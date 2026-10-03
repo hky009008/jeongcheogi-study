@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>D002 UML</title>
+<link rel="stylesheet" href="../style.css"></head>
+<body><main>
+<nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a></nav>
+<h1>D002 · UML</h1><div class="meta">2026-10-04 · A1 소프트웨어 개발 &gt; 요구사항 확인</div><p>오늘의 목표: UML을 쓰는 법보다 <b>시험이 묻는 분류와 기호</b>를 잡기. 다이어그램을 구조/행위로 나누고, 클래스 관계 6종의 선·끝 모양과 유스케이스의 include/extend 방향을 그림으로 구별할 수 있게 만들기.</p>
+<ul>
+<li>UML 구성요소(사물·관계·다이어그램)와 사물 4종을 구별한다</li>
+<li>다이어그램을 구조(정적)와 행위(동적)로 분류한다</li>
+<li>클래스 관계 6종의 기호와 의미를 구별한다</li>
+<li>유스케이스 다이어그램의 include/extend/일반화를 구별한다</li>
+<li>상황(시간 순 메시지·상태 변화·처리 흐름)에 맞는 행위 다이어그램을 고른다</li>
+</ul>
+
+<h2>1. UML이란 — 구성요소 큰 그림</h2>
+<p><b>UML(Unified Modeling Language)</b>은 OMG가 표준으로 관리하는 객체지향 모델링 언어예요. 요구사항 확인 단계에서는 분석한 요구를 그림(모델)으로 표현하는 도구로 나와요. 시험에서는 “UML은 프로그래밍 언어가 아니라 <b>모델링 언어</b>”, “특정 개발 방법론·언어에 종속되지 않는다”는 성격 문제도 가끔 나와요.</p>
+<div class="grid">
+<div><b>① 사물 (Things)</b>모델을 구성하는 요소 자체. 클래스, 유스케이스, 패키지, 노트…</div>
+<div><b>② 관계 (Relationships)</b>사물과 사물을 잇는 의미. 연관·집합·합성·일반화·의존·실체화</div>
+<div><b>③ 다이어그램 (Diagrams)</b>사물과 관계를 모아 한 관점으로 그린 그림. 클래스·시퀀스…</div>
+</div>
+<div class="memo"><b>사관다</b> — 사물 · 관계 · 다이어그램</div>
+
+<h3>사물 4종</h3>
+<table>
+<tr><th>사물</th><th>뜻</th><th>예</th></tr>
+<tr><td><b>구조 사물</b></td><td>시스템의 정적인 부분(명사)</td><td>클래스, 인터페이스, 유스케이스, 컴포넌트, 노드</td></tr>
+<tr><td><b>행동 사물</b></td><td>시간·공간에 따른 동작(동사)</td><td>상호작용(메시지), 상태 머신</td></tr>
+<tr><td><b>그룹 사물</b></td><td>요소를 묶는 단위</td><td>패키지</td></tr>
+<tr><td><b>주해 사물</b></td><td>설명·제약을 덧붙이는 메모</td><td>노트(귀 접힌 사각형)</td></tr>
+</table>
+<div class="memo"><b>구행그주</b> — 구조 · 행동 · 그룹 · 주해. “패키지 = 그룹 사물”, “노트 = 주해 사물” 짝이 단골이에요.</div>
+<p><small>※ 사물 4종 분류는 국내 수험서에서 쓰는 정리예요(UML 2.5 명세 본문 용어와는 조금 달라요). 시험은 이 분류로 출제돼요.</small></p>
+
+<h2>2. 다이어그램 분류 — 구조(정적) vs 행위(동적)</h2>
+<div class="vs">
+<div><b>구조 다이어그램</b>시스템이 <b>무엇으로 이루어졌나</b><br>시간 개념 없음 = 정적</div>
+<div><b>행위 다이어그램</b>시스템이 <b>어떻게 움직이나</b><br>시간에 따른 변화 = 동적</div>
+</div>
+<pre class="mermaid">
+flowchart LR
+  S[구조 · 정적] --> S1[클래스]
+  S --> S2[객체]
+  S --> S3[컴포넌트]
+  S --> S4[배치]
+  S --> S5[패키지]
+  S --> S6[복합 구조]
+</pre>
+<pre class="mermaid">
+flowchart LR
+  B[행위 · 동적] --> B1[유스케이스]
+  B --> B2[활동]
+  B --> B3[상태]
+  B --> I[상호작용]
+  I --> I1[시퀀스]
+  I --> I2[커뮤니케이션]
+  I --> I3[상호작용 개요]
+  I --> I4[타이밍]
+</pre>
+<div class="memo"><b>클객컴배패복</b>은 구조, 나머지는 전부 행위. 구조 6개만 외우면 분류 문제는 끝나요.</div>
+<div class="trap">유스케이스 다이어그램은 “요구사항을 정리하는 그림”이라 정적으로 착각하기 쉽지만 <b>행위</b> 다이어그램이에요.</div>
+<p><small>※ UML 2.5 명세에는 구조 쪽에 <b>프로파일 다이어그램</b>도 있어요(7종). 시험 선지는 보통 위 6종 기준으로 판단하면 돼요.</small></p>
+
+<h2>3. 다이어그램 한눈 표</h2>
+<table>
+<tr><th>다이어그램</th><th>분류</th><th>무엇을 보여 주나</th><th>시험 키워드</th></tr>
+<tr><td><b>클래스</b></td><td>구조</td><td>클래스의 속성·연산과 클래스 간 관계</td><td>속성·오퍼레이션, 관계 기호</td></tr>
+<tr><td><b>객체</b></td><td>구조</td><td>특정 시점의 인스턴스와 링크</td><td>인스턴스, 스냅샷</td></tr>
+<tr><td><b>컴포넌트</b></td><td>구조</td><td>소프트웨어 구성요소와 인터페이스</td><td>모듈·라이브러리, 구현 관점</td></tr>
+<tr><td><b>배치</b></td><td>구조</td><td>물리 노드(서버·장비)와 그 위의 산출물</td><td>노드, 하드웨어, 물리적 배치</td></tr>
+<tr><td><b>패키지</b></td><td>구조</td><td>요소를 묶은 그룹과 그룹 간 의존</td><td>그룹화, 네임스페이스</td></tr>
+<tr><td><b>복합 구조</b></td><td>구조</td><td>클래스·컴포넌트의 내부 구조</td><td>내부 파트, 포트</td></tr>
+<tr><td><b>유스케이스</b></td><td>행위</td><td>사용자(액터) 관점의 기능</td><td>액터, 시스템 경계, 요구 분석</td></tr>
+<tr><td><b>시퀀스</b></td><td>행위</td><td>객체 간 메시지를 <b>시간 순서</b>로</td><td>생명선, 활성 박스, 메시지</td></tr>
+<tr><td><b>커뮤니케이션</b></td><td>행위</td><td>객체 간 메시지를 <b>연결(링크) 중심</b>으로</td><td>링크, 메시지 번호</td></tr>
+<tr><td><b>상태</b></td><td>행위</td><td>한 객체가 <b>이벤트</b>에 따라 바뀌는 상태</td><td>상태 전이, 이벤트</td></tr>
+<tr><td><b>활동</b></td><td>행위</td><td>처리 흐름(로직·업무 절차)</td><td>분기, 병렬, 스윔레인</td></tr>
+<tr><td><b>타이밍</b></td><td>행위</td><td>시간 제약에 따른 상태 변화</td><td>시간 축, 제약</td></tr>
+</table>
+
+<h3>시퀀스 다이어그램 — 시간 순서</h3>
+<p>세로 점선이 <b>생명선</b>(객체가 살아 있는 시간), 위에서 아래로 시간이 흘러요. 가로 화살표가 메시지, 실선은 호출이고 점선은 응답이에요.</p>
+<pre class="mermaid">
+sequenceDiagram
+  actor U as 사용자
+  participant O as 주문서비스
+  participant P as 결제서비스
+  U->>O: 주문 요청
+  activate O
+  O->>P: 결제 요청
+  activate P
+  P-->>O: 결제 승인
+  deactivate P
+  O-->>U: 주문 완료
+  deactivate O
+</pre>
+<p>시퀀스 구성요소: <span class="tag">액터</span><span class="tag">객체</span><span class="tag">생명선</span><span class="tag">활성 박스(실행)</span><span class="tag">메시지</span><span class="tag">프레임(alt·loop)</span></p>
+
+<h3>상태 다이어그램 — 이벤트에 따른 상태 변화</h3>
+<pre class="mermaid">
+stateDiagram-v2
+  state "접수" as R
+  state "결제완료" as P
+  state "배송중" as S
+  state "배송완료" as D
+  state "취소" as C
+  [*] --> R
+  R --> P : 결제
+  P --> S : 출고
+  S --> D : 도착
+  R --> C : 취소 요청
+  P --> C : 취소 요청
+  D --> [*]
+  C --> [*]
+</pre>
+<p>검은 점이 시작, 테두리 있는 점이 종료예요. 화살표 위의 글자가 상태를 바꾸는 <b>이벤트</b>예요.</p>
+
+<div class="vs">
+<div><b>시퀀스</b>같은 상호작용을 <b>시간 축</b>으로 정렬<br>“메시지 순서”가 키워드</div>
+<div><b>커뮤니케이션</b>같은 상호작용을 <b>객체 연결</b>로 배치<br>순서는 메시지 번호(1, 1.1…)로 표시</div>
+</div>
+<div class="point">문제 속 키워드 → 다이어그램: “시간 순서·메시지” → 시퀀스 / “상태 변화·이벤트” → 상태 / “처리 흐름·분기·스윔레인” → 활동 / “물리적 노드·하드웨어” → 배치 / “사용자 관점 기능” → 유스케이스</div>
+
+<h2>4. 클래스 관계 6종 — 선과 끝 모양</h2>
+<p>선은 <b>실선/점선</b> 두 가지, 끝 모양은 <b>없음·빈 마름모·채운 마름모·빈 삼각형·열린 화살표</b>로 구별해요. 그림의 왼쪽·오른쪽 배치가 그대로 실제 표기예요.</p>
+<figure><svg viewBox="0 0 400 440" font-family="sans-serif">
+<rect width="400" height="440" rx="12" fill="#f7f7f4"/>
+<g fill="#222" font-size="15" font-weight="700">
+<text x="20" y="28">① 연관 — 실선</text>
+<text x="20" y="98">② 집합 — 실선 + 빈 마름모(전체 쪽)</text>
+<text x="20" y="168">③ 합성 — 실선 + 채운 마름모(전체 쪽)</text>
+<text x="20" y="238">④ 일반화 — 실선 + 빈 삼각형(부모 쪽)</text>
+<text x="20" y="308">⑤ 실체화 — 점선 + 빈 삼각형(인터페이스 쪽)</text>
+<text x="20" y="378">⑥ 의존 — 점선 + 열린 화살표</text>
+</g>
+<g fill="#fff" stroke="#333" stroke-width="1.5">
+<rect x="20" y="38" width="100" height="30"/><rect x="280" y="38" width="100" height="30"/>
+<rect x="20" y="108" width="100" height="30"/><rect x="280" y="108" width="100" height="30"/>
+<rect x="20" y="178" width="100" height="30"/><rect x="280" y="178" width="100" height="30"/>
+<rect x="20" y="248" width="100" height="30"/><rect x="280" y="248" width="100" height="30"/>
+<rect x="20" y="318" width="100" height="30"/><rect x="280" y="318" width="100" height="30"/>
+<rect x="20" y="388" width="100" height="30"/><rect x="280" y="388" width="100" height="30"/>
+</g>
+<g fill="#222" font-size="14" text-anchor="middle">
+<text x="70" y="58">학생</text><text x="330" y="58">강의</text>
+<text x="70" y="128">컴퓨터</text><text x="330" y="128">모니터</text>
+<text x="70" y="198">주문</text><text x="330" y="198">주문항목</text>
+<text x="70" y="268">개</text><text x="330" y="268">동물</text>
+<text x="70" y="338">카드결제</text><text x="330" y="338">«인터페이스»</text>
+<text x="70" y="408">주문</text><text x="330" y="408">쿠폰</text>
+</g>
+<g stroke="#333" stroke-width="2" fill="none">
+<line x1="120" y1="53" x2="280" y2="53"/>
+<line x1="148" y1="123" x2="280" y2="123"/>
+<line x1="148" y1="193" x2="280" y2="193"/>
+<line x1="120" y1="263" x2="264" y2="263"/>
+<line x1="120" y1="333" x2="264" y2="333" stroke-dasharray="7 5"/>
+<line x1="120" y1="403" x2="278" y2="403" stroke-dasharray="7 5"/>
+<polyline points="266,396 279,403 266,410"/>
+</g>
+<polygon points="120,123 134,115 148,123 134,131" fill="#fff" stroke="#333" stroke-width="2"/>
+<polygon points="120,193 134,185 148,193 134,201" fill="#222" stroke="#333" stroke-width="2"/>
+<polygon points="280,263 264,254 264,272" fill="#fff" stroke="#333" stroke-width="2"/>
+<polygon points="280,333 264,324 264,342" fill="#fff" stroke="#333" stroke-width="2"/>
+</svg><figcaption>클래스 관계 6종의 실제 표기. 마름모는 전체 쪽, 삼각형은 부모·인터페이스 쪽에 붙어요</figcaption></figure>
+
+<table>
+<tr><th>관계 (예)</th><th>선</th><th>끝 모양</th><th>의미</th></tr>
+<tr><td><b>연관</b> Association<br><small>학생 — 강의</small></td><td>실선</td><td>없음(방향 있으면 열린 화살표)</td><td>서로 알고 참조하는 관계</td></tr>
+<tr><td><b>집합</b> Aggregation<br><small>컴퓨터 ◇— 모니터</small></td><td>실선</td><td>빈 마름모 ◇ (전체 쪽)</td><td>전체–부분, 부분은 <b>독립적으로 존재</b> 가능</td></tr>
+<tr><td><b>합성</b> Composition (포함)<br><small>주문 ◆— 주문항목</small></td><td>실선</td><td>채운 마름모 ◆ (전체 쪽)</td><td>전체–부분, <b>생명주기 공유</b>: 전체가 사라지면 부분도 사라짐</td></tr>
+<tr><td><b>일반화</b> Generalization<br><small>개 —▷ 동물</small></td><td>실선</td><td>빈 삼각형 △ (부모 쪽)</td><td>상속, is-a</td></tr>
+<tr><td><b>실체화</b> Realization<br><small>카드결제 ┄▷ 결제수단</small></td><td>점선</td><td>빈 삼각형 △ (인터페이스 쪽)</td><td>인터페이스 구현</td></tr>
+<tr><td><b>의존</b> Dependency<br><small>주문 ┄&gt; 쿠폰</small></td><td>점선</td><td>열린 화살표 (쓰이는 쪽)</td><td>잠깐 사용(매개변수·지역 변수), 상대가 바뀌면 영향</td></tr>
+</table>
+
+<div class="vs">
+<div><b>집합 ◇</b>부분이 다른 전체와 <b>공유·분리</b> 가능<br>컴퓨터를 버려도 모니터는 남는다</div>
+<div><b>합성 ◆</b>부분은 <b>한 전체에만</b> 속함<br>주문을 지우면 주문항목도 지워진다</div>
+</div>
+<p>코드로 보면 감이 와요. 합성은 전체가 부분을 직접 만들어 소유하고, 집합은 밖에서 만든 걸 받아서 써요.</p>
+<pre>// 합성: Order가 OrderItem을 만들고 소유
+class Order {
+  List&lt;OrderItem&gt; items = new ArrayList&lt;&gt;();
+}
+// 집합: 밖에서 만든 Monitor를 받아 연결
+class Computer {
+  Monitor monitor;
+  Computer(Monitor m) { monitor = m; }
+}
+// 의존: 메서드 안에서 잠깐 사용
+class OrderService {
+  void apply(Coupon c) { ... }
+}</pre>
+
+<p>Mermaid 표기로도 같은 관계를 볼 수 있어요(이름은 영어로 표기).</p>
+<pre class="mermaid">
+classDiagram
+  direction LR
+  Order "1" *-- "1..*" OrderItem : 합성
+  Computer o-- Monitor : 집합
+  Student -- Lecture : 연관
+</pre>
+<pre class="mermaid">
+classDiagram
+  direction LR
+  Animal <|-- Dog : 일반화
+  PayMethod <|.. CardPay : 실체화
+  Order ..> Coupon : 의존
+</pre>
+
+<div class="memo"><b>빈 마름모 = 빈 관계</b>(헤어져도 각자 산다), <b>꽉 찬 마름모 = 운명 공동체</b>(같이 죽는다). <b>점선</b>은 약하거나(의존) 약속만 하는(실체화) 관계.</div>
+<div class="trap">마름모는 <b>부분 쪽이 아니라 전체 쪽</b>에 붙어요. 일반화 화살표는 <b>자식 → 부모</b>(삼각형이 부모에 닿음). 그림 문제에서 방향을 뒤집은 선지가 나와요.</div>
+<div class="trap">“합성”을 “포함 관계”라고도 불러요. 유스케이스의 <b>«include»(포함)</b>와는 전혀 다른 개념이니 섞지 마세요.</div>
+
+<h2>5. 유스케이스 다이어그램 — include vs extend</h2>
+<div class="grid">
+<div><b>액터</b>시스템 밖에서 시스템과 상호작용하는 사람·외부 시스템(졸라맨)</div>
+<div><b>유스케이스</b>액터에게 제공하는 기능(타원)</div>
+<div><b>시스템 경계</b>시스템 범위를 나타내는 사각형</div>
+<div><b>관계</b>연관(실선), 포함 «include», 확장 «extend», 일반화</div>
+</div>
+<figure><svg viewBox="0 0 400 300" font-family="sans-serif">
+<defs><marker id="uo" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#333" stroke-width="1.5"/></marker></defs>
+<rect width="400" height="300" rx="12" fill="#f7f7f4"/>
+<rect x="100" y="20" width="290" height="265" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<text x="245" y="40" font-size="14" fill="#555" text-anchor="middle">쇼핑몰 (시스템 경계)</text>
+<g stroke="#333" stroke-width="2" fill="none">
+<circle cx="45" cy="112" r="11" fill="#fff"/>
+<line x1="45" y1="123" x2="45" y2="158"/>
+<line x1="25" y1="135" x2="65" y2="135"/>
+<line x1="45" y1="158" x2="30" y2="182"/>
+<line x1="45" y1="158" x2="60" y2="182"/>
+</g>
+<text x="45" y="204" font-size="14" fill="#222" text-anchor="middle">고객</text>
+<line x1="66" y1="140" x2="130" y2="150" stroke="#333" stroke-width="2"/>
+<g fill="#e6efff" stroke="#2f5bd3" stroke-width="2">
+<ellipse cx="190" cy="150" rx="60" ry="24"/>
+<ellipse cx="320" cy="85" rx="52" ry="22"/>
+<ellipse cx="320" cy="225" rx="56" ry="22"/>
+</g>
+<g font-size="14" fill="#222" text-anchor="middle">
+<text x="190" y="155">주문하기</text>
+<text x="320" y="90">로그인</text>
+<text x="320" y="230">쿠폰 적용</text>
+</g>
+<g stroke="#333" stroke-width="1.8" fill="none" stroke-dasharray="6 4">
+<line x1="232" y1="133" x2="276" y2="100" marker-end="url(#uo)"/>
+<line x1="272" y1="209" x2="234" y2="168" marker-end="url(#uo)"/>
+</g>
+<g font-size="14" fill="#b23b3b" text-anchor="middle">
+<text x="200" y="100">«include»</text>
+<text x="205" y="212">«extend»</text>
+</g>
+</svg><figcaption>include는 기본(주문하기) → 포함(로그인), extend는 확장(쿠폰 적용) → 기본(주문하기). 화살표 방향이 반대예요</figcaption></figure>
+
+<table>
+<tr><th></th><th>포함 «include»</th><th>확장 «extend»</th></tr>
+<tr><td>성격</td><td><b>반드시</b> 실행(필수)</td><td>조건이 맞을 때만 실행(<b>선택</b>)</td></tr>
+<tr><td>화살표</td><td>점선, <b>기본 → 포함되는 쪽</b></td><td>점선, <b>확장 → 기본 쪽</b></td></tr>
+<tr><td>용도</td><td>여러 유스케이스의 <b>공통 기능 추출</b> (함수 호출처럼)</td><td>기본 흐름에 <b>부가 기능</b>을 덧붙임, 확장점(extension point)에서 끼어듦</td></tr>
+<tr><td>기본 유스케이스는</td><td>포함된 것 없이는 완결되지 않음</td><td>확장 없이도 혼자 완결</td></tr>
+<tr><td>예</td><td>주문하기 ┄&gt; 로그인</td><td>쿠폰 적용 ┄&gt; 주문하기</td></tr>
+</table>
+<p><b>일반화</b>: 액터끼리(회원 —▷ 고객), 유스케이스끼리(카드 결제 —▷ 결제) 상속 관계를 실선 + 빈 삼각형으로 그려요. 클래스 일반화와 같은 기호예요.</p>
+<div class="memo"><b>include는 “인(in)”으로 끌어들인다</b> → 기본이 포함 쪽을 가리킴. <b>extend는 밖에서 붙는다</b> → 확장 쪽이 기본을 가리킴.</div>
+<div class="trap">extend 화살표는 <b>확장 쪽에서 기본 쪽으로</b> 향해요. include와 방향이 반대라서 “둘 다 기본에서 나간다”는 선지는 틀려요.</div>
+
+<h2>6. 시험 포인트 정리</h2>
+<div class="point">
+<ul>
+<li>UML 구성요소 = 사물·관계·다이어그램 / 사물 = 구조·행동·그룹·주해 (패키지=그룹, 노트=주해)</li>
+<li>구조 다이어그램 6종 <b>클객컴배패복</b>, 나머지(유스케이스·시퀀스·커뮤니케이션·상태·활동·타이밍·상호작용 개요)는 행위</li>
+<li>키워드 → 다이어그램: 시간 순서=시퀀스, 상태 전이=상태, 처리 흐름=활동, 물리 노드=배치</li>
+<li>관계 기호: 실선/점선 + 빈/채운 마름모(전체 쪽) + 빈 삼각형(부모·인터페이스 쪽) + 열린 화살표(의존)</li>
+<li>집합 vs 합성 = 부분이 독립적으로 사느냐, 같이 사라지느냐</li>
+<li>include = 필수·공통 추출·기본→포함 / extend = 선택·부가·확장→기본</li>
+</ul>
+</div>
+
+<h2>7. 오답 복습 — D001 2번 (워크숍)</h2>
+<p>어제 “상충하는 요구를 함께 논의해 합의” 문제에서 정적 분석을 골랐어요. 두 용어는 쓰이는 단계부터 달라요.</p>
+<div class="vs">
+<div><b>워크숍</b> (요구사항 <b>도출</b> 기법)<br>이해관계자들이 <b>한자리에 모여</b> 집중 논의 → 상충 요구 조율·합의</div>
+<div><b>정적 분석</b> (테스트·품질 기법)<br>코드를 <b>실행하지 않고</b> 결함·규칙 위반을 찾음. 도출 기법이 아님</div>
+</div>
+<table>
+<tr><th>상황</th><th>도출 기법</th></tr>
+<tr><td>소수 핵심 담당자에게 깊이 묻기</td><td>인터뷰</td></tr>
+<tr><td>많은 사람에게 같은 질문 빠르게</td><td>설문</td></tr>
+<tr><td>비판 없이 아이디어 많이 내기</td><td>브레인스토밍</td></tr>
+<tr><td>여러 이해관계자 모여 충돌 조율·합의</td><td><b>워크숍</b></td></tr>
+<tr><td>실제 업무 현장을 지켜보기</td><td>관찰</td></tr>
+</table>
+<p>재확인 문제는 아래 3번이에요.</p>
+
+<h2>확인 문제</h2>
+<ol class="quiz">
+<li>다음 중 <b>구조(정적)</b> 다이어그램은? ① 시퀀스 ② 상태 ③ 컴포넌트 ④ 활동</li>
+<li><code>주문</code>이 삭제되면 <code>주문항목</code>도 함께 소멸하는 관계는? ① 연관 ② 집합 ③ 합성 ④ 의존</li>
+<li>(오답 복습) 영업·물류·회계 담당자의 요구가 서로 부딪혀서, 이해관계자들을 한자리에 모아 집중 논의로 합의안을 만들려 한다. 알맞은 요구사항 도출 기법은? ① 설문 ② 워크숍 ③ 관찰 ④ 정적 분석</li>
+</ol>
+<p>답장: <code>정처기 D002: 1)번호 2)번호 3)번호</code></p>
+<p class="meta"><a href="2026-10-03-D001.html">← D001</a>  </p>
+<script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";mermaid.initialize({startOnLoad:true,theme:"neutral"});</script>
+<footer>2027년 정기 기사 1회 정보처리기사 필기 준비 · 공식 범위: Q-Net 2027~2029 출제기준</footer>
+</main></body></html>
