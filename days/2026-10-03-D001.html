@@ -10,28 +10,44 @@
 
 <h2>1. 요구사항이란</h2>
 <p>시스템이 제공해야 할 기능과, 그 기능이 지켜야 할 제약이에요.</p>
-<table>
-<tr><th>구분</th><th>뜻</th><th>예</th></tr>
-<tr><td>기능 요구사항</td><td>시스템이 <b>무엇을</b> 하는가</td><td>회원은 비밀번호를 변경할 수 있다</td></tr>
-<tr><td>비기능 요구사항</td><td>그 기능을 <b>얼마나 잘</b> 하는가 (성능·보안·가용성·사용성·호환성 등)</td><td>조회 결과를 2초 이내 표시한다</td></tr>
-</table>
+<div class="vs">
+<div><b>기능 요구사항</b>시스템이 <b>무엇을</b> 하는가<br><small>예) 회원은 비밀번호를 변경할 수 있다</small></div>
+<div><b>비기능 요구사항</b>그 기능을 <b>얼마나 잘</b> 하는가<br>성능·보안·가용성·사용성·호환성<br><small>예) 조회 결과를 2초 이내 표시한다</small></div>
+</div>
 <div class="point">비기능 요구사항은 “빠르다” 대신 “2초 이내”, “월 가용성 99.9%”처럼 <b>재서 확인할 수 있게</b> 씁니다. “검증 가능한 요구사항”을 고르는 문제가 여기서 나와요.</div>
 
 <h2>2. 요구사항 개발 4단계 — 도출 → 분석 → 명세 → 확인</h2>
-<p>암기: <b>도분명확</b>. 이 4단계 이후 생기는 변경을 통제·추적하는 일은 <i>요구사항 관리</i>(D006)로 따로 봅니다.</p>
+<div class="flow">
+<div><b>① 도출</b>요구 찾아내기</div><div class="arrow">→</div>
+<div><b>② 분석</b>정리·충돌 해결</div><div class="arrow">→</div>
+<div><b>③ 명세</b>문서로 쓰기</div><div class="arrow">→</div>
+<div><b>④ 확인</b>제대로 썼나 검토</div>
+</div>
+<div class="memo"><b>도분명확</b> — 도출 · 분석 · 명세 · 확인. 이후 변경을 통제·추적하는 일은 <i>요구사항 관리</i>(D006)로 따로 봐요.</div>
 
 <h3>① 도출 — 요구사항 찾아내기</h3>
-<table>
-<tr><th>기법</th><th>언제 쓰나</th></tr>
-<tr><td>인터뷰</td><td>소수의 핵심 담당자에게 깊게 묻는다. 예외 업무 파악에 좋다</td></tr>
-<tr><td>설문</td><td>많은 사람에게 같은 질문을 빠르게 돌린다</td></tr>
-<tr><td>브레인스토밍</td><td>아이디어를 넓게 끌어낸다. 남의 의견을 비판하지 않는 게 원칙</td></tr>
-<tr><td><b>워크숍</b></td><td>여러 이해관계자를 모아 <b>상충하는 요구를 조율·합의</b>한다</td></tr>
-<tr><td>관찰</td><td>사용자가 실제로 일하는 모습을 본다</td></tr>
-<tr><td>프로토타이핑</td><td>시제품을 보여 주고 피드백을 받는다</td></tr>
-<tr><td>유스케이스</td><td>사용자 관점의 기능 시나리오로 정리한다</td></tr>
-<tr><td>롤플레잉</td><td>역할을 나눠 상황을 재현한다</td></tr>
-</table>
+<figure><svg viewBox="0 0 420 230" font-family="sans-serif">
+<rect width="420" height="230" rx="12" fill="#f7f7f4"/>
+<line x1="40" y1="200" x2="400" y2="200" stroke="#555" stroke-width="2" marker-end="url(#ar)"/>
+<line x1="40" y1="200" x2="40" y2="20" stroke="#555" stroke-width="2" marker-end="url(#ar)"/>
+<defs><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8z" fill="#555"/></marker></defs>
+<text x="300" y="222" font-size="14" fill="#333">응답자 수 많음 →</text>
+<text x="48" y="22" font-size="14" fill="#333">↑ 깊이·합의</text>
+<circle cx="90" cy="70" r="34" fill="#2f5bd3" opacity=".85"/><text x="90" y="75" font-size="15" fill="#fff" text-anchor="middle">인터뷰</text>
+<circle cx="200" cy="70" r="34" fill="#e0a100" opacity=".9"/><text x="200" y="75" font-size="15" fill="#fff" text-anchor="middle">워크숍</text>
+<circle cx="340" cy="160" r="30" fill="#2a9d6f" opacity=".9"/><text x="340" y="165" font-size="15" fill="#fff" text-anchor="middle">설문</text>
+<circle cx="200" cy="150" r="30" fill="#8a5cd1" opacity=".85"/><text x="200" y="148" font-size="12" fill="#fff" text-anchor="middle">브레인</text><text x="200" y="163" font-size="12" fill="#fff" text-anchor="middle">스토밍</text>
+</svg><figcaption>상황 → 기법 지도: 깊게 묻기는 인터뷰, 여럿이 합의는 워크숍, 많이 모으기는 설문</figcaption></figure>
+<div class="grid">
+<div><b>인터뷰</b>소수 핵심 담당자 심층. 예외 업무 파악</div>
+<div><b>설문</b>다수에게 같은 질문을 빠르게</div>
+<div><b>브레인스토밍</b>아이디어 확산, 비판 금지</div>
+<div><b>워크숍</b>이해관계자 모아 <b>상충 요구 조율·합의</b></div>
+<div><b>관찰</b>실제 업무 현장을 본다</div>
+<div><b>프로토타이핑</b>시제품 보여 주고 피드백</div>
+<div><b>유스케이스</b>사용자 관점 기능 시나리오</div>
+<div><b>롤플레잉</b>역할 나눠 상황 재현</div>
+</div>
 
 <h3>② 분석 — 정리하고 충돌 풀기</h3>
 <ul>
@@ -43,22 +59,22 @@
 </ul>
 
 <h3>③ 명세 — 문서로 쓰기</h3>
-<table>
-<tr><th>구분</th><th>방식</th><th>장단점</th></tr>
-<tr><td>정형 명세</td><td>수학 기호 (Z, VDM, Petri-net, CSP, LOTOS)</td><td>모호하지 않지만 쓰고 읽기 어렵다</td></tr>
-<tr><td>비정형 명세</td><td>자연어·다이어그램</td><td>쉽지만 모호할 수 있다</td></tr>
-</table>
+<div class="vs">
+<div><b>정형 명세</b>수학 기호 기반<br><code>Z</code> <code>VDM</code> <code>Petri-net</code> <code>CSP</code> <code>LOTOS</code><br>✔ 모호성 없음 ✘ 작성·이해 어려움</div>
+<div><b>비정형 명세</b>자연어·다이어그램<br>✔ 쓰기 쉬움 ✘ 모호할 수 있음</div>
+</div>
 
 <h3>④ 확인 — 제대로 썼는지 검토</h3>
-<ul>
-<li><b>동료 검토</b>: 작성자가 설명하고 동료가 결함을 찾는다</li>
-<li><b>워크스루</b>: 자료를 미리 나눠 주고 짧게 검토 회의를 한다</li>
-<li><b>인스펙션</b>: 작성자를 뺀 전문가가 결함을 찾는다. 셋 중 가장 공식적</li>
-<li>그 외: 프로토타입, 테스트 설계, CASE 도구 검증</li>
-</ul>
+<table>
+<tr><th>기법</th><th>방식</th><th>공식성</th></tr>
+<tr><td>동료 검토</td><td>작성자가 설명, 동료가 결함 찾기</td><td>★</td></tr>
+<tr><td>워크스루</td><td>자료 사전 배포 → 짧은 검토 회의</td><td>★★</td></tr>
+<tr><td><b>인스펙션</b></td><td><b>작성자 제외</b> 전문가가 결함 검출</td><td>★★★ 가장 공식적</td></tr>
+</table>
+<p>그 외: 프로토타입, 테스트 설계, CASE 도구 검증</p>
 
 <h2>3. 좋은 요구사항 명세서의 조건</h2>
-<p>정확성 · 완전성 · 일관성 · 명확성(모호하지 않음) · 검증 가능성 · 추적 가능성 · 수정 용이성</p>
+<p><span class="tag">정확성</span><span class="tag">완전성</span><span class="tag">일관성</span><span class="tag">명확성</span><span class="tag">검증 가능성</span><span class="tag">추적 가능성</span><span class="tag">수정 용이성</span></p>
 
 <h2>4. 시험 포인트</h2>
 <div class="point">
@@ -68,6 +84,8 @@
 <li>정형 명세 언어 이름(Z, VDM, Petri-net)을 고르게 하는 문제도 나와요.</li>
 </ul>
 </div>
+
+<div class="trap">“빠르다”, “편리하다”처럼 잴 수 없는 표현은 검증 가능한 요구사항이 아니에요.</div>
 
 <h2>확인 문제 (채점 완료 · 2/3)</h2>
 <ol class="quiz">
@@ -79,5 +97,6 @@
 <details><summary>정답·해설</summary>③. “2초 이내”는 측정할 수 있는 성능 요구사항이에요. ①④는 기능, ②는 “빠르다”가 모호해서 검증할 수 없어요.</details></li>
 </ol>
 <p class="meta">  </p>
+
 <footer>2027년 정기 기사 1회 정보처리기사 필기 준비 · 공식 범위: Q-Net 2027~2029 출제기준</footer>
 </main></body></html>

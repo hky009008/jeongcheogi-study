@@ -25,3 +25,23 @@ ul.list li{padding:10px 0;border-bottom:1px solid var(--line)}
 ul.list .d{color:var(--muted);font-size:14px;margin-right:6px}
 svg{max-width:100%;height:auto}
 footer{color:var(--muted);font-size:13px;margin-top:3em}
+/* 시각 컴포넌트 — 사용법은 site/COMPONENTS.md */
+.flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:6px;margin:1em 0}
+.flow>div{flex:1 1 120px;background:var(--card);border:2px solid var(--accent);border-radius:12px;padding:10px;text-align:center;font-size:15px}
+.flow>div b{display:block;font-size:16px}
+.flow>.arrow{flex:0 0 auto;border:0;background:none;align-self:center;font-size:22px;color:var(--accent);padding:0}
+@media (max-width:560px){.flow{flex-direction:column}.flow>div{flex:none}.flow>.arrow{transform:rotate(90deg);line-height:1}}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:1em 0}
+.grid>div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:15px}
+.grid>div>b:first-child,.vs>div>b:first-child{display:block;margin-bottom:4px}
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:1em 0}
+.vs>div{border-radius:12px;padding:12px;font-size:15px}
+.vs>div:first-child{background:#e6efff}.vs>div:last-child{background:#ffeede}
+@media (prefers-color-scheme:dark){.vs>div:first-child{background:#1f2b45}.vs>div:last-child{background:#45301f}}
+.memo{border-left:5px solid #e0a100;background:var(--card);padding:10px 14px;border-radius:6px;margin:1em 0}
+.memo::before{content:"암기 ";font-weight:700;color:#e0a100}
+.trap{border-left:5px solid #d23f3f;background:var(--card);padding:10px 14px;border-radius:6px;margin:1em 0}
+.trap::before{content:"함정 ";font-weight:700;color:#d23f3f}
+.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:99px;background:var(--code);margin-right:4px}
+figure{margin:1.2em 0;text-align:center}figcaption{font-size:13px;color:var(--muted)}
+.mermaid{background:#fff;border-radius:12px;padding:8px;margin:1em 0;text-align:center}
