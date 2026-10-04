@@ -89,13 +89,19 @@
 
 <h2>확인 문제 (채점 완료 · 2/3)</h2>
 <ol class="quiz">
-<li>500명의 사용자에게 동일한 사용 패턴 질문을 단기간에 받으려면? ① 인터뷰 ② 설문 ③ 코드 리뷰 ④ 단위 테스트
-<details><summary>정답·해설</summary>② 설문. 많은 사용자에게 같은 문항을 빠르게 모으는 상황이에요. 인터뷰는 심층 파악용이라 500명에게는 비효율적이에요.</details></li>
-<li>영업팀과 운영팀의 상충하는 요구를 함께 논의해 합의하려면? ① 워크숍 ② 정적 분석 ③ 부하 테스트 ④ 빌드 자동화
-<details><summary>정답·해설 (오답 기록됨)</summary>① 워크숍. 여러 이해관계자의 상충 요구를 한자리에서 조율하는 기법이에요. 나머지는 코드 분석·테스트·빌드 활동이에요.</details></li>
-<li>다음 중 검증 가능한 비기능 요구사항은? ① 사용자가 주문을 취소한다 ② 화면이 빠르다 ③ 조회 결과를 2초 이내 표시한다 ④ 관리자가 재고를 수정한다
-<details><summary>정답·해설</summary>③. “2초 이내”는 측정할 수 있는 성능 요구사항이에요. ①④는 기능, ②는 “빠르다”가 모호해서 검증할 수 없어요.</details></li>
-</ol>
+<li>500명의 사용자에게 동일한 사용 패턴 질문을 단기간에 받으려면?<label class="opt"><input type="radio" name="D001-q1" value="1">① 인터뷰</label><label class="opt"><input type="radio" name="D001-q1" value="2">② 설문</label><label class="opt"><input type="radio" name="D001-q1" value="3">③ 코드 리뷰</label><label class="opt"><input type="radio" name="D001-q1" value="4">④ 단위 테스트</label><details><summary>정답·해설</summary>② 설문. 많은 사용자에게 같은 문항을 빠르게 모으는 상황이에요. 인터뷰는 심층 파악용이라 500명에게는 비효율적이에요.</details></li>
+<li>영업팀과 운영팀의 상충하는 요구를 함께 논의해 합의하려면?<label class="opt"><input type="radio" name="D001-q2" value="1">① 워크숍</label><label class="opt"><input type="radio" name="D001-q2" value="2">② 정적 분석</label><label class="opt"><input type="radio" name="D001-q2" value="3">③ 부하 테스트</label><label class="opt"><input type="radio" name="D001-q2" value="4">④ 빌드 자동화</label><details><summary>정답·해설 (오답 기록됨)</summary>① 워크숍. 여러 이해관계자의 상충 요구를 한자리에서 조율하는 기법이에요. 나머지는 코드 분석·테스트·빌드 활동이에요.</details></li>
+<li>다음 중 검증 가능한 비기능 요구사항은?<label class="opt"><input type="radio" name="D001-q3" value="1">① 사용자가 주문을 취소한다</label><label class="opt"><input type="radio" name="D001-q3" value="2">② 화면이 빠르다</label><label class="opt"><input type="radio" name="D001-q3" value="3">③ 조회 결과를 2초 이내 표시한다</label><label class="opt"><input type="radio" name="D001-q3" value="4">④ 관리자가 재고를 수정한다</label><details><summary>정답·해설</summary>③. “2초 이내”는 측정할 수 있는 성능 요구사항이에요. ①④는 기능, ②는 “빠르다”가 모호해서 검증할 수 없어요.</details></li>
+</ol><div class="answer-bar" data-id="D001" data-n="3"><code></code><button type="button">답안 복사</button></div><p><small>고른 뒤 <b>답안 복사</b> → 디스코드 공부 채널에 붙여넣기 하면 돼요.</small></p>
 <p class="meta">  <a href="2026-10-04-D002.html">D002 →</a></p>
+<script>
+document.querySelectorAll('.answer-bar').forEach(bar=>{
+  const id=bar.dataset.id,n=+bar.dataset.n,out=bar.querySelector('code'),btn=bar.querySelector('button');
+  const text=()=>'정처기 '+id+': '+Array.from({length:n},(_,i)=>{const c=document.querySelector('input[name="'+id+'-q'+(i+1)+'"]:checked');return (i+1)+')'+(c?c.value:'?')}).join(' ');
+  document.querySelectorAll('input[name^="'+id+'-q"]').forEach(r=>r.addEventListener('change',()=>{out.textContent=text()}));
+  out.textContent=text();
+  btn.addEventListener('click',async()=>{const t=text();try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}btn.textContent='복사됨 ✓';setTimeout(()=>btn.textContent='답안 복사',1500)});
+});
+</script>
 <footer>2027년 정기 기사 1회 정보처리기사 필기 준비 · 공식 범위: Q-Net 2027~2029 출제기준</footer>
 </main></body></html>

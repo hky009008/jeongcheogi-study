@@ -241,14 +241,20 @@ class OrderService {
 
 <h2>확인 문제 (채점 완료 · 3/3)</h2>
 <ol class="quiz">
-<li>다음 중 <b>구조(정적)</b> 다이어그램은? ① 시퀀스 ② 상태 ③ 컴포넌트 ④ 활동
-<details><summary>정답·해설</summary>③ 컴포넌트. 구조 6종(클객컴배패복) 중 하나예요. 시퀀스·상태·활동은 시간에 따라 움직이는 행위(동적) 다이어그램이에요.</details></li>
-<li><code>주문</code>이 삭제되면 <code>주문항목</code>도 함께 소멸하는 관계는? ① 연관 ② 집합 ③ 합성 ④ 의존
-<details><summary>정답·해설</summary>③ 합성(채운 마름모 ◆). 전체가 사라지면 부분도 같이 사라지는 강한 소유예요. 집합(빈 마름모 ◇)은 부분이 따로 살아남을 수 있고, 연관·의존은 소유 관계가 아니에요.</details></li>
-<li>(오답 복습) 영업·물류·회계 담당자의 요구가 서로 부딪혀서, 이해관계자들을 한자리에 모아 집중 논의로 합의안을 만들려 한다. 알맞은 요구사항 도출 기법은? ① 설문 ② 워크숍 ③ 관찰 ④ 정적 분석
-<details><summary>정답·해설 (D001-2 재확인 통과)</summary>② 워크숍. 여러 이해관계자를 한자리에 모아 상충하는 요구를 조율·합의하는 기법이에요. 설문은 다수에게 같은 질문, 관찰은 현장 업무 관찰, 정적 분석은 코드를 실행하지 않는 품질 검사라 도출 기법이 아니에요.</details></li>
-</ol>
+<li>다음 중 <b>구조(정적)</b> 다이어그램은?<label class="opt"><input type="radio" name="D002-q1" value="1">① 시퀀스</label><label class="opt"><input type="radio" name="D002-q1" value="2">② 상태</label><label class="opt"><input type="radio" name="D002-q1" value="3">③ 컴포넌트</label><label class="opt"><input type="radio" name="D002-q1" value="4">④ 활동</label><details><summary>정답·해설</summary>③ 컴포넌트. 구조 6종(클객컴배패복) 중 하나예요. 시퀀스·상태·활동은 시간에 따라 움직이는 행위(동적) 다이어그램이에요.</details></li>
+<li><code>주문</code>이 삭제되면 <code>주문항목</code>도 함께 소멸하는 관계는?<label class="opt"><input type="radio" name="D002-q2" value="1">① 연관</label><label class="opt"><input type="radio" name="D002-q2" value="2">② 집합</label><label class="opt"><input type="radio" name="D002-q2" value="3">③ 합성</label><label class="opt"><input type="radio" name="D002-q2" value="4">④ 의존</label><details><summary>정답·해설</summary>③ 합성(채운 마름모 ◆). 전체가 사라지면 부분도 같이 사라지는 강한 소유예요. 집합(빈 마름모 ◇)은 부분이 따로 살아남을 수 있고, 연관·의존은 소유 관계가 아니에요.</details></li>
+<li>(오답 복습) 영업·물류·회계 담당자의 요구가 서로 부딪혀서, 이해관계자들을 한자리에 모아 집중 논의로 합의안을 만들려 한다. 알맞은 요구사항 도출 기법은?<label class="opt"><input type="radio" name="D002-q3" value="1">① 설문</label><label class="opt"><input type="radio" name="D002-q3" value="2">② 워크숍</label><label class="opt"><input type="radio" name="D002-q3" value="3">③ 관찰</label><label class="opt"><input type="radio" name="D002-q3" value="4">④ 정적 분석</label><details><summary>정답·해설 (D001-2 재확인 통과)</summary>② 워크숍. 여러 이해관계자를 한자리에 모아 상충하는 요구를 조율·합의하는 기법이에요. 설문은 다수에게 같은 질문, 관찰은 현장 업무 관찰, 정적 분석은 코드를 실행하지 않는 품질 검사라 도출 기법이 아니에요.</details></li>
+</ol><div class="answer-bar" data-id="D002" data-n="3"><code></code><button type="button">답안 복사</button></div><p><small>고른 뒤 <b>답안 복사</b> → 디스코드 공부 채널에 붙여넣기 하면 돼요.</small></p>
 <p>답장: <code>정처기 D002: 1)번호 2)번호 3)번호</code></p>
 <p class="meta"><a href="2026-10-03-D001.html">← D001</a>  </p>
+<script>
+document.querySelectorAll('.answer-bar').forEach(bar=>{
+  const id=bar.dataset.id,n=+bar.dataset.n,out=bar.querySelector('code'),btn=bar.querySelector('button');
+  const text=()=>'정처기 '+id+': '+Array.from({length:n},(_,i)=>{const c=document.querySelector('input[name="'+id+'-q'+(i+1)+'"]:checked');return (i+1)+')'+(c?c.value:'?')}).join(' ');
+  document.querySelectorAll('input[name^="'+id+'-q"]').forEach(r=>r.addEventListener('change',()=>{out.textContent=text()}));
+  out.textContent=text();
+  btn.addEventListener('click',async()=>{const t=text();try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}btn.textContent='복사됨 ✓';setTimeout(()=>btn.textContent='답안 복사',1500)});
+});
+</script>
 <footer>2027년 정기 기사 1회 정보처리기사 필기 준비 · 공식 범위: Q-Net 2027~2029 출제기준</footer>
 </main></body></html>
