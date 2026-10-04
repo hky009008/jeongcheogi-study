@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>D003 애자일(Agile)</title>
+<link rel="stylesheet" href="../style.css"></head>
+<body><main>
+<nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a></nav>
+<h1>D003 · 애자일(Agile)</h1><div class="meta">2026-10-05 · A1 소프트웨어 개발 &gt; 요구사항 확인</div><p>오늘의 목표: 현업에서 스크럼·칸반을 써 봤더라도 <b>시험 용어와 분류</b>는 따로 잡아야 해요. 선언문 4가치의 “더 중시하는 쪽”, 스크럼 3역할·3산출물·5이벤트, XP 5가치·실천, 칸반 WIP를 짝으로 외우고, 수험서와 최신 가이드 용어가 어긋나는 지점(개발팀/개발자, 번다운 차트의 위치)도 짚고 갈게요.</p>
+<ul>
+<li>폭포수와 애자일의 차이, 애자일 선언 4가치에서 더 중시하는 쪽을 구별한다</li>
+<li>스크럼의 역할·산출물·이벤트를 구별한다</li>
+<li>XP의 5가치와 대표 실천을 구별한다</li>
+<li>칸반(시각화·WIP 제한·Pull)을 스크럼(고정 길이 스프린트)과 구별한다</li>
+<li>애자일 계열(린·FDD·크리스탈 등)과 비애자일 모델(폭포수·V-모델·나선형)을 구별한다</li>
+</ul>
+
+<h2>1. 큰 그림 — 폭포수 vs 애자일</h2>
+<p><b>애자일(Agile)</b>은 요구가 바뀐다는 것을 전제로, <b>짧은 반복</b>마다 실제로 돌아가는 결과물을 만들고 고객 피드백으로 방향을 고치는 개발 방식의 총칭이에요. 특정 방법 하나가 아니라 스크럼·XP·칸반 같은 여러 방법을 묶는 우산 개념이에요.</p>
+<div class="vs">
+<div><b>폭포수 (전통적)</b>요구 분석 → 설계 → 구현 → 테스트 → 유지보수를 <b>한 방향으로 순차</b> 진행<br>계획·문서 중심, 앞 단계로 되돌아가기 어려움 → <b>후반 변경 비용이 큼</b></div>
+<div><b>애자일</b>1~4주 단위 <b>반복(이터레이션·스프린트)</b>마다 계획→개발→시연→회고<br>동작하는 결과물·고객 협력 중심 → <b>변화 수용</b></div>
+</div>
+<figure><svg viewBox="0 0 400 300" font-family="sans-serif">
+<defs><marker id="wa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker></defs>
+<rect width="400" height="300" rx="12" fill="#f7f7f4"/>
+<line x1="188" y1="20" x2="188" y2="280" stroke="#ccc" stroke-width="1.5"/>
+<g fill="#222" font-size="15" font-weight="700" text-anchor="middle"><text x="90" y="32">폭포수: 한 번 흐름</text><text x="292" y="32">애자일: 짧게 반복</text></g>
+<g fill="#e6efff" stroke="#333" stroke-width="1.5">
+<rect x="8" y="50" width="100" height="32" rx="6"/>
+<rect x="24" y="98" width="100" height="32" rx="6"/>
+<rect x="40" y="146" width="100" height="32" rx="6"/>
+<rect x="56" y="194" width="100" height="32" rx="6"/>
+<rect x="72" y="242" width="100" height="32" rx="6"/>
+</g>
+<g stroke="#333" stroke-width="2">
+<line x1="68" y1="82" x2="68" y2="97" marker-end="url(#wa)"/>
+<line x1="84" y1="130" x2="84" y2="145" marker-end="url(#wa)"/>
+<line x1="100" y1="178" x2="100" y2="193" marker-end="url(#wa)"/>
+<line x1="116" y1="226" x2="116" y2="241" marker-end="url(#wa)"/>
+</g>
+<g fill="#222" font-size="14" text-anchor="middle"><text x="58" y="71">요구 분석</text><text x="74" y="119">설계</text><text x="90" y="167">구현</text><text x="106" y="215">테스트</text><text x="122" y="263">유지보수</text></g>
+<circle cx="290" cy="175" r="78" fill="none" stroke="#e8e2d0" stroke-width="2"/>
+<g stroke="#c26a00" stroke-width="2.5" fill="none">
+<path d="M323,104 A78,78 0 0 1 360,142" marker-end="url(#wa)"/>
+<path d="M360,208 A78,78 0 0 1 323,246" marker-end="url(#wa)"/>
+<path d="M257,246 A78,78 0 0 1 220,208" marker-end="url(#wa)"/>
+<path d="M220,142 A78,78 0 0 1 257,104" marker-end="url(#wa)"/>
+</g>
+<g fill="#fff4d6" stroke="#333" stroke-width="1.5">
+<rect x="262" y="82" width="56" height="30" rx="6"/>
+<rect x="342" y="160" width="52" height="30" rx="6"/>
+<rect x="242" y="238" width="96" height="30" rx="6"/>
+<rect x="194" y="160" width="52" height="30" rx="6"/>
+</g>
+<g fill="#222" font-size="14" text-anchor="middle">
+<text x="290" y="102">계획</text><text x="368" y="180">개발</text><text x="290" y="258">시연·피드백</text><text x="220" y="180">회고</text>
+<text x="290" y="172" font-weight="700">스프린트</text><text x="290" y="190" fill="#555">1~4주</text>
+</g>
+</svg><figcaption>왼쪽: 폭포수는 단계를 한 번 내려가고 끝(되돌아가기 어려움). 오른쪽: 애자일은 같은 고리를 짧게 여러 번 돌며 매번 동작하는 결과물을 만들어요.</figcaption></figure>
+
+<h2>2. 애자일 선언 4가치</h2>
+<p>2001년 17명의 개발자가 발표한 <b>애자일 소프트웨어 개발 선언(Agile Manifesto)</b>이에요. 형식은 전부 “<b>A보다 B를</b> 가치 있게 여긴다” — 즉 <b>B를 더 중시</b>해요.</p>
+<table>
+<tr><th>덜 중시 (그래도 가치 있음)</th><th></th><th>더 중시</th></tr>
+<tr><td>공정(프로세스)과 도구</td><td>보다</td><td><b>개인과 상호작용</b></td></tr>
+<tr><td>포괄적인 문서</td><td>보다</td><td><b>작동하는(동작하는) 소프트웨어</b></td></tr>
+<tr><td>계약 협상</td><td>보다</td><td><b>고객과의 협력</b></td></tr>
+<tr><td>계획을 따르기</td><td>보다</td><td><b>변화에 대응하기</b></td></tr>
+</table>
+<div class="memo"><b>사작고변</b> — 더 중시하는 쪽은 <b>사</b>람(개인·상호작용) · <b>작</b>동하는 SW · <b>고</b>객 협력 · <b>변</b>화 대응. 나머지(도구·문서·계약·계획)는 “덜 중시”.</div>
+<div class="trap">
+<b>단골 함정 세 가지</b>
+<ul>
+<li>“변화 대응보다 계획 준수”처럼 <b>A·B를 뒤집은 선지</b>가 거의 매번 나와요. 내용(사작고변)으로 판단하세요.</li>
+<li>“왼쪽/오른쪽” 표현은 믿지 마세요. 영문 원문은 “<b>왼쪽</b>을 더 중시”, 공식 한국어판은 어순이 뒤집혀 “<b>오른쪽</b>에 더 높은 가치”라고 써요. 좌우가 아니라 내용으로 외우는 게 안전해요.</li>
+<li>“덜 중시 = 필요 없음”이 아니에요. 선언문도 “덜 중시하는 항목에도 가치가 있다”고 명시해요. “문서화를 하지 않는다”는 선지는 틀려요.</li>
+</ul>
+</div>
+<p><small>※ 공식 한국어판 용어는 “공정과 도구”, “작동하는 소프트웨어”예요. 수험서는 “프로세스와 도구”, “동작하는 소프트웨어”로 많이 써요. 같은 뜻이에요.</small></p>
+
+<h2>3. 애자일 계열 지도</h2>
+<div class="grid">
+<div><b>스크럼 (Scrum)</b>고정 길이 <b>스프린트</b>, PO·SM·개발팀, 관리 프레임워크</div>
+<div><b>XP (eXtreme Programming)</b><b>짝 프로그래밍·TDD·CI·리팩토링</b> 등 개발 실천 중심</div>
+<div><b>칸반 (Kanban)</b>보드 <b>시각화</b>, <b>WIP 제한</b>, Pull 방식 흐름 관리</div>
+<div><b>린 (Lean)</b>도요타 생산 방식 → <b>낭비 제거</b>, 가치 흐름</div>
+<div><b>FDD</b>Feature-Driven: <b>기능(feature) 단위</b>로 설계·구현</div>
+<div><b>크리스탈 (Crystal)</b>팀 규모·중요도에 따라 방법을 <b>색깔별로</b> 골라 씀</div>
+<div><b>ASD · DSDM</b>적응형 SW 개발(추측·협력·학습) / 동적 시스템 개발 방법</div>
+<div><b>⚠ 애자일 아님</b><b>폭포수</b>(순차), <b>V-모델</b>(단계별 테스트 대응), <b>나선형</b>(위험 분석 반복)</div>
+</div>
+<div class="memo"><b>키워드 → 방법 짝</b>: 스프린트·PO·SM → 스크럼 / 짝 프로그래밍·TDD → XP / WIP 제한·보드 → 칸반 / 낭비 제거 → 린 / 기능 단위 → FDD / 위험 분석 → 나선형(비애자일)</div>
+<div class="trap">나선형 모델도 “반복”을 하지만 핵심은 매 회전의 <b>위험 분석</b>이고 계획·문서 비중이 커서 애자일로 분류하지 않아요. “반복한다 = 애자일”로 고르면 틀려요.</div>
+
+<h2>4. 스크럼 (Scrum)</h2>
+<p>스크럼은 <b>개발 기법이 아니라 일하는 틀(프레임워크)</b>이에요. 코딩 방법은 규정하지 않고, 역할·산출물·이벤트만 정해요. 시험에서 가장 많이 나오는 애자일 방법이라 <b>3·3·5</b>로 외우면 돼요.</p>
+<figure><svg viewBox="0 0 400 470" font-family="sans-serif">
+<defs><marker id="sa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker></defs>
+<rect width="400" height="470" rx="12" fill="#f7f7f4"/>
+<g stroke="#333" stroke-width="1.5">
+<rect x="110" y="18" width="180" height="46" rx="6" fill="#fff4d6"/>
+<rect x="110" y="96" width="180" height="40" rx="6" fill="#e6efff"/>
+<rect x="110" y="168" width="180" height="46" rx="6" fill="#fff4d6"/>
+<rect x="110" y="330" width="180" height="46" rx="6" fill="#fff4d6"/>
+<rect x="20" y="410" width="170" height="40" rx="6" fill="#e6efff"/>
+<rect x="210" y="410" width="170" height="40" rx="6" fill="#e6efff"/>
+</g>
+<circle cx="200" cy="272" r="44" fill="#fff" stroke="#2f5bd3" stroke-width="3"/>
+<circle cx="318" cy="252" r="26" fill="#fff" stroke="#c26a00" stroke-width="2.5"/>
+<g fill="#222" font-size="14" text-anchor="middle">
+<text x="200" y="38" font-weight="700">제품 백로그</text><text x="200" y="56">PO가 순서 결정</text>
+<text x="200" y="121" font-weight="700">스프린트 계획</text>
+<text x="200" y="188" font-weight="700">스프린트 백로그</text><text x="200" y="206">개발자가 작성</text>
+<text x="200" y="268" font-weight="700">스프린트</text><text x="200" y="286">≤ 1개월</text>
+<text x="318" y="248" font-size="14" font-weight="700">일일</text><text x="318" y="264" font-size="14">15분</text>
+<text x="200" y="350" font-weight="700">증분 (Increment)</text><text x="200" y="368">완료 정의(DoD) 충족</text>
+<text x="105" y="435" font-weight="700">스프린트 리뷰</text>
+<text x="295" y="435" font-weight="700">스프린트 회고</text>
+</g>
+<g stroke="#333" stroke-width="2" fill="none">
+<line x1="200" y1="64" x2="200" y2="94" marker-end="url(#sa)"/>
+<line x1="200" y1="136" x2="200" y2="166" marker-end="url(#sa)"/>
+<line x1="200" y1="214" x2="200" y2="226" marker-end="url(#sa)"/>
+<line x1="200" y1="316" x2="200" y2="328" marker-end="url(#sa)"/>
+<line x1="160" y1="376" x2="120" y2="408" marker-end="url(#sa)"/>
+<line x1="190" y1="430" x2="208" y2="430" marker-end="url(#sa)"/>
+<line x1="244" y1="272" x2="290" y2="262"/>
+<path d="M380,430 Q395,430 395,250 Q395,41 292,41" stroke-dasharray="6 4" marker-end="url(#sa)"/>
+</g>
+<text x="375" y="155" font-size="14" fill="#555" text-anchor="end">다음 스프린트</text>
+</svg><figcaption>스크럼 한 사이클. 노란 칸 = 산출물 3개, 파란 칸·원 = 이벤트 5개(스프린트가 나머지 4개를 담는 그릇)</figcaption></figure>
+
+<h3>① 역할 3가지</h3>
+<table>
+<tr><th>역할</th><th>핵심 책임</th><th>시험 함정</th></tr>
+<tr><td><b>제품 책임자 (PO, Product Owner)</b></td><td>제품 가치 극대화. <b>제품 백로그 항목 작성·우선순위(순서) 결정</b>, 이해관계자 요구 대표</td><td>한 사람(위원회 아님). <b>스프린트 취소 권한은 PO만</b></td></tr>
+<tr><td><b>스크럼 마스터 (SM)</b></td><td>스크럼이 잘 돌아가게 <b>촉진·코칭</b>, <b>장애물 제거</b>, 이벤트 타임박스 유지. 섬기는 리더(Servant Leader)</td><td><b>프로젝트 관리자·지시자 아님</b>. 백로그 우선순위 결정자 아님</td></tr>
+<tr><td><b>개발팀 (2020 가이드: 개발자)</b></td><td><b>스프린트 백로그 작성</b>, 매 스프린트 증분 완성. 자기관리·교차기능</td><td>팀 내 하위 팀·직급 구분 없음, 보통 10명 이하(스크럼 팀 전체)</td></tr>
+</table>
+<p><small>※ Scrum Guide 2020은 “개발팀(Development Team)” 대신 “개발자(Developers)”, “역할” 대신 “책임(accountability)”이라고 써요. 수험서·기출은 “개발팀”이 많으니 둘 다 같은 대상으로 보면 돼요.</small></p>
+
+<h3>② 산출물 3가지 (+ 각 산출물의 약속)</h3>
+<table>
+<tr><th>산출물 (누가)</th><th>내용</th><th>약속</th></tr>
+<tr><td><b>제품 백로그</b><br><small>PO</small></td><td>제품에 필요한 모든 항목(사용자 스토리 등)의 <b>순서 있는 목록</b></td><td>제품 목표</td></tr>
+<tr><td><b>스프린트 백로그</b><br><small>개발자</small></td><td>이번 스프린트에서 할 항목 + 실행 계획</td><td>스프린트 목표</td></tr>
+<tr><td><b>증분</b> (Increment)<br><small>스크럼 팀</small></td><td>스프린트 결과 <b>사용 가능한</b> 제품 조각</td><td>완료 정의 (DoD)</td></tr>
+</table>
+
+<h3>③ 이벤트 5가지 (타임박스는 1개월 스프린트 기준 최대치)</h3>
+<table>
+<tr><th>이벤트</th><th>타임박스</th><th>목적</th></tr>
+<tr><td><b>스프린트</b></td><td>1개월 이하 고정 길이</td><td>나머지 4개 이벤트를 담는 그릇. 끝나면 바로 다음 스프린트</td></tr>
+<tr><td><b>스프린트 계획</b></td><td>최대 8시간</td><td>왜(스프린트 목표)·무엇(백로그 선택)·어떻게(작업 계획)</td></tr>
+<tr><td><b>일일 스크럼</b></td><td><b>15분</b></td><td>개발자가 스프린트 목표 진척 점검·<b>다음 24시간 계획 조정</b></td></tr>
+<tr><td><b>스프린트 리뷰</b></td><td>최대 4시간</td><td>이해관계자와 결과(증분) 검사 → 제품 백로그 조정</td></tr>
+<tr><td><b>스프린트 회고</b></td><td>최대 3시간</td><td>팀의 일하는 방식(사람·프로세스·도구) 개선</td></tr>
+</table>
+<div class="vs">
+<div><b>스프린트 리뷰</b><b>무엇을</b> 만들었나<br>이해관계자와 <b>제품</b>을 검사<br>순서: 회고보다 먼저</div>
+<div><b>스프린트 회고</b><b>어떻게</b> 일했나<br>팀이 <b>프로세스</b>를 개선<br>순서: 스프린트의 마지막</div>
+</div>
+<p><small>※ 백로그 정제(refinement)는 공식 이벤트가 아니라 수시로 하는 활동이에요.</small></p>
+
+<h3>번다운 차트 — 진척 시각화 도구</h3>
+<figure><svg viewBox="0 0 400 250" font-family="sans-serif">
+<rect width="400" height="250" rx="12" fill="#f7f7f4"/>
+<g stroke="#555" stroke-width="1.5">
+<line x1="60" y1="30" x2="60" y2="200"/>
+<line x1="60" y1="200" x2="380" y2="200"/>
+</g>
+<line x1="60" y1="40" x2="370" y2="200" stroke="#888" stroke-width="2" stroke-dasharray="7 5"/>
+<polyline points="60,40 91,40 122,62 153,70 184,70 215,104 246,124 277,140 308,152 339,180 370,200" fill="none" stroke="#2f5bd3" stroke-width="3"/>
+<g fill="#222" font-size="14">
+<text x="14" y="44">남은</text><text x="14" y="62">작업</text>
+<text x="300" y="225">시간(일) →</text>
+<text x="150" y="135" fill="#555">이상선</text>
+<text x="125" y="40" fill="#2f5bd3" font-weight="700">실제</text>
+</g>
+</svg><figcaption>세로축 = 남은 작업량, 가로축 = 시간. 실제선이 이상선 위에 있으면 늦어지는 중. 오른쪽 아래로 “타고 내려가서(burn down)” 0이 되면 완료</figcaption></figure>
+<p><small>※ 수험서에선 스크럼 도구로 함께 나오지만, Scrum Guide 2020에서는 번다운·번업 차트를 공식 산출물이 아닌 “예측 실천의 예”로만 언급해요. 공식 3산출물은 위 표의 3개예요.</small></p>
+
+<div class="memo"><b>3·3·5</b> — 역할 3(PO·SM·개발팀), 산출물 3(제품 백로그·스프린트 백로그·증분), 이벤트 5(스프린트·계획·일일·리뷰·회고)<br>스크럼 3기둥 <b>투검적</b> — 투명성 · 검사 · 적응<br>스크럼 5가치 — 확약 · 집중 · 개방성 · 존중 · 용기</div>
+<div class="trap">
+<ul>
+<li>“스크럼 마스터 = 프로젝트 관리자(PM)” ✕ — 지시·통제하지 않고 촉진·코칭해요.</li>
+<li>“제품 백로그 우선순위는 스크럼 마스터가 정한다” ✕ — <b>PO</b>예요.</li>
+<li>“일일 스크럼은 관리자에게 진행 상황을 보고하는 회의” ✕ — 개발자들이 스스로 계획을 조정하는 15분 이벤트예요.</li>
+</ul>
+</div>
+
+<h2>5. XP (eXtreme Programming)</h2>
+<p>켄트 벡이 정리한 방법으로, 스크럼이 “어떻게 관리할까”라면 XP는 “<b>어떻게 코딩할까</b>”에 집중해요. 짧은 릴리스와 고객 상시 참여로 피드백을 극단적으로(eXtreme) 자주 받는 게 핵심이에요.</p>
+<h3>5가치</h3>
+<div class="grid">
+<div><b>의사소통</b>Communication</div>
+<div><b>단순성</b>Simplicity</div>
+<div><b>피드백</b>Feedback</div>
+<div><b>용기</b>Courage</div>
+<div><b>존중</b>Respect</div>
+</div>
+<div class="memo"><b>의단피용존</b> — 의사소통 · 단순성 · 피드백 · 용기 · 존중</div>
+<p><small>※ XP 초판(1999)은 존중을 뺀 4가치, 2판(2004)에서 존중이 추가됐어요. 시험은 5가치 기준이에요.</small></p>
+
+<h3>대표 실천</h3>
+<table>
+<tr><th>묶음</th><th>실천</th><th>한 줄 뜻</th></tr>
+<tr><td rowspan="3">계획</td><td><b>사용자 스토리</b></td><td>고객이 쓰는 짧은 요구 카드</td></tr>
+<tr><td><b>작은 릴리스</b></td><td>짧은 주기로 자주 배포</td></tr>
+<tr><td><b>고객 상시 참여</b></td><td>고객이 팀과 함께 있으며 바로 답함</td></tr>
+<tr><td rowspan="3">설계</td><td><b>단순한 설계</b></td><td>지금 필요한 만큼만</td></tr>
+<tr><td><b>리팩토링</b></td><td>기능은 그대로, 내부 구조 개선</td></tr>
+<tr><td><b>메타포 · 스파이크</b></td><td>공통 비유로 구조 공유 / 불확실한 기술을 짧게 시험 구현</td></tr>
+<tr><td rowspan="5">코딩</td><td><b>짝 프로그래밍</b></td><td>두 명이 한 컴퓨터로 함께 코딩</td></tr>
+<tr><td><b>테스트 먼저 (TDD)</b></td><td>테스트를 먼저 작성하고 통과하는 코드를 씀</td></tr>
+<tr><td><b>지속적 통합 (CI)</b></td><td>하루에도 여러 번 통합·빌드·테스트</td></tr>
+<tr><td><b>공동 코드 소유</b></td><td>누구나 어떤 코드든 고칠 수 있음</td></tr>
+<tr><td><b>코딩 표준</b></td><td>팀 공통 코딩 규칙</td></tr>
+<tr><td>관리</td><td><b>지속 가능한 속도</b></td><td>야근 없는 일정한 속도(옛 표현: <b>주 40시간 근무</b>)</td></tr>
+</table>
+<div class="vs">
+<div><b>스크럼</b>관리 프레임워크<br>역할·이벤트·산출물 규정<br>개발 기법은 규정 안 함</div>
+<div><b>XP</b>개발 실천 중심<br>짝 프로그래밍·TDD·CI·리팩토링<br>스크럼과 함께 쓰기도 함</div>
+</div>
+<div class="trap">“짝 프로그래밍”, “테스트 주도 개발”, “주 40시간”이 보이면 스크럼이 아니라 <b>XP</b>예요.</div>
+
+<h2>6. 칸반 (Kanban)</h2>
+<p>도요타 생산 방식의 “간판(看板)”에서 온 방법이에요. 작업을 보드에 카드로 붙여 <b>시각화</b>하고, 진행 중(WIP, Work In Progress) 작업 수를 <b>제한</b>해서, 앞 칸이 비어야 다음 작업을 <b>당겨오는(Pull)</b> 방식으로 흐름을 관리해요.</p>
+<figure><svg viewBox="0 0 400 290" font-family="sans-serif">
+<defs><marker id="ka" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c26a00"/></marker></defs>
+<rect width="400" height="290" rx="12" fill="#f7f7f4"/>
+<g fill="#fff" stroke="#555" stroke-width="1.5">
+<rect x="12" y="14" width="118" height="262" rx="6"/>
+<rect x="141" y="14" width="118" height="262" rx="6"/>
+<rect x="270" y="14" width="118" height="262" rx="6"/>
+</g>
+<g fill="#222" font-size="15" font-weight="700" text-anchor="middle">
+<text x="71" y="38">할 일</text>
+<text x="200" y="38">진행 중</text>
+<text x="329" y="38">완료</text>
+</g>
+<text x="200" y="58" font-size="14" fill="#c00" text-anchor="middle" font-weight="700">WIP 제한 3 (꽉 참)</text>
+<g stroke="#333" stroke-width="1">
+<rect x="24" y="70" width="94" height="34" rx="4" fill="#fff4d6"/>
+<rect x="24" y="112" width="94" height="34" rx="4" fill="#fff4d6"/>
+<rect x="24" y="154" width="94" height="34" rx="4" fill="#fff4d6"/>
+<rect x="153" y="70" width="94" height="34" rx="4" fill="#e6efff"/>
+<rect x="153" y="112" width="94" height="34" rx="4" fill="#e6efff"/>
+<rect x="153" y="154" width="94" height="34" rx="4" fill="#e6efff"/>
+<rect x="282" y="70" width="94" height="34" rx="4" fill="#e3f4e1"/>
+<rect x="282" y="112" width="94" height="34" rx="4" fill="#e3f4e1"/>
+</g>
+<g fill="#222" font-size="14" text-anchor="middle">
+<text x="71" y="92">기능 F</text><text x="71" y="134">기능 G</text><text x="71" y="176">기능 H</text>
+<text x="200" y="92">기능 C</text><text x="200" y="134">기능 D</text><text x="200" y="176">기능 E</text>
+<text x="329" y="92">기능 A</text><text x="329" y="134">기능 B</text>
+</g>
+<g stroke="#c26a00" stroke-width="2.5" fill="none">
+<path d="M200,190 Q200,232 290,232" marker-end="url(#ka)"/>
+<path d="M118,250 Q140,262 160,250" marker-end="url(#ka)"/>
+</g>
+<g fill="#c26a00" font-size="14" text-anchor="middle">
+<text x="329" y="264">① 하나 끝나면</text>
+<text x="71" y="230">② 빈자리에</text><text x="71" y="248">F를 당겨옴</text>
+</g>
+</svg><figcaption>칸반 보드. ‘진행 중’이 WIP 제한(3)에 걸려 있어 새 일을 밀어 넣지 못하고, 하나가 완료돼 자리가 나야 다음 일을 당겨와요(Pull)</figcaption></figure>
+<div class="vs">
+<div><b>스크럼</b><b>고정 길이 스프린트</b>(≤1개월) 단위로 계획·약속<br>PO·SM·개발팀 역할 정의<br>스프린트 중간 범위 변경 최소화</div>
+<div><b>칸반</b><b>고정 주기 없음</b>, 연속 흐름<br>정해진 역할 없음, <b>WIP 제한</b>으로 병목 관리<br>기존 프로세스 위에 그대로 얹어 시작</div>
+</div>
+<div class="memo"><b>칸반 = 보WIP풀</b> — 보드 시각화 · WIP 제한 · Pull. “진행 중 작업 수 제한”이 보이면 칸반.</div>
+<p><small>※ Kanban University 가이드는 칸반을 “방법론이 아닌, 기존 프로세스 위에 적용하는 관리 방법”으로 설명해요. 시험에서는 애자일 계열 방법으로 분류해요.</small></p>
+
+<h2>7. 시험 포인트 정리</h2>
+<div class="point">
+<ul>
+<li>선언 4가치: 더 중시 = <b>사작고변</b>(개인·상호작용 / 작동하는 SW / 고객 협력 / 변화 대응). 뒤집은 선지 주의</li>
+<li>스크럼 <b>3·3·5</b>. 백로그 순서 = <b>PO</b>, 촉진·장애 제거 = <b>SM</b>, 스프린트 백로그 = <b>개발팀(개발자)</b></li>
+<li>일일 스크럼 <b>15분</b>, 스프린트 <b>1개월 이하</b>. 리뷰 = 제품(무엇), 회고 = 프로세스(어떻게)</li>
+<li>XP 5가치 <b>의단피용존</b>, 짝 프로그래밍·TDD·CI·리팩토링·주 40시간 → XP</li>
+<li>WIP 제한·시각화·Pull → <b>칸반</b>, 낭비 제거 → 린, 기능 단위 → FDD</li>
+<li>비애자일: <b>폭포수·V-모델·나선형</b></li>
+</ul>
+</div>
+<div class="memo">지난 오답 리마인드(D001-2, 10/10 재확인 예정): 이해관계자가 모여 상충 요구를 <b>합의</b> = <b>워크숍</b>. 정적 분석은 도출 기법이 아니에요.</div>
+
+<h2>확인 문제</h2>
+<ol class="quiz">
+<li>애자일 선언의 가치로 옳은 것은?<label class="opt"><input type="radio" name="D003-q1" value="1">① 포괄적인 문서보다 동작하는 소프트웨어</label><label class="opt"><input type="radio" name="D003-q1" value="2">② 변화 대응보다 계획 준수</label><label class="opt"><input type="radio" name="D003-q1" value="3">③ 고객 협력보다 계약 협상</label><label class="opt"><input type="radio" name="D003-q1" value="4">④ 개인과 상호작용보다 프로세스와 도구</label></li>
+<li>스크럼에서 제품 백로그 항목을 작성하고 우선순위(순서)를 결정할 책임이 있는 사람은?<label class="opt"><input type="radio" name="D003-q2" value="1">① 스크럼 마스터</label><label class="opt"><input type="radio" name="D003-q2" value="2">② 제품 책임자(PO)</label><label class="opt"><input type="radio" name="D003-q2" value="3">③ 개발자(개발팀)</label><label class="opt"><input type="radio" name="D003-q2" value="4">④ 이해관계자</label></li>
+</ol><div class="answer-bar" data-id="D003" data-n="2"><code></code><button type="button">답안 복사</button></div><p><small>고른 뒤 <b>답안 복사</b> → 디스코드 공부 채널에 붙여넣기 하면 돼요.</small></p>
+<p>답장: <code>정처기 D003: 1)번호 2)번호</code></p>
+<p class="meta"><a href="2026-10-04-D002.html">← D002</a>  </p>
+<script>
+document.querySelectorAll('.answer-bar').forEach(bar=>{
+  const id=bar.dataset.id,n=+bar.dataset.n,out=bar.querySelector('code'),btn=bar.querySelector('button');
+  const text=()=>'정처기 '+id+': '+Array.from({length:n},(_,i)=>{const c=document.querySelector('input[name="'+id+'-q'+(i+1)+'"]:checked');return (i+1)+')'+(c?c.value:'?')}).join(' ');
+  document.querySelectorAll('input[name^="'+id+'-q"]').forEach(r=>r.addEventListener('change',()=>{out.textContent=text()}));
+  out.textContent=text();
+  btn.addEventListener('click',async()=>{const t=text();try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}btn.textContent='복사됨 ✓';setTimeout(()=>btn.textContent='답안 복사',1500)});
+});
+</script>
+<footer>2027년 정기 기사 1회 정보처리기사 필기 준비 · 공식 범위: Q-Net 2027~2029 출제기준</footer>
+</main></body></html>
