@@ -40,26 +40,8 @@
 <div><b>구조 다이어그램</b>시스템이 <b>무엇으로 이루어졌나</b><br>시간 개념 없음 = 정적</div>
 <div><b>행위 다이어그램</b>시스템이 <b>어떻게 움직이나</b><br>시간에 따른 변화 = 동적</div>
 </div>
-<pre class="mermaid">
-flowchart LR
-  S[구조 · 정적] --> S1[클래스]
-  S --> S2[객체]
-  S --> S3[컴포넌트]
-  S --> S4[배치]
-  S --> S5[패키지]
-  S --> S6[복합 구조]
-</pre>
-<pre class="mermaid">
-flowchart LR
-  B[행위 · 동적] --> B1[유스케이스]
-  B --> B2[활동]
-  B --> B3[상태]
-  B --> I[상호작용]
-  I --> I1[시퀀스]
-  I --> I2[커뮤니케이션]
-  I --> I3[상호작용 개요]
-  I --> I4[타이밍]
-</pre>
+<figure class="mermaid"><img src="../assets/2cdafdaa021c29d3.png" alt="도식" loading="lazy"></figure>
+<figure class="mermaid"><img src="../assets/67a7e6ee6b22c724.png" alt="도식" loading="lazy"></figure>
 <div class="memo"><b>클객컴배패복</b>은 구조, 나머지는 전부 행위. 구조 6개만 외우면 분류 문제는 끝나요.</div>
 <div class="trap">유스케이스 다이어그램은 “요구사항을 정리하는 그림”이라 정적으로 착각하기 쉽지만 <b>행위</b> 다이어그램이에요.</div>
 <p><small>※ UML 2.5 명세에는 구조 쪽에 <b>프로파일 다이어그램</b>도 있어요(7종). 시험 선지는 보통 위 6종 기준으로 판단하면 돼요.</small></p>
@@ -83,39 +65,11 @@ flowchart LR
 
 <h3>시퀀스 다이어그램 — 시간 순서</h3>
 <p>세로 점선이 <b>생명선</b>(객체가 살아 있는 시간), 위에서 아래로 시간이 흘러요. 가로 화살표가 메시지, 실선은 호출이고 점선은 응답이에요.</p>
-<pre class="mermaid">
-sequenceDiagram
-  actor U as 사용자
-  participant O as 주문서비스
-  participant P as 결제서비스
-  U->>O: 주문 요청
-  activate O
-  O->>P: 결제 요청
-  activate P
-  P-->>O: 결제 승인
-  deactivate P
-  O-->>U: 주문 완료
-  deactivate O
-</pre>
+<figure class="mermaid"><img src="../assets/b2f836462e567259.png" alt="도식" loading="lazy"></figure>
 <p>시퀀스 구성요소: <span class="tag">액터</span><span class="tag">객체</span><span class="tag">생명선</span><span class="tag">활성 박스(실행)</span><span class="tag">메시지</span><span class="tag">프레임(alt·loop)</span></p>
 
 <h3>상태 다이어그램 — 이벤트에 따른 상태 변화</h3>
-<pre class="mermaid">
-stateDiagram-v2
-  state "접수" as R
-  state "결제완료" as P
-  state "배송중" as S
-  state "배송완료" as D
-  state "취소" as C
-  [*] --> R
-  R --> P : 결제
-  P --> S : 출고
-  S --> D : 도착
-  R --> C : 취소 요청
-  P --> C : 취소 요청
-  D --> [*]
-  C --> [*]
-</pre>
+<figure class="mermaid"><img src="../assets/2208784193013201.png" alt="도식" loading="lazy"></figure>
 <p>검은 점이 시작, 테두리 있는 점이 종료예요. 화살표 위의 글자가 상태를 바꾸는 <b>이벤트</b>예요.</p>
 
 <div class="vs">
@@ -197,20 +151,8 @@ class OrderService {
 }</pre>
 
 <p>Mermaid 표기로도 같은 관계를 볼 수 있어요(이름은 영어로 표기).</p>
-<pre class="mermaid">
-classDiagram
-  direction LR
-  Order "1" *-- "1..*" OrderItem : 합성
-  Computer o-- Monitor : 집합
-  Student -- Lecture : 연관
-</pre>
-<pre class="mermaid">
-classDiagram
-  direction LR
-  Animal <|-- Dog : 일반화
-  PayMethod <|.. CardPay : 실체화
-  Order ..> Coupon : 의존
-</pre>
+<figure class="mermaid"><img src="../assets/5afab017b31c5cec.png" alt="도식" loading="lazy"></figure>
+<figure class="mermaid"><img src="../assets/a9b76e0ac97fe6c1.png" alt="도식" loading="lazy"></figure>
 
 <div class="memo"><b>빈 마름모 = 빈 관계</b>(헤어져도 각자 산다), <b>꽉 찬 마름모 = 운명 공동체</b>(같이 죽는다). <b>점선</b>은 약하거나(의존) 약속만 하는(실체화) 관계.</div>
 <div class="trap">마름모는 <b>부분 쪽이 아니라 전체 쪽</b>에 붙어요. 일반화 화살표는 <b>자식 → 부모</b>(삼각형이 부모에 닿음). 그림 문제에서 방향을 뒤집은 선지가 나와요.</div>
@@ -305,6 +247,5 @@ classDiagram
 </ol>
 <p>답장: <code>정처기 D002: 1)번호 2)번호 3)번호</code></p>
 <p class="meta"><a href="2026-10-03-D001.html">← D001</a>  </p>
-<script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";mermaid.initialize({startOnLoad:true,theme:"neutral"});</script>
 <footer>2027년 정기 기사 1회 정보처리기사 필기 준비 · 공식 범위: Q-Net 2027~2029 출제기준</footer>
 </main></body></html>
