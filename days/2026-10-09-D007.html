@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>D007 UI 표준·지침 — 요구사항과 구별, 설계 4원칙·UI 유형</title>
+<link rel="stylesheet" href="../style.css"></head>
+<body><main>
+<nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a></nav>
+<h1>D007 · UI 표준·지침 — 요구사항과 구별, 설계 4원칙·UI 유형</h1><div class="meta">2026-10-09 · A2 소프트웨어 개발 &gt; 화면 설계</div><p>오늘부터 <b>A2 화면 설계</b>예요. 회사 디자인 시스템(버튼 모양·색·레이아웃 규칙)과 “이번 프로젝트 주문 조회 화면 요구”는 서로 다른 문서죠. 시험은 이 구분을 <b>UI 표준 · UI 지침 · UI 요구사항</b>이라는 말로 물어요. 여기에 단골 암기거리 세 묶음 — <b>설계 4원칙(직유학유)</b>, <b>UI 유형(CLI·GUI·NUI·OUI)</b>, <b>요구사항 확인 절차</b> — 를 붙이면 오늘 분량이에요.</p>
+<ul>
+<li><b>UI 표준</b>(전체 시스템 공통 화면 규약) · <b>UI 지침</b>(개발할 때 지킬 공통 조건·가이드라인) · <b>UI 요구사항</b>(이 시스템 사용자의 UI 요구)을 구별한다</li>
+<li>UI 설계 4원칙(직관성·유효성·학습성·유연성)을 설명을 보고 고를 수 있다</li>
+<li>UI 유형 CLI·GUI·NUI·OUI를 조작 방식으로 구별한다</li>
+<li>UI 요구사항 확인 절차(목표 정의 → 활동 사항 정의 → UI 요구사항 작성)와 작성 순서, 요구 요소 4종을 구별한다</li>
+<li>대표 UI 지침 키워드(사용자 중심·일관성·가시성·접근성·오류 안내)와 KWCAG 4원칙 이름을 알아본다</li>
+</ul>
+
+<h2>1. 큰 그림 — A2 화면 설계 지도</h2>
+<p>출제기준에서 A2 “화면 설계”는 세부항목 두 개, 세세항목 다섯 개예요. 오늘은 왼쪽 위 두 칸(<b>UI 표준</b>, <b>UI 지침</b>)을 맡고, 같은 상자에 있는 스토리보드와 아래 상자의 감성공학은 내일(D008) 몫이에요.</p>
+<figure><svg viewBox="0 0 400 300" font-family="sans-serif">
+<rect width="400" height="300" rx="12" fill="#f7f7f4"/>
+<text x="200" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">A2 화면 설계</text>
+<rect x="16" y="40" width="368" height="118" rx="10" fill="#ffffff" stroke="#2a5db0" stroke-width="2.5"/>
+<text x="200" y="64" font-size="15" font-weight="700" fill="#2a5db0" text-anchor="middle">① UI 요구사항 확인</text>
+<g stroke-width="2.5">
+<rect x="28" y="78" width="112" height="64" rx="8" fill="#e6efff" stroke="#2a5db0"/>
+<rect x="144" y="78" width="112" height="64" rx="8" fill="#e6efff" stroke="#2a5db0"/>
+<rect x="260" y="78" width="112" height="64" rx="8" fill="#ffffff" stroke="#888" stroke-dasharray="6 4"/>
+</g>
+<g font-size="15" font-weight="700" text-anchor="middle">
+<text x="84" y="106" fill="#222">UI 표준</text>
+<text x="200" y="106" fill="#222">UI 지침</text>
+<text x="316" y="106" fill="#555">스토리보드</text>
+</g>
+<g font-size="14" text-anchor="middle">
+<text x="84" y="128" fill="#2a5db0" font-weight="700">오늘 D007</text>
+<text x="200" y="128" fill="#2a5db0" font-weight="700">오늘 D007</text>
+<text x="316" y="128" fill="#555">내일 D008</text>
+</g>
+<rect x="16" y="172" width="368" height="112" rx="10" fill="#ffffff" stroke="#888" stroke-width="2"/>
+<text x="200" y="196" font-size="15" font-weight="700" fill="#555" text-anchor="middle">② UI 설계</text>
+<g stroke="#888" stroke-width="2" stroke-dasharray="6 4" fill="#ffffff">
+<rect x="28" y="208" width="166" height="62" rx="8"/>
+<rect x="206" y="208" width="166" height="62" rx="8"/>
+</g>
+<g font-size="15" font-weight="700" fill="#555" text-anchor="middle">
+<text x="111" y="234">감성공학</text>
+<text x="289" y="234">UI 설계 도구</text>
+</g>
+<g font-size="14" fill="#555" text-anchor="middle">
+<text x="111" y="256">내일 D008</text>
+<text x="289" y="256">이후 진도</text>
+</g>
+</svg><figcaption>Q-Net 2027~2029 출제기준의 A2 구조. 파란 칸이 오늘 범위예요. 표준과 지침은 <b>별개의 세세항목 두 개</b>로 나뉘어 있어요.</figcaption></figure>
+
+<h2>2. 표준 → 지침 → 요구사항, 세 문서의 관계</h2>
+<p>세 가지는 <b>범위</b>로 구별하면 쉬워요. 표준·지침은 조직·전체 시스템에 걸쳐 재사용하는 공통 규칙이고, 요구사항은 <b>이번 시스템, 이번 사용자</b> 이야기예요. UI 요구사항은 표준·지침에 <b>의거해서</b> 확인해요.</p>
+<figure><svg viewBox="0 0 400 300" font-family="sans-serif">
+<defs><marker id="d7a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker></defs>
+<rect width="400" height="300" rx="12" fill="#f7f7f4"/>
+<polygon points="16,20 384,20 352,80 48,80" fill="#e6efff" stroke="#2a5db0" stroke-width="2.5"/>
+<text x="200" y="44" font-size="15" font-weight="700" fill="#2a5db0" text-anchor="middle">UI 표준</text>
+<text x="200" y="66" font-size="14" fill="#222" text-anchor="middle">전체 시스템 공통 · 화면 구성·이동 규약</text>
+<polygon points="52,90 348,90 316,150 84,150" fill="#fff4d6" stroke="#c26a00" stroke-width="2.5"/>
+<text x="200" y="114" font-size="15" font-weight="700" fill="#c26a00" text-anchor="middle">UI 지침</text>
+<text x="200" y="136" font-size="14" fill="#222" text-anchor="middle">만들 때 꼭 지킬 공통 조건</text>
+<polygon points="88,160 312,160 280,220 120,220" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2.5"/>
+<text x="200" y="184" font-size="15" font-weight="700" fill="#2e7d32" text-anchor="middle">UI 요구사항</text>
+<text x="200" y="206" font-size="14" fill="#222" text-anchor="middle">이 시스템·이 사용자</text>
+<line x1="200" y1="224" x2="200" y2="252" stroke="#333" stroke-width="2" marker-end="url(#d7a)"/>
+<rect x="110" y="256" width="180" height="34" rx="8" fill="#ffffff" stroke="#333" stroke-width="2"/>
+<text x="200" y="278" font-size="14" font-weight="700" fill="#222" text-anchor="middle">화면 설계 · 스토리보드</text>
+<text x="388" y="150" font-size="14" fill="#444" text-anchor="end">범위 ↓</text>
+</svg><figcaption>위로 갈수록 넓고(전사·전체 시스템 공통) 오래 쓰는 규칙, 아래로 갈수록 이번 프로젝트에 한정된 요구예요. 요구사항은 위 두 층에 의거해 확인하고, 그 결과가 화면 설계·스토리보드로 이어져요.</figcaption></figure>
+<table>
+<tr><th>구분</th><th>UI 표준</th><th>UI 지침</th><th>UI 요구사항</th></tr>
+<tr><td><b>한 줄 정의</b></td><td>전체 시스템의 모든 UI에 <b>공통 적용</b>할 화면 규약</td><td>개발 과정에서 <b>꼭 지켜야 할</b> 공통 조건·가이드라인</td><td>이 시스템 사용자가 원하는 UI 기능·품질</td></tr>
+<tr><td><b>범위</b></td><td>전사·전체 시스템</td><td>전사·전체 시스템(개발 시 제약)</td><td>이 프로젝트</td></tr>
+<tr><td><b>현업 비유</b></td><td>모든 화면 상단 GNB, 버튼 위치, 화면 이동 규칙 (디자인 시스템)</td><td>오류 메시지엔 원인+해결 방법, 색만으로 정보 전달 금지</td><td>“주문 조회에서 기간 검색 결과가 3초 안에 표시”</td></tr>
+<tr><td><b>목적</b></td><td>일관된 UI → 사용성 향상</td><td>요구사항·구현 제약을 공통으로 지키게</td><td>표준·지침에 의거해 이 SW에 적용할 UI 확정</td></tr>
+<tr><td><b>시험 키워드</b></td><td>전체 공통, 화면 구성, 화면 간 이동</td><td>지켜야 할 공통 조건, 가이드라인</td><td>정황 시나리오, 요구 요소</td></tr>
+</table>
+<div class="memo"><b>표준 = 통일할 규약, 지침 = 지킬 조건, 요구 = 이번 사용자의 바람</b>. 선지에 “화면 구성 · 화면 간 이동 · 모든 화면 공통”이 보이면 표준.</div>
+<p><small>※ 표준과 지침의 경계는 자료마다 조금 흐릿해요(지침 설명에도 “공통”이 들어가요). 시험은 대개 “전체 시스템 공통의 화면 구성·이동 규약 = UI 표준” 키워드로 물으니 그 짝을 먼저 잡으세요.</small></p>
+<div class="trap">표준과 지침의 정의를 <b>서로 바꿔 놓은 선지</b>가 단골이에요. “화면 구성·이동 규약”이 지침 설명에 붙어 있으면 ✕.</div>
+
+<h2>3. UI 설계 4원칙 — 직유학유</h2>
+<table>
+<tr><th>원칙</th><th>뜻</th><th>현업 예</th><th>함정</th></tr>
+<tr><td><b>직관성</b></td><td>누구나 <b>쉽게 이해</b>하고 바로 쓸 수 있게</td><td>휴지통 아이콘 = 삭제, 설명 없이 알아봄</td><td>↔ 학습성</td></tr>
+<tr><td><b>유효성</b></td><td>사용자의 <b>목적</b>을 정확하고 완전하게 <b>달성</b>하게</td><td>결제 화면에서 결제가 끝까지 제대로 됨</td><td>빠르기 ✕<br><b>목적 달성</b></td></tr>
+<tr><td><b>학습성</b></td><td>초보도 <b>쉽게 배우고</b> 기억하게</td><td>한 번 써 보면 다음에도 같은 위치·흐름</td><td>↔ 직관성</td></tr>
+<tr><td><b>유연성</b></td><td>다양한 사용자·조작을 <b>최대한 포용</b>하고 <b>실수를 막아</b> 줌</td><td>단축키·마우스 모두 지원, 삭제 전 확인·되돌리기</td><td>커스터마이징만 ✕</td></tr>
+</table>
+<div class="memo"><b>직유학유 = 이해 · 달성 · 배움 · 포용</b>. “실수 방지·오류 최소화·초보~숙련자 모두” → <b>유연성</b>.</div>
+<div class="trap"><b>직관성 ↔ 학습성</b>: “처음 봐도 바로 안다” = 직관성, “쉽게 배워 익힌다” = 학습성. 두 정의를 바꾼 선지를 조심하세요.</div>
+<p><small>※ 유효성의 영어를 effectiveness(목적 달성)로 쓰는 자료가 많지만 efficiency(효율)로 적은 자료도 있어요. 시험 문구는 “목적을 정확·완벽하게 달성”이 일반적이에요.</small></p>
+
+<h2>4. UI 유형 — 무엇으로 조작하나</h2>
+<figure><svg viewBox="0 0 400 230" font-family="sans-serif">
+<defs><marker id="d7b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2a5db0"/></marker></defs>
+<rect width="400" height="230" rx="12" fill="#f7f7f4"/>
+<line x1="20" y1="24" x2="384" y2="24" stroke="#2a5db0" stroke-width="2.5" marker-end="url(#d7b)"/>
+<text x="200" y="46" font-size="14" fill="#2a5db0" text-anchor="middle">사람에게 더 자연스럽게 →</text>
+<g stroke="#333" stroke-width="2" fill="#ffffff">
+<rect x="12" y="60" width="86" height="150" rx="8"/>
+<rect x="108" y="60" width="86" height="150" rx="8"/>
+<rect x="204" y="60" width="86" height="150" rx="8"/>
+<rect x="300" y="60" width="86" height="150" rx="8"/>
+</g>
+<rect x="24" y="76" width="62" height="40" rx="4" fill="#222"/>
+<text x="55" y="101" font-size="14" fill="#7CFC00" text-anchor="middle" font-family="monospace">$ ls_</text>
+<rect x="120" y="76" width="62" height="40" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/>
+<rect x="126" y="84" width="16" height="12" fill="#2a5db0"/>
+<rect x="148" y="84" width="16" height="12" fill="#c26a00"/>
+<path d="M166,100 L166,114 L170,110 L174,116 L176,115 L172,109 L178,109 z" fill="#222"/>
+<rect x="228" y="72" width="38" height="50" rx="6" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+<g stroke="#2e7d32" stroke-width="2.5" fill="none"><path d="M240,98 l-6,-6 M254,98 l6,-6"/></g>
+<circle cx="247" cy="100" r="3" fill="#2e7d32"/>
+<circle cx="343" cy="96" r="20" fill="#fff4d6" stroke="#c26a00" stroke-width="2.5"/>
+<rect x="335" y="70" width="16" height="8" fill="#c26a00"/>
+<rect x="335" y="114" width="16" height="8" fill="#c26a00"/>
+<text x="343" y="101" font-size="14" fill="#c26a00" text-anchor="middle">♥72</text>
+<g font-size="15" font-weight="700" fill="#222" text-anchor="middle">
+<text x="55" y="146">CLI</text>
+<text x="151" y="146">GUI</text>
+<text x="247" y="146">NUI</text>
+<text x="343" y="146">OUI</text>
+</g>
+<g font-size="14" fill="#444" text-anchor="middle">
+<text x="55" y="172">텍스트</text>
+<text x="55" y="192">명령어</text>
+<text x="151" y="172">아이콘·창</text>
+<text x="151" y="192">마우스</text>
+<text x="247" y="172">터치·</text>
+<text x="247" y="192">제스처·음성</text>
+<text x="343" y="172">사물 자체가</text>
+<text x="343" y="192">입출력</text>
+</g>
+</svg><figcaption>왼쪽에서 오른쪽으로 갈수록 사람이 기계 문법을 배우는 대신, 기계가 사람의 자연스러운 행동을 받아들여요. OUI 그림은 몸에 차는 웨어러블(심박 표시)을 예로 든 것이에요.</figcaption></figure>
+<table>
+<tr><th>유형</th><th>풀이</th><th>조작 방식</th><th>예</th></tr>
+<tr><td><b>CLI</b></td><td>Command Line Interface</td><td>키보드로 <b>텍스트 명령어</b> 입력</td><td>터미널, DOS</td></tr>
+<tr><td><b>GUI</b></td><td>Graphical User Interface</td><td><b>아이콘·창·메뉴</b>를 마우스로</td><td>Windows, macOS 데스크톱</td></tr>
+<tr><td><b>NUI</b></td><td>Natural User Interface</td><td>사람의 <b>자연스러운 몸짓</b>: 터치·제스처·음성</td><td>핀치 줌, 스와이프</td></tr>
+<tr><td><b>OUI</b></td><td>Organic User Interface</td><td><b>사물 자체</b>가 입출력 장치가 되는 유기적 UI</td><td>웨어러블, IoT 기기 표면</td></tr>
+</table>
+<div class="point"><b>기출 포인트</b>: “터치·제스처 등 신체의 자연스러운 동작으로 조작” → <b>NUI</b>. GUI와 NUI를 섞은 선지가 자주 나와요.</div>
+<p><small>※ 음성만 따로 떼어 VUI(Voice UI)라고 부르기도 하지만, 수험 자료는 대개 NUI 안에 포함해요.</small></p>
+
+<h2>5. UI 요구사항 확인 절차</h2>
+<p>큰 순서는 세 단계예요. 이름이 모두 평범해서 <b>순서</b>를 묻는 문제로 나와요.</p>
+<div class="flow"><div><b>① 목표 정의</b>인터뷰로 비즈니스 요구·목표 정의</div><div class="arrow">→</div><div><b>② 활동 사항 정의</b>비전 일치·예산·일정·우선순위</div><div class="arrow">→</div><div><b>③ UI 요구사항 작성</b>실사용자 중심으로 작성</div></div>
+<p>③ 안쪽도 다시 세 단계예요.</p>
+<div class="flow"><div><b>요구사항 요소 확인</b>무엇을 담을지</div><div class="arrow">→</div><div><b>정황 시나리오 작성</b>육하원칙, 초기 시나리오</div><div class="arrow">→</div><div><b>요구사항 작성</b>시나리오에서 요구 도출</div></div>
+<p><b>정황 시나리오</b>는 “누가 언제 어디서 무엇을 왜 어떻게 쓰는가”를 이야기처럼 적은 초기 시나리오예요. 유저 스토리의 서술형 버전이라고 보면 돼요. 확인할 <b>요구사항 요소</b>는 네 가지예요.</p>
+<div class="grid">
+<div><b>데이터 요구</b>화면이 다룰 데이터·속성 (예: 주문번호·일자·금액)</div>
+<div><b>기능 요구</b>사용자가 하려는 일, 동사형 (조회한다·취소한다)</div>
+<div><b>제품·서비스 품질</b>사용성·응답 시간 같은 품질, 감성 품질 포함</div>
+<div><b>제약사항</b>기한·비용·규제·기술 환경</div>
+</div>
+<div class="memo"><b>목·활·작</b> — 목표 정의 → 활동 사항 정의 → 작성. 작성 안에서는 <b>요소 → 시나리오 → 작성</b>.</div>
+<div class="trap">“화면 결과가 3초 안에 표시” 같은 시간·성능 조건은 <b>비기능</b> 요구사항이에요(품질 요구). “조회할 수 있다”처럼 동작을 말하면 기능 요구.</div>
+<p><small>※ UI 품질 요구는 ISO/IEC 9126의 6특성(기능성·신뢰성·사용성·효율성·유지보수성·이식성)으로 정리하는 자료가 많아요. 후속 표준 ISO/IEC 25010은 특성이 8개(2011판)로 늘었어요. 품질 특성 자체는 뒤 과목에서 자세히 다뤄요.</small></p>
+
+<h2>6. 대표 UI 지침과 웹 접근성</h2>
+<p>“UI 설계 지침”으로 자주 나오는 키워드예요. 기출에서는 이 중 하나를 살짝 비튼 선지가 정답(옳지 않은 것)이 돼요.</p>
+<div class="grid">
+<div><b>사용자 중심</b>개발자가 아니라 실사용자 기준으로</div>
+<div><b>일관성</b>버튼·용어·조작 방식이 화면마다 같게</div>
+<div><b>가시성</b>주요 기능을 메인 화면에 노출, 바로 찾게</div>
+<div><b>접근성</b>나이·장애·환경과 관계없이 쓸 수 있게</div>
+<div><b>오류 안내</b>이해하기 쉬운 메시지 + 복구 방법, 색·소리로 보조</div>
+<div><b>피드백</b>조작 결과·진행 상태를 즉시 알려 줌</div>
+</div>
+<div class="trap"><b>“심미성을 사용성보다 우선”</b>은 틀린 선지예요. UI 설계에서 우선은 언제나 <b>사용성</b>. 또, 오류 메시지를 “전문 용어로 정확히만” 쓰라는 선지도 ✕ — 사용자가 이해하고 복구할 수 있어야 해요.</div>
+<p><b>웹 접근성</b>은 한국형 웹 콘텐츠 접근성 지침(<b>KWCAG</b>)이 기준이에요. 4원칙 이름만 확실히 잡아 두세요.</p>
+<table>
+<tr><th>KWCAG 원칙</th><th>뜻</th><th>예</th></tr>
+<tr><td><b>인식의 용이성</b></td><td>모든 콘텐츠를 사용자가 인식할 수 있게</td><td>이미지 대체 텍스트, 자막</td></tr>
+<tr><td><b>운용의 용이성</b></td><td>UI 구성요소를 조작·이동할 수 있게</td><td>키보드만으로 조작</td></tr>
+<tr><td><b>이해의 용이성</b></td><td>콘텐츠와 조작법을 이해할 수 있게</td><td>명확한 입력 오류 안내</td></tr>
+<tr><td><b>견고성</b></td><td>여러 브라우저·보조기술에서도 동작</td><td>표준 마크업</td></tr>
+</table>
+<div class="memo"><b>인운이견</b> — 인식·운용·이해·견고. W3C WCAG의 POUR(Perceivable · Operable · Understandable · Robust)와 같은 구조예요.</div>
+<p><small>※ KWCAG 2.2(2022-12 개정) 기준 4원칙 · 14지침 · 33검사항목이에요. 지침 개수는 버전마다 달라 원칙 이름 위주로 기억하세요.</small></p>
+
+<h2>7. 시험 포인트 정리</h2>
+<div class="point">
+<ul>
+<li>“전체 시스템 공통 · 화면 구성 · 화면 간 이동 규약” → <b>UI 표준</b></li>
+<li>“개발 과정에서 꼭 지켜야 할 공통 조건” → <b>UI 지침</b>. 요구사항은 표준·지침에 <b>의거해</b> 확인</li>
+<li>설계 4원칙 <b>직유학유</b>: 이해(직관) · 목적 달성(유효) · 배움(학습) · 포용·실수 방지(유연)</li>
+<li>터치·제스처 → <b>NUI</b>, 텍스트 명령 → CLI, 아이콘·마우스 → GUI, 사물 자체 → OUI</li>
+<li>확인 절차 <b>목표 정의 → 활동 사항 정의 → UI 요구사항 작성</b>(요소 확인 → 정황 시나리오 → 작성)</li>
+<li>지침: 사용성 우선(심미성 우선 ✕), 오류 메시지는 이해 쉽게 + 복구 방법, 피드백</li>
+<li>KWCAG 4원칙 <b>인운이견</b></li>
+</ul>
+</div>
+
+<h2>8. 오답 복습 (짧게)</h2>
+<p>오늘 예정된 D+1·D+7·D+21 재확인은 없어요. 대신 이번 주 오답 두 개를 한 줄씩 다시 봐요.</p>
+<div class="memo"><b>OMT</b>: 객체 모델 = 객체 다이어그램, 동적 모델 = 상태 다이어그램, <b>기능 모델 = DFD</b> (흐르면 DFD). <b>부정형</b>: 질문 끝 “아닌·옳지 않은”에 먼저 동그라미.</div>
+<p>어제 <a href="2026-10-08-D006.html">D006</a> 답장을 아직 안 보냈다면 오늘 것과 함께 보내 주세요.</p>
+
+<h2>확인 문제</h2>
+<ol class="quiz">
+<li>전체 시스템의 모든 화면에 공통으로 적용하도록 화면 구성 방식과 화면 간 이동 방법 등을 정해 둔 규약은?<label class="opt"><input type="radio" name="D007-q1" value="1">① UI 지침</label><label class="opt"><input type="radio" name="D007-q1" value="2">② UI 표준</label><label class="opt"><input type="radio" name="D007-q1" value="3">③ UI 요구사항</label><label class="opt"><input type="radio" name="D007-q1" value="4">④ 정황 시나리오</label></li>
+<li>“초보자부터 숙련자까지 다양한 조작 방식을 받아들이고, 사용자의 실수를 막아 오류를 줄이도록 설계한다”에 해당하는 UI 설계 원칙은?<label class="opt"><input type="radio" name="D007-q2" value="1">① 직관성</label><label class="opt"><input type="radio" name="D007-q2" value="2">② 유효성</label><label class="opt"><input type="radio" name="D007-q2" value="3">③ 학습성</label><label class="opt"><input type="radio" name="D007-q2" value="4">④ 유연성</label></li>
+<li>스마트폰에서 두 손가락을 벌려 사진을 확대하는 것처럼, 사람의 자연스러운 몸동작으로 기기를 조작하는 UI 유형은?<label class="opt"><input type="radio" name="D007-q3" value="1">① CLI</label><label class="opt"><input type="radio" name="D007-q3" value="2">② GUI</label><label class="opt"><input type="radio" name="D007-q3" value="3">③ NUI</label><label class="opt"><input type="radio" name="D007-q3" value="4">④ OUI</label></li>
+</ol><div class="answer-bar" data-id="D007" data-n="3"><code></code><button type="button">답안 복사</button></div><p><small>고른 뒤 <b>답안 복사</b> → 디스코드 공부 채널에 붙여넣기 하면 돼요.</small></p>
+<p>답장: <code>정처기 D007: 1)번호 2)번호 3)번호</code></p>
+<p class="meta"><a href="2026-10-08-D006.html">← D006</a>  </p>
+<script>
+document.querySelectorAll('.answer-bar').forEach(bar=>{
+  const id=bar.dataset.id,n=+bar.dataset.n,out=bar.querySelector('code'),btn=bar.querySelector('button');
+  const text=()=>'정처기 '+id+': '+Array.from({length:n},(_,i)=>{const c=document.querySelector('input[name="'+id+'-q'+(i+1)+'"]:checked');return (i+1)+')'+(c?c.value:'?')}).join(' ');
+  document.querySelectorAll('input[name^="'+id+'-q"]').forEach(r=>r.addEventListener('change',()=>{out.textContent=text()}));
+  out.textContent=text();
+  btn.addEventListener('click',async()=>{const t=text();try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}btn.textContent='복사됨 ✓';setTimeout(()=>btn.textContent='답안 복사',1500)});
+});
+</script>
+<footer>2027년 정기 기사 1회 정보처리기사 필기 준비 · 공식 범위: Q-Net 2027~2029 출제기준</footer>
+</main></body></html>
