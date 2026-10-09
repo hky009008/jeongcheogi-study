@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>D008 스토리보드와 UI 설계 도구 — 와이어프레임·목업·프로토타입 구별</title>
+<link rel="stylesheet" href="../style.css"></head>
+<body><main>
+<nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a></nav>
+<h1>D008 · 스토리보드와 UI 설계 도구 — 와이어프레임·목업·프로토타입 구별</h1><div class="meta">2026-10-10 · A2 소프트웨어 개발 &gt; 화면 설계</div><p>현업에서는 Figma 파일 하나에 뼈대·시안·클릭 시뮬레이션·화면 설명이 다 들어 있는 경우가 많죠. 시험은 이걸 <b>와이어프레임 · 목업 · 스토리보드 · 프로토타입 · 유스케이스</b> 다섯 이름으로 쪼개서 “이 설명은 어느 도구인가”를 물어요. 구별 축은 딱 두 개 — <b>얼마나 실물 같은가(충실도)</b>, <b>눌러서 움직이는가(동작)</b> — 이고, 스토리보드는 그 축 밖의 <b>문서</b>라는 것만 잡으면 돼요.</p>
+<ul>
+<li><b>스토리보드</b>의 정의(정책·프로세스·콘텐츠 구성·와이어프레임·기능 정의·DB 연동까지 담아 디자이너·개발자가 <b>최종 참고</b>하는 설계 문서)와 생김새(왼쪽 화면 · 오른쪽 번호별 Description · 위쪽 문서 정보)를 설명한다</li>
+<li>UI 설계 도구 5종을 <b>충실도·동작 여부·용도</b>로 구별한다 — 핵심 짝: <b>목업 = 정적, 프로토타입 = 동적</b></li>
+<li>프로토타입의 종류 <b>페이퍼 / 디지털</b>을 구별하고, 프로토타입을 쓰는 이유(사용성 테스트·조기 피드백)를 설명한다</li>
+<li>도구 순서·대표 툴은 자료마다 다르다는 것을 알고, 시험에서는 <b>정의 키워드</b>로 고른다</li>
+</ul>
+
+<h2>1. 큰 그림 — A2 지도에서 오늘 위치</h2>
+<p>어제 본 A2 지도예요. 오늘은 위 상자의 <b>스토리보드</b>와 아래 상자의 <b>UI 설계 도구</b> 두 칸이에요. 둘은 출제기준상 다른 세부항목에 있지만, 스토리보드가 UI 설계 도구 목록에도 다시 등장해서 같이 보는 게 효율적이에요.</p>
+<figure><svg viewBox="0 0 400 300" font-family="sans-serif">
+<rect width="400" height="300" rx="12" fill="#f7f7f4"/>
+<text x="200" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">A2 화면 설계</text>
+<rect x="16" y="40" width="368" height="118" rx="10" fill="#ffffff" stroke="#888" stroke-width="2"/>
+<text x="200" y="64" font-size="15" font-weight="700" fill="#555" text-anchor="middle">① UI 요구사항 확인</text>
+<g stroke-width="2.5">
+<rect x="28" y="78" width="112" height="64" rx="8" fill="#eeeeee" stroke="#999"/>
+<rect x="144" y="78" width="112" height="64" rx="8" fill="#eeeeee" stroke="#999"/>
+<rect x="260" y="78" width="112" height="64" rx="8" fill="#e6efff" stroke="#2a5db0"/>
+</g>
+<g font-size="15" font-weight="700" text-anchor="middle">
+<text x="84" y="106" fill="#555">UI 표준</text>
+<text x="200" y="106" fill="#555">UI 지침</text>
+<text x="316" y="106" fill="#222">스토리보드</text>
+</g>
+<g font-size="14" text-anchor="middle">
+<text x="84" y="128" fill="#555">D007 완료</text>
+<text x="200" y="128" fill="#555">D007 완료</text>
+<text x="316" y="128" fill="#2a5db0" font-weight="700">오늘 D008</text>
+</g>
+<rect x="16" y="172" width="368" height="112" rx="10" fill="#ffffff" stroke="#2a5db0" stroke-width="2.5"/>
+<text x="200" y="196" font-size="15" font-weight="700" fill="#2a5db0" text-anchor="middle">② UI 설계</text>
+<rect x="28" y="208" width="166" height="62" rx="8" fill="#ffffff" stroke="#888" stroke-width="2" stroke-dasharray="6 4"/>
+<rect x="206" y="208" width="166" height="62" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2.5"/>
+<g font-size="15" font-weight="700" text-anchor="middle">
+<text x="111" y="234" fill="#555">감성공학</text>
+<text x="289" y="234" fill="#222">UI 설계 도구</text>
+</g>
+<g font-size="14" text-anchor="middle">
+<text x="111" y="256" fill="#555">10/12 예정</text>
+<text x="289" y="256" fill="#2a5db0" font-weight="700">오늘 D008</text>
+</g>
+</svg><figcaption>파란 칸이 오늘 범위예요. 회색은 어제 끝낸 칸, 점선은 다음 주 월요일(10/12) 감성공학이에요.</figcaption></figure>
+
+<h2>2. 두 축으로 보는 UI 설계 도구</h2>
+<p>와이어프레임·목업·프로토타입은 같은 화면을 점점 실물에 가깝게 만든 <b>단계별 모형</b>이에요. 가로축은 충실도(lo-fi → hi-fi), 세로축은 동작 여부예요. 스토리보드는 이 모형들(주로 와이어프레임)에 <b>설명을 붙여 묶은 문서</b>라 축 바깥 테두리로 그렸고, 유스케이스는 화면이 아니라 <b>요구</b> 쪽 도구라 아래에 따로 뒀어요.</p>
+<figure><svg viewBox="0 0 400 340" font-family="sans-serif">
+<defs><marker id="d8a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker></defs>
+<rect width="400" height="340" rx="12" fill="#f7f7f4"/>
+<rect x="10" y="10" width="380" height="266" rx="12" fill="none" stroke="#7b1fa2" stroke-width="2.5" stroke-dasharray="8 5"/>
+<text x="200" y="32" font-size="15" font-weight="700" fill="#7b1fa2" text-anchor="middle">스토리보드: 화면 + 설명을 묶은 최종 문서</text>
+<line x1="56" y1="250" x2="56" y2="50" stroke="#333" stroke-width="2" marker-end="url(#d8a)"/>
+<line x1="56" y1="250" x2="380" y2="250" stroke="#333" stroke-width="2" marker-end="url(#d8a)"/>
+<g font-size="14" font-weight="700" fill="#333" text-anchor="middle">
+<text x="34" y="90">동적</text>
+<text x="34" y="214">정적</text>
+</g>
+<text x="64" y="268" font-size="14" fill="#333">충실도 낮음</text>
+<text x="376" y="268" font-size="14" fill="#333" text-anchor="end">높음 (실물 같음)</text>
+<rect x="70" y="182" width="130" height="56" rx="8" fill="#eeeeee" stroke="#777" stroke-width="2.5"/>
+<rect x="244" y="182" width="130" height="56" rx="8" fill="#fff4d6" stroke="#c26a00" stroke-width="2.5"/>
+<rect x="244" y="58" width="130" height="56" rx="8" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2.5"/>
+<g font-size="15" font-weight="700" text-anchor="middle">
+<text x="135" y="205" fill="#333">와이어프레임</text>
+<text x="309" y="205" fill="#c26a00">목업</text>
+<text x="309" y="81" fill="#2e7d32">프로토타입</text>
+</g>
+<g font-size="14" fill="#222" text-anchor="middle">
+<text x="135" y="227">뼈대 · 선과 박스</text>
+<text x="309" y="227">실물 같음 · 정적</text>
+<text x="309" y="103">클릭 · 화면 전환</text>
+</g>
+<line x1="202" y1="210" x2="240" y2="210" stroke="#333" stroke-width="2" marker-end="url(#d8a)"/>
+<line x1="309" y1="180" x2="309" y2="118" stroke="#333" stroke-width="2" marker-end="url(#d8a)"/>
+<text x="300" y="154" font-size="14" fill="#333" text-anchor="end">인터랙션 입힘</text>
+<rect x="10" y="286" width="380" height="44" rx="10" fill="#ffffff" stroke="#2a5db0" stroke-width="2"/>
+<text x="200" y="313" font-size="14" fill="#222" text-anchor="middle"><tspan font-weight="700" fill="#2a5db0">유스케이스</tspan> · 사용자 목표와 기능 요구(화면 그림 아님)</text>
+</svg><figcaption>와이어프레임 → 목업은 “보기”가 실물에 가까워지는 것, 목업 → 프로토타입은 “동작”이 생기는 것. 목업과 프로토타입은 겉모습이 같을 수 있어요.</figcaption></figure>
+
+<h2>3. 같은 로그인 화면, 세 가지 모형</h2>
+<p>세 모형의 차이를 한 화면으로 보면 이래요. ②와 ③은 <b>그림으로는 똑같아요</b>. 차이는 ③만 버튼을 누르면 다음 화면으로 넘어간다는 것 — 시험이 노리는 지점이 정확히 여기예요.</p>
+<figure><svg viewBox="0 0 400 252" font-family="sans-serif">
+<rect width="400" height="252" rx="12" fill="#f7f7f4"/>
+<g stroke-width="2">
+<rect x="12" y="14" width="116" height="178" rx="14" fill="#ffffff" stroke="#333"/>
+<rect x="142" y="14" width="116" height="178" rx="14" fill="#ffffff" stroke="#333"/>
+<rect x="272" y="14" width="116" height="178" rx="14" fill="#ffffff" stroke="#333"/>
+</g>
+<g stroke="#999" stroke-width="2" fill="#eeeeee">
+<rect x="32" y="30" width="76" height="44"/>
+<rect x="24" y="86" width="92" height="26"/>
+<rect x="24" y="120" width="92" height="26"/>
+</g>
+<line x1="32" y1="30" x2="108" y2="74" stroke="#999" stroke-width="2"/>
+<line x1="108" y1="30" x2="32" y2="74" stroke="#999" stroke-width="2"/>
+<rect x="24" y="154" width="92" height="28" rx="4" fill="#cccccc" stroke="#999" stroke-width="2"/>
+<text x="70" y="173" font-size="14" fill="#555" text-anchor="middle">버튼</text>
+<g>
+<rect x="162" y="30" width="76" height="44" rx="8" fill="#2a5db0"/>
+<text x="200" y="57" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">LOGO</text>
+<rect x="154" y="86" width="92" height="26" rx="4" fill="#ffffff" stroke="#2a5db0" stroke-width="2"/>
+<rect x="154" y="120" width="92" height="26" rx="4" fill="#ffffff" stroke="#2a5db0" stroke-width="2"/>
+<text x="162" y="104" font-size="14" fill="#888">아이디</text>
+<text x="162" y="138" font-size="14" fill="#888">비밀번호</text>
+<rect x="154" y="154" width="92" height="28" rx="6" fill="#2a5db0"/>
+<text x="200" y="173" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">로그인</text>
+</g>
+<g>
+<rect x="292" y="30" width="76" height="44" rx="8" fill="#2a5db0"/>
+<text x="330" y="57" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">LOGO</text>
+<rect x="284" y="86" width="92" height="26" rx="4" fill="#ffffff" stroke="#2a5db0" stroke-width="2"/>
+<rect x="284" y="120" width="92" height="26" rx="4" fill="#ffffff" stroke="#2a5db0" stroke-width="2"/>
+<text x="292" y="104" font-size="14" fill="#888">아이디</text>
+<text x="292" y="138" font-size="14" fill="#888">비밀번호</text>
+<rect x="284" y="154" width="92" height="28" rx="6" fill="#2a5db0"/>
+<text x="330" y="173" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">로그인</text>
+<circle cx="364" cy="168" r="11" fill="none" stroke="#2e7d32" stroke-width="3"/>
+<circle cx="364" cy="168" r="4" fill="#2e7d32"/>
+</g>
+<g font-size="14" font-weight="700" text-anchor="middle">
+<text x="70" y="214" fill="#333">① 와이어프레임</text>
+<text x="200" y="214" fill="#c26a00">② 목업</text>
+<text x="330" y="214" fill="#2e7d32">③ 프로토타입</text>
+</g>
+<g font-size="14" fill="#222" text-anchor="middle">
+<text x="70" y="238">선·박스만</text>
+<text x="200" y="238">완성처럼, 무반응</text>
+<text x="330" y="238">탭 → 다음 화면</text>
+</g>
+</svg><figcaption>①은 X 친 박스가 “이미지 들어갈 자리”라는 뜻이에요. ②는 색·로고·실제 문구가 들어간 시안, ③은 같은 시안에 터치 동작(초록 원)이 연결된 시뮬레이션이에요.</figcaption></figure>
+
+<h2>4. 5도구 비교표</h2>
+<table>
+<tr><th>도구</th><th>정의 · 주 용도</th><th>충실도 · 동작</th></tr>
+<tr><td><b>와이어프레임</b></td><td>영역·배치만 선과 박스로 잡은 뼈대 · 기획 초기 레이아웃 협의</td><td>낮음 · ✕</td></tr>
+<tr><td><b>목업</b></td><td>색·이미지·문구까지 넣어 실제 화면과 비슷한 모형(구현 안 됨) · 디자인 검토</td><td>높음 · ✕ <b>정적</b></td></tr>
+<tr><td><b>스토리보드</b></td><td>화면 + 번호별 Description으로 정책·프로세스·기능·DB 연동까지 담은 문서 · 디자이너·개발자 <b>최종 참고</b></td><td>문서 (축 밖)</td></tr>
+<tr><td><b>프로토타입</b></td><td>와이어프레임·스토리보드에 인터랙션을 입혀 동작해 보는 모형 · 사용성 테스트</td><td>높음 · ○ <b>동적</b></td></tr>
+<tr><td><b>유스케이스</b></td><td>사용자가 목표를 이루려고 시스템과 주고받는 기능 요구 · 다이어그램 → 명세서</td><td>— (화면 아님)</td></tr>
+</table>
+<div class="memo"><b>뼈대 · 시안 · 문서 · 동작 · 시나리오</b> — 와이어프레임은 뼈대, 목업은 시안, 스토리보드는 문서, 프로토타입은 동작, 유스케이스는 사용자 시나리오. 그리고 <b>“목정프동”</b>: 목업 정적, 프로토타입 동적.</div>
+<p><small>※ 도구별 시험 키워드는 9절 “시험 포인트”에 모아 뒀어요.</small></p>
+<p>유스케이스는 A1에서 본 그 <b>UML 유스케이스 다이어그램</b>(액터·유스케이스·include/extend)과 같은 개념이에요. 유스케이스 다이어그램을 그린 뒤 각 유스케이스의 흐름을 <b>유스케이스 명세서</b>로 풀어 써요. UI 설계 도구 목록에 들어 있어도 “화면을 그리는 도구”는 아니라는 점이 함정 포인트예요.</p>
+<table>
+<tr><th>도구</th><th>자주 소개되는 툴 (예시)</th></tr>
+<tr><td>와이어프레임</td><td>손그림, 파워포인트, 키노트, 스케치, 발사믹</td></tr>
+<tr><td>목업</td><td>파워 목업, 발사믹 목업</td></tr>
+<tr><td>스토리보드</td><td>파워포인트, 키노트, 스케치, Axure</td></tr>
+<tr><td>프로토타입</td><td>HTML/CSS, Axure, Flinto, 프로토나우, 카카오 오븐</td></tr>
+</table>
+<p><small>※ 툴 분류는 자료마다 섞여 있어요(발사믹은 와이어프레임 도구로도, 목업 도구로도 소개되고 Axure는 스토리보드·프로토타입 양쪽에 나와요). 툴 이름으로 정답을 고르기보다 <b>정의 키워드</b>로 고르세요.</small></p>
+
+<h2>5. 스토리보드 해부</h2>
+<p>스토리보드는 “그림”이 아니라 <b>설계서</b>예요. 실제 모양은 거의 정해져 있어요 — 위쪽에 문서 정보, 왼쪽에 화면, 오른쪽에 번호로 짝지은 설명(Description).</p>
+<figure><svg viewBox="0 0 400 360" font-family="sans-serif">
+<rect width="400" height="360" rx="12" fill="#f7f7f4"/>
+<rect x="12" y="12" width="376" height="48" rx="6" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/>
+<text x="22" y="32" font-size="14" font-weight="700" fill="#222">화면 ID LGN-001 · 화면명 로그인</text>
+<text x="22" y="52" font-size="14" fill="#333">작성자 · 작성일 · 버전 · 연결 화면</text>
+<rect x="12" y="68" width="180" height="280" rx="6" fill="#ffffff" stroke="#333" stroke-width="2"/>
+<text x="102" y="88" font-size="14" font-weight="700" fill="#555" text-anchor="middle">화면(UI) 영역</text>
+<rect x="40" y="98" width="124" height="236" rx="12" fill="#ffffff" stroke="#777" stroke-width="2"/>
+<g stroke="#999" stroke-width="2" fill="#eeeeee">
+<rect x="54" y="132" width="96" height="26"/>
+<rect x="54" y="170" width="96" height="26"/>
+</g>
+<text x="62" y="150" font-size="14" fill="#666">아이디</text>
+<text x="62" y="188" font-size="14" fill="#666">비밀번호</text>
+<rect x="54" y="214" width="96" height="28" rx="4" fill="#cccccc" stroke="#999" stroke-width="2"/>
+<text x="102" y="233" font-size="14" fill="#333" text-anchor="middle">로그인</text>
+<line x1="54" y1="268" x2="150" y2="268" stroke="#c62828" stroke-width="2" stroke-dasharray="4 3"/>
+<text x="102" y="290" font-size="14" fill="#c62828" text-anchor="middle">오류 문구</text>
+<rect x="200" y="68" width="188" height="280" rx="6" fill="#ffffff" stroke="#333" stroke-width="2"/>
+<g fill="#c62828">
+<circle cx="46" cy="132" r="11"/>
+<circle cx="46" cy="214" r="11"/>
+<circle cx="46" cy="268" r="11"/>
+<circle cx="222" cy="116" r="11"/>
+<circle cx="222" cy="176" r="11"/>
+<circle cx="222" cy="236" r="11"/>
+</g>
+<g font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">
+<text x="46" y="137">1</text>
+<text x="46" y="219">2</text>
+<text x="46" y="273">3</text>
+<text x="222" y="121">1</text>
+<text x="222" y="181">2</text>
+<text x="222" y="241">3</text>
+</g>
+<text x="294" y="90" font-size="14" font-weight="700" fill="#555" text-anchor="middle">Description</text>
+<g font-size="14" fill="#222">
+<text x="238" y="121">이메일 형식 검사,</text>
+<text x="238" y="141">빈칸이면 안내</text>
+<text x="238" y="181">회원 DB 조회 →</text>
+<text x="238" y="201">성공 시 홈 이동</text>
+<text x="238" y="241">5회 실패 시 잠금,</text>
+<text x="238" y="261">잠금 안내 표시</text>
+</g>
+<text x="294" y="306" font-size="14" fill="#7b1fa2" text-anchor="middle" font-weight="700">입력 규칙 · 분기 · 예외</text>
+<text x="294" y="328" font-size="14" fill="#7b1fa2" text-anchor="middle" font-weight="700">· DB 연동 · 정책</text>
+</svg><figcaption>화면의 빨간 번호와 오른쪽 Description 번호가 짝이에요. Description에는 화면 설명뿐 아니라 처리 로직·분기·예외·DB 조회 대상까지 적어요.</figcaption></figure>
+<p>스토리보드 한 벌에 담기는 정보는 이 여섯 가지예요. “정보가 가장 많이 실린 문서”라고 기억하면 선지에서 바로 보여요.</p>
+<div class="grid">
+<div><b>정책</b>서비스 운영 규칙 (예: 5회 실패 시 잠금)</div>
+<div><b>프로세스</b>업무·화면 흐름, 페이지 간 이동</div>
+<div><b>콘텐츠 구성</b>화면에 들어갈 내용·문구</div>
+<div><b>와이어프레임</b>화면 레이아웃(UI/UX)</div>
+<div><b>기능 정의</b>버튼·입력 처리 로직</div>
+<div><b>DB 연동</b>어떤 데이터를 조회·저장하나</div>
+</div>
+<p>현업 비유로는 <b>화면 설계서 + 기능 명세 + 예외 정책</b>을 한 문서로 합친 것이에요. SI 프로젝트에서 “화면정의서”라 부르며 개발·테스트·검수 기준으로 쓰는 문서가 바로 이 자리예요. 작성은 대체로 메뉴 구성(IA) → 화면별 레이아웃(와이어프레임) → 번호별 Description 작성 → 이해관계자 검토 순으로 진행돼요.</p>
+<div class="memo"><b>스토리보드 = 모든 정보 + 최종 참고</b>. 선지에 “디자이너와 개발자가 최종적으로 참고”, “정책·기능 정의·DB 연동”, “Description”이 보이면 스토리보드.</div>
+<p><small>※ 스토리보드에 적는 항목은 자료마다 표현이 달라요(“제목·작성자 / UI 화면 / 디스크립션”, 또는 “주제·화면 제목·화면 구성·화면 설명·연결 화면”). 버전 표기는 실무 관행이에요. 구조(화면 + 번호 설명 + 문서 정보)만 잡아 두면 충분해요.</small></p>
+
+<h2>6. 프로토타입 — 페이퍼 vs 디지털</h2>
+<p>프로토타입은 와이어프레임이나 스토리보드에 <b>인터랙션</b>을 입혀 실제 서비스처럼 눌러 보게 만든 시제품이에요. 개발 전에 사용자에게 써 보게 하고(사용성 테스트) 피드백을 일찍 반영하려고 만들어요. 만드는 방식에 따라 두 가지로 나눠요.</p>
+<div class="vs">
+<div><b>페이퍼 프로토타입</b>종이·포스트잇에 손으로 그려 사람이 직접 화면을 바꿔 가며 보여 주는 아날로그 방식</div>
+<div><b>디지털 프로토타입</b>파워포인트·Axure·HTML 등 프로그램으로 만들어 실제 기기에서 눌러 보는 방식</div>
+</div>
+<table>
+<tr><th>구분</th><th>장점</th><th>단점</th></tr>
+<tr><td><b>페이퍼</b></td><td>빠르고 비용이 거의 없음, 회의 중 바로 고쳐 그림</td><td>공유·보관·재사용이 어려움, 실제 동작 느낌이 약함</td></tr>
+<tr><td><b>디지털</b></td><td>실제와 비슷한 체험, 원격 공유·재사용·수정 이력 관리</td><td>도구 숙련과 제작 시간 필요</td></tr>
+</table>
+<p><small>※ 위 장단점은 일반적인 정리예요(이번에 수험 자료 원문과 대조하지 못했어요). 시험은 대부분 “페이퍼 = 손으로 직접, 디지털 = 프로그램 사용” 구분까지만 물어요.</small></p>
+<div class="point">프로토타입을 쓰는 이유: <b>사용성 테스트</b>, 사용자 피드백을 <b>개발 전에</b> 반영, 요구사항 오해 줄이기, 작업자(기획·디자인·개발) 간 이해 맞추기.</div>
+<div class="trap">프로토타입은 <b>완성품이 아니에요</b>. 눌러 보니 다 되는 것 같아서 “거의 다 만들었네”로 착각하면 일정·기대가 꼬여요. 시험에서도 “프로토타입 = 최종 제품”식 선지는 ✕.</div>
+
+<h2>7. 순서·위치는 자료마다 달라요</h2>
+<p>“어떤 순서로 만드나”, “무엇이 가장 정밀한가”는 수험 자료끼리도 다르게 적혀 있어요.</p>
+<table>
+<tr><th>자료 계열</th><th>설명 방식</th></tr>
+<tr><td>A</td><td>와이어프레임 → 목업 → 프로토타입 → <b>스토리보드(최종 명세)</b></td></tr>
+<tr><td>B</td><td>와이어프레임 → 스토리보드(설명 추가) → <b>프로토타입(스토리보드에 인터랙션)</b></td></tr>
+<tr><td>C</td><td>와이어프레임 → 목업 → 프로토타입은 완성도 축, 스토리보드는 <b>축 밖의 문서</b></td></tr>
+</table>
+<p>그래서 순서 자체보다 <b>모든 자료가 일치하는 네 가지</b>를 잡으세요.</p>
+<ol>
+<li><b>와이어프레임</b>이 가장 초기 단계다</li>
+<li>충실도는 <b>와이어프레임 &lt; 목업 &lt; 프로토타입</b>(동작까지 포함하면)</li>
+<li><b>목업 = 정적, 프로토타입 = 동적</b></li>
+<li><b>스토리보드</b> = 디자이너·개발자가 최종 참고하는, 정보가 가장 많은 문서</li>
+</ol>
+
+<h2>8. 단골 함정</h2>
+<div class="trap">
+<ul>
+<li>“목업은 클릭해서 화면 전환을 확인할 수 있다” → ✕ (그건 프로토타입)</li>
+<li>“와이어프레임 단계에서 색상·이미지까지 확정한다” → ✕ (선과 박스의 뼈대)</li>
+<li>“스토리보드는 화면 그림만 모은 것 / 디자인 스타일 가이드다” → ✕ (설명·정책·기능·DB까지 담은 설계서)</li>
+<li>와이어프레임과 스토리보드 정의 바꿔치기 — “디자이너·개발자가 최종 참고하는 문서 = 와이어프레임” → ✕</li>
+<li>“유스케이스는 화면 레이아웃을 그리는 도구다” → ✕ (사용자 목표·기능 요구 표현)</li>
+</ul>
+</div>
+
+<h2>9. 시험 포인트 정리</h2>
+<div class="point">
+<ul>
+<li>“정책 · 프로세스 · 기능 정의 · DB 연동 · 최종 참고 · Description” → <b>스토리보드</b></li>
+<li>“실제 화면과 유사하지만 <b>정적</b>, 실제 구현은 안 됨” → <b>목업</b></li>
+<li>“인터랙션 · <b>동적</b> · 시뮬레이션 · 사용성 테스트” → <b>프로토타입</b></li>
+<li>“뼈대 · 레이아웃 · 개략 · 기획 초기” → <b>와이어프레임</b></li>
+<li>“사용자 목표 · 기능 요구 · 다이어그램 → 명세서” → <b>유스케이스</b></li>
+<li>프로토타입 종류 = <b>페이퍼</b>(손으로) · <b>디지털</b>(프로그램으로)</li>
+<li>출제기준 위치: 스토리보드 = UI 요구사항 확인, UI 설계 도구 = UI 설계</li>
+</ul>
+</div>
+
+<h2>10. 오답 복습 — 워크숍 (D+7)</h2>
+<p>10/03 D001 2번에서 틀렸던 요구사항 도출 기법을 오늘 다시 확인해요(확인 문제 3번).</p>
+<div class="memo"><b>부딪히는 요구를 한자리에서 합의 → 워크숍</b>. 설문은 다수에게 같은 질문, 관찰은 실제 업무 행동 보기, 문서 분석은 기존 자료에서 요구 찾기 — 셋 다 “합의”를 만드는 수단은 아니에요.</div>
+<p><a href="2026-10-08-D006.html">D006</a>·<a href="2026-10-09-D007.html">D007</a> 답장이 아직이면 내일 D009 주간 복습에서 다시 나와요. 그래서 오늘 새 범위 문제는 2개로 줄였어요.</p>
+
+<h2>확인 문제</h2>
+<ol class="quiz">
+<li>디자인 검토를 위해 색·이미지·실제 문구까지 넣어 완성 화면과 거의 똑같이 만들었지만, 버튼을 눌러도 아무 반응이 없는 정적인 화면 모형은?<label class="opt"><input type="radio" name="D008-q1" value="1">① 와이어프레임</label><label class="opt"><input type="radio" name="D008-q1" value="2">② 프로토타입</label><label class="opt"><input type="radio" name="D008-q1" value="3">③ 목업</label><label class="opt"><input type="radio" name="D008-q1" value="4">④ 유스케이스</label></li>
+<li>화면 그림 옆에 번호별 설명(Description)으로 처리 로직·분기·예외 처리를 적고, 정책·기능 정의·DB 연동 정보까지 담아 디자이너와 개발자가 최종적으로 참고하는 설계 산출물은?<label class="opt"><input type="radio" name="D008-q2" value="1">① 프로토타입</label><label class="opt"><input type="radio" name="D008-q2" value="2">② 스토리보드</label><label class="opt"><input type="radio" name="D008-q2" value="3">③ 와이어프레임</label><label class="opt"><input type="radio" name="D008-q2" value="4">④ 목업</label></li>
+<li>(오답 복습) 새 결제 화면을 두고 보안팀은 추가 인증 단계를, 마케팅팀은 결제 단계 축소를 요구해 의견이 맞선다. 진행자를 두고 두 팀 대표가 한자리에 모여 쟁점을 정리하고 합의안을 만들려 할 때 알맞은 요구사항 도출 기법은?<label class="opt"><input type="radio" name="D008-q3" value="1">① 관찰</label><label class="opt"><input type="radio" name="D008-q3" value="2">② 설문</label><label class="opt"><input type="radio" name="D008-q3" value="3">③ 기존 문서 분석</label><label class="opt"><input type="radio" name="D008-q3" value="4">④ 워크숍</label></li>
+</ol><div class="answer-bar" data-id="D008" data-n="3"><code></code><button type="button">답안 복사</button></div><p><small>고른 뒤 <b>답안 복사</b> → 디스코드 공부 채널에 붙여넣기 하면 돼요.</small></p>
+<p>답장: <code>정처기 D008: 1)번호 2)번호 3)번호</code></p>
+<p class="meta"><a href="2026-10-09-D007.html">← D007</a>  </p>
+<script>
+document.querySelectorAll('.answer-bar').forEach(bar=>{
+  const id=bar.dataset.id,n=+bar.dataset.n,out=bar.querySelector('code'),btn=bar.querySelector('button');
+  const text=()=>'정처기 '+id+': '+Array.from({length:n},(_,i)=>{const c=document.querySelector('input[name="'+id+'-q'+(i+1)+'"]:checked');return (i+1)+')'+(c?c.value:'?')}).join(' ');
+  document.querySelectorAll('input[name^="'+id+'-q"]').forEach(r=>r.addEventListener('change',()=>{out.textContent=text()}));
+  out.textContent=text();
+  btn.addEventListener('click',async()=>{const t=text();try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}btn.textContent='복사됨 ✓';setTimeout(()=>btn.textContent='답안 복사',1500)});
+});
+</script>
+<footer>2027년 정기 기사 1회 정보처리기사 필기 준비 · 공식 범위: Q-Net 2027~2029 출제기준</footer>
+</main></body></html>
