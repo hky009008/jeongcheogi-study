@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>D010 감성공학 1·2·3류와 설계 모델링 — A2 마무리, A3 시작</title>
+<link rel="stylesheet" href="../style.css"></head>
+<body><main>
+<nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a></nav>
+<h1>D010 · 감성공학 1·2·3류와 설계 모델링 — A2 마무리, A3 시작</h1><div class="meta">2026-10-12 · A2·A3 소프트웨어 설계 &gt; 화면 설계 · 애플리케이션 설계</div><p><span class="tag">A2</span> <span class="tag">A3</span> 오늘로 A2(화면 설계)를 닫고 A3(애플리케이션 설계)를 열어요. 둘 다 시험에서 묻는 건 좁아요 — 감성공학은 <b>1·2·3류 키워드</b>, 설계 모델링은 <b>상위/하위 설계</b>와 공통 모듈 명세 원칙 <b>“정명완일추”</b>가 사실상 전부예요.</p>
+<ul>
+<li><b>감성공학</b>의 정의(사람의 감성을 측정·분석해 제품·UI 설계에 반영하는 인간 중심 공학)와 UI 적용 예를 설명한다</li>
+<li>감성공학 <b>1·2·3류</b>를 키워드로 구별한다 — 1류 형용사·감성 어휘 / 2류 개인·심리·문화 / 3류 공학 측정·수학 모델·생리</li>
+<li><b>A2 세세항목 5개</b>(UI 표준·UI 지침·스토리보드·감성공학·UI 설계 도구)를 한 장 요약으로 정리한다</li>
+<li><b>설계 모델링</b>(무엇을 → 어떻게, 구조/행위 모델링, 상위 설계 = 아키텍처·예비 / 하위 설계 = 모듈·상세)을 구별한다 — 자료구조 설계의 소속은 자료마다 다르다는 것도 안다</li>
+<li><b>공통 모듈 명세 원칙</b> 정확성·명확성·완전성·일관성·추적성을 정의로 구별한다</li>
+</ul>
+
+<h2>1. A2 지도 — 마지막 칸</h2>
+<figure><svg viewBox="0 0 400 300" font-family="sans-serif">
+<rect width="400" height="300" rx="12" fill="#f7f7f4"/>
+<text x="200" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">A2 화면 설계</text>
+<rect x="16" y="40" width="368" height="118" rx="10" fill="#ffffff" stroke="#888" stroke-width="2"/>
+<text x="200" y="64" font-size="15" font-weight="700" fill="#555" text-anchor="middle">① UI 요구사항 확인</text>
+<g stroke-width="2.5" fill="#eeeeee" stroke="#999">
+<rect x="28" y="78" width="112" height="64" rx="8"/>
+<rect x="144" y="78" width="112" height="64" rx="8"/>
+<rect x="260" y="78" width="112" height="64" rx="8"/>
+</g>
+<g font-size="15" font-weight="700" text-anchor="middle" fill="#555">
+<text x="84" y="106">UI 표준</text>
+<text x="200" y="106">UI 지침</text>
+<text x="316" y="106">스토리보드</text>
+</g>
+<g font-size="14" text-anchor="middle" fill="#555">
+<text x="84" y="128">✓ D007</text>
+<text x="200" y="128">✓ D007</text>
+<text x="316" y="128">✓ D008</text>
+</g>
+<rect x="16" y="172" width="368" height="112" rx="10" fill="#ffffff" stroke="#2a5db0" stroke-width="2.5"/>
+<text x="200" y="196" font-size="15" font-weight="700" fill="#2a5db0" text-anchor="middle">② UI 설계</text>
+<rect x="28" y="208" width="166" height="62" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2.5"/>
+<rect x="206" y="208" width="166" height="62" rx="8" fill="#eeeeee" stroke="#999" stroke-width="2.5"/>
+<g font-size="15" font-weight="700" text-anchor="middle">
+<text x="111" y="234" fill="#222">감성공학</text>
+<text x="289" y="234" fill="#555">UI 설계 도구</text>
+</g>
+<g font-size="14" text-anchor="middle">
+<text x="111" y="256" fill="#2a5db0" font-weight="700">오늘 D010</text>
+<text x="289" y="256" fill="#555">✓ D008</text>
+</g>
+</svg><figcaption>파란 칸이 오늘이에요. 이 칸을 끝내면 A2 다섯 칸이 모두 채워져요.</figcaption></figure>
+
+<h2>2. 감성공학이란</h2>
+<div class="point"><b>감성공학(Kansei Engineering)</b> = 사람이 제품에서 느끼는 감성(고급스럽다·답답하다·쾌적하다 …)을 <b>정성·정량적으로 측정하고 과학적으로 분석</b>해서 제품·UI 설계에 반영하는 <b>인간 중심</b> 설계 기술.</div>
+<p>현업 감각으로는 “만족도 설문·A/B 테스트·사용성 테스트로 <b>느낌을 숫자로 바꿔</b> 디자인 결정에 쓰는 것”이에요. 목적은 사용자가 <b>편리·안전·쾌적</b>하게 쓰도록 하는 것, UI에서는 HCI 설계에 감성을 반영하는 것이에요. 이름은 1988년 국제 인간공학 학회에서 붙었다고 소개돼요.</p>
+<div class="grid">
+<div><b>색·톤</b>금융 앱의 짙은 파랑 = 신뢰감</div>
+<div><b>햅틱</b>결제 완료 짧은 진동 = 확실함</div>
+<div><b>애니메이션 속도</b>너무 느리면 답답, 빠르면 경쾌</div>
+<div><b>폰트·여백</b>넓은 여백·세리프 = 고급스러움</div>
+</div>
+
+<h2>3. 감성공학 1·2·3류 — 말 · 마음 · 몸</h2>
+<p>시험에 나오는 건 거의 이 분류예요. 감성을 <b>무엇으로 붙잡느냐</b>가 다릅니다. 1류는 사람이 말로 표현한 감성, 2류는 그 사람 자체(개인·문화), 3류는 기계로 잰 몸의 반응이에요. 1류 → 3류로 갈수록 주관에서 객관으로 옮겨 가요.</p>
+<figure><svg viewBox="0 0 360 410" font-family="sans-serif">
+<defs><marker id="d10a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker></defs>
+<rect width="360" height="410" rx="12" fill="#f7f7f4"/>
+<rect x="14" y="14" width="290" height="110" rx="10" fill="#fff4d6" stroke="#c26a00" stroke-width="2.5"/>
+<text x="28" y="40" font-size="16" font-weight="700" fill="#c26a00">1류 · 말 (감성 어휘)</text>
+<rect x="28" y="52" width="140" height="34" rx="14" fill="#ffffff" stroke="#c26a00" stroke-width="2"/>
+<text x="98" y="74" font-size="14" fill="#222" text-anchor="middle">“고급스럽다”</text>
+<text x="180" y="74" font-size="14" fill="#222">→ 디자인 요소</text>
+<text x="28" y="110" font-size="14" fill="#333">형용사로 이미지 조사 → 설계에 연결</text>
+<rect x="14" y="146" width="290" height="110" rx="10" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="2.5"/>
+<text x="28" y="172" font-size="16" font-weight="700" fill="#7b1fa2">2류 · 마음 (개인·문화)</text>
+<circle cx="46" cy="202" r="10" fill="none" stroke="#7b1fa2" stroke-width="2.5"/>
+<path d="M30,232 Q46,212 62,232" fill="none" stroke="#7b1fa2" stroke-width="2.5"/>
+<circle cx="96" cy="210" r="18" fill="none" stroke="#7b1fa2" stroke-width="2"/>
+<ellipse cx="96" cy="210" rx="8" ry="18" fill="none" stroke="#7b1fa2" stroke-width="1.5"/>
+<line x1="78" y1="210" x2="114" y2="210" stroke="#7b1fa2" stroke-width="1.5"/>
+<text x="128" y="206" font-size="14" fill="#222">생활방식·개인 특성</text>
+<text x="128" y="226" font-size="14" fill="#222">문화적 감성 반영</text>
+<text x="28" y="248" font-size="14" fill="#333" font-weight="700">심리적 특성 강조</text>
+<rect x="14" y="278" width="290" height="110" rx="10" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2.5"/>
+<text x="28" y="304" font-size="16" font-weight="700" fill="#2e7d32">3류 · 몸 (공학적 측정)</text>
+<polyline points="28,350 44,340 56,352 70,322 84,346 98,334 112,344" fill="none" stroke="#2e7d32" stroke-width="2.5"/>
+<text x="124" y="334" font-size="14" fill="#222">센서로 감각 계측</text>
+<text x="124" y="354" font-size="14" fill="#222">→ 수학적 모델</text>
+<text x="28" y="378" font-size="14" fill="#333" font-weight="700">생리적 특성 강조</text>
+<line x1="330" y1="24" x2="330" y2="380" stroke="#333" stroke-width="2.5" marker-end="url(#d10a)"/>
+<text x="346" y="120" font-size="14" font-weight="700" fill="#333" text-anchor="middle">주</text>
+<text x="346" y="138" font-size="14" font-weight="700" fill="#333" text-anchor="middle">관</text>
+<text x="346" y="290" font-size="14" font-weight="700" fill="#333" text-anchor="middle">객</text>
+<text x="346" y="308" font-size="14" font-weight="700" fill="#333" text-anchor="middle">관</text>
+</svg><figcaption>1류는 말(형용사), 2류는 마음(개인·문화·심리), 3류는 몸(센서 측정·생리). 아래로 갈수록 객관적인 측정에 가까워져요.</figcaption></figure>
+<table>
+<tr><th>분류</th><th>감성을 잡는 방법</th><th>강조 특성</th><th>시험 키워드</th></tr>
+<tr><td><b>1류</b></td><td>감성 어휘(형용사)로 제품 이미지를 조사해 디자인 요소와 연결 (의미 미분법 등)</td><td>감성 이미지</td><td>형용사 · 감성 어휘 · 이미지</td></tr>
+<tr><td><b>2류</b></td><td>개인의 생활방식·특성으로 이미지를 구체화, 문화적 감성 일부 반영</td><td><b>심리적</b></td><td>개인 · 문화 · 심리</td></tr>
+<tr><td><b>3류</b></td><td>감성 어휘 <b>대신</b> 공학적으로 감각을 계측 → 수학적 모델, 물리적 특성과 객관 지표의 연관 분석</td><td><b>생리적</b></td><td>측정 · 정량 · 수학 모델 · 생리</td></tr>
+</table>
+<p><small>※ 이 1·2·3류 정리는 여러 수험 자료가 일치하는 기준이에요(분류를 제안한 연구자로 나가마치 미츠오가 소개되기도 해요). 일부 요약은 4류까지 두거나 1류를 “인터뷰 같은 질적 자료”로 설명하는 등 다르게 적어요. 시험에서는 <b>형용사 → 1류, 심리·문화 → 2류, 측정·생리 → 3류</b>로 고르면 돼요.</small></p>
+<p>감성공학을 이루는 요소 기술은 세 단계로 소개돼요.</p>
+<div class="flow"><div><b>기반 기술</b>인간 특성 파악 (생체·감각 계측, 인간공학)</div><div class="arrow">→</div><div><b>구현 기술</b>센서·디스플레이·퍼지/신경망으로 인터페이스 구현</div><div class="arrow">→</div><div><b>응용 기술</b>사용성 평가·VR로 적합성 판단, 새 감성 창출</div></div>
+<div class="memo"><b>1류 말, 2류 마음, 3류 몸</b> — 형용사는 말, 심리·문화는 마음, 생리·센서 측정은 몸.</div>
+<div class="trap">“2류 = 생리적 특성 강조”, “3류 = 심리적 특성 강조”처럼 <b>심리↔생리를 바꿔 놓은 선지</b>가 단골이에요. 또 “감성 어휘 <b>대신</b> 공학적 측정”은 이름에 어휘가 나와도 <b>3류</b>예요.</div>
+
+<h2>4. A2 한 장 요약 — 화면 설계 끝</h2>
+<table>
+<tr><th>세세항목</th><th>한 줄 정의</th><th>시험 키워드</th></tr>
+<tr><td><a href="2026-10-09-D007.html">UI 표준</a></td><td>전체 시스템에 공통으로 적용하는 화면 구성·이동 규약</td><td>전체 공통 · 규약</td></tr>
+<tr><td><a href="2026-10-09-D007.html">UI 지침</a></td><td>UI 개발 중 지켜야 할 세부 조건·원칙 (사용자 중심·일관성·가시성·접근성·오류 안내)</td><td>세부 조건 · 함께 본 설계 4원칙 직유학유</td></tr>
+<tr><td><a href="2026-10-10-D008.html">스토리보드</a></td><td>화면 + 번호별 Description, 정책·기능·DB 연동까지 담은 최종 참고 문서</td><td>최종 참고 · Description</td></tr>
+<tr><td><b>감성공학</b> (오늘)</td><td>감성을 측정·분석해 설계에 반영하는 인간 중심 공학</td><td>1류 말 · 2류 마음 · 3류 몸</td></tr>
+<tr><td><a href="2026-10-10-D008.html">UI 설계 도구</a></td><td>와이어프레임·목업·스토리보드·프로토타입·유스케이스</td><td>목업 정적 · 프로토타입 동적</td></tr>
+</table>
+
+<h2>5. A3 지도 — 이번 주 로드맵</h2>
+<p>A3 애플리케이션 설계는 세부항목 2개, 세세항목 8개예요. 오늘은 첫 칸 <b>설계 모델링</b>이고, 나머지는 이번 주에 하루씩 채워요.</p>
+<figure><svg viewBox="0 0 360 330" font-family="sans-serif">
+<rect width="360" height="330" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">A3 애플리케이션 설계</text>
+<rect x="12" y="40" width="336" height="176" rx="10" fill="#ffffff" stroke="#2a5db0" stroke-width="2.5"/>
+<text x="180" y="62" font-size="15" font-weight="700" fill="#2a5db0" text-anchor="middle">① 공통 모듈 설계</text>
+<rect x="22" y="74" width="154" height="56" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2.5"/>
+<rect x="184" y="74" width="154" height="56" rx="8" fill="#ffffff" stroke="#888" stroke-width="2" stroke-dasharray="6 4"/>
+<g font-size="15" font-weight="700" text-anchor="middle">
+<text x="99" y="98" fill="#222">설계 모델링</text>
+<text x="261" y="98" fill="#555">SW 아키텍처</text>
+</g>
+<g font-size="14" text-anchor="middle">
+<text x="99" y="119" fill="#2a5db0" font-weight="700">오늘 D010</text>
+<text x="261" y="119" fill="#555">10/13</text>
+</g>
+<g fill="#ffffff" stroke="#888" stroke-width="2" stroke-dasharray="6 4">
+<rect x="22" y="140" width="76" height="62" rx="8"/>
+<rect x="104" y="140" width="76" height="62" rx="8"/>
+<rect x="186" y="140" width="76" height="62" rx="8"/>
+<rect x="268" y="140" width="72" height="62" rx="8"/>
+</g>
+<g font-size="14" font-weight="700" fill="#555" text-anchor="middle">
+<text x="60" y="166">재사용</text>
+<text x="142" y="166">모듈화</text>
+<text x="224" y="166">결합도</text>
+<text x="304" y="166">응집도</text>
+</g>
+<g font-size="14" fill="#555" text-anchor="middle">
+<text x="60" y="188">10/14</text>
+<text x="142" y="188">10/14</text>
+<text x="224" y="188">10/14</text>
+<text x="304" y="188">10/14</text>
+</g>
+<rect x="12" y="230" width="336" height="86" rx="10" fill="#ffffff" stroke="#888" stroke-width="2"/>
+<text x="180" y="252" font-size="15" font-weight="700" fill="#555" text-anchor="middle">② 객체지향 설계</text>
+<g fill="#ffffff" stroke="#888" stroke-width="2" stroke-dasharray="6 4">
+<rect x="22" y="262" width="154" height="44" rx="8"/>
+<rect x="184" y="262" width="154" height="44" rx="8"/>
+</g>
+<g font-size="14" fill="#555" text-anchor="middle">
+<text x="99" y="289"><tspan font-weight="700">객체지향</tspan> 10/15</text>
+<text x="261" y="289"><tspan font-weight="700">디자인패턴</tspan> 10/16</text>
+</g>
+</svg><figcaption>점선 칸은 이번 주 예정이에요. 결합도·응집도는 A3에서 가장 자주 나오는 단골이라 10/14에 따로 시간을 써요.</figcaption></figure>
+
+<h2>6. 설계 모델링 — “무엇을”에서 “어떻게”로</h2>
+<p>A1에서 한 분석 모델링(DFD·OMT 등)은 <b>무엇을</b> 만들지 이해하는 그림이었어요. 설계 모델링은 그 요구를 <b>어떻게</b> 구현할지 정하는 청사진 — 소프트웨어의 내부 기능·구조·동적 행위를 모델로 표현해 분석·검증하는 작업이에요.</p>
+<div class="vs">
+<div><b>분석 모델링 (A1)</b>무엇을(What) · 요구를 이해하고 정리 · DFD, OMT, 유스케이스</div>
+<div><b>설계 모델링 (A3)</b>어떻게(How) · 구현 방법을 구체화 · 아키텍처, 모듈, 인터페이스</div>
+</div>
+<p>설계 모델링에서 지킬 원칙으로 네 가지가 소개돼요.</p>
+<div class="grid">
+<div><b>변경 용이</b>바뀌어도 고치기 쉽게 구조화</div>
+<div><b>필요한 자료만</b>주어진 기능에 필요한 자료만 사용</div>
+<div><b>독립 모듈 분할</b>독립적·기능적인 모듈 단위로 나눔</div>
+<div><b>계층 구조</b>계층적 구조를 가짐</div>
+</div>
+<p>무엇을 모델링하느냐에 따라 두 가지로 나눠요. A1에서 본 UML <b>구조(정적) / 행위(동적)</b> 다이어그램 구분과 같은 생각이에요.</p>
+<div class="vs">
+<div><b>구조 모델링</b>구성 요소와 그 관계 = 뼈대 · 프로시저, 데이터 구조, 모듈, 파일 구조 · (UML 클래스·컴포넌트처럼 정적)</div>
+<div><b>행위 모델링</b>언제·어떤 순서로 동작 · 입출력 데이터, 데이터 흐름·변환·저장 · (UML 시퀀스·상태처럼 동적)</div>
+</div>
+
+<h2>7. 상위 설계 vs 하위 설계</h2>
+<p>설계는 크게 두 층이에요. 건물로 치면 <b>배치도·평면도</b>(상위)와 <b>방별 배선·배관 상세도</b>(하위)예요.</p>
+<figure><svg viewBox="0 0 360 340" font-family="sans-serif">
+<defs><marker id="d10b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker></defs>
+<rect width="360" height="340" rx="12" fill="#f7f7f4"/>
+<rect x="12" y="14" width="336" height="104" rx="10" fill="#e6efff" stroke="#2a5db0" stroke-width="2.5"/>
+<text x="180" y="40" font-size="16" font-weight="700" fill="#2a5db0" text-anchor="middle">상위 설계 = 예비 설계</text>
+<g fill="#ffffff" stroke="#2a5db0" stroke-width="2">
+<rect x="20" y="54" width="88" height="50" rx="6"/>
+<rect x="113" y="54" width="88" height="50" rx="6"/>
+<rect x="206" y="54" width="88" height="50" rx="6"/>
+<rect x="299" y="54" width="41" height="50" rx="6"/>
+</g>
+<g font-size="14" font-weight="700" fill="#222" text-anchor="middle">
+<text x="64" y="84">아키텍처</text>
+<text x="157" y="84">인터페이스</text>
+<text x="250" y="84">데이터(DB)</text>
+<text x="319.5" y="84">UI</text>
+</g>
+<line x1="180" y1="122" x2="180" y2="156" stroke="#333" stroke-width="2.5" marker-end="url(#d10b)"/>
+<text x="192" y="144" font-size="14" fill="#333">구체화</text>
+<rect x="12" y="162" width="336" height="88" rx="10" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2.5"/>
+<text x="180" y="188" font-size="16" font-weight="700" fill="#2e7d32" text-anchor="middle">하위 설계 = 모듈 설계 · 상세 설계</text>
+<g fill="#ffffff" stroke="#2e7d32" stroke-width="2">
+<rect x="40" y="200" width="130" height="38" rx="6"/>
+<rect x="190" y="200" width="130" height="38" rx="6"/>
+</g>
+<g font-size="14" font-weight="700" fill="#222" text-anchor="middle">
+<text x="105" y="224">모듈 설계</text>
+<text x="255" y="224">모듈 내부 로직</text>
+</g>
+<rect x="12" y="264" width="336" height="64" rx="10" fill="#ffffff" stroke="#888" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="180" y="290" font-size="14" font-weight="700" fill="#555" text-anchor="middle">자료구조·알고리즘·프로시저·협약 설계</text>
+<text x="180" y="312" font-size="14" fill="#555" text-anchor="middle">→ 자료마다 소속이 다름 (아래 표)</text>
+</svg><figcaption>파란 층은 시스템 전체 뼈대(어떤 구성 요소가 어떻게 연결되나), 초록 층은 각 모듈 안을 어떻게 짤지예요. 점선 칸은 자료 계열마다 위·아래가 갈려요.</figcaption></figure>
+<table>
+<tr><th>자료 계열</th><th>상위 설계</th><th>하위 설계</th></tr>
+<tr><td>A</td><td>아키텍처 · 데이터 · 인터페이스 · UI</td><td>모듈 · <b>자료구조</b> · <b>알고리즘</b></td></tr>
+<tr><td>B</td><td>아키텍처 · 인터페이스 · <b>자료구조</b> · <b>프로시저</b> · 협약에 의한 설계</td><td><b>모듈 설계만</b></td></tr>
+</table>
+<div class="point">모든 자료가 일치하는 것: <b>아키텍처 설계 = 상위(예비) 설계</b>, <b>모듈 설계 = 하위(상세) 설계</b>, 인터페이스 설계 = 상위. “자료구조 설계는 상위인가 하위인가”는 자료가 엇갈리니 단정하는 선지는 조심하세요.</div>
+<p><b>협약에 의한 설계(Design by Contract)</b>는 현업의 assert·계약 프로그래밍과 같은 생각이에요. 컴포넌트를 쓸 때 지켜야 할 조건을 세 가지로 명시해요.</p>
+<div class="grid">
+<div><b>선행 조건</b>호출 전에 참이어야 함 (입력 검증)</div>
+<div><b>결과 조건</b>실행 후 보장되어야 함 (반환값 조건)</div>
+<div><b>불변 조건</b>실행 내내 항상 참 (객체 상태 규칙)</div>
+</div>
+<p><small>※ 설계 원리(분할과 정복·추상화·단계적 분해·모듈화·정보은닉)와 상향식/하향식 설계는 내일 D011 아키텍처에서 본문으로 다뤄요.</small></p>
+
+<h2>8. 공통 모듈과 명세 원칙 — 정명완일추</h2>
+<p><b>공통 모듈</b>은 여러 기능·프로그램이 함께 쓰는, 독립적으로 컴파일·재사용할 수 있는 모듈이에요. 날짜 변환, 코드 값 변환, 금액 포맷 유틸 같은 것들이죠. 여러 곳에서 쓰는 만큼 명세를 엄격하게 써야 하고, 그 기준이 다섯 원칙이에요.</p>
+<table>
+<tr><th>원칙</th><th>뜻</th><th>어기면 이런 모습</th></tr>
+<tr><td><b>정확성</b></td><td>실제 구현 시 필요한 기능인지 알 수 있도록 정확히 작성</td><td>필요 없는 기능까지 공통 모듈에 넣어 둠</td></tr>
+<tr><td><b>명확성</b></td><td>해당 기능을 이해할 때 <b>한 가지로 해석</b>되도록 작성</td><td>“적절히 반올림한다” — 사람마다 다르게 읽음</td></tr>
+<tr><td><b>완전성</b></td><td>시스템 구현에 필요한 것을 <b>빠짐없이</b> 기술</td><td>빈 값·음수 입력 처리 규칙이 없음</td></tr>
+<tr><td><b>일관성</b></td><td>공통 기능들 사이에 <b>상호 충돌이 없도록</b> 작성</td><td>날짜 모듈은 KST, 시간 모듈은 UTC 기준으로 서로 어긋남</td></tr>
+<tr><td><b>추적성</b></td><td>공통 기능의 <b>요구사항 출처</b>와 관련 시스템 등의 관계를 식별할 수 있도록 작성</td><td>이 기능이 어느 요구에서 나왔고 누가 쓰는지 모름</td></tr>
+</table>
+<div class="memo"><b>정명완일추</b> — 정확성·명확성·완전성·일관성·추적성. “정명이 완전히 일관되게 추적한다”로 외워도 돼요.</div>
+<div class="trap">이름이 A1의 <b>요구사항 명세 품질</b>(D005)·<b>요구사항 추적</b>(D006)과 겹쳐서 헷갈리기 쉬워요. 공통 모듈 원칙 문제에서는 정의 문구로 고르세요 — “공통 기능 간 <b>충돌 없음</b>” = 일관성, “요구사항 <b>출처</b>·관련 시스템 <b>식별</b>” = 추적성, “<b>한 가지</b>로 해석” = 명확성, “<b>모든 것</b>을 기술” = 완전성.</div>
+
+<h2>9. 시험 포인트 정리</h2>
+<div class="point">
+<ul>
+<li>“형용사 · 감성 어휘 · 이미지 조사” → <b>감성공학 1류</b></li>
+<li>“개인 특성 · 생활방식 · 문화 · <b>심리적</b>” → <b>2류</b></li>
+<li>“공학적 감각 측정 · 수학적 모델 · 객관 지표 · <b>생리적</b>” → <b>3류</b></li>
+<li>요구분석의 “무엇을”을 “어떻게”로 바꾸는 청사진 → <b>설계 모델링</b></li>
+<li>구성 요소·관계 = <b>구조 모델링</b>, 데이터 흐름·변환·저장 = <b>행위 모델링</b></li>
+<li><b>예비 설계 = 상위 설계</b>(아키텍처), <b>상세 설계 = 하위 설계</b>(모듈)</li>
+<li>공통 모듈 명세 원칙 = <b>정명완일추</b>, “상호 충돌 없음” = 일관성, “요구 출처 식별” = 추적성</li>
+</ul>
+</div>
+
+<h2>10. 오답 복습</h2>
+<p>오늘 예정된 오답 재확인은 없어요. 10/14(D012)에 <b>D004-1</b>(OMT 기능 모델 ↔ DFD)과 <b>D005-2</b>(분석자동화 기대효과가 아닌 것)를 D+7로 다시 확인해요.</p>
+
+<h2>11. 밀린 답장</h2>
+<p>D007·D008·D009 답장이 아직 없어요. 오늘 문제와 함께 보내 주시면 한꺼번에 채점해서 오답 복습에 반영할게요. 그래서 오늘 확인 문제는 2개로 줄였어요.</p>
+<ul>
+<li><a href="2026-10-09-D007.html">D007 · UI 표준과 지침</a> (3문항)</li>
+<li><a href="2026-10-10-D008.html">D008 · 스토리보드와 UI 설계 도구</a> (3문항)</li>
+<li><a href="2026-10-11-D009.html">D009 · 주간 종합 복습</a> (10문항)</li>
+</ul>
+
+<h2>확인 문제</h2>
+<ol class="quiz">
+<li>새 스마트워치 진동 패턴을 설계하면서, 참가자의 피부 전도도·심박 변화를 센서로 측정해 수치화하고 진동 세기·주기라는 물리적 특성과의 관계를 수학적 모델로 만들어 설계값을 정했다. 이 방식에 해당하는 감성공학 접근 방법은?<label class="opt"><input type="radio" name="D010-q1" value="1">① 감성공학 1류</label><label class="opt"><input type="radio" name="D010-q1" value="2">② 감성공학 2류</label><label class="opt"><input type="radio" name="D010-q1" value="3">③ 감성공학 3류</label><label class="opt"><input type="radio" name="D010-q1" value="4">④ 감성 어휘 분석법</label></li>
+<li>결제·정산 시스템에서 함께 쓸 공통 모듈 명세를 검토하다가, ‘통화 반올림’ 공통 기능이 어느 요구사항에서 나왔고 어떤 시스템이 이 기능을 쓰는지 문서만으로는 확인할 수 없다는 지적이 나왔다. 이 명세가 지키지 못한 공통 모듈 명세 원칙은?<label class="opt"><input type="radio" name="D010-q2" value="1">① 완전성</label><label class="opt"><input type="radio" name="D010-q2" value="2">② 추적성</label><label class="opt"><input type="radio" name="D010-q2" value="3">③ 일관성</label><label class="opt"><input type="radio" name="D010-q2" value="4">④ 명확성</label></li>
+</ol><div class="answer-bar" data-id="D010" data-n="2"><code></code><button type="button">답안 복사</button></div><p><small>고른 뒤 <b>답안 복사</b> → 디스코드 공부 채널에 붙여넣기 하면 돼요.</small></p>
+<p>답장: <code>정처기 D010: 1)번호 2)번호</code></p>
+<p class="meta"><a href="2026-10-11-D009.html">← D009</a>  </p>
+<script>
+document.querySelectorAll('.answer-bar').forEach(bar=>{
+  const id=bar.dataset.id,n=+bar.dataset.n,out=bar.querySelector('code'),btn=bar.querySelector('button');
+  const text=()=>'정처기 '+id+': '+Array.from({length:n},(_,i)=>{const c=document.querySelector('input[name="'+id+'-q'+(i+1)+'"]:checked');return (i+1)+')'+(c?c.value:'?')}).join(' ');
+  document.querySelectorAll('input[name^="'+id+'-q"]').forEach(r=>r.addEventListener('change',()=>{out.textContent=text()}));
+  out.textContent=text();
+  btn.addEventListener('click',async()=>{const t=text();try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}btn.textContent='복사됨 ✓';setTimeout(()=>btn.textContent='답안 복사',1500)});
+});
+</script>
+<footer>2027년 정기 기사 1회 정보처리기사 필기 준비 · 공식 범위: Q-Net 2027~2029 출제기준</footer>
+</main></body></html>
