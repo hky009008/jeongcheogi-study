@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>D011 소프트웨어 아키텍처 — 설계 원리·품질 속성·패턴 8종·4+1 뷰</title>
+<link rel="stylesheet" href="../style.css"></head>
+<body><main>
+<nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a></nav>
+<h1>D011 · 소프트웨어 아키텍처 — 설계 원리·품질 속성·패턴 8종·4+1 뷰</h1><div class="meta">2026-10-13 · A3 소프트웨어 설계 &gt; 애플리케이션 설계</div><p><span class="tag">A3</span> 어제는 “아키텍처 설계 = 상위 설계”까지 봤어요. 오늘은 그 상위 설계의 <b>원리·품질·패턴</b>을 봐요. 현업에서 익숙한 내용이 대부분이라, 시험이 쓰는 <b>분류 이름</b>과 <b>패턴 8종 키워드</b>만 정확히 맞추면 돼요. 패턴 8종은 거의 매회 나오는 단골이에요.</p>
+<ul>
+<li>소프트웨어 아키텍처의 정의와 <b>설계 원리 4가지</b>(모듈화·추상화·단계적 분해·정보 은닉), 추상화 3종(과정·데이터·제어)을 구별한다</li>
+<li>품질 속성을 <b>시스템·비즈니스·아키텍처</b> 3측면으로 나누고 대표 항목을 분류한다 (ISO 9126 품질 특성과 혼동하지 않는다)</li>
+<li><b>아키텍처 패턴 8종</b>(레이어·클라이언트-서버·파이프-필터·MVC·브로커·P2P·이벤트 버스·마스터-슬레이브)을 구조 그림과 키워드로 구별하고, MVC가 GoF 디자인 패턴이 아님을 안다</li>
+<li>설계 과정(설계 목표 설정 → 시스템 타입 결정 → 아키텍처 패턴 적용 → 서브시스템 구체화 → 검토)과 시스템 타입 4종을 알아본다</li>
+<li><b>4+1 뷰</b>(논리·프로세스·구현(개발)·배포(물리) + 유스케이스)를 무엇을 보는 뷰인지로 구별한다</li>
+</ul>
+
+<h2>1. A3 지도 — 오늘 위치</h2>
+<figure><svg viewBox="0 0 360 330" font-family="sans-serif">
+<rect width="360" height="330" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">A3 애플리케이션 설계</text>
+<rect x="12" y="40" width="336" height="176" rx="10" fill="#ffffff" stroke="#2a5db0" stroke-width="2.5"/>
+<text x="180" y="62" font-size="15" font-weight="700" fill="#2a5db0" text-anchor="middle">① 공통 모듈 설계</text>
+<rect x="22" y="74" width="154" height="56" rx="8" fill="#eeeeee" stroke="#999" stroke-width="2.5"/>
+<rect x="184" y="74" width="154" height="56" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2.5"/>
+<g font-size="15" font-weight="700" text-anchor="middle">
+<text x="99" y="98" fill="#555">설계 모델링</text>
+<text x="261" y="98" fill="#222">SW 아키텍처</text>
+</g>
+<g font-size="14" text-anchor="middle">
+<text x="99" y="119" fill="#555">✓ D010</text>
+<text x="261" y="119" fill="#2a5db0" font-weight="700">오늘 D011</text>
+</g>
+<g fill="#ffffff" stroke="#888" stroke-width="2" stroke-dasharray="6 4">
+<rect x="22" y="140" width="76" height="62" rx="8"/>
+<rect x="104" y="140" width="76" height="62" rx="8"/>
+<rect x="186" y="140" width="76" height="62" rx="8"/>
+<rect x="268" y="140" width="72" height="62" rx="8"/>
+</g>
+<g font-size="14" font-weight="700" fill="#555" text-anchor="middle">
+<text x="60" y="166">재사용</text>
+<text x="142" y="166">모듈화</text>
+<text x="224" y="166">결합도</text>
+<text x="304" y="166">응집도</text>
+</g>
+<g font-size="14" fill="#555" text-anchor="middle">
+<text x="60" y="188">10/14</text>
+<text x="142" y="188">10/14</text>
+<text x="224" y="188">10/14</text>
+<text x="304" y="188">10/14</text>
+</g>
+<rect x="12" y="230" width="336" height="86" rx="10" fill="#ffffff" stroke="#888" stroke-width="2"/>
+<text x="180" y="252" font-size="15" font-weight="700" fill="#555" text-anchor="middle">② 객체지향 설계</text>
+<g fill="#ffffff" stroke="#888" stroke-width="2" stroke-dasharray="6 4">
+<rect x="22" y="262" width="154" height="44" rx="8"/>
+<rect x="184" y="262" width="154" height="44" rx="8"/>
+</g>
+<g font-size="14" fill="#555" text-anchor="middle">
+<text x="99" y="289"><tspan font-weight="700">객체지향</tspan> 10/15</text>
+<text x="261" y="289"><tspan font-weight="700">디자인패턴</tspan> 10/16</text>
+</g>
+</svg><figcaption>파란 칸이 오늘이에요. 오늘 배우는 모듈화·정보 은닉은 내일 결합도·응집도로 이어져요.</figcaption></figure>
+
+<h2>2. 아키텍처란 — 그리고 설계 원리 4가지</h2>
+<div class="point"><b>소프트웨어 아키텍처</b> = 소프트웨어의 골격이 되는 기본 구조. <b>구성 요소(컴포넌트) + 구성 요소 사이의 관계 + 설계·진화를 이끄는 원칙</b>의 집합이에요. 이해관계자끼리 소통하는 도구이고, 성능·보안 같은 <b>비기능 요구</b>를 반영하는 가장 이른 설계 결정이에요.</div>
+<p>건물로 치면 골조예요. 나중에 바꾸려면 비용이 가장 많이 드는 결정이라 상위(예비) 설계에서 먼저 정해요. 이 골조를 짤 때 따르는 원리는 네 가지예요.</p>
+<div class="grid">
+<div><b>모듈화</b>기능을 모듈 단위로 나눔. 너무 잘게 나누면 통합 비용↑, 너무 크게 나누면 모듈 하나의 개발 비용↑</div>
+<div><b>추상화</b>전체 흐름과 본질만 먼저 설계하고, 세부는 뒤로 미룸</div>
+<div><b>단계적 분해</b>Niklaus Wirth의 <b>하향식</b> 전략. 상위 기능부터 하위로 점점 쪼개고, 상세 내역은 가능한 한 뒤로 미룸</div>
+<div><b>정보 은닉</b>모듈 내부(자료·로직)를 감추고, 정해진 인터페이스로만 주고받음 → 수정이 다른 모듈로 번지지 않음</div>
+</div>
+<div class="vs">
+<div><b>하향식 설계</b>최상위 기능 → 하위 모듈로 분해 (= 단계적 분해). 인터페이스가 먼저 정해져 통합이 수월</div>
+<div><b>상향식 설계</b>최하위 모듈부터 만들고 위로 결합. 기존 모듈 재사용에 유리, 인터페이스는 나중에 맞춤</div>
+</div>
+<p><small>※ 설계 원리 목록은 자료마다 조금 달라요. 시나공·흥달 계열은 오늘 본 네 가지(흥달은 <b>분할과 정복</b>을 더해 다섯), 일부 강의 요약은 <b>단순성·자기서술성·추상화·정보은닉</b>으로 적어요. 추상화·정보 은닉은 어느 쪽에도 들어가요.</small></p>
+
+<h3>추상화 3종</h3>
+<table>
+<tr><th>종류</th><th>뜻</th><th>현업 감각</th></tr>
+<tr><td><b>과정 추상화</b></td><td>자세한 수행 과정은 정의하지 않고 <b>전체 흐름</b>만 파악할 수 있게 설계</td><td>함수 이름만 보고 호출 — <code>sendMail()</code> 안은 몰라도 됨</td></tr>
+<tr><td><b>데이터 추상화</b></td><td>데이터의 세부 속성·용도는 정의하지 않고, 데이터 구조를 <b>대표하는 표현</b>으로 대체</td><td>ADT·interface — <code>Queue</code>가 배열인지 리스트인지 모름</td></tr>
+<tr><td><b>제어 추상화</b></td><td>이벤트 발생의 정확한 절차·방법은 정의하지 않고 <b>대표하는 표현</b>으로 대체</td><td>이벤트 핸들러 등록 — 언제 어떻게 호출될지는 프레임워크가 처리</td></tr>
+</table>
+<div class="memo"><b>과데제</b> — 과정(흐름)·데이터(자료 구조)·제어(이벤트). 기능 추상화라는 말이 나오면 과정 추상화와 같은 뜻으로 보세요.</div>
+
+<h2>3. 품질 속성 — 시스템 · 비즈니스 · 아키텍처</h2>
+<p>아키텍처가 좋은지 따지는 기준을 <b>누가 보는 품질인가</b>에 따라 세 측면으로 나눠요.</p>
+<figure><svg viewBox="0 0 360 340" font-family="sans-serif">
+<rect width="360" height="340" rx="12" fill="#f7f7f4"/>
+<rect x="14" y="14" width="332" height="98" rx="10" fill="#e6efff" stroke="#2a5db0" stroke-width="2.5"/>
+<text x="28" y="40" font-size="16" font-weight="700" fill="#2a5db0">시스템 측면</text>
+<text x="332" y="40" font-size="14" fill="#2a5db0" text-anchor="end">돌아가는 시스템의 품질</text>
+<text x="28" y="70" font-size="15" font-weight="700" fill="#222">성능 · 보안 · 가용성 · 사용성</text>
+<text x="28" y="96" font-size="14" fill="#333"><tspan font-weight="700">변경 용이성</tspan> (+ 기능성·확장성·시험 용이성)</text>
+<rect x="14" y="124" width="332" height="98" rx="10" fill="#fff4d6" stroke="#c26a00" stroke-width="2.5"/>
+<text x="28" y="150" font-size="16" font-weight="700" fill="#c26a00">비즈니스 측면</text>
+<text x="332" y="150" font-size="14" fill="#c26a00" text-anchor="end">돈·출시·시장의 품질</text>
+<text x="28" y="180" font-size="15" font-weight="700" fill="#222">시장 적시성 · 비용과 혜택</text>
+<text x="28" y="206" font-size="14" fill="#333"><tspan font-weight="700">예상 시스템 수명</tspan> (+ 목표 시장·공개 일정)</text>
+<rect x="14" y="234" width="332" height="94" rx="10" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2.5"/>
+<text x="28" y="260" font-size="16" font-weight="700" fill="#2e7d32">아키텍처 측면</text>
+<text x="332" y="260" font-size="14" fill="#2e7d32" text-anchor="end">설계 자체의 완성도</text>
+<text x="28" y="290" font-size="15" font-weight="700" fill="#222">개념적 무결성 · 정확성/완결성</text>
+<text x="28" y="316" font-size="14" fill="#333"><tspan font-weight="700">구축 가능성</tspan> (+ 변경성·시험성 등)</text>
+</svg><figcaption>굵은 글자는 확인한 두 자료가 같은 측면으로 분류한 항목, 괄호 안은 한 자료에만 있는 항목이에요.</figcaption></figure>
+<table>
+<tr><th>측면</th><th>대표 항목 (공통)</th><th>한 자료에만 있는 항목</th><th>판단 키워드</th></tr>
+<tr><td><b>시스템</b></td><td>성능, 보안, 가용성, 사용성, 변경 용이성</td><td>기능성, 확장성, 시험 용이성, 배치성, 안정성</td><td>운영 중 시스템이 어떻게 동작하나</td></tr>
+<tr><td><b>비즈니스</b></td><td>시장 적시성, 비용과 혜택, 예상 시스템 수명</td><td>목표 시장, 공개 일정, 기존 시스템과의 통합</td><td>언제 출시·얼마·얼마나 오래</td></tr>
+<tr><td><b>아키텍처</b></td><td>개념적 무결성, 정확성·완결성, 구축 가능성</td><td>변경성, 시험성, 적응성, 일치성, 대체성</td><td>설계가 하나의 일관된 개념인가, 정말 만들 수 있나</td></tr>
+</table>
+<div class="memo"><b>시비아</b> = 시스템·비즈니스·아키텍처. 아키텍처 측면은 <b>개정구</b> = 개념적 무결성·정확성(완결성)·구축 가능성.</div>
+<div class="trap">① “시장 적시성·비용·예상 수명”을 <b>시스템 측면</b> 선지에 섞어 내요 — 돈·출시·수명은 비즈니스예요. ② ISO 9126 품질 특성(기능성·신뢰성·사용성·효율성·유지보수성·이식성)과는 <b>다른 분류</b>예요. “품질 속성 3측면”을 묻는데 9126 이름이 나오면 의심하세요(9126은 D 범위에서 따로 봐요).</div>
+
+<h2>4. 설계 과정 — 참고</h2>
+<div class="flow"><div><b>설계 목표 설정</b>요구분석을 토대로 목표 확정</div><div class="arrow">→</div><div><b>시스템 타입 결정</b>어떤 성격의 시스템인가</div><div class="arrow">→</div><div><b>아키텍처 패턴 적용</b>패턴 선택·조정</div><div class="arrow">→</div><div><b>서브시스템 구체화</b>기능·인터페이스 작성</div><div class="arrow">→</div><div><b>검토</b>목표·원칙 부합 확인</div></div>
+<p>두 번째 단계의 시스템 타입은 네 가지로 소개돼요.</p>
+<div class="grid">
+<div><b>대화형</b>사용자 요청 → 처리 → 응답 (웹 서비스)</div>
+<div><b>이벤트 중심</b>외부 상태 변화(이벤트)에 반응 (임베디드·제어)</div>
+<div><b>변환형</b>입력 데이터를 변환해 출력 (컴파일러·배치)</div>
+<div><b>객체 영속형</b>데이터를 DB에 저장·조회 (DB 중심 업무 시스템)</div>
+</div>
+<p><small>※ 설계 과정 순서와 시스템 타입은 확인한 자료가 한 곳뿐이라 오늘 문제로는 내지 않아요. 흐름만 눈에 익혀 두세요.</small></p>
+
+<h2>5. 아키텍처 패턴 — 구조의 정석</h2>
+<p><b>아키텍처 패턴</b>은 자주 만나는 구조 문제에 대한 참조용 전형적 해결 방식이에요. <b>아키텍처 스타일·표준 아키텍처</b>라고도 불러요. 서브시스템들과 각자의 역할, 서로의 관계 규칙·지침까지 담고 있어요. 패턴을 쓰면 개발 시간이 줄고, 검증된 구조라 품질을 예측하기 쉽고, 이해관계자끼리 소통도 쉬워져요.</p>
+<div class="vs">
+<div><b>아키텍처 패턴</b>시스템 <b>전체</b>의 구조 · 상위 설계의 초기 결정 · 레이어, MVC, 파이프-필터 …</div>
+<div><b>디자인 패턴 (GoF)</b><b>클래스·객체</b> 수준의 설계 해법 · 하위 설계 · 싱글톤, 옵저버, 팩토리 … (10/16 D014)</div>
+</div>
+
+<h3>패턴 8종 — 실제 모양</h3>
+<figure><svg viewBox="0 0 360 630" font-family="sans-serif">
+<defs><marker id="d11a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker></defs>
+<rect width="360" height="630" rx="12" fill="#f7f7f4"/>
+<g fill="#ffffff" stroke="#999" stroke-width="1.5">
+<rect x="10" y="10" width="165" height="145" rx="10"/>
+<rect x="185" y="10" width="165" height="145" rx="10"/>
+<rect x="10" y="165" width="165" height="145" rx="10"/>
+<rect x="185" y="165" width="165" height="145" rx="10"/>
+<rect x="10" y="320" width="165" height="145" rx="10"/>
+<rect x="185" y="320" width="165" height="145" rx="10"/>
+<rect x="10" y="475" width="165" height="145" rx="10"/>
+<rect x="185" y="475" width="165" height="145" rx="10"/>
+</g>
+<g font-size="15" font-weight="700" fill="#2a5db0" text-anchor="middle">
+<text x="92" y="32">① 레이어</text>
+<text x="267" y="32">② 클라이언트-서버</text>
+<text x="92" y="187">③ 파이프-필터</text>
+<text x="267" y="187">④ MVC</text>
+<text x="92" y="342">⑤ 브로커</text>
+<text x="267" y="342">⑥ P2P</text>
+<text x="92" y="497">⑦ 이벤트 버스</text>
+<text x="267" y="497">⑧ 마스터-슬레이브</text>
+</g>
+<!-- ① 레이어 -->
+<g fill="#e6efff" stroke="#2a5db0" stroke-width="2">
+<rect x="40" y="44" width="122" height="28" rx="5"/>
+<rect x="40" y="80" width="122" height="28" rx="5"/>
+<rect x="40" y="116" width="122" height="28" rx="5"/>
+</g>
+<g font-size="14" fill="#222" text-anchor="middle">
+<text x="101" y="63">표현 계층</text>
+<text x="101" y="99">비즈니스 계층</text>
+<text x="101" y="135">데이터 계층</text>
+</g>
+<line x1="24" y1="48" x2="24" y2="140" stroke="#333" stroke-width="2.5" marker-end="url(#d11a)"/>
+<!-- ② C/S -->
+<rect x="232" y="44" width="70" height="30" rx="5" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/>
+<text x="267" y="64" font-size="14" font-weight="700" fill="#222" text-anchor="middle">서버</text>
+<g stroke="#333" stroke-width="2">
+<line x1="217" y1="114" x2="252" y2="76" marker-end="url(#d11a)"/>
+<line x1="267" y1="114" x2="267" y2="78" marker-end="url(#d11a)"/>
+<line x1="317" y1="114" x2="282" y2="76" marker-end="url(#d11a)"/>
+</g>
+<g fill="#ffffff" stroke="#2a5db0" stroke-width="2">
+<rect x="197" y="116" width="40" height="26" rx="5"/>
+<rect x="247" y="116" width="40" height="26" rx="5"/>
+<rect x="297" y="116" width="40" height="26" rx="5"/>
+</g>
+<g font-size="14" fill="#222" text-anchor="middle">
+<text x="217" y="134">C</text><text x="267" y="134">C</text><text x="317" y="134">C</text>
+</g>
+<!-- ③ 파이프-필터 -->
+<g fill="#e6efff" stroke="#2a5db0" stroke-width="2">
+<rect x="38" y="214" width="44" height="32" rx="5"/>
+<rect x="102" y="214" width="44" height="32" rx="5"/>
+</g>
+<g font-size="14" font-weight="700" fill="#222" text-anchor="middle">
+<text x="60" y="235">F1</text><text x="124" y="235">F2</text>
+</g>
+<g stroke="#333" stroke-width="2.5">
+<line x1="16" y1="230" x2="36" y2="230" marker-end="url(#d11a)"/>
+<line x1="82" y1="230" x2="100" y2="230" marker-end="url(#d11a)"/>
+<line x1="146" y1="230" x2="168" y2="230" marker-end="url(#d11a)"/>
+</g>
+<text x="92" y="268" font-size="14" fill="#333" text-anchor="middle">화살표 = 파이프</text>
+<text x="92" y="292" font-size="14" fill="#333" text-anchor="middle" font-family="monospace">cat|grep|sort</text>
+<!-- ④ MVC -->
+<g stroke="#333" stroke-width="2">
+<line x1="306" y1="268" x2="279" y2="219" marker-end="url(#d11a)"/>
+<line x1="255" y1="219" x2="229" y2="267" marker-end="url(#d11a)"/>
+<line x1="234" y1="282" x2="300" y2="282" stroke-dasharray="4 3"/>
+</g>
+<g fill="#e6efff" stroke="#2a5db0" stroke-width="2">
+<circle cx="267" cy="205" r="17"/>
+<circle cx="217" cy="282" r="17"/>
+<circle cx="317" cy="282" r="17"/>
+</g>
+<g font-size="15" font-weight="700" fill="#222" text-anchor="middle">
+<text x="267" y="210">M</text><text x="217" y="287">V</text><text x="317" y="287">C</text>
+</g>
+<text x="330" y="232" font-size="14" fill="#333" text-anchor="middle">입력</text>
+<line x1="334" y1="238" x2="326" y2="262" stroke="#333" stroke-width="2" marker-end="url(#d11a)"/>
+<!-- ⑤ 브로커 -->
+<rect x="16" y="382" width="36" height="28" rx="5" fill="#ffffff" stroke="#2a5db0" stroke-width="2"/>
+<text x="34" y="401" font-size="14" fill="#222" text-anchor="middle">C</text>
+<line x1="52" y1="396" x2="66" y2="396" stroke="#333" stroke-width="2.5" marker-end="url(#d11a)"/>
+<rect x="68" y="376" width="56" height="40" rx="6" fill="#fff4d6" stroke="#c26a00" stroke-width="2.5"/>
+<text x="96" y="401" font-size="14" font-weight="700" fill="#222" text-anchor="middle">브로커</text>
+<g stroke="#333" stroke-width="2">
+<line x1="124" y1="388" x2="136" y2="366" marker-end="url(#d11a)"/>
+<line x1="124" y1="396" x2="136" y2="396" marker-end="url(#d11a)"/>
+<line x1="124" y1="404" x2="136" y2="426" marker-end="url(#d11a)"/>
+</g>
+<g fill="#ffffff" stroke="#2a5db0" stroke-width="2">
+<rect x="138" y="352" width="32" height="24" rx="5"/>
+<rect x="138" y="384" width="32" height="24" rx="5"/>
+<rect x="138" y="416" width="32" height="24" rx="5"/>
+</g>
+<g font-size="14" fill="#222" text-anchor="middle">
+<text x="154" y="369">S</text><text x="154" y="401">S</text><text x="154" y="433">S</text>
+</g>
+<text x="92" y="457" font-size="14" fill="#333" text-anchor="middle">맞는 서버를 찾아 연결</text>
+<!-- ⑥ P2P -->
+<g stroke="#2a5db0" stroke-width="2">
+<line x1="267" y1="363" x2="307" y2="392"/><line x1="267" y1="363" x2="292" y2="439"/><line x1="267" y1="363" x2="242" y2="439"/><line x1="267" y1="363" x2="227" y2="392"/>
+<line x1="307" y1="392" x2="292" y2="439"/><line x1="307" y1="392" x2="242" y2="439"/><line x1="307" y1="392" x2="227" y2="392"/>
+<line x1="292" y1="439" x2="242" y2="439"/><line x1="292" y1="439" x2="227" y2="392"/>
+<line x1="242" y1="439" x2="227" y2="392"/>
+</g>
+<g fill="#e6efff" stroke="#2a5db0" stroke-width="2">
+<circle cx="267" cy="363" r="11"/><circle cx="307" cy="392" r="11"/><circle cx="292" cy="439" r="11"/><circle cx="242" cy="439" r="11"/><circle cx="227" cy="392" r="11"/>
+</g>
+<!-- ⑦ 이벤트 버스 -->
+<rect x="20" y="506" width="56" height="26" rx="5" fill="#fff4d6" stroke="#c26a00" stroke-width="2"/>
+<text x="48" y="524" font-size="14" font-weight="700" fill="#222" text-anchor="middle">발행</text>
+<line x1="48" y1="532" x2="48" y2="552" stroke="#333" stroke-width="2.5" marker-end="url(#d11a)"/>
+<line x1="18" y1="560" x2="168" y2="560" stroke="#c26a00" stroke-width="6"/>
+<text x="124" y="550" font-size="14" fill="#c26a00" text-anchor="middle">버스·채널</text>
+<g stroke="#333" stroke-width="2">
+<line x1="42" y1="563" x2="42" y2="584" marker-end="url(#d11a)"/>
+<line x1="92" y1="563" x2="92" y2="584" marker-end="url(#d11a)"/>
+<line x1="142" y1="563" x2="142" y2="584" marker-end="url(#d11a)"/>
+</g>
+<g fill="#ffffff" stroke="#2a5db0" stroke-width="2">
+<rect x="22" y="586" width="40" height="26" rx="5"/>
+<rect x="72" y="586" width="40" height="26" rx="5"/>
+<rect x="122" y="586" width="40" height="26" rx="5"/>
+</g>
+<g font-size="14" fill="#222" text-anchor="middle">
+<text x="42" y="604">구독</text><text x="92" y="604">구독</text><text x="142" y="604">구독</text>
+</g>
+<!-- ⑧ 마스터-슬레이브 -->
+<rect x="200" y="506" width="134" height="28" rx="5" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/>
+<text x="267" y="525" font-size="14" font-weight="700" fill="#222" text-anchor="middle">마스터</text>
+<g stroke="#333" stroke-width="2">
+<line x1="211" y1="536" x2="211" y2="582" marker-end="url(#d11a)"/>
+<line x1="261" y1="536" x2="261" y2="582" marker-end="url(#d11a)"/>
+<line x1="311" y1="536" x2="311" y2="582" marker-end="url(#d11a)"/>
+</g>
+<g stroke="#2e7d32" stroke-width="2" stroke-dasharray="4 3">
+<line x1="223" y1="584" x2="223" y2="538" marker-end="url(#d11a)"/>
+<line x1="273" y1="584" x2="273" y2="538" marker-end="url(#d11a)"/>
+<line x1="323" y1="584" x2="323" y2="538" marker-end="url(#d11a)"/>
+</g>
+<g fill="#ffffff" stroke="#2a5db0" stroke-width="2">
+<rect x="197" y="586" width="40" height="26" rx="5"/>
+<rect x="247" y="586" width="40" height="26" rx="5"/>
+<rect x="297" y="586" width="40" height="26" rx="5"/>
+</g>
+<g font-size="14" fill="#222" text-anchor="middle">
+<text x="217" y="604">S</text><text x="267" y="604">S</text><text x="317" y="604">S</text>
+</g>
+</svg><figcaption>① 마주 보는 계층끼리만 위→아래로 호출 ② 서버 하나에 클라이언트 여럿 ③ 필터를 파이프로 이어 데이터를 흘림 ④ 입력 → C → M 갱신 → V 표시 ⑤ 브로커가 요청에 맞는 서버를 찾아 연결 ⑥ 중앙 없이 피어끼리 직접 ⑦ 채널에 발행하면 구독자가 받음 ⑧ 검은 실선 = 작업 분배, 초록 점선 = 결과 회수.</figcaption></figure>
+
+<h3>패턴 8종 비교표</h3>
+<table>
+<tr><th>패턴</th><th>구조 한 줄</th><th>결정 키워드 · 대표 예</th></tr>
+<tr><td><b>레이어</b></td><td>시스템을 계층으로 나누고, <b>마주 보는 두 계층 사이에서만</b> 상호작용</td><td>계층 · 특정 계층만 교체 쉬움<br><small>예: OSI 7계층, 3-tier</small></td></tr>
+<tr><td><b>클라이언트-서버</b></td><td><b>서버 하나 + 클라이언트 여럿</b>. 서버는 항상 요청을 기다림</td><td>요청-응답 · 서버 상시 대기<br><small>예: 웹 브라우저 ↔ 웹 서버</small></td></tr>
+<tr><td><b>파이프-필터</b></td><td>데이터 처리 단계를 <b>필터</b>로 캡슐화하고 <b>파이프</b>로 연결</td><td>필터 재사용·재배치 쉬움 · 필터 간 <b>데이터 변환 오버헤드</b><br><small>예: UNIX 셸 <code>|</code>, 컴파일러 단계</small></td></tr>
+<tr><td><b>MVC</b></td><td><b>모델</b>(핵심 기능·데이터) · <b>뷰</b>(표시) · <b>컨트롤러</b>(입력 처리, 모델에 명령) 분리</td><td><b>한 모델에 여러 뷰</b> · 대화형 앱<br><small>예: 웹 프레임워크(Spring MVC)</small></td></tr>
+<tr><td><b>브로커</b></td><td>중개자(브로커)가 요청에 맞는 컴포넌트를 찾아 사용자와 <b>연결</b></td><td>중개 · <b>위치 투명성</b> · 분산 환경<br><small>예: CORBA, RPC 미들웨어</small></td></tr>
+<tr><td><b>P2P</b></td><td>피어 하나가 <b>클라이언트이자 서버</b>. 중앙 서버 없음</td><td>피어 · 대등 · 분산 공유<br><small>예: BitTorrent, 블록체인 노드</small></td></tr>
+<tr><td><b>이벤트 버스</b></td><td>소스가 채널에 메시지를 <b>발행</b>하면 그 채널을 <b>구독</b>한 리스너가 처리. 구성 = 소스·리스너·채널·버스</td><td>발행/구독(Pub/Sub) · 비동기 · 느슨한 결합<br><small>예: Kafka 토픽 구독, 알림 서비스</small></td></tr>
+<tr><td><b>마스터-슬레이브</b></td><td>마스터가 같은 구조의 슬레이브들에 작업을 나누고 <b>결과를 모음</b></td><td>분할 → 회수 · 병렬 · 장애 허용<br><small>예: DB 복제, MapReduce</small></td></tr>
+</table>
+<p><small>※ 기타 패턴으로 <b>블랙보드</b>(공유 지식 저장소에 여러 컴포넌트가 해답을 써 나감, 음성 인식)와 <b>인터프리터</b>(특정 언어로 작성된 프로그램 해석)도 가끔 선지에 나와요. 파이프-필터의 데이터 흐름은 그림처럼 한 방향이 기본인데, “양방향도 구현 가능”이라고 쓴 요약도 있어 자료마다 달라요. 방향을 단정하는 선지보다 <b>필터·파이프·변환 오버헤드·UNIX 셸</b> 키워드로 고르세요.</small></p>
+<div class="memo">1순위 4종 <b>레·클·파·M</b>(레이어·클라이언트-서버·파이프-필터·MVC)부터 확실히. “<b>서버 하나, 클라이언트 여럿</b>”, “<b>모델 하나, 뷰 여럿</b>”으로 개수를 붙여 외우면 뒤집힌 선지가 바로 보여요.</div>
+<div class="trap">
+<ul>
+<li><b>브로커 vs 이벤트 버스</b>: 둘 다 가운데 무언가가 있지만, 브로커는 요청한 쪽에 맞는 서버를 <b>찾아 연결</b>해 주는 요청-응답이고, 이벤트 버스는 <b>발행만 하면 구독자들이 받는</b> 구조(발행자는 누가 받는지 모름)예요.</li>
+<li><b>MVC vs 레이어</b>: MVC는 역할 3분할(입력·데이터·표시), 레이어는 위아래 계층 쌓기예요.</li>
+<li><b>“MVC는 GoF 디자인 패턴이다” ✕</b> — MVC는 아키텍처 패턴이에요. GoF 23개 목록에 없어요.</li>
+<li><b>“C/S는 클라이언트 하나에 서버 여럿” ✕</b> — 개수를 뒤집은 선지예요.</li>
+</ul>
+</div>
+
+<h2>6. 4+1 뷰 — 아키텍처를 보는 다섯 시선</h2>
+<p>아키텍처는 한 장의 그림으로 다 표현되지 않아요. Kruchten(1995)은 네 개의 뷰로 나눠 그리고, <b>유스케이스(시나리오) 뷰</b>를 +1로 두어 나머지 넷을 묶고 검증하게 했어요.</p>
+<figure><svg viewBox="0 0 360 290" font-family="sans-serif">
+<rect width="360" height="290" rx="12" fill="#f7f7f4"/>
+<g stroke="#888" stroke-width="2" stroke-dasharray="5 4">
+<line x1="140" y1="132" x2="96" y2="114"/><line x1="220" y1="132" x2="264" y2="114"/>
+<line x1="140" y1="176" x2="96" y2="192"/><line x1="220" y1="176" x2="264" y2="192"/>
+</g>
+<g fill="#e6efff" stroke="#2a5db0" stroke-width="2.5">
+<rect x="14" y="14" width="156" height="98" rx="10"/>
+<rect x="190" y="14" width="156" height="98" rx="10"/>
+<rect x="14" y="192" width="156" height="84" rx="10"/>
+<rect x="190" y="192" width="156" height="84" rx="10"/>
+</g>
+<g font-size="15" font-weight="700" fill="#2a5db0" text-anchor="middle">
+<text x="92" y="42">논리 뷰</text>
+<text x="268" y="42">구현 뷰</text>
+<text x="92" y="218">프로세스 뷰</text>
+<text x="268" y="218">배포 뷰</text>
+</g>
+<g font-size="14" fill="#222" text-anchor="middle">
+<text x="92" y="68">기능 · 무엇을 하나</text>
+<text x="92" y="92">클래스 · 상태</text>
+<text x="268" y="68">(= 개발 뷰)</text>
+<text x="268" y="92">모듈 · 패키지</text>
+<text x="92" y="244">실행 · 동시성</text>
+<text x="92" y="266">시퀀스 · 활동</text>
+<text x="268" y="244">(= 물리 · 배치 뷰)</text>
+<text x="268" y="266">서버 · 네트워크</text>
+</g>
+<rect x="104" y="122" width="152" height="62" rx="31" fill="#fff4d6" stroke="#c26a00" stroke-width="2.5"/>
+<text x="180" y="148" font-size="15" font-weight="700" fill="#c26a00" text-anchor="middle">유스케이스 (+1)</text>
+<text x="180" y="170" font-size="14" fill="#222" text-anchor="middle">시나리오로 검증</text>
+</svg><figcaption>가운데 +1이 유스케이스 뷰예요. 네 뷰가 같은 시스템을 그리고 있는지 시나리오로 맞춰 봐요.</figcaption></figure>
+<table>
+<tr><th>뷰</th><th>무엇을 보나</th><th>대표 UML</th></tr>
+<tr><td><b>논리 뷰</b></td><td>시스템이 제공하는 <b>기능</b>, 구성 객체와 관계</td><td>클래스, 상태</td></tr>
+<tr><td><b>프로세스 뷰</b></td><td>실행 중 동작 — <b>동시성·분산·성능</b>, 프로세스·스레드 간 통신</td><td>시퀀스, 통신, 활동</td></tr>
+<tr><td><b>구현 뷰</b><br><small>= 개발 뷰</small></td><td>개발자가 보는 <b>모듈·패키지 구성</b>(소스·라이브러리 구조)</td><td>컴포넌트, 패키지</td></tr>
+<tr><td><b>배포 뷰</b><br><small>= 물리 뷰, 배치 뷰</small></td><td>소프트웨어가 올라갈 <b>물리 노드</b>와 네트워크 배치</td><td>배치</td></tr>
+<tr><td><b>유스케이스 뷰 (+1)</b><br><small>= 시나리오 뷰</small></td><td>시나리오로 나머지 네 뷰를 묶고 <b>검증</b>, 다른 뷰 설계의 출발점</td><td>유스케이스</td></tr>
+</table>
+<div class="memo"><b>+1 = 유스케이스</b>. 나머지 넷은 “<b>논프구배</b>”(논리·프로세스·구현·배포). D002에서 본 UML 다이어그램이 뷰마다 어디에 쓰이는지 짝지어 보세요 — 배치 다이어그램은 배포 뷰, 컴포넌트·패키지는 구현 뷰.</div>
+<p><small>※ 원 논문 이름은 Logical·Development·Process·Physical + Scenarios예요. 그래서 국내 자료마다 구현/개발, 배포/배치/물리처럼 이름이 달라요. 각 뷰를 누가 주로 보는지(사용자·설계자·개발자 등)도 자료마다 달라서 여기엔 적지 않았어요.</small></p>
+
+<h2>7. 시험 포인트 정리</h2>
+<div class="point">
+<ul>
+<li>아키텍처 = 구성 요소 + 관계 + 원칙 = 시스템의 <b>골격</b>, 상위(예비) 설계</li>
+<li>설계 원리 = <b>모듈화 · 추상화 · 단계적 분해 · 정보 은닉</b>, 단계적 분해 = Wirth의 <b>하향식</b></li>
+<li>추상화 3종 = <b>과정 · 데이터 · 제어</b></li>
+<li>“시장 적시성 · 비용 · 예상 수명” → <b>비즈니스</b> 측면, “개념적 무결성 · 구축 가능성” → <b>아키텍처</b> 측면, “성능 · 가용성 · 보안” → <b>시스템</b> 측면</li>
+<li>“발행 · 구독 · 채널” → <b>이벤트 버스</b>, “중개 · 위치 투명성” → <b>브로커</b></li>
+<li>“필터 · UNIX 셸 · 변환 오버헤드” → <b>파이프-필터</b>, “모델 하나 · 뷰 여럿” → <b>MVC</b></li>
+<li>“마주 보는 계층끼리만 · OSI” → <b>레이어</b>, “클라이언트이자 서버” → <b>P2P</b>, “작업 분할 → 결과 회수” → <b>마스터-슬레이브</b></li>
+<li>4+1 뷰의 <b>+1 = 유스케이스 뷰</b>, MVC ≠ GoF 디자인 패턴</li>
+<li>참고: 아키텍처 평가 방법으로 ATAM(품질 속성 간 트레이드오프 분석)·SAAM(변경 용이성 중심)이 소개돼요.</li>
+</ul>
+</div>
+
+<h2>8. 오답 복습 — D007 다시 보기 (D+1)</h2>
+<table>
+<tr><th>오답</th><th>헷갈린 것</th><th>바로잡기</th></tr>
+<tr><td>D007-1</td><td>UI 표준 ↔ UI 지침</td><td><b>표준</b> = 시스템 <b>전체</b>에 공통 적용하는 화면 구성·화면 이동 <b>규약</b>. <b>지침</b> = UI를 개발할 때 지켜야 할 공통 <b>조건·가이드라인</b>. (사용자가 원하는 UI는 <b>UI 요구사항</b>)</td></tr>
+<tr><td>D007-2</td><td>유연성 ↔ 직관성</td><td><b>직유학유</b> — 직관성(쉽게 이해) · 유효성(목적 달성) · 학습성(쉽게 배움) · <b>유연성</b>(다양한 사용자·조작 방식 포용, <b>실수 방지·복구</b>)</td></tr>
+</table>
+<p>원문은 <a href="2026-10-09-D007.html">D007 · UI 표준과 지침</a>에 있어요. 오늘 3·4번이 이 두 오답의 변형 문제예요. 다음 재확인은 10/19(D+7)와 11/02(D+21)이에요.</p>
+
+<h2>9. 밀린 답장</h2>
+<p>D009·D010 답장이 아직 없어요. 오늘 문제와 함께 보내 주시면 한꺼번에 채점해서 오답 복습에 반영할게요. 그래서 오늘 새 범위 문제는 2개로 줄였어요.</p>
+<ul>
+<li><a href="2026-10-11-D009.html">D009 · 주간 종합 복습</a> (10문항)</li>
+<li><a href="2026-10-12-D010.html">D010 · 감성공학과 설계 모델링</a> (2문항)</li>
+</ul>
+
+<h2>확인 문제</h2>
+<ol class="quiz">
+<li>주문 서비스가 ‘주문 완료’ 이벤트를 메시지 채널에 올리기만 하면, 그 채널을 구독하고 있는 재고·알림·포인트 컴포넌트가 각자 메시지를 받아 처리한다. 주문 서비스는 누가 받는지 알지 못하고, 새 컴포넌트는 구독만 추가하면 된다. 이 구조에 해당하는 아키텍처 패턴은?<label class="opt"><input type="radio" name="D011-q1" value="1">① 브로커 패턴</label><label class="opt"><input type="radio" name="D011-q1" value="2">② 이벤트 버스 패턴</label><label class="opt"><input type="radio" name="D011-q1" value="3">③ 마스터-슬레이브 패턴</label><label class="opt"><input type="radio" name="D011-q1" value="4">④ 클라이언트-서버 패턴</label></li>
+<li>소프트웨어 아키텍처 품질 속성 중 비즈니스 측면에 해당하는 것은?<label class="opt"><input type="radio" name="D011-q2" value="1">① 가용성</label><label class="opt"><input type="radio" name="D011-q2" value="2">② 개념적 무결성</label><label class="opt"><input type="radio" name="D011-q2" value="3">③ 시장 적시성</label><label class="opt"><input type="radio" name="D011-q2" value="4">④ 성능</label></li>
+<li>UI 표준과 UI 지침에 대한 설명으로 옳은 것은?<label class="opt"><input type="radio" name="D011-q3" value="1">① UI 표준은 이 시스템 사용자가 화면에 대해 원하는 요구를 모은 것이다</label><label class="opt"><input type="radio" name="D011-q3" value="2">② UI 지침은 시스템 전체 화면에 공통으로 적용하는 화면 구성·화면 간 이동 규약이다</label><label class="opt"><input type="radio" name="D011-q3" value="3">③ UI 표준은 요구사항을 쓰기 전에 만드는 초기 정황 시나리오다</label><label class="opt"><input type="radio" name="D011-q3" value="4">④ UI 표준은 시스템 전체 화면에 공통으로 적용하는 화면 구성·화면 간 이동 규약이다</label></li>
+<li>공공기관 민원 앱이 터치·음성 입력·외부 키보드를 모두 지원하고, 신청서를 제출하기 전에 입력 내용을 다시 보여 주며 잘못 고른 항목을 되돌릴 수 있게 했다. 이 설계가 주로 따른 UI 설계 원칙은?<label class="opt"><input type="radio" name="D011-q4" value="1">① 유연성</label><label class="opt"><input type="radio" name="D011-q4" value="2">② 직관성</label><label class="opt"><input type="radio" name="D011-q4" value="3">③ 유효성</label><label class="opt"><input type="radio" name="D011-q4" value="4">④ 학습성</label></li>
+</ol><div class="answer-bar" data-id="D011" data-n="4"><code></code><button type="button">답안 복사</button></div><p><small>고른 뒤 <b>답안 복사</b> → 디스코드 공부 채널에 붙여넣기 하면 돼요.</small></p>
+<p>답장: <code>정처기 D011: 1)번호 2)번호 3)번호 4)번호</code></p>
+<p class="meta"><a href="2026-10-12-D010.html">← D010</a>  </p>
+<script>
+document.querySelectorAll('.answer-bar').forEach(bar=>{
+  const id=bar.dataset.id,n=+bar.dataset.n,out=bar.querySelector('code'),btn=bar.querySelector('button');
+  const text=()=>'정처기 '+id+': '+Array.from({length:n},(_,i)=>{const c=document.querySelector('input[name="'+id+'-q'+(i+1)+'"]:checked');return (i+1)+')'+(c?c.value:'?')}).join(' ');
+  document.querySelectorAll('input[name^="'+id+'-q"]').forEach(r=>r.addEventListener('change',()=>{out.textContent=text()}));
+  out.textContent=text();
+  btn.addEventListener('click',async()=>{const t=text();try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}btn.textContent='복사됨 ✓';setTimeout(()=>btn.textContent='답안 복사',1500)});
+});
+</script>
+<footer>2027년 정기 기사 1회 정보처리기사 필기 준비 · 공식 범위: Q-Net 2027~2029 출제기준</footer>
+</main></body></html>
