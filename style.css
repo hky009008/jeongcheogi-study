@@ -44,6 +44,11 @@ footer{color:var(--muted);font-size:13px;margin-top:3em}
 .trap::before{content:"함정 ";font-weight:700;color:#d23f3f}
 .tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:99px;background:var(--code);margin-right:4px}
 figure{margin:1.2em 0;text-align:center}figcaption{font-size:13px;color:var(--muted)}
+.glance{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:1.2em 0}
+@media (max-width:560px){.glance{grid-template-columns:repeat(2,1fr)}}
+.glance>div{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:10px;padding:10px;font-size:14px;line-height:1.4}
+.glance b{display:block;font-size:26px;color:var(--accent);line-height:1.1}
+.glance small{display:block;color:var(--muted);font-size:12px;margin-top:4px}
 .mermaid{background:#fff;border-radius:12px;padding:8px;margin:1em 0;text-align:center}
 .opt{display:block;margin:6px 0;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);cursor:pointer}
 .opt input{margin-right:8px}
