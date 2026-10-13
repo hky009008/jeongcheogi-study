@@ -14,6 +14,13 @@
 <li>설계 과정(설계 목표 설정 → 시스템 타입 결정 → 아키텍처 패턴 적용 → 서브시스템 구체화 → 검토)과 시스템 타입 4종을 알아본다</li>
 <li><b>4+1 뷰</b>(논리·프로세스·구현(개발)·배포(물리) + 유스케이스)를 무엇을 보는 뷰인지로 구별한다</li>
 </ul>
+<div class="glance">
+<div><b>4</b>설계 원리<small>모듈화·추상화·단계적 분해·정보 은닉</small></div>
+<div><b>3</b>품질 측면<small>시스템·비즈니스·아키텍처</small></div>
+<div><b>8</b>아키텍처 패턴<small>레·클·파·M + 브·P·이·마</small></div>
+<div><b>4+1</b>뷰<small>논리·프로세스·구현·배포 + 유스케이스</small></div>
+</div>
+
 
 <h2>1. A3 지도 — 오늘 위치</h2>
 <figure><svg viewBox="0 0 360 330" font-family="sans-serif">
@@ -112,10 +119,11 @@
 <tr><td><b>아키텍처</b></td><td>개념적 무결성, 정확성·완결성, 구축 가능성</td><td>변경성, 시험성, 적응성, 일치성, 대체성</td><td>설계가 하나의 일관된 개념인가, 정말 만들 수 있나</td></tr>
 </table>
 <div class="memo"><b>시비아</b> = 시스템·비즈니스·아키텍처. 아키텍처 측면은 <b>개정구</b> = 개념적 무결성·정확성(완결성)·구축 가능성.</div>
+<div class="lol">품질 속성 3측면 <b>시비아</b>: 시스템(운영할 때 잘 돌아가나) · 비즈니스(언제 내고 얼마 들고 얼마나 오래 쓰나) · 아키텍처(설계 자체가 말이 되나). 돈·출시일·수명 얘기 나오면 무조건 비즈니스, 이건 킹정.</div>
 <div class="trap">① “시장 적시성·비용·예상 수명”을 <b>시스템 측면</b> 선지에 섞어 내요 — 돈·출시·수명은 비즈니스예요. ② ISO 9126 품질 특성(기능성·신뢰성·사용성·효율성·유지보수성·이식성)과는 <b>다른 분류</b>예요. “품질 속성 3측면”을 묻는데 9126 이름이 나오면 의심하세요(9126은 D 범위에서 따로 봐요).</div>
 
 <h2>4. 설계 과정 — 참고</h2>
-<div class="flow"><div><b>설계 목표 설정</b>요구분석을 토대로 목표 확정</div><div class="arrow">→</div><div><b>시스템 타입 결정</b>어떤 성격의 시스템인가</div><div class="arrow">→</div><div><b>아키텍처 패턴 적용</b>패턴 선택·조정</div><div class="arrow">→</div><div><b>서브시스템 구체화</b>기능·인터페이스 작성</div><div class="arrow">→</div><div><b>검토</b>목표·원칙 부합 확인</div></div>
+<figure class="mermaid"><img src="../assets/5a49d2181be4fce2.png" alt="도식" loading="lazy"></figure>
 <p>두 번째 단계의 시스템 타입은 네 가지로 소개돼요.</p>
 <div class="grid">
 <div><b>대화형</b>사용자 요청 → 처리 → 응답 (웹 서비스)</div>
@@ -133,161 +141,66 @@
 </div>
 
 <h3>패턴 8종 — 실제 모양</h3>
-<figure><svg viewBox="0 0 360 630" font-family="sans-serif">
-<defs><marker id="d11a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker></defs>
-<rect width="360" height="630" rx="12" fill="#f7f7f4"/>
-<g fill="#ffffff" stroke="#999" stroke-width="1.5">
-<rect x="10" y="10" width="165" height="145" rx="10"/>
-<rect x="185" y="10" width="165" height="145" rx="10"/>
-<rect x="10" y="165" width="165" height="145" rx="10"/>
-<rect x="185" y="165" width="165" height="145" rx="10"/>
-<rect x="10" y="320" width="165" height="145" rx="10"/>
-<rect x="185" y="320" width="165" height="145" rx="10"/>
-<rect x="10" y="475" width="165" height="145" rx="10"/>
-<rect x="185" y="475" width="165" height="145" rx="10"/>
+<figure><svg viewBox="0 0 360 640" font-family="-apple-system,'Apple SD Gothic Neo','Noto Sans KR',sans-serif" role="img" aria-label="아키텍처 패턴 8종 구조도">
+<defs><marker id="pa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10z" fill="#64748b"/></marker></defs>
+<rect width="360" height="640" rx="14" fill="#f8fafc"/>
+<g fill="none" stroke="#cbd5e1" stroke-width="1.5"><rect x="8" y="8" width="168" height="150" rx="10"/><rect x="184" y="8" width="168" height="150" rx="10"/><rect x="8" y="166" width="168" height="150" rx="10"/><rect x="184" y="166" width="168" height="150" rx="10"/><rect x="8" y="324" width="168" height="150" rx="10"/><rect x="184" y="324" width="168" height="150" rx="10"/><rect x="8" y="482" width="168" height="150" rx="10"/><rect x="184" y="482" width="168" height="150" rx="10"/></g>
+<g font-size="15" font-weight="700" fill="#172033"><text x="20" y="30">① 레이어</text><text x="196" y="30">② 클라이언트-서버</text><text x="20" y="188">③ 파이프-필터</text><text x="196" y="188">④ MVC</text><text x="20" y="346">⑤ 브로커</text><text x="196" y="346">⑥ P2P</text><text x="20" y="504">⑦ 이벤트 버스</text><text x="196" y="504">⑧ 마스터-슬레이브</text></g>
+<!-- connectors first -->
+<g stroke="#64748b" stroke-width="2" fill="none">
+<path d="M92 70 V82" marker-end="url(#pa)"/><path d="M92 110 V122" marker-end="url(#pa)"/>
+<path d="M222 118 L258 84" marker-end="url(#pa)" marker-start="url(#pa)"/><path d="M268 118 V84" marker-end="url(#pa)" marker-start="url(#pa)"/><path d="M314 118 L278 84" marker-end="url(#pa)" marker-start="url(#pa)"/>
+<path d="M60 240 H74" marker-end="url(#pa)"/><path d="M114 240 H128" marker-end="url(#pa)"/>
+<path d="M246 226 H292" marker-end="url(#pa)"/><path d="M318 240 L286 272" marker-end="url(#pa)"/><path d="M244 286 L220 242" marker-end="url(#pa)"/>
+<path d="M92 382 V396" marker-end="url(#pa)"/><path d="M92 424 V440" marker-end="url(#pa)"/>
+<path d="M72 424 L44 440" stroke-dasharray="4 4"/><path d="M112 424 L140 440" stroke-dasharray="4 4"/>
+<path d="M268 368 L314 398 L296 448 L240 448 L222 398 Z M268 368 L296 448 M268 368 L240 448 M314 398 L222 398 M314 398 L240 448 M222 398 L296 448"/>
+<path d="M50 536 V552" marker-end="url(#pa)"/><path d="M44 566 V582" marker-end="url(#pa)"/><path d="M92 566 V582" marker-end="url(#pa)"/><path d="M140 566 V582" marker-end="url(#pa)"/>
+<path d="M258 540 L222 580" marker-end="url(#pa)"/><path d="M268 540 V580" marker-end="url(#pa)"/><path d="M278 540 L314 580" marker-end="url(#pa)"/>
+<path d="M236 582 L262 548" stroke-dasharray="4 3" stroke="#0f766e" marker-end="url(#pa)"/>
 </g>
-<g font-size="15" font-weight="700" fill="#2a5db0" text-anchor="middle">
-<text x="92" y="32">① 레이어</text>
-<text x="267" y="32">② 클라이언트-서버</text>
-<text x="92" y="187">③ 파이프-필터</text>
-<text x="267" y="187">④ MVC</text>
-<text x="92" y="342">⑤ 브로커</text>
-<text x="267" y="342">⑥ P2P</text>
-<text x="92" y="497">⑦ 이벤트 버스</text>
-<text x="267" y="497">⑧ 마스터-슬레이브</text>
+<!-- nodes -->
+<g stroke="#64748b" stroke-width="1.5" font-size="14" text-anchor="middle" fill="#172033">
+<rect x="32" y="42" width="120" height="28" rx="6" fill="#bfdbfe"/><text x="92" y="61" stroke="none">표현 계층</text>
+<rect x="32" y="82" width="120" height="28" rx="6" fill="#c7d2fe"/><text x="92" y="101" stroke="none">비즈니스 계층</text>
+<rect x="32" y="122" width="120" height="28" rx="6" fill="#99f6e4"/><text x="92" y="141" stroke="none">데이터 계층</text>
+<rect x="233" y="50" width="70" height="34" rx="6" fill="#c7d2fe"/><text x="268" y="72" stroke="none" font-weight="700">서버</text>
+<rect x="198" y="118" width="44" height="28" rx="6" fill="#bfdbfe"/><text x="220" y="137" stroke="none">C</text>
+<rect x="246" y="118" width="44" height="28" rx="6" fill="#bfdbfe"/><text x="268" y="137" stroke="none">C</text>
+<rect x="294" y="118" width="44" height="28" rx="6" fill="#bfdbfe"/><text x="316" y="137" stroke="none">C</text>
+<rect x="18" y="226" width="42" height="28" rx="6" fill="#bfdbfe"/><text x="39" y="245" stroke="none">입력</text>
+<rect x="74" y="226" width="40" height="28" rx="6" fill="#c7d2fe"/><text x="94" y="245" stroke="none">F1</text>
+<rect x="128" y="226" width="40" height="28" rx="6" fill="#c7d2fe"/><text x="148" y="245" stroke="none">F2</text>
+<rect x="196" y="212" width="50" height="30" rx="6" fill="#bfdbfe"/><text x="221" y="232" stroke="none" font-weight="700">C</text>
+<rect x="292" y="212" width="50" height="30" rx="6" fill="#99f6e4"/><text x="317" y="232" stroke="none" font-weight="700">M</text>
+<rect x="244" y="272" width="50" height="30" rx="6" fill="#c7d2fe"/><text x="269" y="292" stroke="none" font-weight="700">V</text>
+<rect x="50" y="356" width="84" height="26" rx="6" fill="#bfdbfe"/><text x="92" y="374" stroke="none">클라이언트</text>
+<rect x="52" y="396" width="80" height="28" rx="14" fill="#fde68a"/><text x="92" y="415" stroke="none" font-weight="700">브로커</text>
+<rect x="22" y="440" width="44" height="26" rx="6" fill="#e2e8f0"/><text x="44" y="458" stroke="none">S1</text>
+<rect x="70" y="440" width="44" height="26" rx="6" fill="#c7d2fe"/><text x="92" y="458" stroke="none">S2</text>
+<rect x="118" y="440" width="44" height="26" rx="6" fill="#e2e8f0"/><text x="140" y="458" stroke="none">S3</text>
+<circle cx="268" cy="368" r="15" fill="#c7d2fe"/><circle cx="314" cy="398" r="15" fill="#c7d2fe"/><circle cx="296" cy="448" r="15" fill="#c7d2fe"/><circle cx="240" cy="448" r="15" fill="#c7d2fe"/><circle cx="222" cy="398" r="15" fill="#c7d2fe"/>
+<rect x="22" y="512" width="56" height="24" rx="6" fill="#bfdbfe"/><text x="50" y="529" stroke="none">소스</text>
+<rect x="18" y="552" width="148" height="14" rx="7" fill="#fde68a"/>
+<rect x="22" y="582" width="44" height="26" rx="6" fill="#c7d2fe"/><text x="44" y="600" stroke="none">L1</text>
+<rect x="70" y="582" width="44" height="26" rx="6" fill="#c7d2fe"/><text x="92" y="600" stroke="none">L2</text>
+<rect x="118" y="582" width="44" height="26" rx="6" fill="#c7d2fe"/><text x="140" y="600" stroke="none">L3</text>
+<rect x="234" y="512" width="68" height="28" rx="6" fill="#fde68a"/><text x="268" y="531" stroke="none" font-weight="700">마스터</text>
+<rect x="198" y="580" width="44" height="26" rx="6" fill="#c7d2fe"/><text x="220" y="598" stroke="none">S</text>
+<rect x="246" y="580" width="44" height="26" rx="6" fill="#c7d2fe"/><text x="268" y="598" stroke="none">S</text>
+<rect x="294" y="580" width="44" height="26" rx="6" fill="#c7d2fe"/><text x="316" y="598" stroke="none">S</text>
 </g>
-<!-- ① 레이어 -->
-<g fill="#e6efff" stroke="#2a5db0" stroke-width="2">
-<rect x="40" y="44" width="122" height="28" rx="5"/>
-<rect x="40" y="80" width="122" height="28" rx="5"/>
-<rect x="40" y="116" width="122" height="28" rx="5"/>
+<g font-size="13" fill="#5b6475" text-anchor="middle">
+<text x="92" y="290">파이프로 이어진 필터들</text>
+<text x="270" y="210">명령</text><text x="322" y="268">갱신</text><text x="214" y="270">입력</text>
+<text x="268" y="374">P</text><text x="314" y="404">P</text><text x="296" y="454">P</text><text x="240" y="454">P</text><text x="222" y="404">P</text>
+<text x="340" y="346" text-anchor="end">클라+서버</text>
+<text x="128" y="530">발행</text><text x="92" y="626">구독한 리스너가 처리</text>
+<text x="268" y="624">작업 분할 → 결과 회수</text>
 </g>
-<g font-size="14" fill="#222" text-anchor="middle">
-<text x="101" y="63">표현 계층</text>
-<text x="101" y="99">비즈니스 계층</text>
-<text x="101" y="135">데이터 계층</text>
-</g>
-<line x1="24" y1="48" x2="24" y2="140" stroke="#333" stroke-width="2.5" marker-end="url(#d11a)"/>
-<!-- ② C/S -->
-<rect x="232" y="44" width="70" height="30" rx="5" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/>
-<text x="267" y="64" font-size="14" font-weight="700" fill="#222" text-anchor="middle">서버</text>
-<g stroke="#333" stroke-width="2">
-<line x1="217" y1="114" x2="252" y2="76" marker-end="url(#d11a)"/>
-<line x1="267" y1="114" x2="267" y2="78" marker-end="url(#d11a)"/>
-<line x1="317" y1="114" x2="282" y2="76" marker-end="url(#d11a)"/>
-</g>
-<g fill="#ffffff" stroke="#2a5db0" stroke-width="2">
-<rect x="197" y="116" width="40" height="26" rx="5"/>
-<rect x="247" y="116" width="40" height="26" rx="5"/>
-<rect x="297" y="116" width="40" height="26" rx="5"/>
-</g>
-<g font-size="14" fill="#222" text-anchor="middle">
-<text x="217" y="134">C</text><text x="267" y="134">C</text><text x="317" y="134">C</text>
-</g>
-<!-- ③ 파이프-필터 -->
-<g fill="#e6efff" stroke="#2a5db0" stroke-width="2">
-<rect x="38" y="214" width="44" height="32" rx="5"/>
-<rect x="102" y="214" width="44" height="32" rx="5"/>
-</g>
-<g font-size="14" font-weight="700" fill="#222" text-anchor="middle">
-<text x="60" y="235">F1</text><text x="124" y="235">F2</text>
-</g>
-<g stroke="#333" stroke-width="2.5">
-<line x1="16" y1="230" x2="36" y2="230" marker-end="url(#d11a)"/>
-<line x1="82" y1="230" x2="100" y2="230" marker-end="url(#d11a)"/>
-<line x1="146" y1="230" x2="168" y2="230" marker-end="url(#d11a)"/>
-</g>
-<text x="92" y="268" font-size="14" fill="#333" text-anchor="middle">화살표 = 파이프</text>
-<text x="92" y="292" font-size="14" fill="#333" text-anchor="middle" font-family="monospace">cat|grep|sort</text>
-<!-- ④ MVC -->
-<g stroke="#333" stroke-width="2">
-<line x1="306" y1="268" x2="279" y2="219" marker-end="url(#d11a)"/>
-<line x1="255" y1="219" x2="229" y2="267" marker-end="url(#d11a)"/>
-<line x1="234" y1="282" x2="300" y2="282" stroke-dasharray="4 3"/>
-</g>
-<g fill="#e6efff" stroke="#2a5db0" stroke-width="2">
-<circle cx="267" cy="205" r="17"/>
-<circle cx="217" cy="282" r="17"/>
-<circle cx="317" cy="282" r="17"/>
-</g>
-<g font-size="15" font-weight="700" fill="#222" text-anchor="middle">
-<text x="267" y="210">M</text><text x="217" y="287">V</text><text x="317" y="287">C</text>
-</g>
-<text x="330" y="232" font-size="14" fill="#333" text-anchor="middle">입력</text>
-<line x1="334" y1="238" x2="326" y2="262" stroke="#333" stroke-width="2" marker-end="url(#d11a)"/>
-<!-- ⑤ 브로커 -->
-<rect x="16" y="382" width="36" height="28" rx="5" fill="#ffffff" stroke="#2a5db0" stroke-width="2"/>
-<text x="34" y="401" font-size="14" fill="#222" text-anchor="middle">C</text>
-<line x1="52" y1="396" x2="66" y2="396" stroke="#333" stroke-width="2.5" marker-end="url(#d11a)"/>
-<rect x="68" y="376" width="56" height="40" rx="6" fill="#fff4d6" stroke="#c26a00" stroke-width="2.5"/>
-<text x="96" y="401" font-size="14" font-weight="700" fill="#222" text-anchor="middle">브로커</text>
-<g stroke="#333" stroke-width="2">
-<line x1="124" y1="388" x2="136" y2="366" marker-end="url(#d11a)"/>
-<line x1="124" y1="396" x2="136" y2="396" marker-end="url(#d11a)"/>
-<line x1="124" y1="404" x2="136" y2="426" marker-end="url(#d11a)"/>
-</g>
-<g fill="#ffffff" stroke="#2a5db0" stroke-width="2">
-<rect x="138" y="352" width="32" height="24" rx="5"/>
-<rect x="138" y="384" width="32" height="24" rx="5"/>
-<rect x="138" y="416" width="32" height="24" rx="5"/>
-</g>
-<g font-size="14" fill="#222" text-anchor="middle">
-<text x="154" y="369">S</text><text x="154" y="401">S</text><text x="154" y="433">S</text>
-</g>
-<text x="92" y="457" font-size="14" fill="#333" text-anchor="middle">맞는 서버를 찾아 연결</text>
-<!-- ⑥ P2P -->
-<g stroke="#2a5db0" stroke-width="2">
-<line x1="267" y1="363" x2="307" y2="392"/><line x1="267" y1="363" x2="292" y2="439"/><line x1="267" y1="363" x2="242" y2="439"/><line x1="267" y1="363" x2="227" y2="392"/>
-<line x1="307" y1="392" x2="292" y2="439"/><line x1="307" y1="392" x2="242" y2="439"/><line x1="307" y1="392" x2="227" y2="392"/>
-<line x1="292" y1="439" x2="242" y2="439"/><line x1="292" y1="439" x2="227" y2="392"/>
-<line x1="242" y1="439" x2="227" y2="392"/>
-</g>
-<g fill="#e6efff" stroke="#2a5db0" stroke-width="2">
-<circle cx="267" cy="363" r="11"/><circle cx="307" cy="392" r="11"/><circle cx="292" cy="439" r="11"/><circle cx="242" cy="439" r="11"/><circle cx="227" cy="392" r="11"/>
-</g>
-<!-- ⑦ 이벤트 버스 -->
-<rect x="20" y="506" width="56" height="26" rx="5" fill="#fff4d6" stroke="#c26a00" stroke-width="2"/>
-<text x="48" y="524" font-size="14" font-weight="700" fill="#222" text-anchor="middle">발행</text>
-<line x1="48" y1="532" x2="48" y2="552" stroke="#333" stroke-width="2.5" marker-end="url(#d11a)"/>
-<line x1="18" y1="560" x2="168" y2="560" stroke="#c26a00" stroke-width="6"/>
-<text x="124" y="550" font-size="14" fill="#c26a00" text-anchor="middle">버스·채널</text>
-<g stroke="#333" stroke-width="2">
-<line x1="42" y1="563" x2="42" y2="584" marker-end="url(#d11a)"/>
-<line x1="92" y1="563" x2="92" y2="584" marker-end="url(#d11a)"/>
-<line x1="142" y1="563" x2="142" y2="584" marker-end="url(#d11a)"/>
-</g>
-<g fill="#ffffff" stroke="#2a5db0" stroke-width="2">
-<rect x="22" y="586" width="40" height="26" rx="5"/>
-<rect x="72" y="586" width="40" height="26" rx="5"/>
-<rect x="122" y="586" width="40" height="26" rx="5"/>
-</g>
-<g font-size="14" fill="#222" text-anchor="middle">
-<text x="42" y="604">구독</text><text x="92" y="604">구독</text><text x="142" y="604">구독</text>
-</g>
-<!-- ⑧ 마스터-슬레이브 -->
-<rect x="200" y="506" width="134" height="28" rx="5" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/>
-<text x="267" y="525" font-size="14" font-weight="700" fill="#222" text-anchor="middle">마스터</text>
-<g stroke="#333" stroke-width="2">
-<line x1="211" y1="536" x2="211" y2="582" marker-end="url(#d11a)"/>
-<line x1="261" y1="536" x2="261" y2="582" marker-end="url(#d11a)"/>
-<line x1="311" y1="536" x2="311" y2="582" marker-end="url(#d11a)"/>
-</g>
-<g stroke="#2e7d32" stroke-width="2" stroke-dasharray="4 3">
-<line x1="223" y1="584" x2="223" y2="538" marker-end="url(#d11a)"/>
-<line x1="273" y1="584" x2="273" y2="538" marker-end="url(#d11a)"/>
-<line x1="323" y1="584" x2="323" y2="538" marker-end="url(#d11a)"/>
-</g>
-<g fill="#ffffff" stroke="#2a5db0" stroke-width="2">
-<rect x="197" y="586" width="40" height="26" rx="5"/>
-<rect x="247" y="586" width="40" height="26" rx="5"/>
-<rect x="297" y="586" width="40" height="26" rx="5"/>
-</g>
-<g font-size="14" fill="#222" text-anchor="middle">
-<text x="217" y="604">S</text><text x="267" y="604">S</text><text x="317" y="604">S</text>
-</g>
-</svg><figcaption>① 마주 보는 계층끼리만 위→아래로 호출 ② 서버 하나에 클라이언트 여럿 ③ 필터를 파이프로 이어 데이터를 흘림 ④ 입력 → C → M 갱신 → V 표시 ⑤ 브로커가 요청에 맞는 서버를 찾아 연결 ⑥ 중앙 없이 피어끼리 직접 ⑦ 채널에 발행하면 구독자가 받음 ⑧ 검은 실선 = 작업 분배, 초록 점선 = 결과 회수.</figcaption></figure>
+<text x="92" y="562" font-size="11" font-weight="700" fill="#92400e" text-anchor="middle">버스(채널)</text>
+</svg><figcaption>파랑=요청·입력 쪽, 보라=처리, 청록=데이터, 노랑=가운데서 중개·분배하는 요소. 화살표는 요청·데이터가 흐르는 방향이에요.</figcaption></figure>
 
-<h3>패턴 8종 비교표</h3>
 <table>
 <tr><th>패턴</th><th>구조 한 줄</th><th>결정 키워드 · 대표 예</th></tr>
 <tr><td><b>레이어</b></td><td>시스템을 계층으로 나누고, <b>마주 보는 두 계층 사이에서만</b> 상호작용</td><td>계층 · 특정 계층만 교체 쉬움<br><small>예: OSI 7계층, 3-tier</small></td></tr>
@@ -301,6 +214,9 @@
 </table>
 <p><small>※ 기타 패턴으로 <b>블랙보드</b>(공유 지식 저장소에 여러 컴포넌트가 해답을 써 나감, 음성 인식)와 <b>인터프리터</b>(특정 언어로 작성된 프로그램 해석)도 가끔 선지에 나와요. 파이프-필터의 데이터 흐름은 그림처럼 한 방향이 기본인데, “양방향도 구현 가능”이라고 쓴 요약도 있어 자료마다 달라요. 방향을 단정하는 선지보다 <b>필터·파이프·변환 오버헤드·UNIX 셸</b> 키워드로 고르세요.</small></p>
 <div class="memo">1순위 4종 <b>레·클·파·M</b>(레이어·클라이언트-서버·파이프-필터·MVC)부터 확실히. “<b>서버 하나, 클라이언트 여럿</b>”, “<b>모델 하나, 뷰 여럿</b>”으로 개수를 붙여 외우면 뒤집힌 선지가 바로 보여요.</div>
+<div class="lol">브로커 vs 이벤트 버스 한 줄 요약: <b>브로커 = 소개팅 주선자</b>(요청 받으면 딱 맞는 상대를 찾아 연결) / <b>이벤트 버스 = 단톡방 공지</b>(올리면 구독한 사람이 다 받고, 올린 사람은 누가 읽었는지 모름). 현업 기준으론 Kafka 토픽 구독이 이벤트 버스.</div>
+<div class="lol">클라이언트-서버는 <b>서버 1 : 클라 N</b>, MVC는 <b>모델 1 : 뷰 N</b>. 숫자 뒤집은 선지 보이면 “이게 맞나?” 하고 바로 거르기.</div>
+<figure class="meme"><img src="../assets/memes/D011-mvc.png" alt="드레이크 밈: MVC는 GoF 패턴이라는 말은 거절, MVC는 아키텍처 패턴을 선택"><figcaption>MVC는 GoF 23개 디자인 패턴 목록에 없어요. <b>아키텍처 패턴</b>이에요.</figcaption></figure>
 <div class="trap">
 <ul>
 <li><b>브로커 vs 이벤트 버스</b>: 둘 다 가운데 무언가가 있지만, 브로커는 요청한 쪽에 맞는 서버를 <b>찾아 연결</b>해 주는 요청-응답이고, 이벤트 버스는 <b>발행만 하면 구독자들이 받는</b> 구조(발행자는 누가 받는지 모름)예요.</li>
@@ -309,41 +225,37 @@
 <li><b>“C/S는 클라이언트 하나에 서버 여럿” ✕</b> — 개수를 뒤집은 선지예요.</li>
 </ul>
 </div>
+<h3>MVC — 요청 하나가 흐르는 순서</h3>
+<figure class="mermaid"><img src="../assets/85dbbfe9e5d1ee6b.png" alt="도식" loading="lazy"></figure>
+<h3>브로커 vs 이벤트 버스 — 가운데 있는 것이 하는 일</h3>
+<p><b>브로커</b>: 요청을 받아 맞는 서버를 <b>찾아 연결</b>하고 응답을 돌려줘요(요청-응답, 위치 투명성).</p>
+<figure class="mermaid"><img src="../assets/cb8f3ebabd23369b.png" alt="도식" loading="lazy"></figure>
+<p><b>이벤트 버스</b>: 소스는 발행만 하고 <b>누가 받는지 몰라요</b>. 구독자들이 각자 비동기로 받아요(느슨한 결합).</p>
+<figure class="mermaid"><img src="../assets/dea43867049ca8cb.png" alt="도식" loading="lazy"></figure>
+
 
 <h2>6. 4+1 뷰 — 아키텍처를 보는 다섯 시선</h2>
 <p>아키텍처는 한 장의 그림으로 다 표현되지 않아요. Kruchten(1995)은 네 개의 뷰로 나눠 그리고, <b>유스케이스(시나리오) 뷰</b>를 +1로 두어 나머지 넷을 묶고 검증하게 했어요.</p>
-<figure><svg viewBox="0 0 360 290" font-family="sans-serif">
-<rect width="360" height="290" rx="12" fill="#f7f7f4"/>
-<g stroke="#888" stroke-width="2" stroke-dasharray="5 4">
-<line x1="140" y1="132" x2="96" y2="114"/><line x1="220" y1="132" x2="264" y2="114"/>
-<line x1="140" y1="176" x2="96" y2="192"/><line x1="220" y1="176" x2="264" y2="192"/>
+<figure><svg viewBox="0 0 360 300" font-family="-apple-system,'Apple SD Gothic Neo','Noto Sans KR',sans-serif" role="img" aria-label="4+1 뷰 모델">
+<rect width="360" height="300" rx="14" fill="#f8fafc"/>
+<g stroke="#64748b" stroke-width="2" fill="none" stroke-dasharray="5 4">
+<path d="M180 150 L92 70"/><path d="M180 150 L268 70"/><path d="M180 150 L92 230"/><path d="M180 150 L268 230"/>
 </g>
-<g fill="#e6efff" stroke="#2a5db0" stroke-width="2.5">
-<rect x="14" y="14" width="156" height="98" rx="10"/>
-<rect x="190" y="14" width="156" height="98" rx="10"/>
-<rect x="14" y="192" width="156" height="84" rx="10"/>
-<rect x="190" y="192" width="156" height="84" rx="10"/>
+<g stroke="#64748b" stroke-width="1.5">
+<rect x="14" y="20" width="156" height="92" rx="10" fill="#c7d2fe"/>
+<rect x="190" y="20" width="156" height="92" rx="10" fill="#bfdbfe"/>
+<rect x="14" y="190" width="156" height="92" rx="10" fill="#c7d2fe"/>
+<rect x="190" y="190" width="156" height="92" rx="10" fill="#99f6e4"/>
+<rect x="100" y="124" width="160" height="52" rx="26" fill="#fde68a"/>
 </g>
-<g font-size="15" font-weight="700" fill="#2a5db0" text-anchor="middle">
-<text x="92" y="42">논리 뷰</text>
-<text x="268" y="42">구현 뷰</text>
-<text x="92" y="218">프로세스 뷰</text>
-<text x="268" y="218">배포 뷰</text>
+<g text-anchor="middle" fill="#172033">
+<text x="92" y="46" font-size="15" font-weight="700">논리 뷰</text><text x="92" y="70" font-size="14">기능 · 객체 관계</text><text x="92" y="94" font-size="13" fill="#5b6475">클래스 · 상태</text>
+<text x="268" y="46" font-size="15" font-weight="700">구현 뷰 (개발)</text><text x="268" y="70" font-size="14">모듈 · 패키지 구성</text><text x="268" y="94" font-size="13" fill="#5b6475">컴포넌트 · 패키지</text>
+<text x="92" y="216" font-size="15" font-weight="700">프로세스 뷰</text><text x="92" y="240" font-size="14">실행 · 동시성 · 성능</text><text x="92" y="264" font-size="13" fill="#5b6475">시퀀스 · 활동</text>
+<text x="268" y="216" font-size="15" font-weight="700">배포 뷰 (물리)</text><text x="268" y="240" font-size="14">서버 · 네트워크 배치</text><text x="268" y="264" font-size="13" fill="#5b6475">배치 다이어그램</text>
+<text x="180" y="147" font-size="15" font-weight="700">유스케이스 뷰 +1</text><text x="180" y="166" font-size="13">시나리오로 4개 뷰 검증</text>
 </g>
-<g font-size="14" fill="#222" text-anchor="middle">
-<text x="92" y="68">기능 · 무엇을 하나</text>
-<text x="92" y="92">클래스 · 상태</text>
-<text x="268" y="68">(= 개발 뷰)</text>
-<text x="268" y="92">모듈 · 패키지</text>
-<text x="92" y="244">실행 · 동시성</text>
-<text x="92" y="266">시퀀스 · 활동</text>
-<text x="268" y="244">(= 물리 · 배치 뷰)</text>
-<text x="268" y="266">서버 · 네트워크</text>
-</g>
-<rect x="104" y="122" width="152" height="62" rx="31" fill="#fff4d6" stroke="#c26a00" stroke-width="2.5"/>
-<text x="180" y="148" font-size="15" font-weight="700" fill="#c26a00" text-anchor="middle">유스케이스 (+1)</text>
-<text x="180" y="170" font-size="14" fill="#222" text-anchor="middle">시나리오로 검증</text>
-</svg><figcaption>가운데 +1이 유스케이스 뷰예요. 네 뷰가 같은 시스템을 그리고 있는지 시나리오로 맞춰 봐요.</figcaption></figure>
+</svg><figcaption>가운데 +1(유스케이스)이 나머지 네 뷰를 묶어 검증해요. 회색 글자는 그 뷰에서 주로 쓰는 UML 다이어그램이에요.</figcaption></figure>
 <table>
 <tr><th>뷰</th><th>무엇을 보나</th><th>대표 UML</th></tr>
 <tr><td><b>논리 뷰</b></td><td>시스템이 제공하는 <b>기능</b>, 구성 객체와 관계</td><td>클래스, 상태</td></tr>
@@ -353,6 +265,7 @@
 <tr><td><b>유스케이스 뷰 (+1)</b><br><small>= 시나리오 뷰</small></td><td>시나리오로 나머지 네 뷰를 묶고 <b>검증</b>, 다른 뷰 설계의 출발점</td><td>유스케이스</td></tr>
 </table>
 <div class="memo"><b>+1 = 유스케이스</b>. 나머지 넷은 “<b>논프구배</b>”(논리·프로세스·구현·배포). D002에서 본 UML 다이어그램이 뷰마다 어디에 쓰이는지 짝지어 보세요 — 배치 다이어그램은 배포 뷰, 컴포넌트·패키지는 구현 뷰.</div>
+<div class="lol">4+1 뷰: 나머지 넷은 <b>논프구배</b>(논리·프로세스·구현·배포). 배포 뷰의 그 배포가 맞아요 — 서버·네트워크에 뭘 올리나.</div>
 <p><small>※ 원 논문 이름은 Logical·Development·Process·Physical + Scenarios예요. 그래서 국내 자료마다 구현/개발, 배포/배치/물리처럼 이름이 달라요. 각 뷰를 누가 주로 보는지(사용자·설계자·개발자 등)도 자료마다 달라서 여기엔 적지 않았어요.</small></p>
 
 <h2>7. 시험 포인트 정리</h2>
