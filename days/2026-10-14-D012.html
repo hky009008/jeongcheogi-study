@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>D012 재사용·모듈화·결합도·응집도 — fan-in/out과 6·7단계 순서</title>
+<link rel="stylesheet" href="../style.css"></head>
+<body><main>
+<nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a></nav>
+<h1>D012 · 재사용·모듈화·결합도·응집도 — fan-in/out과 6·7단계 순서</h1><div class="meta">2026-10-14 · A3 소프트웨어 설계 &gt; 애플리케이션 설계</div><p><span class="tag">A3</span> 어제 설계 원리 첫째가 <b>모듈화</b>였어요. 그런데 “잘 나눴다”는 건 어떻게 판단할까요? 오늘은 그 판단 기준인 두 개의 자, <b>결합도</b>와 <b>응집도</b>를 봐요. 앞에는 왜 나누는지(재사용·모듈화), 뒤에는 나눈 구조를 숫자로 세는 법(fan-in·fan-out)이 붙어요. 결합도·응집도 순서 문제는 필기에서 거의 매회 나오는 A3 최빈출이에요.</p>
+<ul>
+<li><b>재사용</b>의 정의, 범위 3단계(함수·객체 → 컴포넌트 → 애플리케이션), 방법 2가지(합성 중심 / 생성 중심)를 구별하고, 3R(역공학·재공학·재사용)의 관계를 설명할 수 있다</li>
+<li><b>모듈화</b>의 목적과 모듈 독립성 기준(결합도↓ · 응집도↑ · 적당한 크기)을 설명하고, 구조도에서 <b>fan-in / fan-out</b>을 셀 수 있다</li>
+<li><b>결합도 6종</b>을 약한 것부터(자료 &lt; 스탬프 &lt; 제어 &lt; 외부 &lt; 공통 &lt; 내용) 나열하고 코드 단서로 구별할 수 있다</li>
+<li><b>응집도 7종</b>을 강한 것부터(기능 &gt; 순차 &gt; 교환 &gt; 절차 &gt; 시간 &gt; 논리 &gt; 우연) 나열하고, 특히 순차·교환·절차·시간을 상황으로 구별할 수 있다</li>
+<li>좋은 방향(결합도는 낮게, 응집도는 높게)과 순서 문제의 <b>방향 뒤집기 함정</b>을 피할 수 있다</li>
+</ul>
+<div class="glance">
+<div><b>3</b>재사용 범위<small>함수·객체 / 컴포넌트 / 애플리케이션</small></div>
+<div><b>2</b>재사용 방법<small>합성 중심 · 생성 중심</small></div>
+<div><b>6</b>결합도<small>자스제외공내 (약 → 강)</small></div>
+<div><b>7</b>응집도<small>기순교절시논우 (강 → 약)</small></div>
+</div>
+<div class="box"><b>오늘 이야기의 흐름</b>① 소프트웨어를 왜 부품처럼 다시 쓰고 싶어졌는지(<b>재사용</b>)에서 출발해요. ② 다시 쓰려면 먼저 독립된 부품으로 나눠야 하니 <b>모듈화</b>가 필요하고, ③ 나눈 부품이 정말 독립적인지 재는 자가 둘 생겨요. 부품 <b>사이</b>가 얼마나 얽혔나(<b>결합도</b>)와 부품 <b>안</b>이 얼마나 한 목적으로 뭉쳤나(<b>응집도</b>)예요. ④ 여기에 구조도에서 “몇 곳이 나를 부르나 / 내가 몇 곳을 부르나”를 세는 <b>fan-in·fan-out</b>이 공통 모듈 설계의 마지막 체크가 돼요. 앞 단계가 뒤 단계의 이유가 되니 막히면 이 순서로 돌아오세요.</div>
+
+<h2>1. A3 지도 — 오늘 위치</h2>
+<figure><svg viewBox="0 0 360 330" font-family="sans-serif" role="img" aria-label="A3 범위 지도, 오늘은 재사용·모듈화·결합도·응집도">
+<rect width="360" height="330" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">A3 애플리케이션 설계</text>
+<rect x="12" y="40" width="336" height="176" rx="10" fill="#ffffff" stroke="#2a5db0" stroke-width="2.5"/>
+<text x="180" y="62" font-size="15" font-weight="700" fill="#2a5db0" text-anchor="middle">① 공통 모듈 설계</text>
+<g fill="#eeeeee" stroke="#999" stroke-width="2.5">
+<rect x="22" y="74" width="154" height="56" rx="8"/>
+<rect x="184" y="74" width="154" height="56" rx="8"/>
+</g>
+<g font-size="15" font-weight="700" text-anchor="middle" fill="#555">
+<text x="99" y="98">설계 모델링</text>
+<text x="261" y="98">SW 아키텍처</text>
+</g>
+<g font-size="14" text-anchor="middle" fill="#555">
+<text x="99" y="119">✓ D010</text>
+<text x="261" y="119">✓ D011</text>
+</g>
+<g fill="#e6efff" stroke="#2a5db0" stroke-width="2.5">
+<rect x="22" y="140" width="76" height="62" rx="8"/>
+<rect x="104" y="140" width="76" height="62" rx="8"/>
+<rect x="186" y="140" width="76" height="62" rx="8"/>
+<rect x="268" y="140" width="72" height="62" rx="8"/>
+</g>
+<g font-size="14" font-weight="700" fill="#222" text-anchor="middle">
+<text x="60" y="166">재사용</text>
+<text x="142" y="166">모듈화</text>
+<text x="224" y="166">결합도</text>
+<text x="304" y="166">응집도</text>
+</g>
+<g font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">
+<text x="60" y="188">오늘</text>
+<text x="142" y="188">오늘</text>
+<text x="224" y="188">오늘</text>
+<text x="304" y="188">오늘</text>
+</g>
+<rect x="12" y="230" width="336" height="86" rx="10" fill="#ffffff" stroke="#888" stroke-width="2"/>
+<text x="180" y="252" font-size="15" font-weight="700" fill="#555" text-anchor="middle">② 객체지향 설계</text>
+<g fill="#ffffff" stroke="#888" stroke-width="2" stroke-dasharray="6 4">
+<rect x="22" y="262" width="154" height="44" rx="8"/>
+<rect x="184" y="262" width="154" height="44" rx="8"/>
+</g>
+<g font-size="14" fill="#555" text-anchor="middle">
+<text x="99" y="289"><tspan font-weight="700">객체지향</tspan> 10/15</text>
+<text x="261" y="289"><tspan font-weight="700">디자인패턴</tspan> 10/16</text>
+</g>
+</svg><figcaption>파란 칸 넷이 오늘이에요. 이걸로 ‘공통 모듈 설계’ 묶음이 끝나고, 내일부터 객체지향 설계로 넘어가요.</figcaption></figure>
+
+<h2>2. 재사용 — 이미 검증된 것을 다시 쓰기</h2>
+<p>어제 본 아키텍처 품질 속성 중 비즈니스 측면에 <b>비용</b>과 <b>시장 적시성</b>이 있었죠. 매번 처음부터 만들면 둘 다 나빠져요. 1960~70년대 “소프트웨어 위기” 때 개발 비용과 일정이 계속 늘어나자, 하드웨어처럼 이미 만들어 검증한 부품을 다시 끼워 쓰자는 생각이 힘을 얻었어요. 이게 재사용이에요.</p>
+<div class="point"><b>재사용(Reuse)</b> = 목표 시스템 개발에 드는 시간·비용을 줄이려고, <b>기능·성능·품질이 이미 확인된</b> 소프트웨어의 <b>전체 또는 일부</b>를 다시 사용하는 것이에요.</div>
+<p>재사용으로 얻는 건 분명해요. 개발 기간과 비용이 줄고, 이미 운영에서 검증된 코드라 품질과 신뢰성이 올라가요. 대가도 있어요. 다시 쓸 수 있게 만들려면 처음에 더 일반적으로 설계해야 해서 초기 비용이 들고, 부품을 고르고 이해하는 비용, 새 시스템에 맞게 고치는 비용이 따라와요. 그리고 다시 쓰려면 그 부품이 다른 코드와 덜 얽혀 있어야 하는데, 이 조건이 바로 뒤에서 볼 모듈화·결합도·응집도예요.</p>
+
+<h3>재사용 범위 3단계</h3>
+<p>무엇을 다시 쓰느냐에 따라 크기가 세 단계로 나뉘어요. 가장 작은 단위는 <b>함수와 객체</b>예요. 날짜 포맷 함수나 금액 반올림 클래스처럼 클래스·메서드 수준에서 다시 쓰는 거예요. 그다음은 <b>컴포넌트</b>예요. 결제 모듈·인증 모듈처럼 여러 클래스가 묶인 독립 부품을, 내부를 고치지 않고 정해진 인터페이스로 가져다 써요. 가장 큰 단위는 <b>애플리케이션</b>이에요. 한 고객사에 만든 쇼핑몰 솔루션을 다른 고객사에 거의 그대로 설치하는 것처럼, 같은 종류의 애플리케이션을 공유하는 방식이에요.</p>
+<div class="flow"><div><b>함수 · 객체</b>유틸 함수, 클래스</div><div class="arrow">→</div><div><b>컴포넌트</b>결제·인증 부품</div><div class="arrow">→</div><div><b>애플리케이션</b>솔루션 통째로</div></div>
+
+<h3>재사용 방법 2가지 — 합성 중심 vs 생성 중심</h3>
+<p><b>합성 중심(Composition-based)</b>은 미리 만들어 둔 부품(모듈)을 끼워 맞춰 시스템을 완성하는 방법이에요. 전자 칩을 기판에 꽂아 회로를 만드는 것과 같아서 <b>블록 구성 방법</b>이라고도 불러요. npm·Maven에서 라이브러리를 받아 조립하는 일이 현업에서 가장 흔한 모습이에요.</p>
+<p><b>생성 중심(Generation-based)</b>은 부품 자체가 아니라 <b>추상화된 명세</b>를 재사용하고, 그 명세를 구체화해서 프로그램을 만들어 내는 방법이에요. OpenAPI 명세로 클라이언트 코드를 생성하거나, 템플릿·코드 생성기로 CRUD 코드를 찍어 내는 것이 비슷한 감각이에요. 둘의 차이는 “완성된 부품을 끼우나(합성) vs 설계 명세에서 코드를 뽑아내나(생성)”예요.</p>
+<div class="vs">
+<div><b>합성 중심</b>만들어 둔 블록(모듈)을 끼워 맞춰 완성. 전자 칩 조립 비유, 블록 구성 방법</div>
+<div><b>생성 중심</b>추상화된 명세를 구체화해 프로그램 생성. 코드 생성기·템플릿 감각</div>
+</div>
+
+<h3>3R — 역공학 · 재공학 · 재사용</h3>
+<p>재사용은 혼자 나오지 않고 <b>3R</b>이라는 묶음으로 나와요. 이미 있는 시스템을 버리지 않고 살려 쓰려는 세 가지 활동이에요. <b>역공학(Reverse Engineering)</b>은 기존 코드·데이터를 분석해 설계서·명세를 거꾸로 뽑아내는 거예요. 문서 없는 레거시 코드에서 ERD나 클래스 다이어그램을 추출하는 게 대표 예이고, D005에서 본 CASE 도구가 이 일을 자동으로 도와요. <b>재공학(Re-engineering)</b>은 기존 시스템을 새로 만드는 대신, 분석해서 구조를 다시 짜고 새 기술·표준에 맞게 고쳐 유지보수성을 높이는 거예요. 재공학 과정 안에 역공학이 들어간다고 기억하면 관계가 정리돼요.</p>
+<table>
+<tr><th>구분</th><th>하는 일</th><th>현업 감각</th></tr>
+<tr><td><b>역공학</b></td><td>기존 코드·데이터 → 설계서·명세를 거꾸로 추출</td><td>레거시 DB에서 ERD 뽑기</td></tr>
+<tr><td><b>재공학</b></td><td>기존 시스템을 분석해 구조를 개선·재구성, 유지보수성↑</td><td>모놀리스를 정리해 새 프레임워크로 옮기기</td></tr>
+<tr><td><b>재사용</b></td><td>검증된 SW의 전체·일부를 새 개발에 다시 사용</td><td>사내 공통 라이브러리 가져다 쓰기</td></tr>
+</table>
+
+<h2>3. 모듈화와 모듈 독립성</h2>
+<p>재사용하려면 떼어 낼 수 있는 단위가 있어야 해요. 그 단위를 만드는 일이 어제 설계 원리에서 본 <b>모듈화</b>예요. <b>모듈</b>은 하나의 기능을 수행하는, 독립적으로 컴파일·테스트·재사용할 수 있는 단위예요. 자바의 클래스·패키지, 서비스 하나가 모두 모듈로 볼 수 있어요.</p>
+<p>모듈화를 하면 얻는 게 많아요. 한 모듈만 이해하고 고치면 되니 <b>복잡도가 줄고 유지보수가 쉬워져요</b>. 모듈 단위로 사람을 나눠 <b>병행 개발</b>할 수 있고, 모듈마다 따로 <b>테스트</b>하기 쉬우며, 다른 시스템에서 <b>재사용</b>할 수 있어요. 다만 어제 본 것처럼 너무 잘게 나누면 모듈끼리 연결·통합하는 비용이 커지고, 너무 크게 나누면 모듈 하나가 비대해져요.</p>
+<p>그러면 “잘 나눈 모듈”이란 무엇일까요? 시험은 이것을 <b>모듈 독립성</b>이라고 불러요. 다른 모듈과 덜 얽혀 있고, 자기 일 하나에 집중할수록 독립적이에요. 그래서 독립성은 두 개의 자로 재요. 모듈 <b>사이</b>의 의존 정도를 재는 <b>결합도(Coupling)</b>, 모듈 <b>안</b> 요소들이 한 목적으로 뭉친 정도를 재는 <b>응집도(Cohesion)</b>예요. 둘은 1970년대 구조적 설계에서 Constantine 등이 정리한 개념이에요.</p>
+<figure><svg viewBox="0 0 360 260" font-family="sans-serif" role="img" aria-label="결합도는 모듈 사이 연결, 응집도는 모듈 안 묶임">
+<defs><marker id="d12a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c26a00"/></marker></defs>
+<rect width="360" height="260" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">결합도는 사이, 응집도는 안</text>
+<line x1="156" y1="132" x2="202" y2="132" stroke="#c26a00" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#d12a)"/>
+<text x="180" y="122" font-size="14" fill="#c26a00" text-anchor="middle">값만</text>
+<g fill="#ffffff" stroke="#2a5db0" stroke-width="2.5">
+<rect x="16" y="40" width="140" height="160" rx="10"/>
+<rect x="204" y="40" width="140" height="160" rx="10"/>
+</g>
+<g font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">
+<text x="86" y="62">모듈 A · 주문</text>
+<text x="274" y="62">모듈 B · 배송</text>
+</g>
+<g stroke="#2a5db0" stroke-width="5">
+<line x1="86" y1="104" x2="86" y2="118"/><line x1="86" y1="146" x2="86" y2="160"/>
+<line x1="274" y1="104" x2="274" y2="118"/><line x1="274" y1="146" x2="274" y2="160"/>
+</g>
+<g fill="#e6efff" stroke="#2a5db0" stroke-width="1.5">
+<rect x="36" y="76" width="100" height="28" rx="6"/><rect x="36" y="118" width="100" height="28" rx="6"/><rect x="36" y="160" width="100" height="28" rx="6"/>
+<rect x="224" y="76" width="100" height="28" rx="6"/><rect x="224" y="118" width="100" height="28" rx="6"/><rect x="224" y="160" width="100" height="28" rx="6"/>
+</g>
+<g font-size="14" fill="#222" text-anchor="middle">
+<text x="86" y="95">주문 검증</text><text x="86" y="137">금액 계산</text><text x="86" y="179">주문 저장</text>
+<text x="274" y="95">배송 등록</text><text x="274" y="137">송장 출력</text><text x="274" y="179">배송 조회</text>
+</g>
+<g font-size="14" text-anchor="middle">
+<text x="180" y="226" fill="#c26a00">사이 연결은 가늘고 적게 → <tspan font-weight="700">결합도↓</tspan></text>
+<text x="180" y="248" fill="#2a5db0">안은 한 목적으로 단단히 → <tspan font-weight="700">응집도↑</tspan></text>
+</g>
+</svg><figcaption>주황 점선이 모듈 사이의 의존(결합도), 파란 굵은 선이 모듈 안의 묶임(응집도)이에요. 좋은 설계는 사이가 가늘고 안이 단단해요.</figcaption></figure>
+<p>그래서 설계 지침은 한 줄로 “<b>결합도는 낮추고 응집도는 높인다</b>”예요. 여기에 모듈 크기를 적당히 유지하고, 입구·출구를 하나씩 두며(단일 입구·단일 출구), 어제 본 <b>정보 은닉</b>으로 내부를 감추는 것이 함께 나와요. 정보 은닉이 결합도를 낮추는 가장 기본 수단이라는 연결도 기억해 두세요.</p>
+<p><small>※ 참고: 여러 시스템이 공통으로 쓰는 기능을 모은 것이 <b>공통 모듈</b>이고, 그 명세는 정확성·명확성·완전성·일관성·추적성 원칙(정명완일추)을 따른다고 소개돼요(D010 2번 문항). 이번에 확인한 자료 중 한 곳에만 다시 정리돼 있어 오늘 문항은 내지 않았어요.</small></p>
+
+<h2>4. Fan-in / Fan-out — 구조도에서 세는 법</h2>
+<p>결합도·응집도가 모듈 하나하나의 품질이라면, fan-in·fan-out은 모듈들이 <b>서로 부르는 구조</b>를 숫자로 보는 방법이에요. 모듈 구조도(호출 관계를 위에서 아래로 그린 그림)에서 셉니다.</p>
+<p><b>Fan-in</b>은 어떤 모듈을 <b>호출하는 상위 모듈의 수</b>, 즉 “나를 부르는 쪽이 몇 개인가”예요. fan-in이 높다는 건 여러 곳에서 그 모듈을 쓰고 있다는 뜻이라 <b>재사용이 잘 되고 있다</b>는 신호예요. 공통 모듈은 원래 여러 곳에서 쓰라고 만든 것이니 fan-in이 높은 게 정상이에요. 대신 많은 곳이 기대고 있어서, 이 모듈에 버그가 있으면 영향이 넓게 퍼지므로 더 꼼꼼히 테스트해야 해요.</p>
+<p><b>Fan-out</b>은 어떤 모듈이 <b>호출하는 하위 모듈의 수</b>, 즉 “내가 부르는 쪽이 몇 개인가”예요. fan-out이 높으면 그 모듈은 여러 하위 모듈에 의존하고 있어서 하위 하나만 바뀌어도 영향을 받고, 흐름을 이해하기도 어려워져요. 그래서 일반적으로 <b>fan-out은 줄이는 것</b>이 좋아요. 정리하면 “공통 모듈은 fan-in↑, fan-out↓”가 바람직한 구조예요.</p>
+<figure><svg viewBox="0 0 360 336" font-family="sans-serif" role="img" aria-label="fan-in fan-out 구조도 예시">
+<defs>
+<marker id="d12g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d32"/></marker>
+<marker id="d12o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c26a00"/></marker>
+<marker id="d12k" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#777"/></marker>
+</defs>
+<rect width="360" height="336" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="14" fill="#333" text-anchor="middle">화살표 = 호출 방향 (부르는 쪽 → 불리는 쪽)</text>
+<g fill="none" stroke-width="2.5">
+<path d="M70,84 L70,142" stroke="#777" marker-end="url(#d12k)"/>
+<path d="M80,84 L156,138" stroke="#2e7d32" marker-end="url(#d12g)"/>
+<path d="M180,84 L180,138" stroke="#2e7d32" marker-end="url(#d12g)"/>
+<path d="M280,84 L204,138" stroke="#2e7d32" marker-end="url(#d12g)"/>
+<path d="M166,188 L134,248" stroke="#c26a00" marker-end="url(#d12o)"/>
+<path d="M194,188 L226,248" stroke="#c26a00" marker-end="url(#d12o)"/>
+</g>
+<g fill="#ffffff" stroke="#888" stroke-width="2">
+<rect x="30" y="44" width="80" height="40" rx="8"/>
+<rect x="140" y="44" width="80" height="40" rx="8"/>
+<rect x="250" y="44" width="80" height="40" rx="8"/>
+<rect x="30" y="144" width="80" height="40" rx="8"/>
+<rect x="90" y="250" width="80" height="40" rx="8"/>
+<rect x="190" y="250" width="80" height="40" rx="8"/>
+</g>
+<rect x="128" y="140" width="104" height="48" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="3"/>
+<g font-size="15" font-weight="700" fill="#222" text-anchor="middle">
+<text x="70" y="69">A</text><text x="180" y="69">B</text><text x="290" y="69">C</text>
+<text x="70" y="169">P</text>
+<text x="180" y="169" fill="#2a5db0">M 공통</text>
+<text x="130" y="275">X</text><text x="230" y="275">Y</text>
+</g>
+<rect x="240" y="138" width="108" height="26" rx="6" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1.5"/>
+<rect x="240" y="168" width="108" height="26" rx="6" fill="#fff1d6" stroke="#c26a00" stroke-width="1.5"/>
+<g font-size="14" font-weight="700" text-anchor="middle">
+<text x="294" y="156" fill="#2e7d32">fan-in 3</text>
+<text x="294" y="186" fill="#c26a00">fan-out 2</text>
+</g>
+<text x="180" y="320" font-size="14" fill="#333" text-anchor="middle">A는 fan-in 0, fan-out 2 (P와 M을 부름)</text>
+</svg><figcaption>M을 부르는 초록 화살표 3개 = fan-in 3, M이 부르는 주황 화살표 2개 = fan-out 2. A는 아무도 부르지 않고 P·M을 부르니 fan-in 0, fan-out 2예요.</figcaption></figure>
+<p>세는 요령은 하나예요. <b>그 모듈로 들어오는 화살표</b>를 세면 fan-in, <b>그 모듈에서 나가는 화살표</b>를 세면 fan-out이에요. 시험에서는 구조도를 주고 특정 모듈의 fan-in·fan-out을 묻거나, “fan-in이 2 이상인 모듈을 모두 고르라”는 식으로 나와요. 위 그림에서 직접 세어 보세요. X·Y는 fan-in 1, fan-out 0이에요.</p>
+<div class="trap">① 화살표 방향을 거꾸로 세는 실수 — fan-<b>in</b>은 <b>들어오는</b> 화살표(나를 부르는 상위), fan-<b>out</b>은 <b>나가는</b> 화살표(내가 부르는 하위). ② “fan-out을 높이는 것이 바람직하다” ✕ — 공통 모듈은 fan-in을 높이고 fan-out을 줄여요. <small>(fan-out을 7 이하로 두라는 권장도 한 자료에 소개돼요.)</small></div>
+
+<h2>5. 결합도 6종 — 모듈 사이가 얼마나 얽혔나</h2>
+<p>이제 첫 번째 자, 결합도예요. <b>결합도</b>는 모듈과 모듈 사이의 상호 의존 정도예요. 한 모듈을 고쳤을 때 다른 모듈도 같이 고쳐야 할 가능성이 클수록 결합도가 높아요. 결합도가 높으면 변경이 연쇄적으로 번지고(파급 효과), 따로 테스트하거나 재사용하기 어려워져요. 그래서 <b>낮을수록 좋아요</b>.</p>
+<p>결합도는 “모듈끼리 <b>무엇을 주고받거나 공유하는가</b>”로 6단계를 나눠요. 주고받는 게 단순한 값일수록 약하고, 상대의 흐름을 지시하거나 같은 전역 데이터를 함께 쓰거나 상대 내부에 손을 넣을수록 강해요. 약한 것부터 하나씩 봐요. 예시 코드는 TypeScript로 썼어요.</p>
+
+<h3>① 자료 결합도 (Data Coupling) — 가장 약함</h3>
+<p>모듈 사이에 <b>필요한 자료 요소(값)만</b> 매개변수로 주고받는 경우예요. 호출되는 모듈은 받은 값으로 계산만 하고, 호출한 쪽의 내부 사정을 전혀 몰라도 돼요. 인터페이스가 가장 단순해서 가장 바람직한 결합이에요.</p>
+<pre>// 필요한 값 두 개만 받음
+function area(w: number, h: number) {
+  return w * h;
+}</pre>
+
+<h3>② 스탬프 결합도 (Stamp Coupling)</h3>
+<p>배열·레코드·객체 같은 <b>자료 구조를 통째로</b> 넘기는 경우예요. 받는 쪽은 그중 일부만 쓰는데도 구조 전체를 받으니, 그 자료 구조의 형태가 바뀌면(필드 이름 변경 등) 실제로 쓰지 않는 모듈까지 영향을 받을 수 있어요. 현업에서 엔티티 객체를 통째로 넘기는 흔한 패턴이 여기에 해당해요.</p>
+<pre>// 주소만 쓰는데 주문 객체 전체를 받음
+function printLabel(order: Order) {
+  console.log(order.address);
+}</pre>
+
+<h3>③ 제어 결합도 (Control Coupling)</h3>
+<p>값이 아니라 <b>제어 플래그(제어 요소)</b>를 넘겨서, 받는 모듈의 내부 처리 흐름을 바꾸는 경우예요. 호출하는 쪽이 “이 모드로 처리해”라고 상대 내부 논리를 지시하는 셈이라, 호출하는 쪽이 받는 쪽의 내부를 알아야 해요. 제어 신호가 거꾸로 <b>하위 모듈에서 상위 모듈로</b> 올라가 하위가 상위에게 처리를 지시하게 되면, 위아래 권한이 뒤집혔다는 뜻으로 <b>권리 전도</b> 현상이라고 불러요. 시험 보기에는 이 표현이 제어 결합도의 단서로 자주 나와요.</p>
+<pre>// 넘겨준 플래그가 내부 분기를 결정
+type Mode = "pdf" | "html";
+function render(d: Data, mode: Mode) {
+  if (mode === "pdf") { /* PDF */ }
+  else { /* HTML */ }
+}</pre>
+
+<h3>④ 외부 결합도 (External Coupling)</h3>
+<p>모듈들이 <b>모듈 밖에서 정해진 것</b>에 함께 의존하는 경우예요. 이 단계는 자료마다 설명이 두 갈래예요. 한쪽은 외부에서 정한 <b>데이터 포맷·통신 프로토콜·장치 인터페이스</b>를 여러 모듈이 공유하는 것이라고 하고(예: 두 모듈이 같은 외부 CSV 파일 형식에 맞춰 읽고 씀), 다른 쪽은 <b>어떤 모듈에서 선언한 데이터(변수)를 외부의 다른 모듈이 참조</b>하는 것이라고 해요. 어느 설명이든 순서상 위치는 같아요. 제어 결합도보다 강하고 공통 결합도보다 약해요.</p>
+<pre>// 외부 파일 형식 "이름,금액,날짜"에
+// 두 모듈이 함께 의존
+// → 형식이 바뀌면 둘 다 수정
+writeCsv("sales.csv", rows); // 모듈 A
+readCsv("sales.csv");        // 모듈 B</pre>
+
+<h3>⑤ 공통 결합도 (Common Coupling)</h3>
+<p>여러 모듈이 <b>공유 데이터 영역</b>, 즉 <b>전역 변수</b>를 함께 읽고 쓰는 경우예요. 누가 언제 값을 바꿨는지 추적하기 어렵고, 전역 변수 하나를 바꾸면 그것을 쓰는 모든 모듈을 확인해야 해요. “어디서 이 값이 바뀌었지?” 하며 디버깅하던 경험이 바로 이 단계의 대가예요.</p>
+<pre>// 전역 공유 객체
+export const config = { taxRate: 0.1 };
+// 모듈 A
+config.taxRate = 0.2;
+// 모듈 B
+const tax = price * config.taxRate;</pre>
+
+<h3>⑥ 내용 결합도 (Content Coupling) — 가장 강함</h3>
+<p>한 모듈이 <b>다른 모듈의 내부 기능이나 내부 자료를 직접 참조·수정</b>하는 경우예요. 인터페이스를 거치지 않고 상대의 private 필드를 바꾸거나 상대 코드 중간으로 분기해 들어가는 식이에요. 정보 은닉이 완전히 깨진 상태라, 상대 모듈 내부 구현이 조금만 바뀌어도 바로 깨져요.</p>
+<pre>// 타입 검사를 우회해
+// 다른 클래스의 private 필드를 직접 수정
+(cart as any)._items.length = 0;</pre>
+
+<p><b>한 장 요약</b> — 위 여섯 단계를 사다리로 세우면 이래요. 위로 갈수록 약하고 좋아요.</p>
+<figure><svg viewBox="0 0 360 392" font-family="sans-serif" role="img" aria-label="결합도 6단계 사다리, 위가 약하고 좋음">
+<defs><marker id="d12u" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d32"/></marker></defs>
+<rect width="360" height="392" rx="12" fill="#f7f7f4"/>
+<text x="180" y="28" font-size="15" font-weight="700" fill="#222" text-anchor="middle">결합도 — 위로 갈수록 약함(좋음)</text>
+<line x1="32" y1="318" x2="32" y2="90" stroke="#2e7d32" stroke-width="3" marker-end="url(#d12u)"/>
+<g font-size="15" font-weight="700" text-anchor="middle">
+<text x="32" y="74" fill="#2e7d32">약</text>
+<text x="32" y="338" fill="#c62828">강</text>
+</g>
+<g stroke-width="1.5">
+<rect x="60" y="46" width="286" height="44" rx="8" fill="#e8f5e9" stroke="#2e7d32"/>
+<rect x="60" y="98" width="286" height="44" rx="8" fill="#eef6e0" stroke="#7cb342"/>
+<rect x="60" y="150" width="286" height="44" rx="8" fill="#fff8dc" stroke="#c9a400"/>
+<rect x="60" y="202" width="286" height="44" rx="8" fill="#fff1d6" stroke="#c26a00"/>
+<rect x="60" y="254" width="286" height="44" rx="8" fill="#fde4d6" stroke="#d84315"/>
+<rect x="60" y="306" width="286" height="44" rx="8" fill="#fbd5d5" stroke="#c62828"/>
+</g>
+<g font-size="15" font-weight="700" fill="#222">
+<text x="74" y="73">① 자료</text>
+<text x="74" y="125">② 스탬프</text>
+<text x="74" y="177">③ 제어</text>
+<text x="74" y="229">④ 외부</text>
+<text x="74" y="281">⑤ 공통</text>
+<text x="74" y="333">⑥ 내용</text>
+</g>
+<g font-size="14" fill="#333" text-anchor="end">
+<text x="332" y="73">값(자료 요소)만</text>
+<text x="332" y="125">자료 구조 통째</text>
+<text x="332" y="177">제어 플래그</text>
+<text x="332" y="229">외부 포맷·데이터</text>
+<text x="332" y="281">전역 변수 공유</text>
+<text x="332" y="333">내부 직접 참조</text>
+</g>
+<text x="180" y="376" font-size="14" fill="#2e7d32" text-anchor="middle">↑ 좋아지는 방향 = 결합도 낮추기</text>
+</svg><figcaption>자스제외공내 — 자료·스탬프·제어·외부·공통·내용. 위(자료)가 가장 약하고 바람직해요.</figcaption></figure>
+<table>
+<tr><th>결합도</th><th>주고받는 것 · 단서</th><th>코드 냄새</th></tr>
+<tr><td><b>자료</b></td><td>필요한 값(자료 요소)만 매개변수로</td><td>없음 — 목표 상태</td></tr>
+<tr><td><b>스탬프</b></td><td>배열·레코드·객체 등 <b>자료 구조</b> 통째</td><td>일부 필드만 쓰는데 엔티티 전체를 받음</td></tr>
+<tr><td><b>제어</b></td><td><b>플래그</b>로 상대 내부 흐름 지시, 권리 전도</td><td><code>mode</code>·<code>type</code> 인자로 내부 if 분기</td></tr>
+<tr><td><b>외부</b></td><td>외부 포맷·프로토콜·장치, 또는 다른 모듈이 선언한 데이터 참조</td><td>같은 파일 형식에 여러 모듈이 묶임</td></tr>
+<tr><td><b>공통</b></td><td><b>전역 변수</b>(공유 데이터 영역)</td><td>“이 값 누가 바꿨지?”</td></tr>
+<tr><td><b>내용</b></td><td>상대 <b>내부</b> 자료·코드를 직접 참조·수정</td><td>남의 private 필드 직접 수정</td></tr>
+</table>
+
+<h2>6. 응집도 7종 — 모듈 안이 얼마나 한 목적으로 뭉쳤나</h2>
+<p>결합도가 모듈 사이를 봤다면, 두 번째 자인 <b>응집도</b>는 모듈 <b>안</b>을 봐요. 응집도는 모듈 내부 요소들이 서로 얼마나 관련되어 하나의 목적을 위해 뭉쳐 있는지의 정도예요. 응집도가 높으면 모듈이 하는 일이 분명해서 이름 짓기·이해·수정·재사용이 쉬워요. 응집도가 낮으면 상관없는 일이 한 모듈에 섞여 있어서 한 기능을 고치다 엉뚱한 기능이 깨져요. 그래서 <b>높을수록 좋아요</b>.</p>
+<p>응집도 7단계는 “모듈 안 요소들이 <b>왜 같은 모듈에 들어 있나</b>”라는 묶인 이유로 나눠요. 아래는 모두 같은 쇼핑몰 주문 처리 시스템 안의 예로 들게요. 좋은 것(강한 것)부터 봐요.</p>
+
+<h3>① 기능적 응집도 (Functional) — 가장 강함</h3>
+<p>모듈 안의 모든 요소가 <b>단 하나의 기능</b>을 수행하는 데 함께 기여하는 경우예요. 예를 들어 <code>calcDiscount()</code> 모듈은 쿠폰·등급을 받아 할인 금액 하나를 계산하는 일만 해요. 무엇을 하는 모듈인지 한 문장(동사 + 목적어 하나)으로 설명된다면 기능적 응집도예요.</p>
+
+<h3>② 순차적 응집도 (Sequential)</h3>
+<p>모듈 안에서 <b>한 활동의 출력 데이터가 다음 활동의 입력</b>으로 쓰이는 경우예요. 주문 레코드를 읽고 → 그 레코드로 결제 금액을 계산하고 → 계산된 금액으로 영수증을 출력하는 모듈이 예예요. 리눅스 파이프(<code>cat | grep | sort</code>)나 조립 라인처럼 데이터가 다음 단계로 흘러가요. 기능 하나보다 넓지만 단계끼리 데이터로 강하게 이어져 있어서 꽤 좋은 편이에요.</p>
+
+<h3>③ 교환적 응집도 (Communicational) = 통신적 응집도</h3>
+<p>모듈 안 요소들이 <b>같은 입력 데이터(또는 같은 출력 데이터)</b>를 사용하지만, 각자 <b>서로 다른 기능</b>을 하는 경우예요. 같은 주문 레코드를 가지고 한쪽은 배송 라벨을 출력하고, 다른 쪽은 매출을 집계하는 모듈이 예예요. 같은 데이터를 쓴다는 이유로 묶였을 뿐 두 작업 사이에 데이터가 흐르지는 않아요. 번역에 따라 <b>교환적</b> 또는 <b>통신적</b>이라고 부르는데 같은 단계예요.</p>
+<p>순차와 교환은 그림으로 보면 바로 구별돼요. 순차는 데이터가 <b>한 줄로 이어지고</b>, 교환은 같은 데이터에서 <b>갈라져요</b>.</p>
+<p><b>순차적</b> — 앞 단계의 출력이 다음 단계의 입력이에요.</p>
+<figure class="mermaid"><img src="../assets/e65d28dba24fbc1c.png" alt="도식" loading="lazy" style="width:169px"></figure>
+<p><b>교환적(통신적)</b> — 같은 입력을 두 작업이 따로 써요.</p>
+<figure class="mermaid"><img src="../assets/0d907b1a7695eb13.png" alt="도식" loading="lazy" style="width:360px"></figure>
+
+<h3>④ 절차적 응집도 (Procedural)</h3>
+<p>모듈 안 요소들이 <b>정해진 순서대로 실행</b>된다는 이유로 묶였지만, 단계끼리 <b>데이터를 주고받지는 않는</b> 경우예요. “로그인 권한 확인 → 주문 화면 열기 → 방문 통계 기록”처럼 순서는 정해져 있지만 각 단계가 쓰는 데이터는 따로예요. 순차적 응집도와 헷갈리는데, <b>순서만 같으면 절차, 데이터까지 이어지면 순차</b>예요.</p>
+
+<h3>⑤ 시간적 응집도 (Temporal)</h3>
+<p>서로 관련 없는 기능들이 <b>같은 시점에 실행된다</b>는 이유만으로 묶인 경우예요. 앱이 시작될 때 실행하는 <code>init()</code> 안에 로그 설정·캐시 비우기·설정 파일 읽기가 함께 들어 있는 것, 종료할 때 파일 닫기·연결 해제·알림 보내기를 모아 둔 것이 대표 예예요. 절차적 응집도와 차이는 <b>순서가 중요한가(절차) vs 시점만 같은가(시간)</b>예요.</p>
+
+<h3>⑥ 논리적 응집도 (Logical)</h3>
+<p>하는 일이 <b>비슷한 종류</b>라는 이유로 묶어 두고, 그때그때 <b>플래그로 하나를 골라</b> 실행하는 경우예요. 키보드·마우스·터치 입력 처리를 <code>handleInput(type)</code> 하나에 모아 type으로 분기하는 식이에요. 논리적으로 비슷해 보일 뿐 실제로는 서로 다른 기능이 들어 있어요. 이런 모듈을 부르는 쪽은 플래그를 넘겨야 하니 앞에서 본 <b>제어 결합도</b>와 자주 같이 나타나요.</p>
+
+<h3>⑦ 우연적 응집도 (Coincidental) — 가장 약함</h3>
+<p>모듈 안 요소들 사이에 <b>아무 의미 있는 관련이 없는</b> 경우예요. 갈 곳 없는 함수들을 모아 둔 <code>utils.ts</code>·<code>CommonHelper</code> 클래스에 날짜 포맷, 이메일 검증, 배열 셔플이 함께 들어 있는 모습이에요. 이유 없이 같이 있으니 이름도 붙이기 어렵고, 재사용하려면 필요 없는 것까지 딸려 와요.</p>
+
+<p><b>한 장 요약</b> — 일곱 단계를 같은 사다리로 세우면 이래요. 결합도와 반대로 위가 <b>강하고</b> 좋아요.</p>
+<figure><svg viewBox="0 0 360 446" font-family="sans-serif" role="img" aria-label="응집도 7단계 사다리, 위가 강하고 좋음">
+<defs><marker id="d12v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d32"/></marker></defs>
+<rect width="360" height="446" rx="12" fill="#f7f7f4"/>
+<text x="180" y="28" font-size="15" font-weight="700" fill="#222" text-anchor="middle">응집도 — 위로 갈수록 강함(좋음)</text>
+<line x1="32" y1="370" x2="32" y2="90" stroke="#2e7d32" stroke-width="3" marker-end="url(#d12v)"/>
+<g font-size="15" font-weight="700" text-anchor="middle">
+<text x="32" y="74" fill="#2e7d32">강</text>
+<text x="32" y="390" fill="#c62828">약</text>
+</g>
+<g stroke-width="1.5">
+<rect x="60" y="46" width="286" height="44" rx="8" fill="#e8f5e9" stroke="#2e7d32"/>
+<rect x="60" y="98" width="286" height="44" rx="8" fill="#eef6e0" stroke="#7cb342"/>
+<rect x="60" y="150" width="286" height="44" rx="8" fill="#f6f7dc" stroke="#9e9d24"/>
+<rect x="60" y="202" width="286" height="44" rx="8" fill="#fff8dc" stroke="#c9a400"/>
+<rect x="60" y="254" width="286" height="44" rx="8" fill="#fff1d6" stroke="#c26a00"/>
+<rect x="60" y="306" width="286" height="44" rx="8" fill="#fde4d6" stroke="#d84315"/>
+<rect x="60" y="358" width="286" height="44" rx="8" fill="#fbd5d5" stroke="#c62828"/>
+</g>
+<g font-size="15" font-weight="700" fill="#222">
+<text x="74" y="73">① 기능적</text>
+<text x="74" y="125">② 순차적</text>
+<text x="74" y="177">③ 교환적</text>
+<text x="74" y="229">④ 절차적</text>
+<text x="74" y="281">⑤ 시간적</text>
+<text x="74" y="333">⑥ 논리적</text>
+<text x="74" y="385">⑦ 우연적</text>
+</g>
+<g font-size="14" fill="#333" text-anchor="end">
+<text x="332" y="73">단 하나의 기능</text>
+<text x="332" y="125">앞 출력 → 다음 입력</text>
+<text x="332" y="177">같은 입력·출력 사용</text>
+<text x="332" y="229">순서만 정해짐</text>
+<text x="332" y="281">같은 시점에 실행</text>
+<text x="332" y="333">비슷한 종류, 플래그 선택</text>
+<text x="332" y="385">관련 없음</text>
+</g>
+<text x="180" y="430" font-size="14" fill="#2e7d32" text-anchor="middle">↑ 좋아지는 방향 = 응집도 높이기</text>
+</svg><figcaption>기순교절시논우 — 기능·순차·교환(통신)·절차·시간·논리·우연. 위(기능)가 가장 강하고 바람직해요.</figcaption></figure>
+<table>
+<tr><th>응집도</th><th>왜 같이 있나</th><th>구별 단서</th></tr>
+<tr><td><b>기능적</b></td><td>단 하나의 기능에 모두 기여</td><td>한 문장으로 설명됨</td></tr>
+<tr><td><b>순차적</b></td><td>앞 활동의 <b>출력이 다음 입력</b></td><td><b>데이터가 흐름</b> (파이프)</td></tr>
+<tr><td><b>교환적 (통신적)</b></td><td><b>같은 입력·출력</b>을 쓰는 서로 다른 기능</td><td><b>같은 데이터에서 갈라짐</b></td></tr>
+<tr><td><b>절차적</b></td><td>정해진 <b>순서</b>로 실행</td><td><b>순서만</b>, 데이터는 따로</td></tr>
+<tr><td><b>시간적</b></td><td>같은 <b>시점</b>에 실행</td><td><b>시점만</b> 같음 (init·종료 처리)</td></tr>
+<tr><td><b>논리적</b></td><td>비슷한 <b>종류</b>라서</td><td>플래그로 하나 골라 실행</td></tr>
+<tr><td><b>우연적</b></td><td>이유 없음</td><td><code>utils</code> 잡동사니</td></tr>
+</table>
+
+<h2>7. 결합도 · 응집도 한 장 정리</h2>
+<p>두 자를 나란히 놓으면 헷갈리는 지점이 보여요. 결합도는 모듈 <b>사이</b>, 응집도는 모듈 <b>안</b>을 재고, 좋은 방향이 서로 반대예요(결합도는 낮게, 응집도는 높게). 그래서 순서 문제에서 “강한 것부터 / 약한 것부터”, “좋은 것부터 / 나쁜 것부터”를 바꿔 묻는 함정이 가장 많이 나와요. 시험장에서는 문제의 <b>방향 단어부터 동그라미</b> 치세요.</p>
+<div class="vs">
+<div><b>결합도 (6)</b>모듈 <b>사이</b> 의존 정도 · <b>낮을수록</b> 좋음 · 최선 = 자료, 최악 = 내용</div>
+<div><b>응집도 (7)</b>모듈 <b>안</b> 관련 정도 · <b>높을수록</b> 좋음 · 최선 = 기능, 최악 = 우연</div>
+</div>
+<div class="memo"><b>좋은 것부터</b> 외우기: 결합도 <b>자스제외공내</b>(자료·스탬프·제어·외부·공통·내용, 약 → 강) / 응집도 <b>기순교절시논우</b>(기능·순차·교환·절차·시간·논리·우연, 강 → 약). 거꾸로 읽으면 나쁜 것부터: <b>내공외제스자</b> / <b>우논시절교순기</b>. 둘 다 <b>첫 글자가 좋은 쪽</b>이라고 기억하면 방향이 안 헷갈려요.</div>
+<div class="trap">단골 함정 ① 결합도 순서를 <b>강 → 약</b>으로 묻는데 약 → 강 배열(자스제외공내)을 고름 — 방향 단어 확인. ② “응집도는 낮을수록, 결합도는 높을수록 좋다”처럼 방향을 뒤집은 설명. ③ 자료 구조(배열·레코드)를 넘기는데 <b>자료</b> 결합도라고 한 선지 — 자료 구조면 <b>스탬프</b>. ④ 출력 → 입력인데 <b>교환적</b>, 같은 입력인데 <b>순차적</b>이라고 바꾼 선지. ⑤ 결합도 이름(제어·공통)을 응집도 보기에 섞기 — 응집도에는 제어·공통이 없어요.</div>
+
+<h2>8. ㅋㅋ 외우기</h2>
+<p>설명을 다 읽었으면 이제 웃으면서 굳혀요.</p>
+<div class="lol">결합도 <b>자스제외공내</b> — 자료·스탬프·제어·외부·공통·내용. 오른쪽으로 갈수록 PR 리뷰에서 코멘트 폭탄 맞는 순. 전역 변수(공통)부터는 손절미 풀풀, 남의 private 직접 고치기(내용)는 리뷰어가 말을 잃음.</div>
+<div class="lol">응집도 <b>기순교절시논우</b> — 할인 계산 하나만 딱 하는 기능적 모듈은 감다살. 우연적은 <code>utils.ts</code>에 “그냥 같은 파일에 있어서 같이 있음”… 이게 맞나?</div>
+<div class="lol">fan-in / fan-out — 공통 모듈은 여기저기서 불러 주는 인싸(<b>fan-in↑</b>)일수록 좋고, 혼자 다 부르고 다니는 모듈(<b>fan-out↑</b>)은 하위 하나 고치면 다 같이 터져서 킹받는 구조.</div>
+<figure class="meme"><img src="../assets/memes/D012-coupling.png" alt="드레이크 밈: 결합도 높이기는 거절, 결합도 낮추고 응집도 높이기는 선택"><figcaption>결합도는 낮게, 응집도는 높게 — 방향 뒤집기 함정 주의</figcaption></figure>
+
+<h2>9. 시험 포인트 정리</h2>
+<div class="point"><b>오늘 이것만은</b>
+<ul>
+<li>모듈 독립성 = <b>결합도↓ · 응집도↑</b> (+ 적당한 모듈 크기, 정보 은닉)</li>
+<li>결합도 약 → 강: <b>자료 &lt; 스탬프 &lt; 제어 &lt; 외부 &lt; 공통 &lt; 내용</b></li>
+<li>응집도 강 → 약: <b>기능 &gt; 순차 &gt; 교환(통신) &gt; 절차 &gt; 시간 &gt; 논리 &gt; 우연</b></li>
+<li>단서 짝: 값만 → 자료, 자료 구조 통째 → 스탬프, 플래그 → 제어, 전역 변수 → 공통, 내부 직접 참조 → 내용</li>
+<li>출력 → 입력 → <b>순차</b>, 같은 입력·출력 → <b>교환</b>, 순서만 → <b>절차</b>, 같은 시점 → <b>시간</b>, 플래그로 골라 실행 → <b>논리</b></li>
+<li><b>fan-in</b> = 나를 부르는 상위 수(재사용↑), <b>fan-out</b> = 내가 부르는 하위 수. 공통 모듈은 fan-in↑ fan-out↓</li>
+<li>재사용 범위 = <b>함수·객체 / 컴포넌트 / 애플리케이션</b>, 방법 = <b>합성 중심(블록 조립) / 생성 중심(명세 구체화)</b></li>
+<li>3R = 역공학(코드 → 설계 추출) · 재공학(기존 시스템 개선·재구성) · 재사용</li>
+</ul>
+</div>
+
+<h2>10. 오답 복습 — 여섯 건 다시 보기</h2>
+<p>오늘은 재확인 예정일이 겹친 오답이 여섯 개예요. 새 내용 사이에 끼워 넣기보다 여기서 한 번에 정리하고, 확인 문제 3~8번으로 다시 풀어요.</p>
+
+<h3>D004-1 · 럼바우 OMT 세 모델과 도구 (D+7)</h3>
+<p>럼바우의 객체 모델링 기법(OMT)은 시스템을 세 관점으로 차례로 모델링해요. <b>객체 모델링</b>은 시스템에 어떤 객체(클래스)가 있고 서로 어떤 관계인지 정적인 구조를 그려서 <b>객체 다이어그램</b>을 써요. <b>동적 모델링</b>은 시간에 따라 객체의 상태가 어떻게 바뀌는지 그려서 <b>상태 다이어그램</b>을 써요. <b>기능 모델링</b>은 입력 데이터가 어떤 처리를 거쳐 출력으로 바뀌는지 그려서 <b>자료 흐름도(DFD)</b>를 써요. 지난번에는 기능 모델링의 도구를 헷갈렸는데, “기능 = 데이터가 흘러가며 바뀌는 과정 = DFD”로 연결하면 돼요.</p>
+<table>
+<tr><th>모델링</th><th>무엇을 보나</th><th>도구</th></tr>
+<tr><td><b>객체</b></td><td>객체·클래스와 관계(정적 구조)</td><td>객체 다이어그램</td></tr>
+<tr><td><b>동적</b></td><td>시간에 따른 상태 변화</td><td>상태 다이어그램</td></tr>
+<tr><td><b>기능</b></td><td>입력 → 처리 → 출력, 데이터 흐름</td><td><b>자료 흐름도(DFD)</b></td></tr>
+</table>
+
+<h3>D005-2 · CASE 기대효과가 아닌 것 (D+7)</h3>
+<p>CASE(Computer-Aided Software Engineering) 도구는 요구 분석·설계 산출물 작성을 자동화해 돕는 도구예요. 기대효과는 산출물 <b>표준화</b>, 문서 작성 <b>자동화</b>, 모델 사이 <b>일관성 검증으로 오류를 일찍 발견</b>, 유지보수 용이성이에요. 지난번에는 “일관성 검증”을 효과가 아닌 것으로 골랐는데, 이건 CASE의 대표 효과예요. CASE는 요구사항 정의를 <b>돕는</b> 도구이지, 사람과 요구사항을 도출·정의하는 활동을 <b>없애 주지는</b> 않아요. ‘아닌 것’ 문제는 선지마다 “이게 효과 맞나?”를 O/X로 표시하고 X 하나를 고르세요.</p>
+
+<h3>D007-1 · UI 표준 vs UI 지침 (D+1 재시작 · 두 번 연속 오답)</h3>
+<p>두 번 연달아 틀린 항목이라 조금 길게 정리할게요. 둘 다 “지켜야 하는 규칙”이라서 헷갈리는데, <b>적용 범위와 성격</b>이 달라요.</p>
+<p><b>UI 표준</b>은 시스템 <b>전체</b> 화면에 공통으로 적용하는 <b>화면 구성과 화면 이동 규약</b>이에요. “모든 화면에서 로고와 검색창은 같은 자리에 둔다, 저장·취소 버튼은 항상 오른쪽 아래에 둔다, 상세 화면에서 닫으면 호출한 화면으로 돌아간다”처럼 <b>무엇을 어떻게 통일할지 정한 규칙집</b>이에요. 여러 팀이 화면을 나눠 만들어도 하나의 시스템처럼 보이게 하는 게 목적이에요. 디자인 시스템의 레이아웃·내비게이션 규칙을 떠올리면 가까워요.</p>
+<p><b>UI 지침</b>은 UI를 <b>개발하는 과정에서 지켜야 할 세부 조건·가이드라인</b>이에요. “버튼 글자는 동사로 쓴다, 필수 입력 항목은 빨간 별표로 표시한다, 오류 메시지는 해결 방법을 함께 적는다”처럼 개발자·디자이너가 화면을 만들 때 따라야 할 조건이에요. 표준이 “전체 틀”이라면 지침은 “만들 때의 세부 주의 사항”이에요.</p>
+<p>문제를 볼 때는 두 단어를 찾으세요. “<b>시스템 전체 · 공통 · 화면 구성 · 화면 이동 · 규약</b>”이 보이면 <b>표준</b>, “<b>개발 과정에서 지켜야 할 · 세부 조건 · 가이드라인</b>”이 보이면 <b>지침</b>이에요. 사용자가 원하는 UI를 모은 건 UI 요구사항, 시제품은 프로토타입이라 둘과는 또 달라요.</p>
+<div class="vs">
+<div><b>UI 표준</b>시스템 <b>전체</b>에 공통 적용하는 화면 구성·화면 이동 <b>규약</b> (무엇을 통일할지)</div>
+<div><b>UI 지침</b>UI 개발 과정에서 지켜야 할 <b>세부 조건·가이드라인</b> (만들 때 무엇을 지킬지)</div>
+</div>
+
+<h3>D009-3 · 일반화 vs 실체화 기호 (D+1)</h3>
+<p>두 관계 모두 <b>속이 빈 삼각형</b> 화살촉을 쓰고, 선 모양만 달라요. <b>일반화</b>는 자식 클래스가 부모 클래스를 상속하는 “is-a” 관계라 <b>실선</b>이에요(개 → 동물). <b>실체화</b>는 클래스가 인터페이스에 약속된 기능을 구현하는 관계라 <b>점선</b>이에요(카드결제 ⇢ 결제수단). 자바로 치면 <code>extends</code>는 실선, <code>implements</code>는 점선이에요. 아래 그림에서 선 모양을 비교해 보세요. 삼각형은 둘 다 부모·인터페이스 쪽에 붙어요.</p>
+<figure class="mermaid"><img src="../assets/1c25e997b3f630ef.png" alt="도식" loading="lazy" style="width:246px"></figure>
+
+<h3>D009-4 · 일일 스크럼 vs 스프린트 계획 (D+1)</h3>
+<p>스크럼 이벤트는 <b>언제, 얼마나 자주</b> 하는지로 구별하면 쉬워요. <b>스프린트 계획</b>은 스프린트를 시작할 때 한 번, 이번 스프린트에서 할 일(스프린트 백로그)을 정하는 회의예요. <b>일일 스크럼</b>은 스프린트 기간 동안 <b>매일</b> 같은 시간에 <b>15분</b> 이내로 모여 목표 진척을 확인하고 <b>다음 24시간 계획</b>을 조정하는 회의예요. 스프린트가 끝나면 만든 결과물을 보여 주는 <b>스프린트 리뷰</b>, 일하는 방식을 돌아보는 <b>스프린트 회고</b>가 이어져요. “매일·15분·24시간”이 보이면 일일 스크럼이에요.</p>
+<table>
+<tr><th>이벤트</th><th>시점 · 주기</th><th>하는 일</th></tr>
+<tr><td><b>스프린트 계획</b></td><td>스프린트 <b>시작</b> 시 1회</td><td>목표·스프린트 백로그 결정</td></tr>
+<tr><td><b>일일 스크럼</b></td><td><b>매일 15분</b></td><td>진척 점검, 다음 24시간 계획 조정</td></tr>
+<tr><td><b>스프린트 리뷰</b></td><td>스프린트 <b>끝</b></td><td>결과물 시연·피드백</td></tr>
+<tr><td><b>스프린트 회고</b></td><td>리뷰 다음, 스프린트 <b>끝</b></td><td>일하는 방식 개선</td></tr>
+</table>
+
+<h3>D009-7 · 유효성 vs 유연성 (D+1)</h3>
+<p>UI 설계 원칙 네 가지 <b>직유학유</b> 중 이름이 비슷한 두 개가 문제예요. <b>유효성</b>은 사용자가 원하는 <b>목표를 정확하고 완전하게 달성</b>할 수 있어야 한다는 원칙이에요. 결과가 맞게 나오는지, 목적을 이루는지가 핵심이에요. <b>유연성</b>은 사용자의 <b>다양한 요구·조작 방식을 받아들이고</b>, 실수를 막고 되돌릴 수 있게 해야 한다는 원칙이에요(어제 4번 문항에서 맞혔어요). <b>직관성</b>은 누구나 쉽게 이해하고 쓰기, <b>학습성</b>은 쉽게 배우고 익히기예요. “목표 달성”이면 유효성, “다양한 조작·실수 방지”면 유연성이에요.</p>
+
+<h2>확인 문제</h2>
+<ol class="quiz">
+<li>한 모듈 안에 ‘주문 파일에서 주문 레코드를 읽는 부분’, ‘읽어 온 레코드로 결제 금액을 계산하는 부분’, ‘계산된 금액으로 영수증을 출력하는 부분’이 들어 있다. 앞 부분의 출력이 바로 다음 부분의 입력이 된다. 이 모듈의 응집도는?<label class="opt"><input type="radio" name="D012-q1" value="1">① 교환적(통신적) 응집도</label><label class="opt"><input type="radio" name="D012-q1" value="2">② 절차적 응집도</label><label class="opt"><input type="radio" name="D012-q1" value="3">③ 순차적 응집도</label><label class="opt"><input type="radio" name="D012-q1" value="4">④ 시간적 응집도</label></li>
+<li>결합도를 <b>약한 것부터 강한 것</b> 순서로 바르게 나열한 것은?<label class="opt"><input type="radio" name="D012-q2" value="1">① 내용 → 공통 → 외부 → 제어 → 스탬프 → 자료</label><label class="opt"><input type="radio" name="D012-q2" value="2">② 자료 → 스탬프 → 제어 → 외부 → 공통 → 내용</label><label class="opt"><input type="radio" name="D012-q2" value="3">③ 자료 → 제어 → 스탬프 → 공통 → 외부 → 내용</label><label class="opt"><input type="radio" name="D012-q2" value="4">④ 스탬프 → 자료 → 제어 → 외부 → 내용 → 공통</label></li>
+<li>럼바우(Rumbaugh) OMT의 모델링과 주로 쓰는 도구의 짝으로 옳은 것은?<label class="opt"><input type="radio" name="D012-q3" value="1">① 기능 모델링 — 자료 흐름도(DFD)</label><label class="opt"><input type="radio" name="D012-q3" value="2">② 기능 모델링 — 객체 다이어그램</label><label class="opt"><input type="radio" name="D012-q3" value="3">③ 동적 모델링 — 자료 흐름도(DFD)</label><label class="opt"><input type="radio" name="D012-q3" value="4">④ 객체 모델링 — 상태 다이어그램</label></li>
+<li>CASE(분석 자동화 도구)를 도입했을 때 기대할 수 있는 효과가 <b>아닌</b> 것은?<label class="opt"><input type="radio" name="D012-q4" value="1">① 산출물 형식이 표준화된다</label><label class="opt"><input type="radio" name="D012-q4" value="2">② 설계 문서 작성이 자동화된다</label><label class="opt"><input type="radio" name="D012-q4" value="3">③ 모델 간 일관성을 검증해 오류를 일찍 발견할 수 있다</label><label class="opt"><input type="radio" name="D012-q4" value="4">④ 도구가 요구사항을 대신 정해 주므로 사용자와 요구사항을 도출·정의하는 활동이 필요 없어진다</label></li>
+<li>여러 팀이 나눠 개발하는 쇼핑몰에서 ‘모든 화면은 상단 공통 메뉴와 왼쪽 카테고리 영역을 같은 위치에 두고, 뒤로 가기는 항상 직전 목록 화면으로 돌아간다’처럼 시스템 전체 화면에 공통으로 적용할 화면 구성·화면 이동 규약을 정했다. 이것은?<label class="opt"><input type="radio" name="D012-q5" value="1">① UI 지침</label><label class="opt"><input type="radio" name="D012-q5" value="2">② UI 표준</label><label class="opt"><input type="radio" name="D012-q5" value="3">③ UI 요구사항</label><label class="opt"><input type="radio" name="D012-q5" value="4">④ UI 프로토타입</label></li>
+<li>UML 클래스 다이어그램에서 <b>실선</b>에 <b>속이 빈 삼각형</b> 화살표가 부모 클래스를 가리키는 관계는?<label class="opt"><input type="radio" name="D012-q6" value="1">① 일반화</label><label class="opt"><input type="radio" name="D012-q6" value="2">② 실체화</label><label class="opt"><input type="radio" name="D012-q6" value="3">③ 의존</label><label class="opt"><input type="radio" name="D012-q6" value="4">④ 집합</label></li>
+<li>스프린트 기간 동안 <b>매일</b> 같은 시간에 <b>15분</b> 이내로 모여, 스프린트 목표 진척을 점검하고 다음 24시간 계획을 조정하는 스크럼 이벤트는?<label class="opt"><input type="radio" name="D012-q7" value="1">① 스프린트 계획</label><label class="opt"><input type="radio" name="D012-q7" value="2">② 스프린트 리뷰</label><label class="opt"><input type="radio" name="D012-q7" value="3">③ 일일 스크럼</label><label class="opt"><input type="radio" name="D012-q7" value="4">④ 스프린트 회고</label></li>
+<li>사용자가 원하는 <b>목표를 정확하고 완전하게 달성</b>할 수 있도록 설계해야 한다는 UI 설계 원칙은?<label class="opt"><input type="radio" name="D012-q8" value="1">① 직관성</label><label class="opt"><input type="radio" name="D012-q8" value="2">② 유연성</label><label class="opt"><input type="radio" name="D012-q8" value="3">③ 학습성</label><label class="opt"><input type="radio" name="D012-q8" value="4">④ 유효성</label></li>
+</ol><div class="answer-bar" data-id="D012" data-n="8"><code></code><button type="button">답안 복사</button></div><p><small>고른 뒤 <b>답안 복사</b> → 디스코드 공부 채널에 붙여넣기 하면 돼요.</small></p>
+<p>답장: <code>정처기 D012: 1)번호 2)번호 3)번호 4)번호 5)번호 6)번호 7)번호 8)번호</code></p>
+<p class="meta"><a href="2026-10-13-D011.html">← D011</a>  </p>
+<script>
+document.querySelectorAll('.answer-bar').forEach(bar=>{
+  const id=bar.dataset.id,n=+bar.dataset.n,out=bar.querySelector('code'),btn=bar.querySelector('button');
+  const text=()=>'정처기 '+id+': '+Array.from({length:n},(_,i)=>{const c=document.querySelector('input[name="'+id+'-q'+(i+1)+'"]:checked');return (i+1)+')'+(c?c.value:'?')}).join(' ');
+  document.querySelectorAll('input[name^="'+id+'-q"]').forEach(r=>r.addEventListener('change',()=>{out.textContent=text()}));
+  out.textContent=text();
+  btn.addEventListener('click',async()=>{const t=text();try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}btn.textContent='복사됨 ✓';setTimeout(()=>btn.textContent='답안 복사',1500)});
+});
+</script>
+<footer>2027년 정기 기사 1회 정보처리기사 필기 준비 · 공식 범위: Q-Net 2027~2029 출제기준</footer>
+</main></body></html>
