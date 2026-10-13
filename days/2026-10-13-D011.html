@@ -20,8 +20,8 @@
 <div><b>8</b>아키텍처 패턴<small>레·클·파·M + 브·P·이·마</small></div>
 <div><b>4+1</b>뷰<small>논리·프로세스·구현·배포 + 유스케이스</small></div>
 
-<div class="box"><b>오늘 이야기의 흐름</b><br>아키텍처를 짜는 사람 입장에서 순서대로 따라가요. ① 큰 시스템을 <b>어떻게 나누고 감출지</b>(설계 원리) → ② 나눈 구조가 <b>좋은지 판단하는 기준</b>(품질 속성) → ③ 그 구조를 <b>어떤 순서로 정하는지</b>(설계 과정) → ④ 자주 쓰여서 이름이 붙은 <b>정답 구조</b>(아키텍처 패턴 8종) → ⑤ 완성된 아키텍처를 <b>보는 사람별로 나눠 그리는 법</b>(4+1 뷰). 앞 단계가 뒤 단계의 이유가 되니까, 막히면 이 흐름으로 돌아오세요.</div>
 </div>
+<div class="box"><b>오늘 이야기의 흐름</b>아키텍처를 짜는 사람 입장에서 순서대로 따라가요. ① 큰 시스템을 <b>어떻게 나누고 감출지</b>(설계 원리) → ② 나눈 구조가 <b>좋은지 판단하는 기준</b>(품질 속성) → ③ 그 구조를 <b>어떤 순서로 정하는지</b>(설계 과정) → ④ 자주 쓰여서 이름이 붙은 <b>정답 구조</b>(아키텍처 패턴 8종) → ⑤ 완성된 아키텍처를 <b>보는 사람별로 나눠 그리는 법</b>(4+1 뷰). 앞 단계가 뒤 단계의 이유가 되니까, 막히면 이 흐름으로 돌아오세요.</div>
 
 
 <h2>1. A3 지도 — 오늘 위치</h2>
@@ -136,7 +136,7 @@
 <text x="28" y="290" font-size="15" font-weight="700" fill="#222">개념적 무결성 · 정확성/완결성</text>
 <text x="28" y="316" font-size="14" fill="#333"><tspan font-weight="700">구축 가능성</tspan> (+ 변경성·시험성 등)</text>
 </svg><figcaption>굵은 글자는 확인한 두 자료가 같은 측면으로 분류한 항목, 괄호 안은 한 자료에만 있는 항목이에요.</figcaption></figure>
-<table>
+<p class="hint">↔ 표가 넓어요. 옆으로 밀어서 보세요</p><table>
 <tr><th>측면</th><th>대표 항목 (공통)</th><th>한 자료에만 있는 항목</th><th>판단 키워드</th></tr>
 <tr><td><b>시스템</b></td><td>성능, 보안, 가용성, 사용성, 변경 용이성</td><td>기능성, 확장성, 시험 용이성, 배치성, 안정성</td><td>운영 중 시스템이 어떻게 동작하나</td></tr>
 <tr><td><b>비즈니스</b></td><td>시장 적시성, 비용과 혜택, 예상 시스템 수명</td><td>목표 시장, 공개 일정, 기존 시스템과의 통합</td><td>언제 출시·얼마·얼마나 오래</td></tr>
@@ -147,7 +147,7 @@
 <div class="trap">① “시장 적시성·비용·예상 수명”을 <b>시스템 측면</b> 선지에 섞어 내요 — 돈·출시·수명은 비즈니스예요. ② ISO 9126 품질 특성(기능성·신뢰성·사용성·효율성·유지보수성·이식성)과는 <b>다른 분류</b>예요. “품질 속성 3측면”을 묻는데 9126 이름이 나오면 의심하세요(9126은 D 범위에서 따로 봐요).</div>
 
 <h2>4. 설계 과정 — 참고</h2>
-<figure class="mermaid"><img src="../assets/5a49d2181be4fce2.png" alt="도식" loading="lazy"></figure>
+<figure class="mermaid"><img src="../assets/5a49d2181be4fce2.png" alt="도식" loading="lazy" style="width:334px"></figure>
 <p>두 번째 단계의 시스템 타입은 네 가지로 소개돼요.</p>
 <div class="grid">
 <div><b>대화형</b>사용자 요청 → 처리 → 응답 (웹 서비스)</div>
@@ -262,12 +262,12 @@
 </ul>
 </div>
 <h3>MVC — 요청 하나가 흐르는 순서</h3>
-<figure class="mermaid"><img src="../assets/85dbbfe9e5d1ee6b.png" alt="도식" loading="lazy"></figure>
+<figure class="mermaid"><img src="../assets/85dbbfe9e5d1ee6b.png" alt="도식" loading="lazy" style="width:496px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure>
 <h3>브로커 vs 이벤트 버스 — 가운데 있는 것이 하는 일</h3>
 <p><b>브로커</b>: 요청을 받아 맞는 서버를 <b>찾아 연결</b>하고 응답을 돌려줘요(요청-응답, 위치 투명성).</p>
-<figure class="mermaid"><img src="../assets/cb8f3ebabd23369b.png" alt="도식" loading="lazy"></figure>
+<figure class="mermaid"><img src="../assets/cb8f3ebabd23369b.png" alt="도식" loading="lazy" style="width:408px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure>
 <p><b>이벤트 버스</b>: 소스는 발행만 하고 <b>누가 받는지 몰라요</b>. 구독자들이 각자 비동기로 받아요(느슨한 결합).</p>
-<figure class="mermaid"><img src="../assets/dea43867049ca8cb.png" alt="도식" loading="lazy"></figure>
+<figure class="mermaid"><img src="../assets/dea43867049ca8cb.png" alt="도식" loading="lazy" style="width:499px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure>
 
 
 <h2>6. 4+1 뷰 — 아키텍처를 보는 다섯 시선</h2>

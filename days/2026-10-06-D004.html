@@ -145,7 +145,7 @@
 
 <h2>4. 자료 사전 (DD, Data Dictionary)</h2>
 <p>DFD의 화살표·저장소에 붙은 <b>자료 이름을 정의</b>하는 사전이에요(“자료에 대한 자료” = 메타데이터). 개발자 눈으로 보면 정규식·BNF 비슷한 표기법이에요.</p>
-<table>
+<p class="hint">↔ 표가 넓어요. 옆으로 밀어서 보세요</p><table>
 <tr><th>기호</th><th>의미</th><th>영어</th><th>읽는 법</th></tr>
 <tr><td><code>=</code></td><td><b>정의</b></td><td>is composed of</td><td>~로 구성된다</td></tr>
 <tr><td><code>+</code></td><td><b>연결</b></td><td>and</td><td>~와 ~</td></tr>
@@ -176,14 +176,14 @@
 <h3>럼바우 OMT (Object Modeling Technique) — 가장 많이 출제</h3>
 <p>럼바우(Rumbaugh) 등이 1991년 정리한 방법으로, 시스템을 <b>세 가지 관점의 모델</b>로 나눠 차례로 만들어요. 이후 UML의 주요 뿌리가 됐어요.</p>
 <div class="flow"><div><b>① 객체 모델링</b>객체 다이어그램</div><div class="arrow">→</div><div><b>② 동적 모델링</b>상태 다이어그램</div><div class="arrow">→</div><div><b>③ 기능 모델링</b>DFD</div></div>
-<table>
+<p class="hint">↔ 표가 넓어요. 옆으로 밀어서 보세요</p><table>
 <tr><th>모델</th><th>다이어그램</th><th>무엇을</th><th>답하는 질문</th></tr>
 <tr><td><b>객체</b> 모델링<br><small>(정보 모델링)</small></td><td><b>객체 다이어그램</b></td><td>객체·클래스, 속성·연산, 객체 간 관계(연관·집약·일반화). 가장 먼저, 가장 중요</td><td>“무엇이 있나?”</td></tr>
 <tr><td><b>동적</b> 모델링</td><td><b>상태 다이어그램</b></td><td>이벤트에 따른 상태 변화, 시간 흐름에 따른 <b>제어 흐름</b></td><td>“언제 어떻게 바뀌나?”</td></tr>
 <tr><td><b>기능</b> 모델링</td><td><b>DFD</b></td><td>입력 자료가 처리되어 출력이 되는 <b>자료 흐름·변환</b></td><td>“무엇을 계산하나?”</td></tr>
 </table>
 <p>동적 모델의 상태 다이어그램은 실제로 이렇게 생겼어요(주문 객체의 상태 변화).</p>
-<figure class="mermaid"><img src="../assets/10a69c8cc4ecea79.png" alt="도식" loading="lazy"></figure>
+<figure class="mermaid"><img src="../assets/10a69c8cc4ecea79.png" alt="도식" loading="lazy" style="width:276px"></figure>
 <p>기능 모델은 앞의 3장에서 본 <b>DFD 그대로</b>예요. 즉 럼바우는 객체지향 기법이지만 기능 관점에서는 구조적 분석의 DFD를 빌려 써요. 그래서 “DFD = 구조적 분석 전용”이라고 단정하면 안 돼요.</p>
 <div class="memo"><b>객동기</b> — 순서는 <b>객</b>체 → <b>동</b>적 → <b>기</b>능. 짝은 <b>객-객체도, 동-상태도, 기-DFD</b>. “동적 = 동(動)하는 상태”, “기능 = 자료를 가공하는 DFD”.</div>
 <div class="trap">
