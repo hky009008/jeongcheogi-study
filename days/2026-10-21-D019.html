@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>D019 비용산정 모델 — LOC·COCOMO·기능점수·Putnam</title>
+<link rel="stylesheet" href="../style.css"></head>
+<body><main>
+<nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a></nav>
+<h1>D019 · 비용산정 모델 — LOC·COCOMO·기능점수·Putnam</h1><div class="meta">2026-10-21 · A5 소프트웨어 개발 &gt; 소프트웨어개발 방법론 활용</div><p><span class="tag">A5</span> 어제 D018에서 프로젝트를 어떤 흐름(생명주기 모델)과 어떤 관점(개발 방법론)으로 진행할지 골랐어요. 틀을 골랐으면 회의실에서 바로 다음 질문이 나오죠. <b>“그래서 몇 명이 몇 달 하면 되는데? 얼마 드는데?”</b> 이 질문에 숫자로 답하는 일이 오늘의 세세항목 <b>비용산정 모델</b>이에요. A5 「소프트웨어개발 방법론 활용 > 방법론 선정」 안에 들어 있는 항목이라, 일반적인 프로젝트 관리(일정표·WBS)가 아니라 <b>소프트웨어 규모를 재서 노력과 비용으로 바꾸는 기법</b>에 집중해요. 오늘은 하향식·상향식이라는 두 갈래를 먼저 보고, 시험 단골인 네 모델 — <b>LOC, COCOMO, Putnam, 기능점수(FP)</b> — 를 각각 “무엇을 세서 무엇을 내놓는가”로 구별해요.</p>
+<ul>
+<li>비용 산정 기법을 <b>하향식</b>(전문가 감정·델파이)과 <b>상향식</b>(LOC·단계별 인원수·수학적 산정)으로 구별할 수 있다</li>
+<li><b>COCOMO</b>의 입력(KLOC)·출력(노력 M/M)과 세 개발 유형(조직형·반분리형·내장형), 세 산정 단계(기본형·중간형·발전형)를 구별할 수 있다</li>
+<li><b>기능점수(FP)</b>가 LOC와 달리 사용자 관점의 기능 요소로 규모를 재는 이유와 계산 흐름을 설명할 수 있다</li>
+<li><b>Putnam 모델</b>(Rayleigh-Norden 곡선, 생명주기 전체의 인력 분포)의 특징을 COCOMO·FP와 구별하고, 자동화 도구 SLIM·ESTIMACS를 짝지을 수 있다</li>
+</ul>
+<div class="glance">
+<div><b>2</b>산정 방향<small>하향식 · 상향식</small></div>
+<div><b>4</b>시험 단골 모델<small>LOC·COCOMO·Putnam·FP</small></div>
+<div><b>3×3</b>COCOMO<small>유형 3 · 단계 3</small></div>
+<div><b>5</b>FP 기능 요소<small>입력·출력·조회·내부·외부</small></div>
+</div>
+<div class="box"><b>오늘 이야기의 흐름</b>① 먼저 비용 산정이 무엇이고 왜 틀리면 곤란한지, 무엇이 비용을 좌우하는지 보고, 기법 전체를 한 장의 분류 트리로 봐요. ② 가장 오래된 방식은 경험 많은 사람에게 묻는 것이라 <b>하향식</b>(전문가 감정·델파이)부터 시작해요. ③ 그런데 사람의 감은 근거를 대기 어려워서, 일을 쪼개 세어 보는 <b>상향식</b>이 나왔고 그 대표가 줄 수를 세는 <b>LOC</b>예요. ④ LOC 숫자를 받아 경험식으로 노력을 계산하는 모델이 <b>COCOMO</b>, ⑤ 같은 노력이 시간에 따라 어떻게 분포하는지 보는 모델이 <b>Putnam</b>이에요. ⑥ 마지막으로 “코드가 나오기 전엔 줄 수를 모른다”는 LOC 계열의 근본 약점을 피하려고 기능을 세는 <b>기능점수(FP)</b>가 나왔어요. ⑦ 네 모델을 한 표로 비교하고 함정을 정리한 뒤, ⑧ 오답 두 개(UML 관계선, 결합도 방향)를 다시 풀어요.</div>
+
+<h2>1. 큰 그림 — 비용 산정은 “규모 → 노력 → 비용”의 번역</h2>
+<p>어제 고른 틀은 “어떻게 일할지”였고, 오늘은 그 일에 “얼마가 드는지”예요. <b>소프트웨어 비용 산정</b>은 개발에 필요한 <b>인원·자원·기간</b>을 추정해 소프트웨어의 규모를 파악하고, 그것을 비용으로 환산하는 일이에요. 소프트웨어는 공장 제품처럼 재료비를 더해서 값을 매길 수 없고, 비용의 대부분이 사람의 시간이라서 결국 “몇 명이 몇 달”이라는 <b>노력(Effort)</b>을 먼저 구하고 거기에 인건비를 곱하는 구조가 돼요. 노력의 단위는 <b>M/M(Man-Month, 인월)</b>로, 한 사람이 한 달 동안 하는 일의 양이에요. 12 M/M이면 한 명이 12개월, 또는 세 명이 4개월 하는 양이에요(실제로 사람을 늘리면 그렇게 깔끔하게 줄지 않는다는 건 뒤의 COCOMO에서 나와요).</p>
+<p>산정이 왜 중요하냐면, 어느 쪽으로 틀려도 곤란하기 때문이에요. <b>과대 산정</b>하면 예산이 낭비되고 사업 자체가 승인되지 않거나 경쟁 입찰에서 져요. <b>과소 산정</b>하면 일정이 밀리고, 인력을 급히 투입하거나 테스트를 줄이게 돼서 품질이 떨어져요. 비용을 너무 높게 잡으면 기획서가 결재 문턱에서 돌아오고, 너무 낮게 잡으면 그 차액을 개발자의 주말이 메워요. 비용 산정은 그 주말을 지키는 기술이에요.</p>
+<p>비용을 좌우하는 <b>결정 요소</b>는 시험에서 세 묶음으로 나와요. <b>프로젝트 요소</b>는 만들 소프트웨어 자체의 성질 — 문제의 복잡도, 시스템의 크기, 요구되는 신뢰도예요. <b>자원 요소</b>는 투입할 수 있는 것 — 인적 자원(개발자), 하드웨어 자원, 소프트웨어 자원(도구·라이브러리)이에요. <b>생산성 요소</b>는 같은 일을 얼마나 빨리 하느냐 — 개발자의 능력과 경험, 그리고 주어진 개발 기간이에요. 기간이 생산성 요소에 들어가는 이유는, 기간을 무리하게 줄이면 같은 일에도 더 많은 노력이 들기 때문이에요(Putnam에서 다시 나와요). 한 장 요약은 아래와 같아요.</p>
+<table>
+<tr><th>결정 요소</th><th>포함되는 것</th></tr>
+<tr><td>프로젝트 요소</td><td>문제의 복잡도, 시스템 크기, 요구 신뢰도 — 무엇을 만드나</td></tr>
+<tr><td>자원 요소</td><td>인적 자원, 하드웨어 자원, 소프트웨어 자원 — 무엇을 쓸 수 있나</td></tr>
+<tr><td>생산성 요소</td><td>개발자의 능력·경험, 주어진 개발 기간 — 얼마나 빨리 하나</td></tr>
+</table>
+<p>이제 기법 전체를 한 장에 놓아 볼게요. 크게 두 방향이 있어요. <b>하향식(Top-down)</b>은 전체 규모를 먼저 어림잡고 나중에 세부로 나누는 방식이고, <b>상향식(Bottom-up)</b>은 세부 작업을 하나씩 산정한 뒤 합쳐서 전체를 구하는 방식이에요. 상향식 안에는 줄 수를 세는 LOC, 단계별로 사람을 세는 방식, 그리고 경험식을 쓰는 <b>수학적 산정 기법</b>(COCOMO·Putnam·FP)이 있어요. 교재에 따라 수학적 산정 기법을 별도 묶음으로 떼어 “하향식·상향식·수학적 모델” 셋으로 나누기도 하는데, 시험에서 갈리는 건 묶음 이름보다 <b>각 모델의 특징</b>이라 아래 그림 한 장으로 위치를 기억하면 충분해요.</p>
+<figure><svg viewBox="0 0 360 490" font-family="sans-serif" role="img" aria-label="비용 산정 기법 분류 트리. 비용 산정 기법은 하향식과 상향식으로 나뉜다. 하향식 아래에 전문가 감정과 델파이 기법, 상향식 아래에 LOC 기법과 단계별 인원수 기법이 있고, 상향식 계열의 수학적 산정 기법으로 COCOMO(보헴, 줄 수), Putnam(푸트남, 시간별 인력), FP(알브레히트, 기능 수)가 있다. 자동화 도구는 Putnam의 SLIM, FP의 ESTIMACS">
+<defs><marker id="d19a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs>
+<rect width="360" height="490" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">비용 산정 기법 한 장 지도</text>
+<path d="M180 80 L180 94 L93 94 L93 108" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d19a)"/>
+<path d="M180 94 L267 94 L267 108" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d19a)"/>
+<path d="M93 168 L93 188" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d19a)"/>
+<path d="M93 242 L93 252" stroke="#555" stroke-width="2" fill="none"/>
+<path d="M267 168 L267 188" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d19a)"/>
+<path d="M267 242 L267 252" stroke="#555" stroke-width="2" fill="none"/>
+<path d="M267 306 L267 328" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d19a)"/>
+<rect x="100" y="40" width="160" height="40" rx="8" fill="#ffffff" stroke="#333" stroke-width="2"/>
+<text x="180" y="65" font-size="15" font-weight="700" fill="#222" text-anchor="middle">비용 산정 기법</text>
+<rect x="12" y="110" width="162" height="58" rx="10" fill="#e6efff" stroke="#2a5db0" stroke-width="2.5"/>
+<text x="93" y="134" font-size="15" font-weight="700" fill="#2a5db0" text-anchor="middle">하향식</text>
+<text x="93" y="156" font-size="14" fill="#333" text-anchor="middle">전체 → 세분화</text>
+<rect x="186" y="110" width="162" height="58" rx="10" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2.5"/>
+<text x="267" y="134" font-size="15" font-weight="700" fill="#2f7d4a" text-anchor="middle">상향식</text>
+<text x="267" y="156" font-size="14" fill="#333" text-anchor="middle">작업별 산정 → 집계</text>
+<rect x="24" y="190" width="138" height="52" rx="8" fill="#ffffff" stroke="#2a5db0" stroke-width="1.5"/>
+<text x="93" y="212" font-size="14" font-weight="700" fill="#222" text-anchor="middle">전문가 감정</text>
+<text x="93" y="232" font-size="14" fill="#555" text-anchor="middle">경험·직관 판단</text>
+<rect x="24" y="254" width="138" height="52" rx="8" fill="#ffffff" stroke="#2a5db0" stroke-width="1.5"/>
+<text x="93" y="276" font-size="14" font-weight="700" fill="#222" text-anchor="middle">델파이 기법</text>
+<text x="93" y="296" font-size="14" fill="#555" text-anchor="middle">익명·반복 합의</text>
+<rect x="198" y="190" width="138" height="52" rx="8" fill="#ffffff" stroke="#2f7d4a" stroke-width="1.5"/>
+<text x="267" y="212" font-size="14" font-weight="700" fill="#222" text-anchor="middle">LOC 기법</text>
+<text x="267" y="232" font-size="14" fill="#555" text-anchor="middle">줄 수 3점 추정</text>
+<rect x="198" y="254" width="138" height="52" rx="8" fill="#ffffff" stroke="#2f7d4a" stroke-width="1.5"/>
+<text x="267" y="276" font-size="14" font-weight="700" fill="#222" text-anchor="middle">단계별 인원수</text>
+<text x="267" y="296" font-size="14" fill="#555" text-anchor="middle">단계마다 M/M</text>
+<rect x="12" y="330" width="336" height="146" rx="10" fill="#fff4e0" stroke="#b5730d" stroke-width="2.5"/>
+<text x="180" y="352" font-size="15" font-weight="700" fill="#8a5a0a" text-anchor="middle">수학적 산정 기법 (상향식 계열)</text>
+<rect x="20" y="364" width="102" height="80" rx="8" fill="#ffffff" stroke="#b5730d" stroke-width="1.5"/>
+<text x="71" y="390" font-size="15" font-weight="700" fill="#222" text-anchor="middle">COCOMO</text>
+<text x="71" y="411" font-size="14" fill="#555" text-anchor="middle">보헴</text>
+<text x="71" y="432" font-size="14" fill="#333" text-anchor="middle">줄 수</text>
+<rect x="129" y="364" width="102" height="80" rx="8" fill="#ffffff" stroke="#b5730d" stroke-width="1.5"/>
+<text x="180" y="390" font-size="15" font-weight="700" fill="#222" text-anchor="middle">Putnam</text>
+<text x="180" y="411" font-size="14" fill="#555" text-anchor="middle">푸트남</text>
+<text x="180" y="432" font-size="14" fill="#333" text-anchor="middle">시간별 인력</text>
+<rect x="238" y="364" width="102" height="80" rx="8" fill="#ffffff" stroke="#b5730d" stroke-width="1.5"/>
+<text x="289" y="390" font-size="15" font-weight="700" fill="#222" text-anchor="middle">FP</text>
+<text x="289" y="411" font-size="14" fill="#555" text-anchor="middle">알브레히트</text>
+<text x="289" y="432" font-size="14" fill="#333" text-anchor="middle">기능 수</text>
+<text x="180" y="464" font-size="14" fill="#8a5a0a" text-anchor="middle">도구: SLIM(Putnam) · ESTIMACS(FP)</text>
+</svg><figcaption>파란 쪽(하향식)은 사람의 판단에서, 초록 쪽(상향식)은 세어 본 숫자에서 출발해요. 주황 칸의 세 모델은 각각 셋째 줄에 적힌 것을 잣대로 삼아요 — 줄 수, 시간에 따른 인력, 기능 수.</figcaption></figure>
+
+<h2>2. 하향식 — 경험 많은 사람에게 묻기</h2>
+<p>그림의 왼쪽부터 볼게요. 데이터가 하나도 없는 프로젝트 초기에 가장 먼저 할 수 있는 일은 비슷한 일을 해 본 사람에게 묻는 거예요. <b>하향식 산정</b>은 과거 경험을 가진 전문가의 판단으로 <b>전체 비용을 먼저 추정</b>하고, 필요하면 그것을 세부 작업으로 나눠 배분하는 방식이에요. 빠르고 시스템 전체 수준의 요소(통합·문서화·관리 비용 등)를 놓치지 않는다는 장점이 있지만, 세부 작업을 하나하나 따지지 않으니 기술적으로 어려운 부분을 과소평가하기 쉬워요.</p>
+<p><b>전문가 감정 기법</b>은 조직 안에서 경험이 많은 두 명 이상의 전문가에게 비용 산정을 의뢰하는 방식이에요. 가장 편리하고 빠르지만, 전문가 개인의 경험과 직관에 기대기 때문에 <b>주관적</b>이고, 새로운 유형의 프로젝트에서는 그 경험이 오히려 틀린 방향으로 이끌 수 있어요. 또 왜 그 숫자가 나왔는지 설명하기 어려워서 결재권자를 설득하기도 어려워요.</p>
+<p><b>델파이(Delphi) 기법</b>은 전문가 감정의 편향을 줄이려고 나온 방식이에요. <b>한 명의 조정자(coordinator)</b>와 <b>여러 명의 전문가</b>로 구성되고, 전문가들은 서로 얼굴을 맞대지 않고 <b>익명으로</b> 추정치를 내요. 조정자가 결과를 모아 요약해 돌려주면 전문가들이 그걸 보고 다시 추정하고, 이 과정을 의견이 어느 정도 모일 때까지 <b>반복</b>해요. 델파이 기법이 익명으로 의견을 모으는 이유는 단순해요. 회의실에서 가장 높은 사람이 먼저 “석 달이면 되지?”라고 말하는 순간, 나머지 전문가의 추정치가 신기하게도 석 달로 수렴하거든요. 현업의 플래닝 포커(카드를 동시에 뒤집어 추정치를 내는 애자일 기법)도 같은 문제를 같은 원리로 푸는 친척이에요.</p>
+<div class="vs"><div><b>전문가 감정</b>경험자 몇 명에게 바로 의뢰. 빠르고 편하지만 개인 경험에 치우쳐 주관적</div><div><b>델파이</b>조정자 1명 + 전문가 여러 명, 익명 추정 → 요약 공유 → 재추정 반복. 편향을 줄이지만 시간이 더 걸림</div></div>
+
+<h2>3. 상향식 — 쪼개서 세고 합치기 (LOC·단계별 인원수)</h2>
+<p>하향식의 약점은 “왜 그 숫자인지” 근거가 약하다는 점이었어요. 그래서 반대 방향으로, 일을 잘게 쪼개 하나씩 세어 보고 합치는 <b>상향식 산정</b>이 나왔어요. 세부 작업 단위로 산정하니 근거가 분명하고 정밀하지만, 쪼개는 과정에서 통합·관리 같은 시스템 전체 비용을 빠뜨리기 쉽고, 작업 분해가 끝나야 산정할 수 있어서 시간이 걸려요.</p>
+<h3>LOC(Line Of Code) 기법</h3>
+<p><b>LOC 기법</b>은 소프트웨어의 각 기능을 구현하는 데 필요한 <b>원시 코드 라인 수</b>를 추정해 비용을 구하는 방식이에요. 코드를 실제로 쓰기 전에 줄 수를 정확히 알 수는 없으니, 각 기능마다 세 개의 값을 추정해요 — 가장 잘 풀릴 때의 <b>낙관치</b>, 가장 그럴듯한 <b>기대치(중간치)</b>, 가장 꼬일 때의 <b>비관치</b>. 이 셋으로 <b>예측치 = (낙관치 + 4 × 기대치 + 비관치) ÷ 6</b>을 구해요. 기대치에 4배 가중치를 주는 이유는, 가장 그럴듯한 값이 현실에 가장 가깝다고 보고 극단값의 영향을 줄이기 위해서예요(일정 관리의 PERT가 쓰는 3점 추정과 같은 꼴이라 함정 선지로 자주 엮여요).</p>
+<p>줄 수를 구했으면 나머지는 단위 변환이에요. 한 사람이 한 달에 짤 수 있는 줄 수(생산성)로 나누면 “사람 × 달”, 즉 노력이 나와요. 노력에 한 사람의 한 달 인건비를 곱하면 개발 비용이, 노력을 투입 인원으로 나누면 개발 기간이 나와요. 네 공식은 외우기보다 단위로 유도하는 게 편해요.</p>
+<table>
+<tr><th>구하는 것</th><th>공식 (단위로 따라가기)</th></tr>
+<tr><td>노력(M/M)</td><td>LOC ÷ 1인당 월평균 생산 줄 수 — “줄 ÷ (줄/사람·달) = 사람·달”</td></tr>
+<tr><td>개발 비용</td><td>노력(M/M) × 1인당 월 평균 인건비</td></tr>
+<tr><td>개발 기간</td><td>노력(M/M) ÷ 투입 인원 — “사람·달 ÷ 사람 = 달”</td></tr>
+<tr><td>생산성</td><td>LOC ÷ 노력(M/M) — 한 사람이 한 달에 짠 줄 수</td></tr>
+</table>
+<p>직접 한 번 계산해 볼게요. 어떤 기능의 줄 수를 낙관 30,000줄, 기대 36,000줄, 비관 42,000줄로 추정했다면 예측치는 (30,000 + 4 × 36,000 + 42,000) ÷ 6 = 216,000 ÷ 6 = <b>36,000줄</b>이에요. 개발자 한 명이 한 달에 평균 300줄을 짠다면 노력은 36,000 ÷ 300 = <b>120 M/M</b>, 6명을 투입하면 기간은 120 ÷ 6 = <b>20개월</b>, 1인당 월 인건비가 500만 원이면 비용은 120 × 500만 = <b>6억 원</b>이에요. 시험의 계산 문제는 거의 이 네 줄의 변형이에요.</p>
+<p>LOC 기법의 약점은 현업이 먼저 알아요. 같은 기능을 한 사람은 30줄, 다른 사람은 300줄로 짜는데, 이 기법으로 재면 300줄 쪽이 열 배 일한 사람이 돼요. 줄 수는 <b>언어와 개발자 스타일에 따라 크게 달라지고</b>, 무엇보다 <b>설계 초기에는 줄 수를 추정할 근거 자체가 부족해요</b>. 이 약점이 6장의 기능점수가 태어난 이유예요. 그래도 측정이 쉽고 직관적이라 지금도 COCOMO 같은 수학적 모델의 입력값으로 쓰여요.</p>
+<h3>개발 단계별 인원수(Effort Per Task) 기법</h3>
+<p>LOC 기법은 전체 줄 수로 노력을 한 번에 구하지만, 실제로는 분석·설계·구현·테스트 단계마다 필요한 사람과 숙련도가 달라요. <b>개발 단계별 인원수 기법</b>은 LOC 기법을 보완한 방식으로, <b>생명주기의 각 단계별로 노력(M/M)을 산정</b>해서 합쳐요. 단계마다 따로 계산하니 LOC 기법보다 정밀하지만, 그만큼 단계별 과거 자료가 있어야 해요. 어제 배운 생명주기 모델이 여기서 “단계를 나누는 기준”으로 다시 쓰여요.</p>
+
+<h2>4. COCOMO — 줄 수를 넣으면 노력이 나오는 경험식</h2>
+<p>LOC 기법은 “한 사람이 한 달에 300줄”처럼 생산성을 고정된 숫자로 봤어요. 그런데 현실에서는 프로젝트가 커질수록 한 사람당 생산성이 떨어져요. 사람이 많아지면 소통·조율에 쓰는 시간이 늘기 때문이죠. <b>COCOMO(COnstructive COst MOdel)</b>는 <b>보헴(Boehm)</b>이 1981년에 수많은 실제 프로젝트 자료를 분석해 만든 모델로, <b>LOC(정확히는 천 줄 단위 KLOC·KDSI)를 입력</b>받아 <b>노력(M/M)을 출력</b>하는 경험식이에요. 어제 나선형 모델을 제안한 그 보헴이에요. 비용 산정 결과를 프로젝트 유형별로 다르게 계산해 주고, 결과가 노력(M/M)으로 나온다는 점이 시험 단골이에요.</p>
+<p>기본형의 노력 공식은 <b>노력(M/M) = a × (KLOC)<sup>b</sup></b>이고, 기간은 <b>c × (노력)<sup>d</sup></b>로 구해요. 핵심은 지수 b가 <b>1보다 크다</b>는 점이에요. 규모가 두 배가 되면 노력은 두 배보다 더 늘어나요. 지수 b가 1보다 큰 건, 사람이 두 배가 되면 회의 초대도 두 배 이상이 된다는 걸 수식으로 인정한 거예요. 그래서 같은 36 KLOC라도 유형에 따라 노력이 크게 달라져요 — 조직형 약 103 M/M, 반분리형 약 166 M/M, 내장형 약 265 M/M(기본형 계수로 계산). 시험에서 계수 숫자를 묻는 일은 드물지만, “유형이 엄격할수록 a·b가 커진다”는 방향은 알아 두세요.</p>
+<h3>세 가지 개발 유형</h3>
+<p>COCOMO는 프로젝트를 규모와 제약의 정도에 따라 세 유형으로 나눠요. <b>조직형(Organic Mode)</b>은 기관 내부에서 개발하는 중소 규모의 소프트웨어로, 팀이 업무를 잘 알고 제약이 적어요. 사무 처리용, 업무용, 과학용 응용 프로그램이 예이고, 수험서에서는 <b>5만(50 KDSI) 라인 이하</b>로 외워요. <b>반분리형(Semi-detached Mode)</b>은 조직형과 내장형의 중간으로, 경험과 제약이 중간 수준이에요. 컴파일러·인터프리터 같은 유틸리티, DBMS 등이 예이고 <b>30만(300 KDSI) 라인 이하</b>로 외워요. <b>내장형(Embedded Mode)</b>은 하드웨어·실시간 처리 같은 강한 제약 안에서 돌아가는 초대형 소프트웨어로, 신호기 제어, 미사일 유도, 실시간 처리 시스템이 예이고 <b>30만 라인 이상</b>으로 외워요. 내장형은 “미사일 유도 소프트웨어를 새벽 배포로 핫픽스할 수는 없다”는 세계예요. 하드웨어·실시간 제약이 빡빡할수록 같은 줄 수에도 검증할 것이 늘어 노력이 훨씬 많이 들어요.</p>
+<p>원래 보헴의 구분 기준은 줄 수보다 <b>팀의 경험, 요구·인터페이스 제약의 엄격함</b>이었어요. 그래서 시험 문제도 줄 수보다는 “실시간·하드웨어 제약 → 내장형”, “업무용·중소 규모 → 조직형”처럼 <b>상황 단서</b>로 많이 나와요. 아래 그림은 가로를 규모, 세로를 제약 강도로 놓고 세 유형을 배치한 거예요.</p>
+<figure><svg viewBox="0 0 360 366" font-family="sans-serif" role="img" aria-label="COCOMO 세 개발 유형. 가로축은 규모(라인 수), 세로축은 제약과 복잡도. 왼쪽 아래 조직형(Organic, 지수 1.05, 업무·사무용), 가운데 반분리형(Semi-detached, 지수 1.12, 컴파일러 등 유틸리티), 오른쪽 위 내장형(Embedded, 지수 1.20, 실시간 제어). 5만 라인과 30만 라인 눈금">
+<defs><marker id="d19b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs>
+<rect width="360" height="366" rx="12" fill="#f7f7f4"/>
+<path d="M24 322 L24 14" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d19b)"/>
+<path d="M24 322 L350 322" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d19b)"/>
+<path d="M130 322 L130 330" stroke="#555" stroke-width="2" fill="none"/>
+<path d="M254 322 L254 330" stroke="#555" stroke-width="2" fill="none"/>
+<text x="34" y="24" font-size="14" fill="#555">제약·복잡도 ↑</text>
+<text x="130" y="344" font-size="14" fill="#555" text-anchor="middle">5만</text>
+<text x="254" y="344" font-size="14" fill="#555" text-anchor="middle">30만</text>
+<text x="346" y="360" font-size="14" fill="#555" text-anchor="end">규모(라인 수) →</text>
+<rect x="32" y="222" width="96" height="92" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2.5"/>
+<text x="80" y="246" font-size="15" font-weight="700" fill="#2f7d4a" text-anchor="middle">조직형</text>
+<text x="80" y="266" font-size="14" fill="#555" text-anchor="middle">Organic</text>
+<text x="80" y="286" font-size="14" fill="#333" text-anchor="middle">지수 1.05</text>
+<text x="80" y="305" font-size="14" fill="#333" text-anchor="middle">업무·사무</text>
+<rect x="132" y="126" width="120" height="92" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2.5"/>
+<text x="192" y="150" font-size="15" font-weight="700" fill="#8a5a0a" text-anchor="middle">반분리형</text>
+<text x="192" y="170" font-size="14" fill="#555" text-anchor="middle">Semi-detached</text>
+<text x="192" y="190" font-size="14" fill="#333" text-anchor="middle">지수 1.12</text>
+<text x="192" y="209" font-size="14" fill="#333" text-anchor="middle">컴파일러 등</text>
+<rect x="256" y="30" width="94" height="92" rx="8" fill="#fde8e8" stroke="#b03a2e" stroke-width="2.5"/>
+<text x="303" y="54" font-size="15" font-weight="700" fill="#b03a2e" text-anchor="middle">내장형</text>
+<text x="303" y="74" font-size="14" fill="#555" text-anchor="middle">Embedded</text>
+<text x="303" y="94" font-size="14" fill="#333" text-anchor="middle">지수 1.20</text>
+<text x="303" y="113" font-size="14" fill="#333" text-anchor="middle">실시간 제어</text>
+</svg><figcaption>오른쪽 위로 갈수록 규모도 크고 제약도 강해지며, 노력 공식의 지수 b도 1.05 → 1.12 → 1.20으로 커져요. 줄 수 경계(5만·30만)는 국내 수험서 관례이고, 원래 기준은 경험·제약의 정도예요.</figcaption></figure>
+<p>한 장 요약 — 세 유형의 기본형 계수와 특징이에요.</p>
+<table>
+<tr><th>유형</th><th>규모·특징</th><th>기본형 노력 공식</th></tr>
+<tr><td>조직형(Organic)</td><td>중소 규모(5만 라인 이하), 업무·사무·과학용, 경험 많고 제약 적음</td><td>2.4 × KLOC<sup>1.05</sup></td></tr>
+<tr><td>반분리형(Semi-detached)</td><td>중간 규모(30만 라인 이하), 컴파일러·인터프리터·DBMS 같은 유틸리티</td><td>3.0 × KLOC<sup>1.12</sup></td></tr>
+<tr><td>내장형(Embedded)</td><td>초대형(30만 라인 이상), 하드웨어·실시간 제약이 강한 제어 시스템</td><td>3.6 × KLOC<sup>1.20</sup></td></tr>
+</table>
+<h3>세 가지 산정 단계(종류)</h3>
+<p>유형과 별개로, COCOMO는 얼마나 자세히 계산하느냐에 따라 세 단계로 나뉘어요. <b>기본형(Basic)</b>은 소프트웨어의 크기(KLOC)와 개발 유형만으로 노력을 구해요. 빠르지만 거칠죠. <b>중간형(Intermediate)</b>은 기본형에 <b>15개의 비용 드라이버(cost driver)</b>를 곱해 보정해요. 비용 드라이버는 네 가지 특성으로 묶이는데, <b>제품 특성</b>(요구 신뢰도, DB 크기, 복잡도), <b>컴퓨터(하드웨어) 특성</b>(실행 시간·기억 장치 제약 등), <b>개발요원(인력) 특성</b>(분석가·프로그래머 능력, 경험), <b>프로젝트 특성</b>(도구 사용, 개발 일정 등)이에요. <b>발전형(Detailed)</b>은 중간형을 한 단계 더 쪼개서, 비용 드라이버의 영향을 <b>개발 공정(단계)별로</b> 따로 반영해요. 가장 정밀하지만 그만큼 자료가 많이 필요해서, 주로 설계가 진행된 프로젝트 후반에 적용해요.</p>
+<p>참고로 <b>COCOMO II</b>는 2000년에 나온 개정판으로, 재사용·객체지향·나선형 같은 현대 개발 방식을 반영했어요. 발전형과 이름이 비슷한 자리에서 나오지만 서로 다른 것이고, 필기 시험에서는 이름만 알아 두면 돼요. 시험에서 “COCOMO의 종류”라고 하면 <b>기본형·중간형·발전형</b>, “COCOMO의 유형(모드)”이라고 하면 <b>조직형·반분리형·내장형</b>이에요. 출제자는 이 두 목록을 한 문제의 선지에 섞어 넣는 걸 좋아해요.</p>
+<table>
+<tr><th>단계(종류)</th><th>무엇으로 계산하나</th></tr>
+<tr><td>기본형(Basic)</td><td>크기(KLOC)와 개발 유형만</td></tr>
+<tr><td>중간형(Intermediate)</td><td>기본형 × 15개 비용 드라이버(제품·컴퓨터·개발요원·프로젝트 특성)</td></tr>
+<tr><td>발전형(Detailed)</td><td>중간형의 보정을 개발 공정(단계)별로 적용, 후반부에 사용</td></tr>
+</table>
+
+<h2>5. Putnam — 노력이 시간에 따라 어떻게 퍼지는가</h2>
+<p>COCOMO는 “전체 노력이 얼마인가”라는 하나의 숫자를 줘요. 그런데 관리자에게는 “그 노력을 <b>언제 얼마나</b> 투입해야 하나”도 중요해요. 처음부터 끝까지 같은 인원이 붙는 프로젝트는 없으니까요. <b>Putnam 모델</b>은 <b>푸트남(Putnam)</b>이 제안한 모델로, <b>소프트웨어 생명주기 전 과정에 걸쳐 사용될 노력(인력)의 분포를 예측</b>해요. 분포 모양으로 <b>Rayleigh-Norden(레일리-노든) 곡선</b>을 쓰는데, 노든(Norden)이 연구 개발 프로젝트의 인력 투입 패턴이 레일리 분포를 따른다는 걸 관찰했고, 푸트남이 이를 소프트웨어에 적용했어요. 주로 <b>대형 프로젝트</b>의 노력 분포 산정에 쓰여요.</p>
+<p>Rayleigh-Norden 곡선은 프로젝트 인력의 일생을 그린 그래프예요. 킥오프 때 몇 명으로 시작해 설계·구현 때 사람이 가장 많아지고, 오픈 뒤엔 “운영 담당 두 분”만 남는 그 익숙한 모양이요. 곡선 아래 넓이가 전체 노력이에요.</p>
+<figure><svg viewBox="0 0 360 300" font-family="sans-serif" role="img" aria-label="Rayleigh-Norden 곡선. 가로축은 시간, 세로축은 투입 인력. 분석 단계에서 빠르게 올라가 설계·구현 단계에서 정점을 찍고, 시험 단계부터 완만하게 줄어 유지보수까지 긴 꼬리를 남긴다. 곡선 아래 넓이가 총 노력">
+<defs><marker id="d19c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs>
+<rect width="360" height="300" rx="12" fill="#f7f7f4"/>
+<path d="M40 250 L40 30" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d19c)"/>
+<path d="M40 250 L350 250" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d19c)"/>
+<path d="M125 60 L125 250" stroke="#b5730d" stroke-width="1.5" stroke-dasharray="5 4" fill="none"/>
+<polygon points="40,250 50.6,211.2 61.3,174.2 82.5,111.9 103.8,72.8 125,60.2 146.3,70.7 167.5,97.6 188.8,131.6 210,165.3 231.3,193.9 252.5,215.6 273.8,230.4 295,239.6 337.5,247.6 337.5,250" fill="#e6efff"/>
+<polyline points="40,250 50.6,211.2 61.3,174.2 82.5,111.9 103.8,72.8 125,60.2 146.3,70.7 167.5,97.6 188.8,131.6 210,165.3 231.3,193.9 252.5,215.6 273.8,230.4 295,239.6 337.5,247.6" stroke="#2a5db0" stroke-width="3" stroke-linejoin="round" fill="none"/>
+<text x="48" y="26" font-size="14" fill="#555">투입 인력 ↑</text>
+<text x="134" y="56" font-size="14" font-weight="700" fill="#8a5a0a">정점</text>
+<text x="168" y="226" font-size="14" fill="#2a5db0" text-anchor="middle">넓이 = 총 노력</text>
+<text x="62" y="272" font-size="14" fill="#333" text-anchor="middle">분석</text>
+<text x="135" y="272" font-size="14" fill="#333" text-anchor="middle">설계·구현</text>
+<text x="205" y="272" font-size="14" fill="#333" text-anchor="middle">시험</text>
+<text x="290" y="272" font-size="14" fill="#333" text-anchor="middle">유지보수 꼬리</text>
+<text x="346" y="292" font-size="14" fill="#555" text-anchor="end">시간 →</text>
+</svg><figcaption>인력은 초반에 빠르게 늘어 설계·구현 무렵 정점을 찍고, 시험을 지나며 서서히 줄어 유지보수까지 긴 꼬리를 남겨요. 시험에서는 “생명주기 전 과정의 노력 분포 = Rayleigh-Norden = Putnam”을 한 줄로 묶어 기억하세요.</figcaption></figure>
+<p>Putnam 모델의 또 하나의 특징은 <b>개발 기간과 노력의 맞교환</b>이에요. 푸트남의 소프트웨어 방정식에서는 같은 규모의 소프트웨어를 만들 때 <b>개발 기간을 늘리면 필요한 노력이 줄고</b>, 반대로 기간을 줄이면 노력이 급격히(원래 식에서는 기간의 네제곱에 반비례할 만큼) 늘어나요. 1장에서 “개발 기간”이 생산성 요소에 들어간 이유가 이거예요. 일정을 반으로 줄이면 사람을 두 배 넣으면 될 것 같지만, 이 모델은 그보다 훨씬 많이 든다고 경고해요. Putnam 모델을 기초로 만든 <b>자동화 추정 도구가 SLIM</b>이에요. COCOMO가 “얼마나”를 주는 계산기라면, Putnam은 “언제 얼마나”를 그려 주는 인력 계획표라고 보면 둘이 섞이지 않아요.</p>
+
+<h2>6. 기능점수(FP) — 줄 수 대신 기능을 센다</h2>
+<p>여기까지의 LOC·COCOMO는 모두 줄 수에서 출발했어요. 그런데 3장에서 본 약점이 그대로 남아요. 줄 수는 언어마다 다르고, 코드가 나오기 전인 계획·분석 단계에서는 추정할 근거가 약해요. <b>기능점수(Function Point, FP) 모델</b>은 <b>알브레히트(Albrecht)</b>가 1979년 IBM에서 제안한 방식으로, 소프트웨어가 <b>사용자에게 제공하는 기능의 양</b>으로 규모를 재요. 기능점수는 “코드가 몇 줄이냐” 대신 “사용자가 누를 수 있는 게 몇 개냐”를 세요. 사용자는 우리 코드가 몇 줄인지 관심 없고, 버튼이 동작하는지만 궁금하니까요. 기능은 요구사항 단계에서 이미 보이니 <b>초기에 산정할 수 있고</b>, 언어와 무관해서 서로 다른 언어로 만든 시스템도 비교할 수 있어요. 대신 기능을 세는 규칙을 익혀야 하고 세는 사람에 따라 차이가 생길 수 있어요.</p>
+<p>세는 대상인 <b>기능 증대 요인(기능 요소)</b>은 다섯 가지예요. 국내 수험서는 자료 입력(입력 양식), 정보 출력(출력 보고서), 명령어(사용자 질의), 데이터 파일, 필요한 외부 루틴과의 인터페이스로 적고, 국제 표준(IFPUG)은 같은 다섯을 아래처럼 불러요. 앞의 셋(입력·출력·조회)은 <b>데이터가 경계를 넘나드는 트랜잭션</b>이고, 뒤의 둘(내부 파일·외부 인터페이스 파일)은 <b>보관되는 데이터 덩어리</b>예요. 쇼핑몰로 치면 회원가입 화면이 입력, 주문 내역서 출력이 출력, 상품 검색이 조회, 회원 테이블이 내부 논리 파일, 결제사에서 읽어 오는 카드사 코드표가 외부 인터페이스 파일이에요.</p>
+<table>
+<tr><th>국내 수험서 표기</th><th>IFPUG 표기</th><th>무엇을 세나</th></tr>
+<tr><td>자료 입력(입력 양식)</td><td>EI 외부 입력</td><td>사용자·외부에서 들어와 내부 데이터를 바꾸는 처리</td></tr>
+<tr><td>정보 출력(출력 보고서)</td><td>EO 외부 출력</td><td>계산·가공을 거쳐 밖으로 나가는 보고서·결과</td></tr>
+<tr><td>명령어(사용자 질의)</td><td>EQ 외부 조회</td><td>가공 없이 꺼내 보여 주는 조회</td></tr>
+<tr><td>데이터 파일</td><td>ILF 내부 논리 파일</td><td>시스템이 직접 관리·저장하는 데이터</td></tr>
+<tr><td>외부 루틴 인터페이스</td><td>EIF 외부 인터페이스 파일</td><td>다른 시스템이 관리하고 우리는 참조만 하는 데이터</td></tr>
+</table>
+<p>계산은 세 걸음이에요. 먼저 다섯 요소의 개수를 세고, 각각을 복잡도(단순·보통·복잡)에 따라 정해진 <b>가중치</b>를 곱해 모두 더하면 <b>미조정 기능점수(UFP)</b>가 나와요. 여기에 시스템 전체의 특성(성능 요구, 분산 처리, 온라인 갱신 등 14개 일반 특성을 0~5점으로 평가한 값)으로 만든 <b>영향도(조정 인자)</b>를 곱하면 최종 <b>기능점수(FP)</b>가 돼요. 이 FP를 조직의 생산성(1 M/M당 처리하는 FP)으로 나누면 노력이, 거기에 인건비를 곱하면 비용이 나와요. 즉 “총 기능점수 = 기능 요소별 가중치 합 × 영향도”예요. FP 기반의 <b>자동화 추정 도구가 ESTIMACS</b>예요. 국내 공공 SW 사업 대가 산정에서도 기능점수 방식을 쓰고 있어서, 공공 프로젝트 제안서를 써 본 적이 있다면 이미 만나 봤을 수도 있어요.</p>
+<figure class="mermaid"><img src="../assets/61a32396ab94cc2b.png" alt="도식" loading="lazy" style="width:351px"></figure>
+<p>위 흐름에서 줄 수는 한 번도 나오지 않아요. 이게 FP와 LOC·COCOMO를 가르는 가장 확실한 단서예요. 문제에 “가중치”, “기능 증대 요인”, “입력·출력·질의·파일·인터페이스”가 보이면 FP예요.</p>
+
+<h2>7. 네 모델 비교 — 무엇을 세서 무엇을 내놓나</h2>
+<p>네 모델을 따로 봤으니 이제 나란히 놓을게요. 구별의 열쇠는 늘 같아요 — <b>제안자, 입력(무엇을 세나), 출력(무엇을 알려 주나)</b>. 한 장 요약은 아래와 같아요.</p>
+<table>
+<tr><th>모델</th><th>무엇을 세서 무엇을 내놓나</th><th>키워드·도구</th></tr>
+<tr><td>LOC 기법</td><td>기능별 줄 수(낙관·기대·비관 3점 추정) → 노력·비용·기간·생산성</td><td>(낙관 + 4×기대 + 비관) ÷ 6, 상향식의 기본</td></tr>
+<tr><td>COCOMO</td><td>KLOC → 노력(M/M), 규모가 클수록 노력이 더 빨리 증가(지수 b &gt; 1)</td><td>보헴, 조직형·반분리형·내장형, 기본형·중간형·발전형</td></tr>
+<tr><td>Putnam</td><td>규모·기간 → 생명주기 전체의 노력(인력) 분포</td><td>푸트남, Rayleigh-Norden 곡선, 대형 프로젝트, SLIM</td></tr>
+<tr><td>기능점수(FP)</td><td>기능 요소 5개 × 가중치 × 영향도 → FP → 노력·비용</td><td>알브레히트, 언어 무관·초기 산정, ESTIMACS</td></tr>
+</table>
+<p>함정 하나를 더 짚어요. 일정 관리 도구인 <b>PERT·CPM·간트 차트</b>는 “얼마나 걸리나”를 다루다 보니 비용 산정 기법처럼 보이지만, 작업 순서와 일정을 관리하는 <b>일정 계획 기법</b>이에요. 출제자는 “비용 추정 모형이 아닌 것”에 PERT를 끼워 넣어요. PERT도 3점 추정을 쓰고 일정 이야기를 하니 같은 편처럼 보이길 바라면서요. 내일 D020에서는 이렇게 고른 방법론과 산정한 비용을 실제 프로젝트에 맞게 다듬는 <b>테일러링</b>과 <b>개발 프레임워크</b>를 봐요.</p>
+
+<h2>8. 시험 포인트·암기 단서</h2>
+<p>오늘 내용은 거의 “설명 주고 모델 이름 고르기”로 나와요. 설명 속의 단서 단어 하나만 잡으면 되도록 짝을 정리해요.</p>
+<div class="memo"><b>보 COCOMO · 푸 Putnam · 알 FP</b> — 보헴은 줄 수(LOC)를, 푸트남은 시간에 따른 사람 수를, 알브레히트는 기능 수를 세요. 도구는 <b>SLIM = Putnam</b>(곡선), <b>ESTIMACS = FP</b>.</div>
+<div class="memo"><b>조 · 반 · 내</b> — 작고 익숙한 업무용(조직형) → 컴파일러 같은 중간(반분리형) → 크고 제약 많은 실시간 제어(내장형). 산정 단계는 <b>기 · 중 · 발</b>(기본형 → 15개 비용 드라이버의 중간형 → 공정별 발전형).</div>
+<div class="memo">LOC 예측치 = <b>(낙관 + 4 × 기대 + 비관) ÷ 6</b>. 노력 = LOC ÷ 1인 월 생산량, 비용 = 노력 × 인건비, 기간 = 노력 ÷ 인원, 생산성 = LOC ÷ 노력.</div>
+<div class="trap">“COCOMO 모형의 프로젝트 유형이 아닌 것”을 물으면서 선지에 발전형(Detailed)이나 중간형을 섞어요. 발전형·중간형은 <b>산정 단계(종류)</b>지 유형이 아니에요. 유형은 조직형·반분리형·내장형 셋뿐이에요.</div>
+<div class="trap">“COCOMO의 산정 결과 단위”는 금액이 아니라 <b>노력(M/M, 인월)</b>이에요. 비용은 거기에 인건비를 곱해서 따로 구해요. “Rayleigh-Norden 곡선”이 보이면 COCOMO가 아니라 Putnam, “기능 증대 요인·가중치”가 보이면 LOC가 아니라 FP예요.</div>
+<div class="trap">델파이 기법은 하향식이에요. “여러 전문가 + 조정자 + 익명 반복”이라는 절차가 정교해 보여서 수학적 모델로 착각하기 쉽지만, 결국 사람의 판단이에요.</div>
+
+<h2>9. 오답 복습 — UML 관계선과 결합도 방향</h2>
+<p>오늘은 두 오답을 다시 보는 날이에요. 비용 산정 모델은 “설명 속 단서 단어 하나로 이름을 고르는” 문제였는데, 아래 두 오답도 같은 성격이에요 — <b>모양이나 방향 같은 작은 단서 하나</b>가 정답을 가르죠. 출제자 입장에서는 선 하나를 점선으로 바꾸거나 화살표 방향만 뒤집는 게 새 문제를 쓰는 것보다 훨씬 싸게 먹히는 비용 절감 기법이에요.</p>
+<p><b>D009-3 · 일반화와 실체화의 선 모양.</b> UML 클래스 다이어그램에서 <b>속이 빈 삼각형 화살표</b>는 두 관계가 같이 써요. 차이는 선이에요. <b>일반화(Generalization)</b>는 <b>실선 + 빈 삼각형</b>으로, 자식 클래스가 부모 클래스를 상속하는 is-a 관계예요(Java의 <code>extends</code>). <b>실체화(Realization)</b>는 <b>점선 + 빈 삼각형</b>으로, 클래스가 인터페이스에 약속된 기능을 실제로 구현하는 관계예요(Java의 <code>implements</code>). 점선은 “아직 실체가 없는 약속을 구현한다”는 느낌으로 기억하면 편해요. 같은 점선이라도 화살촉이 <b>열린 화살표</b>면 잠깐 가져다 쓰는 <b>의존</b>이고, 아무 장식 없는 실선은 <b>연관</b>이에요. 일주일 전에는 실선을 보고 실체화를 골랐다가 재시작 문제에서 통과했으니, 오늘은 반대로 점선 쪽을 물어요(<a href="2026-10-11-D009.html">D009</a>·<a href="2026-10-15-D013.html">D013 다시 보기</a>).</p>
+<p><b>D016-6 · 결합도 순서의 방향.</b> 결합도는 모듈 사이가 얼마나 얽혔나를 재는 잣대라 <b>약할수록 좋아요</b>. 좋은 쪽(약한 쪽)부터 외운 “자스제외공내”가 약 → 강 — 자료 → 스탬프 → 제어 → 외부 → 공통 → 내용이고, 강 → 약은 이걸 그대로 뒤집은 “내공외제스자”예요. 어제 D018 6번은 약 → 강을 물었으니, 오늘은 다시 원래 문제처럼 강 → 약을 물어요. 이번엔 정답의 역순만 함정이 아니라, 가운데 두 개의 자리를 바꾼 선지도 섞여 있어요. 선지를 보기 전에 문제의 방향 단어에 먼저 동그라미를 치고, 그다음 “외부가 공통보다 약하다(외부는 외부 데이터 하나, 공통은 전역 데이터 전체를 공유)”를 떠올리면 가운데 두 칸도 흔들리지 않아요(<a href="2026-10-14-D012.html">D012 다시 보기</a>).</p>
+<div class="memo">빈 삼각형: 실선 = 일반화(extends), 점선 = 실체화(implements). 결합도 강 → 약 = 내공외제스자.</div>
+
+<h2>확인 문제</h2>
+<ol class="quiz">
+<li>COCOMO 모형에서, 신호 제어·미사일 유도처럼 하드웨어와 실시간 처리 제약이 엄격한 대규모 소프트웨어를 개발하는 유형은?<label class="opt"><input type="radio" name="D019-q1" value="1">① 조직형(Organic)</label><label class="opt"><input type="radio" name="D019-q1" value="2">② 반분리형(Semi-detached)</label><label class="opt"><input type="radio" name="D019-q1" value="3">③ 내장형(Embedded)</label><label class="opt"><input type="radio" name="D019-q1" value="4">④ 발전형(Detailed)</label></li>
+<li>소프트웨어 생명주기 전 과정에 걸친 노력(인력)의 분포를 Rayleigh-Norden 곡선으로 예측하며, 자동화 도구 SLIM의 기초가 된 비용 산정 모형은?<label class="opt"><input type="radio" name="D019-q2" value="1">① Putnam 모형</label><label class="opt"><input type="radio" name="D019-q2" value="2">② COCOMO 모형</label><label class="opt"><input type="radio" name="D019-q2" value="3">③ 기능점수(FP) 모형</label><label class="opt"><input type="radio" name="D019-q2" value="4">④ 델파이 기법</label></li>
+<li>(오답 재확인) UML 클래스 다이어그램에서 인터페이스와 그 인터페이스를 구현하는 클래스 사이를 점선과 속이 빈 삼각형 화살표로 나타내는 관계는?<label class="opt"><input type="radio" name="D019-q3" value="1">① 일반화(Generalization)</label><label class="opt"><input type="radio" name="D019-q3" value="2">② 실체화(Realization)</label><label class="opt"><input type="radio" name="D019-q3" value="3">③ 의존(Dependency)</label><label class="opt"><input type="radio" name="D019-q3" value="4">④ 연관(Association)</label></li>
+<li>(오답 재확인) 결합도를 강한 것부터 약한 것 순서로 바르게 나열한 것은?<label class="opt"><input type="radio" name="D019-q4" value="1">① 자료 → 스탬프 → 제어 → 외부 → 공통 → 내용</label><label class="opt"><input type="radio" name="D019-q4" value="2">② 내용 → 공통 → 제어 → 외부 → 스탬프 → 자료</label><label class="opt"><input type="radio" name="D019-q4" value="3">③ 내용 → 외부 → 공통 → 제어 → 스탬프 → 자료</label><label class="opt"><input type="radio" name="D019-q4" value="4">④ 내용 → 공통 → 외부 → 제어 → 스탬프 → 자료</label></li>
+</ol><div class="answer-bar" data-id="D019" data-n="4"><code></code><button type="button">답안 복사</button></div><p><small>고른 뒤 <b>답안 복사</b> → 디스코드 공부 채널에 붙여넣기 하면 돼요.</small></p>
+<p>답장: <code>정처기 D019: 1)번호 2)번호 3)번호 4)번호</code></p>
+<p class="meta"><a href="2026-10-20-D018.html">← D018</a>  </p>
+<script>
+document.querySelectorAll('.answer-bar').forEach(bar=>{
+  const id=bar.dataset.id,n=+bar.dataset.n,out=bar.querySelector('code'),btn=bar.querySelector('button');
+  const text=()=>'정처기 '+id+': '+Array.from({length:n},(_,i)=>{const c=document.querySelector('input[name="'+id+'-q'+(i+1)+'"]:checked');return (i+1)+')'+(c?c.value:'?')}).join(' ');
+  document.querySelectorAll('input[name^="'+id+'-q"]').forEach(r=>r.addEventListener('change',()=>{out.textContent=text()}));
+  out.textContent=text();
+  btn.addEventListener('click',async()=>{const t=text();try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}btn.textContent='복사됨 ✓';setTimeout(()=>btn.textContent='답안 복사',1500)});
+});
+</script>
+<footer>2027년 정기 기사 1회 정보처리기사 필기 준비 · 공식 범위: Q-Net 2027~2029 출제기준</footer>
+</main></body></html>
