@@ -27,6 +27,19 @@ ul.list li{padding:10px 0;border-bottom:1px solid var(--line)}
 ul.list .d{color:var(--muted);font-size:14px;margin-right:6px}
 svg{max-width:100%;height:auto}
 footer{color:var(--muted);font-size:13px;margin-top:3em}
+/* 데스크톱(2026-10-22 진수 님: 주로 데스크톱으로 봄) — 넓은 본문, 그림은 바로 앞 문단과 좌우로 나란히(.duo, 빌드가 자동으로 묶음) */
+.duo>figure{margin:1.2em 0}
+@media (min-width:1000px){
+main{max-width:1120px;padding:32px 40px 100px}
+.duo{display:grid;grid-template-columns:minmax(0,1fr) 440px;gap:36px;align-items:start;margin:1em 0}
+.duo>figure{margin:.3em 0 0;position:sticky;top:16px}
+.duo>figure svg{width:100%}
+.duo>figure.mermaid img{max-width:100%}
+main>figure{max-width:460px;margin-left:auto;margin-right:auto}
+table{display:table}
+.hint{display:none}
+}
+}
 /* 시각 컴포넌트 — 사용법은 site/COMPONENTS.md */
 .flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:6px;margin:1em 0}
 .flow>div{flex:1 1 120px;background:var(--card);border:2px solid var(--accent);border-radius:12px;padding:10px;text-align:center;font-size:15px}

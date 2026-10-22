@@ -72,10 +72,9 @@
 <p>객체를 묶기로 했으니 이제 묶음을 부르는 말이 필요해요. 시험에서는 이 용어들을 정의 문장으로 주고 고르게 하니, 하나씩 정확한 문장으로 잡아 둘게요.</p>
 <p><b>객체(Object)</b>는 <b>데이터(속성)와 그 데이터를 처리하는 함수(메서드)를 하나로 묶은</b> 실체예요. 현실의 사물이나 개념 하나에 대응해요. 주문 한 건, 고객 한 명이 각각 객체예요. 객체는 자기 상태를 가지고(이 주문은 결제됨), 자기 행동을 할 수 있어요(이 주문을 취소한다).</p>
 <p><b>클래스(Class)</b>는 <b>공통된 속성과 연산을 가진 객체들을 하나로 정의한 틀</b>이에요. 교재에 따라 “객체의 집합”, “객체를 만드는 설계도·뼈대”라고 써요. <code>class Order</code>는 “주문이라면 번호와 상태가 있고 취소할 수 있다”는 틀이고, 이 틀 자체는 특정 주문 한 건이 아니에요. 상속 관계에서 위쪽 클래스를 <b>상위(슈퍼·부모) 클래스</b>, 아래쪽을 <b>하위(서브·자식) 클래스</b>라고 불러요.</p>
-<p><b>인스턴스(Instance)</b>는 <b>클래스라는 틀로 실제로 찍어 낸 객체 하나하나</b>예요. <code>new Order()</code>로 만든 order1, order2가 Order 클래스의 인스턴스예요. 클래스로 인스턴스를 만드는 과정을 <b>인스턴스화(Instantiation)</b>라고 해요. “객체”와 “인스턴스”는 거의 같은 말인데, 인스턴스는 “어느 클래스로 만든 것인지”를 강조할 때 써요(order1은 Order의 인스턴스).</p>
+<div class="duo"><div><p><b>인스턴스(Instance)</b>는 <b>클래스라는 틀로 실제로 찍어 낸 객체 하나하나</b>예요. <code>new Order()</code>로 만든 order1, order2가 Order 클래스의 인스턴스예요. 클래스로 인스턴스를 만드는 과정을 <b>인스턴스화(Instantiation)</b>라고 해요. “객체”와 “인스턴스”는 거의 같은 말인데, 인스턴스는 “어느 클래스로 만든 것인지”를 강조할 때 써요(order1은 Order의 인스턴스).</p>
 <p><b>속성(Attribute)</b>은 객체가 가진 <b>데이터·상태</b>예요. 필드, 멤버 변수라고도 해요(주문번호, 상태). <b>메서드(Method)</b>는 객체가 할 수 있는 <b>동작·연산</b>을 구현한 함수예요. 교재에 따라 연산(Operation), 서비스, 동작이라고도 불러요(<code>cancel()</code>).</p>
-<p><b>메시지(Message)</b>는 <b>객체들 사이의 상호작용 수단</b>으로, 한 객체가 다른 객체에게 <b>어떤 연산을 수행하라고 요청</b>하는 것이에요. 고객 객체가 <code>order1.cancel()</code>을 호출하는 순간 order1에게 “취소해 줘”라는 메시지를 보낸 거예요. 메시지를 받은 객체는 자기 안의 메서드로 그 요청을 처리해요. 그러니까 <b>메시지는 부탁</b>, <b>메서드는 부탁을 받아 실제로 처리하는 방법</b>이에요. 메시지를 보내는 쪽은 상대가 내부에서 어떻게 처리하는지 몰라도 돼요. 이게 뒤에서 볼 캡슐화·정보 은닉과 이어져요.</p>
-<figure><svg viewBox="0 0 360 400" font-family="sans-serif" role="img" aria-label="Order 클래스에서 order1, order2 인스턴스를 만들고 customer 객체가 order1에 cancel 메시지를 보내는 그림">
+<p><b>메시지(Message)</b>는 <b>객체들 사이의 상호작용 수단</b>으로, 한 객체가 다른 객체에게 <b>어떤 연산을 수행하라고 요청</b>하는 것이에요. 고객 객체가 <code>order1.cancel()</code>을 호출하는 순간 order1에게 “취소해 줘”라는 메시지를 보낸 거예요. 메시지를 받은 객체는 자기 안의 메서드로 그 요청을 처리해요. 그러니까 <b>메시지는 부탁</b>, <b>메서드는 부탁을 받아 실제로 처리하는 방법</b>이에요. 메시지를 보내는 쪽은 상대가 내부에서 어떻게 처리하는지 몰라도 돼요. 이게 뒤에서 볼 캡슐화·정보 은닉과 이어져요.</p></div><figure><svg viewBox="0 0 360 400" font-family="sans-serif" role="img" aria-label="Order 클래스에서 order1, order2 인스턴스를 만들고 customer 객체가 order1에 cancel 메시지를 보내는 그림">
 <defs><marker id="d13a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#555"/></marker>
 <marker id="d13m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#c0392b"/></marker></defs>
 <rect width="360" height="400" rx="12" fill="#f7f7f4"/>
@@ -97,7 +96,8 @@
 <rect x="12" y="340" width="136" height="46" rx="8" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
 <text x="80" y="368" font-size="15" font-weight="700" fill="#222" text-anchor="middle">customer</text>
 <g font-size="14" fill="#555"><text x="164" y="360">order1이 받아서</text><text x="164" y="380">자기 메서드로 처리</text></g>
-</svg><figcaption>파란 칸이 틀(클래스), 흰 칸이 틀로 찍은 실체(인스턴스)예요. 같은 틀이라도 속성 값은 인스턴스마다 달라요. 빨간 화살표가 메시지(부탁)이고, 처리는 받은 쪽의 메서드가 해요.</figcaption></figure>
+</svg><figcaption>파란 칸이 틀(클래스), 흰 칸이 틀로 찍은 실체(인스턴스)예요. 같은 틀이라도 속성 값은 인스턴스마다 달라요. 빨간 화살표가 메시지(부탁)이고, 처리는 받은 쪽의 메서드가 해요.</figcaption></figure></div>
+
 <p>한 장 요약 — 위 문단의 여섯 용어를 시험 문장과 코드 모양으로 짝지으면 이래요.</p>
 <table>
 <tr><th>용어</th><th>시험 문장</th><th>코드에서</th></tr>
@@ -153,9 +153,8 @@ class CardPayment extends Payment {
 </div>
 
 <h3>추상화(Abstraction) — 공통·본질만 남기기</h3>
-<p>추상화는 <b>불필요한 세부를 빼고 공통적이고 본질적인 특징만 뽑아 모델로 만드는 것</b>이에요. 카드결제·계좌이체·포인트결제에서 “금액을 받아 결제한다”는 공통점만 뽑아 <code>Payment</code>로 정의하는 게 추상화예요. 클래스 자체가 데이터와 연산을 추상화한 결과라서 클래스를 만드는 일을 <b>자료(데이터) 추상화</b>라고도 해요. D011 설계 원리에서 본 추상화 3종 <b>기능(과정) 추상화 · 자료(데이터) 추상화 · 제어 추상화</b>와 같은 개념이고, 교재마다 기능/과정, 자료/데이터로 이름만 달라요.</p>
-<p>참고로 일부 교재는 객체 사이의 관계를 묶어 <b>연관성</b>을 특징에 넣어요. is-member-of(연관화), is-instance-of(분류화), is-part-of(집단화), is-a(일반화·특수화) 같은 관계예요. 이름이 나오면 “객체 간 관계 종류”라고만 알아 두세요.</p>
-<figure><svg viewBox="0 0 360 428" font-family="sans-serif" role="img" aria-label="객체지향 4대 특징 캡슐화 상속 다형성 추상화 그림">
+<div class="duo"><div><p>추상화는 <b>불필요한 세부를 빼고 공통적이고 본질적인 특징만 뽑아 모델로 만드는 것</b>이에요. 카드결제·계좌이체·포인트결제에서 “금액을 받아 결제한다”는 공통점만 뽑아 <code>Payment</code>로 정의하는 게 추상화예요. 클래스 자체가 데이터와 연산을 추상화한 결과라서 클래스를 만드는 일을 <b>자료(데이터) 추상화</b>라고도 해요. D011 설계 원리에서 본 추상화 3종 <b>기능(과정) 추상화 · 자료(데이터) 추상화 · 제어 추상화</b>와 같은 개념이고, 교재마다 기능/과정, 자료/데이터로 이름만 달라요.</p>
+<p>참고로 일부 교재는 객체 사이의 관계를 묶어 <b>연관성</b>을 특징에 넣어요. is-member-of(연관화), is-instance-of(분류화), is-part-of(집단화), is-a(일반화·특수화) 같은 관계예요. 이름이 나오면 “객체 간 관계 종류”라고만 알아 두세요.</p></div><figure><svg viewBox="0 0 360 428" font-family="sans-serif" role="img" aria-label="객체지향 4대 특징 캡슐화 상속 다형성 추상화 그림">
 <defs><marker id="d13b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#555"/></marker>
 <marker id="d13t" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" orient="auto-start-reverse"><path d="M1 1 L11 6 L1 11 z" fill="#ffffff" stroke="#555" stroke-width="1.5"/></marker></defs>
 <rect width="360" height="428" rx="12" fill="#f7f7f4"/>
@@ -183,7 +182,8 @@ class CardPayment extends Payment {
 <text x="140" y="284">같은 메시지, 다른 응답</text><text x="140" y="304">오버로딩 · 오버라이딩</text>
 <text x="140" y="380">공통·본질만 뽑아 모델화</text><text x="140" y="400">클래스 = 자료 추상화</text>
 </g>
-</svg><figcaption>네 특징을 한 장에. 캡슐화 안의 “감추기”가 정보 은닉이고, 다형성의 두 구현 방법이 오버로딩·오버라이딩이에요.</figcaption></figure>
+</svg><figcaption>네 특징을 한 장에. 캡슐화 안의 “감추기”가 정보 은닉이고, 다형성의 두 구현 방법이 오버로딩·오버라이딩이에요.</figcaption></figure></div>
+
 <div class="memo"><b>캡상다추</b> = 캡슐화 · 상속 · 다형성 · 추상화. “캡슐은 묶고, 은닉은 감추고.” 오버<b>로</b>딩 = 한 클래스에 같은 이름을 여러 개 <b>로드</b>, 오버<b>라</b>이딩 = 부모 것을 덮어 <b>라이드</b>.</div>
 <div class="trap">“캡슐화 = 외부에서 내부 데이터에 접근하지 못하게 숨기는 것”처럼 <b>정보 은닉의 정의를 캡슐화에 붙인</b> 선지, “오버라이딩 = 같은 클래스에서 매개변수를 달리해 같은 이름의 메서드를 정의”처럼 <b>두 정의를 바꾼</b> 선지가 자주 나와요. “같은 클래스·매개변수 다름”이면 오버로딩, “상속·재정의”면 오버라이딩.</div>
 

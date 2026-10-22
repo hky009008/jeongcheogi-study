@@ -64,8 +64,8 @@
 </table>
 
 <h3>시퀀스 다이어그램 — 시간 순서</h3>
-<p>세로 점선이 <b>생명선</b>(객체가 살아 있는 시간), 위에서 아래로 시간이 흘러요. 가로 화살표가 메시지, 실선은 호출이고 점선은 응답이에요.</p>
-<figure class="mermaid"><img src="../assets/b2f836462e567259.png" alt="도식" loading="lazy" style="width:650px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure>
+<div class="duo"><div><p>세로 점선이 <b>생명선</b>(객체가 살아 있는 시간), 위에서 아래로 시간이 흘러요. 가로 화살표가 메시지, 실선은 호출이고 점선은 응답이에요.</p></div><figure class="mermaid"><img src="../assets/b2f836462e567259.png" alt="도식" loading="lazy" style="width:650px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure></div>
+
 <p>시퀀스 구성요소: <span class="tag">액터</span><span class="tag">객체</span><span class="tag">생명선</span><span class="tag">활성 박스(실행)</span><span class="tag">메시지</span><span class="tag">프레임(alt·loop)</span></p>
 
 <h3>상태 다이어그램 — 이벤트에 따른 상태 변화</h3>
@@ -79,8 +79,7 @@
 <div class="point">문제 속 키워드 → 다이어그램: “시간 순서·메시지” → 시퀀스 / “상태 변화·이벤트” → 상태 / “처리 흐름·분기·스윔레인” → 활동 / “물리적 노드·하드웨어” → 배치 / “사용자 관점 기능” → 유스케이스</div>
 
 <h2>4. 클래스 관계 6종 — 선과 끝 모양</h2>
-<p>선은 <b>실선/점선</b> 두 가지, 끝 모양은 <b>없음·빈 마름모·채운 마름모·빈 삼각형·열린 화살표</b>로 구별해요. 그림의 왼쪽·오른쪽 배치가 그대로 실제 표기예요.</p>
-<figure><svg viewBox="0 0 400 440" font-family="sans-serif">
+<div class="duo"><div><p>선은 <b>실선/점선</b> 두 가지, 끝 모양은 <b>없음·빈 마름모·채운 마름모·빈 삼각형·열린 화살표</b>로 구별해요. 그림의 왼쪽·오른쪽 배치가 그대로 실제 표기예요.</p></div><figure><svg viewBox="0 0 400 440" font-family="sans-serif">
 <rect width="400" height="440" rx="12" fill="#f7f7f4"/>
 <g fill="#222" font-size="15" font-weight="700">
 <text x="20" y="28">① 연관 — 실선</text>
@@ -119,7 +118,8 @@
 <polygon points="120,193 134,185 148,193 134,201" fill="#222" stroke="#333" stroke-width="2"/>
 <polygon points="280,263 264,254 264,272" fill="#fff" stroke="#333" stroke-width="2"/>
 <polygon points="280,333 264,324 264,342" fill="#fff" stroke="#333" stroke-width="2"/>
-</svg><figcaption>클래스 관계 6종의 실제 표기. 마름모는 전체 쪽, 삼각형은 부모·인터페이스 쪽에 붙어요</figcaption></figure>
+</svg><figcaption>클래스 관계 6종의 실제 표기. 마름모는 전체 쪽, 삼각형은 부모·인터페이스 쪽에 붙어요</figcaption></figure></div>
+
 
 <p class="hint">↔ 표가 넓어요. 옆으로 밀어서 보세요</p><table>
 <tr><th>관계 (예)</th><th>선</th><th>끝 모양</th><th>의미</th></tr>
@@ -150,8 +150,8 @@ class OrderService {
   void apply(Coupon c) { ... }
 }</pre>
 
-<p>Mermaid 표기로도 같은 관계를 볼 수 있어요(이름은 영어로 표기).</p>
-<figure class="mermaid"><img src="../assets/5afab017b31c5cec.png" alt="도식" loading="lazy" style="width:349px"></figure>
+<div class="duo"><div><p>Mermaid 표기로도 같은 관계를 볼 수 있어요(이름은 영어로 표기).</p></div><figure class="mermaid"><img src="../assets/5afab017b31c5cec.png" alt="도식" loading="lazy" style="width:349px"></figure></div>
+
 <figure class="mermaid"><img src="../assets/a9b76e0ac97fe6c1.png" alt="도식" loading="lazy" style="width:343px"></figure>
 
 <div class="memo"><b>빈 마름모 = 빈 관계</b>(헤어져도 각자 산다), <b>꽉 찬 마름모 = 운명 공동체</b>(같이 죽는다). <b>점선</b>은 약하거나(의존) 약속만 하는(실체화) 관계.</div>

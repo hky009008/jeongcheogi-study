@@ -116,9 +116,8 @@
 <h3>비즈니스 측면 — 돈과 일정의 품질</h3>
 <p>기술이 아니라 사업 관점의 품질이에요. <b>시장 적시성</b>(경쟁사보다 늦지 않게 출시할 수 있나), <b>비용과 혜택</b>(들인 비용 대비 얻는 이익), <b>예상 시스템 수명</b>(얼마나 오래 쓸 수 있나)이 대표예요. 아키텍처 결정이 출시일과 비용을 좌우하기 때문에 품질 속성에 들어가요. 예를 들어 처음부터 마이크로서비스로 잘게 나누면 확장성은 좋아지지만 출시가 늦어지고 비용이 늘 수 있어요.</p>
 <h3>아키텍처 측면 — 설계 자체의 품질</h3>
-<p>설계도 그 자체가 잘 만들어졌는지를 봐요. <b>개념적 무결성</b>(전체가 하나의 일관된 설계 철학을 따르나 — 여기저기 다른 스타일이 섞이지 않았나), <b>정확성·완결성</b>(요구사항을 빠짐없이 정확하게 반영했나), <b>구축 가능성</b>(주어진 인력·기간·기술로 실제로 만들 수 있나)이 대표예요.</p>
-<p><b>한 장 요약</b> — 세 측면을 그림과 표로 정리하면 이래요.</p>
-<figure><svg viewBox="0 0 360 340" font-family="sans-serif">
+<div class="duo"><div><p>설계도 그 자체가 잘 만들어졌는지를 봐요. <b>개념적 무결성</b>(전체가 하나의 일관된 설계 철학을 따르나 — 여기저기 다른 스타일이 섞이지 않았나), <b>정확성·완결성</b>(요구사항을 빠짐없이 정확하게 반영했나), <b>구축 가능성</b>(주어진 인력·기간·기술로 실제로 만들 수 있나)이 대표예요.</p>
+<p><b>한 장 요약</b> — 세 측면을 그림과 표로 정리하면 이래요.</p></div><figure><svg viewBox="0 0 360 340" font-family="sans-serif">
 <rect width="360" height="340" rx="12" fill="#f7f7f4"/>
 <rect x="14" y="14" width="332" height="98" rx="10" fill="#e6efff" stroke="#2a5db0" stroke-width="2.5"/>
 <text x="28" y="40" font-size="16" font-weight="700" fill="#2a5db0">시스템 측면</text>
@@ -135,7 +134,8 @@
 <text x="332" y="260" font-size="14" fill="#2e7d32" text-anchor="end">설계 자체의 완성도</text>
 <text x="28" y="290" font-size="15" font-weight="700" fill="#222">개념적 무결성 · 정확성/완결성</text>
 <text x="28" y="316" font-size="14" fill="#333"><tspan font-weight="700">구축 가능성</tspan> (+ 변경성·시험성 등)</text>
-</svg><figcaption>굵은 글자는 확인한 두 자료가 같은 측면으로 분류한 항목, 괄호 안은 한 자료에만 있는 항목이에요.</figcaption></figure>
+</svg><figcaption>굵은 글자는 확인한 두 자료가 같은 측면으로 분류한 항목, 괄호 안은 한 자료에만 있는 항목이에요.</figcaption></figure></div>
+
 <p class="hint">↔ 표가 넓어요. 옆으로 밀어서 보세요</p><table>
 <tr><th>측면</th><th>대표 항목 (공통)</th><th>한 자료에만 있는 항목</th><th>판단 키워드</th></tr>
 <tr><td><b>시스템</b></td><td>성능, 보안, 가용성, 사용성, 변경 용이성</td><td>기능성, 확장성, 시험 용이성, 배치성, 안정성</td><td>운영 중 시스템이 어떻게 동작하나</td></tr>
@@ -264,10 +264,10 @@
 <h3>MVC — 요청 하나가 흐르는 순서</h3>
 <figure class="mermaid"><img src="../assets/85dbbfe9e5d1ee6b.png" alt="도식" loading="lazy" style="width:496px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure>
 <h3>브로커 vs 이벤트 버스 — 가운데 있는 것이 하는 일</h3>
-<p><b>브로커</b>: 요청을 받아 맞는 서버를 <b>찾아 연결</b>하고 응답을 돌려줘요(요청-응답, 위치 투명성).</p>
-<figure class="mermaid"><img src="../assets/cb8f3ebabd23369b.png" alt="도식" loading="lazy" style="width:408px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure>
-<p><b>이벤트 버스</b>: 소스는 발행만 하고 <b>누가 받는지 몰라요</b>. 구독자들이 각자 비동기로 받아요(느슨한 결합).</p>
-<figure class="mermaid"><img src="../assets/dea43867049ca8cb.png" alt="도식" loading="lazy" style="width:499px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure>
+<div class="duo"><div><p><b>브로커</b>: 요청을 받아 맞는 서버를 <b>찾아 연결</b>하고 응답을 돌려줘요(요청-응답, 위치 투명성).</p></div><figure class="mermaid"><img src="../assets/cb8f3ebabd23369b.png" alt="도식" loading="lazy" style="width:408px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure></div>
+
+<div class="duo"><div><p><b>이벤트 버스</b>: 소스는 발행만 하고 <b>누가 받는지 몰라요</b>. 구독자들이 각자 비동기로 받아요(느슨한 결합).</p></div><figure class="mermaid"><img src="../assets/dea43867049ca8cb.png" alt="도식" loading="lazy" style="width:499px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure></div>
+
 
 
 <h2>6. 4+1 뷰 — 아키텍처를 보는 다섯 시선</h2>

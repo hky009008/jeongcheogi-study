@@ -22,8 +22,7 @@
 </div>
 
 <h2>1. 이번 주 범위 지도</h2>
-<p>공식 출제기준에서 지금까지 끝낸 칸이에요. A1 요구사항 확인 · 분석모델 확인은 세세항목 6개를 모두 돌았고, A2는 감성공학 하나만 남았어요(내일 D010).</p>
-<figure><svg viewBox="0 0 400 330" font-family="sans-serif">
+<div class="duo"><div><p>공식 출제기준에서 지금까지 끝낸 칸이에요. A1 요구사항 확인 · 분석모델 확인은 세세항목 6개를 모두 돌았고, A2는 감성공학 하나만 남았어요(내일 D010).</p></div><figure><svg viewBox="0 0 400 330" font-family="sans-serif">
 <rect width="400" height="330" rx="12" fill="#f7f7f4"/>
 <text x="200" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">A1 소프트웨어 개발 — 요구사항</text>
 <g stroke-width="2.5">
@@ -57,7 +56,8 @@
 </g>
 <rect x="214" y="270" width="160" height="36" rx="8" fill="#ffffff" stroke="#888" stroke-width="2" stroke-dasharray="6 4"/>
 <text x="294" y="293" font-size="14" fill="#555" text-anchor="middle">감성공학 · 10/12</text>
-</svg><figcaption>✓는 이번 주까지 끝낸 세세항목. 점선은 내일(10/12 D010) 볼 감성공학이에요.</figcaption></figure>
+</svg><figcaption>✓는 이번 주까지 끝낸 세세항목. 점선은 내일(10/12 D010) 볼 감성공학이에요.</figcaption></figure></div>
+
 
 <h2>2. A1 ① 요구사항과 도출 기법</h2>
 <div class="vs">
@@ -82,8 +82,7 @@
 </table>
 <div class="memo"><b>“시간 순서 메시지” = 시퀀스, “이벤트에 따른 상태 변화” = 상태, “물리 노드” = 배치, “처리 흐름·스윔레인” = 활동.</b></div>
 <div class="lol">실선+빈 삼각형 = 상속(일반화), <b>점선</b>+빈 삼각형 = 인터페이스 구현(실체화). 점선은 “구현은 아직 약속만” 느낌. 채운 마름모(합성)는 같이 죽는 찐친, 빈 마름모(집합)는 쿨하게 따로 사는 사이.</div>
-<p>클래스 관계는 <b>선(실선/점선) × 끝 모양</b> 두 가지만 보면 6종이 갈려요.</p>
-<figure><svg viewBox="0 0 400 440" font-family="sans-serif">
+<div class="duo"><div><p>클래스 관계는 <b>선(실선/점선) × 끝 모양</b> 두 가지만 보면 6종이 갈려요.</p></div><figure><svg viewBox="0 0 400 440" font-family="sans-serif">
 <rect width="400" height="440" rx="12" fill="#f7f7f4"/>
 <g fill="#222" font-size="15" font-weight="700">
 <text x="20" y="28">① 연관 — 실선</text>
@@ -122,7 +121,8 @@
 <polygon points="120,193 134,185 148,193 134,201" fill="#222" stroke="#333" stroke-width="2"/>
 <polygon points="280,263 264,254 264,272" fill="#fff" stroke="#333" stroke-width="2"/>
 <polygon points="280,333 264,324 264,342" fill="#fff" stroke="#333" stroke-width="2"/>
-</svg><figcaption>클래스 관계 6종의 실제 표기. 마름모는 전체 쪽, 삼각형은 부모·인터페이스 쪽에 붙어요</figcaption></figure>
+</svg><figcaption>클래스 관계 6종의 실제 표기. 마름모는 전체 쪽, 삼각형은 부모·인터페이스 쪽에 붙어요</figcaption></figure></div>
+
 <p class="hint">↔ 표가 넓어요. 옆으로 밀어서 보세요</p><table>
 <tr><th>관계</th><th>선</th><th>끝 모양</th><th>한 줄</th></tr>
 <tr><td><b>연관</b></td><td>실선</td><td>없음</td><td>서로 참조</td></tr>
@@ -132,8 +132,7 @@
 <tr><td><b>실체화</b></td><td>점선</td><td>빈 삼각형 (인터페이스 쪽)</td><td>인터페이스 구현</td></tr>
 <tr><td><b>의존</b></td><td>점선</td><td>열린 화살표</td><td>잠깐 사용</td></tr>
 </table>
-<p>유스케이스 관계는 <b>필수냐 조건부냐</b>, 그리고 <b>화살표 방향</b>이 정반대라는 점이 핵심이에요.</p>
-<figure><svg viewBox="0 0 400 300" font-family="sans-serif">
+<div class="duo"><div><p>유스케이스 관계는 <b>필수냐 조건부냐</b>, 그리고 <b>화살표 방향</b>이 정반대라는 점이 핵심이에요.</p></div><figure><svg viewBox="0 0 400 300" font-family="sans-serif">
 <defs><marker id="d9u" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#333" stroke-width="1.5"/></marker></defs>
 <rect width="400" height="300" rx="12" fill="#f7f7f4"/>
 <rect x="100" y="20" width="290" height="265" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
@@ -165,7 +164,8 @@
 <text x="200" y="100">«include»</text>
 <text x="205" y="212">«extend»</text>
 </g>
-</svg><figcaption>include는 기본(주문하기) → 포함(로그인), extend는 확장(쿠폰 적용) → 기본(주문하기). 화살표 방향이 반대예요</figcaption></figure>
+</svg><figcaption>include는 기본(주문하기) → 포함(로그인), extend는 확장(쿠폰 적용) → 기본(주문하기). 화살표 방향이 반대예요</figcaption></figure></div>
+
 <table>
 <tr><th></th><th>«include» 포함</th><th>«extend» 확장</th></tr>
 <tr><td>성격</td><td><b>반드시</b> 실행</td><td><b>조건이 맞을 때만</b> 실행</td></tr>
@@ -196,8 +196,7 @@
 <figure class="meme"><img src="../assets/memes/D009-agile.png" alt="드레이크 밈: 계획 따르기는 거절, 변화에 대응은 선택"><figcaption>애자일 선언 4가치는 늘 <b>왼쪽(사람·동작하는 SW·고객 협력·변화 대응)</b>을 더 중시해요.</figcaption></figure>
 
 <h2>5. A1 ④ 분석모델 · 요구사항 관리</h2>
-<p>구조적 분석의 DFD는 기호 4개뿐이에요.</p>
-<figure><svg viewBox="0 0 400 270" font-family="sans-serif">
+<div class="duo"><div><p>구조적 분석의 DFD는 기호 4개뿐이에요.</p></div><figure><svg viewBox="0 0 400 270" font-family="sans-serif">
 <defs><marker id="d9a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker></defs>
 <rect width="400" height="270" rx="12" fill="#f7f7f4"/>
 <line x1="200" y1="15" x2="200" y2="255" stroke="#ddd" stroke-width="1.5"/>
@@ -217,7 +216,8 @@
 <text x="100" y="246">자료 저장소 · 두 줄</text>
 <text x="300" y="246">단말 · 사각형</text>
 </g>
-</svg><figcaption>DFD 4기호. 프로세스(Process) = 원, 자료 흐름(Data Flow) = 이름 붙은 화살표, 자료 저장소(Data Store) = 위아래 평행선, 단말(Terminator, 외부 엔티티) = 사각형</figcaption></figure>
+</svg><figcaption>DFD 4기호. 프로세스(Process) = 원, 자료 흐름(Data Flow) = 이름 붙은 화살표, 자료 저장소(Data Store) = 위아래 평행선, 단말(Terminator, 외부 엔티티) = 사각형</figcaption></figure></div>
+
 <table>
 <tr><th>자료 사전 기호</th><th>뜻</th><th>예</th></tr>
 <tr><td><code>=</code></td><td>정의(구성)</td><td>주문 = 주문번호 + 고객 + 상품목록</td></tr>

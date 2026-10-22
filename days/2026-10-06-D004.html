@@ -39,8 +39,7 @@
 <p>다섯 도구는 서로 짝을 이뤄요. DFD가 “어떤 데이터가 어디로 흐르나”를 그리면, 그 데이터 이름의 정의는 <b>DD</b>에, 맨 아래 프로세스의 처리 로직은 <b>Mini-Spec</b>에 적어요. DFD가 못 그리는 <b>시간·제어</b>는 STD가, 데이터 사이 관계는 ERD가 맡아요.</p>
 
 <h2>3. DFD (Data Flow Diagram, 자료 흐름도)</h2>
-<p>DFD는 <b>자료의 흐름과 변환</b>만 그리는 그림이에요. 프로세스를 버블(원)로 그려서 <b>버블 차트</b>라고도 해요. 구성요소는 딱 네 가지예요.</p>
-<figure><svg viewBox="0 0 400 270" font-family="sans-serif">
+<div class="duo"><div><p>DFD는 <b>자료의 흐름과 변환</b>만 그리는 그림이에요. 프로세스를 버블(원)로 그려서 <b>버블 차트</b>라고도 해요. 구성요소는 딱 네 가지예요.</p></div><figure><svg viewBox="0 0 400 270" font-family="sans-serif">
 <defs><marker id="d4a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker></defs>
 <rect width="400" height="270" rx="12" fill="#f7f7f4"/>
 <line x1="200" y1="15" x2="200" y2="255" stroke="#ddd" stroke-width="1.5"/>
@@ -60,7 +59,8 @@
 <text x="100" y="246">자료 저장소 · 두 줄</text>
 <text x="300" y="246">단말 · 사각형</text>
 </g>
-</svg><figcaption>DFD 4기호. 프로세스(Process) = 원, 자료 흐름(Data Flow) = 이름 붙은 화살표, 자료 저장소(Data Store) = 위아래 평행선, 단말(Terminator, 외부 엔티티) = 사각형</figcaption></figure>
+</svg><figcaption>DFD 4기호. 프로세스(Process) = 원, 자료 흐름(Data Flow) = 이름 붙은 화살표, 자료 저장소(Data Store) = 위아래 평행선, 단말(Terminator, 외부 엔티티) = 사각형</figcaption></figure></div>
+
 <table>
 <tr><th>요소</th><th>기호</th><th>의미</th></tr>
 <tr><td><b>프로세스</b> (Process)</td><td>원(버블)</td><td>입력 자료를 출력 자료로 <b>변환</b>하는 처리. 이름은 “동사+목적어”(주문 접수)</td></tr>
@@ -182,8 +182,8 @@
 <tr><td><b>동적</b> 모델링</td><td><b>상태 다이어그램</b></td><td>이벤트에 따른 상태 변화, 시간 흐름에 따른 <b>제어 흐름</b></td><td>“언제 어떻게 바뀌나?”</td></tr>
 <tr><td><b>기능</b> 모델링</td><td><b>DFD</b></td><td>입력 자료가 처리되어 출력이 되는 <b>자료 흐름·변환</b></td><td>“무엇을 계산하나?”</td></tr>
 </table>
-<p>동적 모델의 상태 다이어그램은 실제로 이렇게 생겼어요(주문 객체의 상태 변화).</p>
-<figure class="mermaid"><img src="../assets/10a69c8cc4ecea79.png" alt="도식" loading="lazy" style="width:276px"></figure>
+<div class="duo"><div><p>동적 모델의 상태 다이어그램은 실제로 이렇게 생겼어요(주문 객체의 상태 변화).</p></div><figure class="mermaid"><img src="../assets/10a69c8cc4ecea79.png" alt="도식" loading="lazy" style="width:276px"></figure></div>
+
 <p>기능 모델은 앞의 3장에서 본 <b>DFD 그대로</b>예요. 즉 럼바우는 객체지향 기법이지만 기능 관점에서는 구조적 분석의 DFD를 빌려 써요. 그래서 “DFD = 구조적 분석 전용”이라고 단정하면 안 돼요.</p>
 <div class="memo"><b>객동기</b> — 순서는 <b>객</b>체 → <b>동</b>적 → <b>기</b>능. 짝은 <b>객-객체도, 동-상태도, 기-DFD</b>. “동적 = 동(動)하는 상태”, “기능 = 자료를 가공하는 DFD”.</div>
 <div class="trap">
