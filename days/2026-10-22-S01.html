@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>S01 스크럼 집중 정리 — 스프린트 계획 vs 일일 스크럼</title>
+<link rel="stylesheet" href="../style.css"></head>
+<body><main>
+<nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a></nav>
+<h1>S01 · 스크럼 집중 정리 — 스프린트 계획 vs 일일 스크럼</h1><div class="meta">2026-10-22 · A1 보충 자료 · 애자일</div><p><span class="tag">보충</span><span class="tag">A1</span> 스크럼 문제, 특히 <b>일일 스크럼 ↔ 스프린트 계획</b>에서 같은 답을 계속 고르고 있어요(D009-4: 처음에도, 10/20 재확인에서도 ‘스프린트 계획’). 순서를 외워도 계속 틀린다는 건 지식이 아니라 <b>문제를 읽는 습관</b>이 걸린다는 뜻이에요. 이 페이지는 스크럼만 따로 떼어 처음부터 다시 쌓고, 왜 자꾸 ‘계획’으로 손이 가는지 그 원인부터 잡아요.</p>
+<ul>
+<li>스크럼 이벤트 5개를 <b>언제·얼마나·누가·무엇을</b> 기준으로 구별할 수 있다</li>
+<li>문제에 “계획”이라는 낱말이 나와도 <b>스프린트 계획과 일일 스크럼</b>을 범위(스프린트 전체 vs 다음 24시간)로 가를 수 있다</li>
+<li>스프린트 리뷰(제품 검사)와 스프린트 회고(일하는 방식 개선)를 구별할 수 있다</li>
+<li>역할 3·산출물 3을 이벤트와 연결해 설명할 수 있다</li>
+</ul>
+<div class="glance">
+<div><b>3</b>역할<small>PO · SM · 개발자</small></div>
+<div><b>3</b>산출물<small>제품 백로그 · 스프린트 백로그 · 증분</small></div>
+<div><b>5</b>이벤트<small>스프린트 · 계획 · 일일 · 리뷰 · 회고</small></div>
+<div><b>15분</b>일일 스크럼<small>매일 · 다음 24시간</small></div>
+</div>
+<div class="box"><b>이 페이지의 흐름</b>① 먼저 왜 틀리는지 원인부터 봐요. 문제 속 “계획”이라는 낱말이 함정이에요. ② 스크럼이 왜 이벤트를 다섯 개나 두는지, 그 뼈대(스프린트)를 봐요. ③ 다섯 이벤트를 시간 순서대로 하나씩, 달력에 놓고 봐요. ④ 가장 많이 틀린 계획 vs 일일 스크럼을 정면 비교하고, 리뷰 vs 회고도 정리해요. ⑤ 역할·산출물을 이벤트와 엮고, 마지막에 단서 → 정답 표와 연습 문제 6개로 굳혀요.</div>
+
+<h2>1. 왜 자꾸 ‘스프린트 계획’을 고를까</h2>
+<p>D009-4 원래 문제와 D018 4번 재확인 문제에는 공통으로 이 문장이 들어 있었어요. “<b>다음 24시간의 작업 계획을 조정</b>하는 스크럼 이벤트는?” 정답은 일일 스크럼인데, 두 번 다 스프린트 계획을 골랐어요. 아마 눈이 문장 끝의 “<b>계획</b>”에 먼저 걸리고, 선지에 같은 낱말이 들어간 “스프린트 <b>계획</b>”이 보이니 손이 거기로 간 거예요. 출제자 입장에서는 일부러 놓은 미끼예요. 정답의 설명문에 오답의 이름을 섞어 두면, 아는 사람도 반쯤은 걸리거든요.</p>
+<p>사실 일일 스크럼도 “계획”을 해요. 다만 <b>범위가 하루</b>예요. 스프린트 계획은 스프린트 <b>전체</b>(최대 1개월)를 시작할 때 한 번 세우는 큰 계획이고, 일일 스크럼은 그 큰 계획을 따라가다가 매일 아침 “오늘 하루는 이렇게 가자”고 <b>조정</b>하는 거예요. 그래서 문제에서 “계획”을 보면, 그 계획이 <b>어느 범위</b>인지 붙어 있는 말을 찾아야 해요. “매일”, “15분”, “24시간”이 붙어 있으면 일일 스크럼, “스프린트를 시작할 때”, “스프린트 목표”, “백로그 항목 선택”이 붙어 있으면 스프린트 계획이에요.</p>
+<div class="trap">“계획”이라는 낱말만 보고 고르지 않기. <b>매일 · 15분 · 24시간</b> 중 하나라도 보이면 일일 스크럼이에요. 스프린트 계획은 <b>매일 하지 않아요</b>.</div>
+
+<h2>2. 스크럼의 뼈대 — 스프린트라는 그릇</h2>
+<p>스크럼은 애자일을 실제로 굴리는 가장 대표적인 <b>관리 프레임워크</b>예요. 코딩 기법(짝 프로그래밍, TDD 같은 건 XP)은 정하지 않고, “누가(역할) 무엇을 가지고(산출물) 언제 모이나(이벤트)”만 정해요. 이렇게 최소한만 정한 이유는, 요구가 계속 바뀌는 환경에서는 긴 계획보다 <b>짧게 만들고 자주 확인하는 리듬</b>이 더 중요하기 때문이에요. 스크럼이 기대는 세 기둥도 그 리듬을 위한 거예요. 일을 다 보이게 하고(<b>투명성</b>), 자주 들여다보고(<b>검사</b>), 문제가 보이면 바로 고친다(<b>적응</b>).</p>
+<p>그 리듬의 단위가 <b>스프린트</b>예요. 스프린트는 <b>1개월 이하의 고정된 기간</b>으로, 이 안에서 사용 가능한 결과물(증분)을 하나 만들어요. 그리고 다른 네 이벤트(계획·일일 스크럼·리뷰·회고)는 모두 스프린트 <b>안에</b> 들어 있어요. 그래서 스프린트를 “나머지 이벤트를 담는 그릇”이라고 불러요. 한 스프린트가 끝나면 쉬는 날 없이 바로 다음 스프린트가 시작돼요. 사내 메신저에서 “이번 스프린트 끝나면 좀 쉬죠”라는 말이 공허하게 들리는 이유가 이거예요.</p>
+<figure><svg viewBox="0 0 360 345" font-family="sans-serif" role="img" aria-label="스프린트 한 바퀴: 계획, 일일 스크럼 매일 반복, 리뷰, 회고 순서">
+<rect width="360" height="345" rx="12" fill="#f7f7f4"/>
+<defs><marker id="s01a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="24" font-size="15" font-weight="700" fill="#222" text-anchor="middle">스프린트 한 바퀴 (최대 1개월)</text><path d="M180 92 L180 110" stroke="#555" stroke-width="2" fill="none" marker-end="url(#s01a)"/><path d="M180 164 L180 182" stroke="#555" stroke-width="2" fill="none" marker-end="url(#s01a)"/><path d="M180 236 L180 254" stroke="#555" stroke-width="2" fill="none" marker-end="url(#s01a)"/><rect x="40" y="40" width="280" height="52" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="180" y="62" font-size="15" font-weight="700" fill="#2a5db0" text-anchor="middle">스프린트 계획</text><text x="180" y="82" font-size="13" fill="#333" text-anchor="middle">시작할 때 1번 · 최대 8시간</text><rect x="40" y="112" width="280" height="52" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="180" y="134" font-size="15" font-weight="700" fill="#b5730d" text-anchor="middle">일일 스크럼</text><text x="180" y="154" font-size="13" fill="#333" text-anchor="middle">매일 · 15분 · 개발자</text><rect x="40" y="184" width="280" height="52" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="180" y="206" font-size="15" font-weight="700" fill="#2f7d4a" text-anchor="middle">스프린트 리뷰</text><text x="180" y="226" font-size="13" fill="#333" text-anchor="middle">끝날 무렵 · 최대 4시간</text><rect x="40" y="256" width="280" height="52" rx="8" fill="#f1e9f8" stroke="#6a3d9a" stroke-width="2"/><text x="180" y="278" font-size="15" font-weight="700" fill="#6a3d9a" text-anchor="middle">스프린트 회고</text><text x="180" y="298" font-size="13" fill="#333" text-anchor="middle">맨 마지막 · 최대 3시간</text><path d="M40 282 C8 282 8 66 38 66" stroke="#888" stroke-width="2" fill="none" stroke-dasharray="4 3" marker-end="url(#s01a)"/><text x="14" y="330" font-size="13" fill="#555">회고가 끝나면 바로 다음 스프린트의 계획</text>
+</svg><figcaption>스프린트는 나머지 네 이벤트를 담는 그릇이에요. 계획은 맨 앞에 한 번, 일일 스크럼은 그 사이에 매일, 리뷰와 회고는 맨 끝에 한 번씩.</figcaption></figure>
+
+<p>그림에서 주황 칸만 화살표가 제자리로 돌아오는 게 보이죠. 다섯 이벤트 중 <b>스프린트 안에서 여러 번</b> 하는 건 일일 스크럼 하나뿐이에요. 이걸 한 번 더 달력으로 놓고 보면 훨씬 선명해요.</p>
+<figure><svg viewBox="0 0 360 310" font-family="sans-serif" role="img" aria-label="2주 스프린트 달력: 첫날 계획, 매일 일일 스크럼, 마지막 날 리뷰와 회고">
+<rect width="360" height="310" rx="12" fill="#f7f7f4"/>
+<text x="180" y="24" font-size="15" font-weight="700" fill="#222" text-anchor="middle">2주 스프린트 달력 예시</text><text x="16" y="58" font-size="13" font-weight="700" fill="#555">1주차</text><rect x="16" y="66" width="60" height="86" rx="6" fill="#ffffff" stroke="#bbb" stroke-width="1.5"/><text x="46" y="84" font-size="13" font-weight="700" fill="#333" text-anchor="middle">월</text><rect x="20" y="92" width="52" height="24" rx="5" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><text x="46" y="109" font-size="13" font-weight="700" fill="#2a5db0" text-anchor="middle">계획</text><rect x="20" y="120" width="52" height="24" rx="5" fill="#fff4e0" stroke="#b5730d" stroke-width="1.5"/><text x="46" y="137" font-size="13" font-weight="700" fill="#b5730d" text-anchor="middle">일일</text><rect x="82" y="66" width="60" height="86" rx="6" fill="#ffffff" stroke="#bbb" stroke-width="1.5"/><text x="112" y="84" font-size="13" font-weight="700" fill="#333" text-anchor="middle">화</text><rect x="86" y="106" width="52" height="24" rx="5" fill="#fff4e0" stroke="#b5730d" stroke-width="1.5"/><text x="112" y="123" font-size="13" font-weight="700" fill="#b5730d" text-anchor="middle">일일</text><rect x="148" y="66" width="60" height="86" rx="6" fill="#ffffff" stroke="#bbb" stroke-width="1.5"/><text x="178" y="84" font-size="13" font-weight="700" fill="#333" text-anchor="middle">수</text><rect x="152" y="106" width="52" height="24" rx="5" fill="#fff4e0" stroke="#b5730d" stroke-width="1.5"/><text x="178" y="123" font-size="13" font-weight="700" fill="#b5730d" text-anchor="middle">일일</text><rect x="214" y="66" width="60" height="86" rx="6" fill="#ffffff" stroke="#bbb" stroke-width="1.5"/><text x="244" y="84" font-size="13" font-weight="700" fill="#333" text-anchor="middle">목</text><rect x="218" y="106" width="52" height="24" rx="5" fill="#fff4e0" stroke="#b5730d" stroke-width="1.5"/><text x="244" y="123" font-size="13" font-weight="700" fill="#b5730d" text-anchor="middle">일일</text><rect x="280" y="66" width="60" height="86" rx="6" fill="#ffffff" stroke="#bbb" stroke-width="1.5"/><text x="310" y="84" font-size="13" font-weight="700" fill="#333" text-anchor="middle">금</text><rect x="284" y="106" width="52" height="24" rx="5" fill="#fff4e0" stroke="#b5730d" stroke-width="1.5"/><text x="310" y="123" font-size="13" font-weight="700" fill="#b5730d" text-anchor="middle">일일</text><text x="16" y="176" font-size="13" font-weight="700" fill="#555">2주차</text><rect x="16" y="184" width="60" height="86" rx="6" fill="#ffffff" stroke="#bbb" stroke-width="1.5"/><text x="46" y="202" font-size="13" font-weight="700" fill="#333" text-anchor="middle">월</text><rect x="20" y="224" width="52" height="24" rx="5" fill="#fff4e0" stroke="#b5730d" stroke-width="1.5"/><text x="46" y="241" font-size="13" font-weight="700" fill="#b5730d" text-anchor="middle">일일</text><rect x="82" y="184" width="60" height="86" rx="6" fill="#ffffff" stroke="#bbb" stroke-width="1.5"/><text x="112" y="202" font-size="13" font-weight="700" fill="#333" text-anchor="middle">화</text><rect x="86" y="224" width="52" height="24" rx="5" fill="#fff4e0" stroke="#b5730d" stroke-width="1.5"/><text x="112" y="241" font-size="13" font-weight="700" fill="#b5730d" text-anchor="middle">일일</text><rect x="148" y="184" width="60" height="86" rx="6" fill="#ffffff" stroke="#bbb" stroke-width="1.5"/><text x="178" y="202" font-size="13" font-weight="700" fill="#333" text-anchor="middle">수</text><rect x="152" y="224" width="52" height="24" rx="5" fill="#fff4e0" stroke="#b5730d" stroke-width="1.5"/><text x="178" y="241" font-size="13" font-weight="700" fill="#b5730d" text-anchor="middle">일일</text><rect x="214" y="184" width="60" height="86" rx="6" fill="#ffffff" stroke="#bbb" stroke-width="1.5"/><text x="244" y="202" font-size="13" font-weight="700" fill="#333" text-anchor="middle">목</text><rect x="218" y="224" width="52" height="24" rx="5" fill="#fff4e0" stroke="#b5730d" stroke-width="1.5"/><text x="244" y="241" font-size="13" font-weight="700" fill="#b5730d" text-anchor="middle">일일</text><rect x="280" y="184" width="60" height="86" rx="6" fill="#ffffff" stroke="#bbb" stroke-width="1.5"/><text x="310" y="202" font-size="13" font-weight="700" fill="#333" text-anchor="middle">금</text><rect x="284" y="210" width="52" height="24" rx="5" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="1.5"/><text x="310" y="227" font-size="13" font-weight="700" fill="#2f7d4a" text-anchor="middle">리뷰</text><rect x="284" y="238" width="52" height="24" rx="5" fill="#f1e9f8" stroke="#6a3d9a" stroke-width="1.5"/><text x="310" y="255" font-size="13" font-weight="700" fill="#6a3d9a" text-anchor="middle">회고</text><text x="180" y="296" font-size="13" font-weight="700" fill="#333" text-anchor="middle">계획 1번 · 일일 스크럼 9번 · 리뷰 1번 · 회고 1번</text>
+</svg><figcaption>‘매일’ 하는 건 일일 스크럼 하나뿐이에요. 계획·리뷰·회고는 스프린트마다 딱 한 번.</figcaption></figure>
+
+
+<h2>3. 이벤트 다섯 개 — 시간 순서대로</h2>
+<p>이제 각 이벤트를 하나씩 봐요. 시험이 묻는 건 거의 항상 같은 네 가지예요. <b>언제</b> 하나, <b>얼마나</b> 하나(타임박스), <b>누가</b> 하나, <b>무엇을</b> 결과로 내나. 아래 시간은 1개월 스프린트 기준 <b>최대치</b>이고, 스프린트가 짧으면 보통 더 짧아져요.</p>
+<h3>① 스프린트 계획 (Sprint Planning) — 시작할 때 1번, 최대 8시간</h3>
+<p>스프린트를 <b>여는</b> 이벤트예요. 스크럼 팀 전체(PO·SM·개발자)가 모여 세 가지 질문에 답해요. <b>왜</b> 이 스프린트가 가치 있나(→ <b>스프린트 목표</b>), <b>무엇을</b> 할 수 있나(→ 제품 백로그에서 이번에 할 항목 선택), <b>어떻게</b> 할까(→ 항목을 하루 이하 크기 작업으로 쪼개는 실행 계획). 이 세 답을 묶은 게 <b>스프린트 백로그</b>예요. 요약하면 “한 달 치 계획을 처음에 한 번”이에요. 넷플릭스 시즌 1 기획 회의라고 생각하면 돼요. 매일 하는 회의가 아니에요.</p>
+<h3>② 일일 스크럼 (Daily Scrum) — 매일, 15분</h3>
+<p>스프린트 동안 <b>매일 같은 시간·같은 장소</b>에서 <b>15분</b> 동안 하는 이벤트예요. 주인공은 <b>개발자</b>예요. 스프린트 목표를 향해 잘 가고 있는지 점검하고, 필요하면 스프린트 백로그를 손보면서 <b>다음 24시간의 계획을 조정</b>해요. 진행 상황과 장애물을 공유하는 자리이기도 해요. 흔히 “스탠드업 미팅”이라고 부르는 그거예요. 문제 해결은 여기서 길게 하지 않고, 필요한 사람만 끝나고 따로 모여요. 15분짜리 회의가 40분이 되는 순간 그건 이미 일일 스크럼이 아니라는 게 공식 입장이에요(현실과는 별개로요).</p>
+<h3>③ 스프린트 리뷰 (Sprint Review) — 끝날 무렵, 최대 4시간</h3>
+<p>스프린트에서 <b>만든 결과물(증분)</b>을 이해관계자에게 보여 주고 함께 <b>검사</b>하는 이벤트예요. 단순 발표회가 아니라, 결과를 보고 “그럼 다음엔 뭘 하는 게 좋을까”를 같이 논의해서 <b>제품 백로그를 조정</b>하는 작업 회의예요. 질문은 “<b>무엇을</b> 만들었나”예요.</p>
+<h3>④ 스프린트 회고 (Sprint Retrospective) — 맨 마지막, 최대 3시간</h3>
+<p>스프린트의 <b>마지막</b> 이벤트예요. 이번엔 제품이 아니라 <b>팀이 일한 방식</b>을 돌아봐요. 사람 사이의 소통, 프로세스, 도구, 완료 정의(DoD)까지 살펴서 무엇이 잘 됐고 무엇을 고칠지 정하고, 가장 도움이 될 개선점을 다음 스프린트에 반영해요. 질문은 “<b>어떻게</b> 일했나”예요. 회고에서 “다들 고생했어요”만 하고 끝나면, 그건 회고가 아니라 회식 예고편이에요.</p>
+<h3>⑤ 스프린트 (Sprint) — 위 넷을 담는 그릇, 1개월 이하</h3>
+<p>앞에서 본 대로 고정 길이 기간이에요. 스프린트 중에는 스프린트 목표를 흔드는 변경을 하지 않고, 품질 기준을 낮추지 않아요. 스프린트 목표가 쓸모없어지면 스프린트를 <b>취소</b>할 수 있는데, 그 권한은 <b>PO에게만</b> 있어요. 참고로 백로그 정제(refinement)는 공식 이벤트가 아니라 수시로 하는 활동이에요.</p>
+
+<h2>4. 가장 많이 틀린 짝 — 계획 vs 일일 스크럼, 리뷰 vs 회고</h2>
+<p>앞 섹션에서 다섯 개를 따로 봤으니, 이제 헷갈리는 둘씩 붙여서 봐요. 먼저 오답의 주범인 계획 vs 일일 스크럼이에요. 둘 다 “계획”을 하지만, 하나는 <b>스프린트 전체를 한 번</b>, 하나는 <b>다음 하루를 매일</b>이에요. 망원경과 현미경 차이라고 생각하면 돼요.</p>
+<figure><svg viewBox="0 0 360 305" font-family="sans-serif" role="img" aria-label="스프린트 계획은 스프린트 전체를 시작할 때 1번, 일일 스크럼은 다음 24시간을 매일 15분">
+<rect width="360" height="305" rx="12" fill="#f7f7f4"/>
+<defs><marker id="s01b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="24" font-size="15" font-weight="700" fill="#222" text-anchor="middle">둘 다 ‘계획’을 하지만 범위가 달라요</text><rect x="16" y="40" width="328" height="112" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="30" y="64" font-size="15" font-weight="700" fill="#2a5db0">스프린트 계획</text><text x="30" y="88" font-size="13" fill="#333">언제: 스프린트 시작할 때 1번</text><text x="30" y="108" font-size="13" fill="#333">범위: 스프린트 전체(최대 1개월)</text><text x="30" y="128" font-size="13" fill="#333">결과: 스프린트 목표 + 스프린트 백로그</text><text x="30" y="145" font-size="12" fill="#555">질문: 왜·무엇을·어떻게 할까?</text><path d="M180 152 L180 176" stroke="#555" stroke-width="2" fill="none" marker-end="url(#s01b)"/><text x="192" y="170" font-size="12" font-weight="700" fill="#b5730d">매일 잘라서 조정</text><rect x="16" y="180" width="328" height="112" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="30" y="204" font-size="15" font-weight="700" fill="#b5730d">일일 스크럼</text><text x="30" y="228" font-size="13" fill="#333">언제: 매일 같은 시간·장소, 15분</text><text x="30" y="248" font-size="13" fill="#333">범위: 다음 24시간</text><text x="30" y="268" font-size="13" fill="#333">결과: 하루 계획 조정(스프린트 목표 점검)</text><text x="30" y="285" font-size="12" fill="#555">질문: 목표까지 잘 가고 있나?</text>
+</svg><figcaption>문제에 ‘계획’이라는 낱말이 나와도 바로 스프린트 계획을 고르지 마세요. ‘매일·15분·24시간’이 붙으면 일일 스크럼이에요.</figcaption></figure>
+
+<p>리뷰와 회고도 둘 다 스프린트 끝에 붙어 있어서 섞여요. 가르는 질문은 “무엇을 들여다보나”예요. <b>제품(결과물)</b>을 보면 리뷰, <b>팀(일하는 방식)</b>을 보면 회고예요. 리뷰엔 이해관계자가 오고, 회고는 스크럼 팀끼리 해요.</p>
+<figure><svg viewBox="0 0 360 205" font-family="sans-serif" role="img" aria-label="스프린트 리뷰는 결과물 검사, 스프린트 회고는 일하는 방식 개선">
+<rect width="360" height="205" rx="12" fill="#f7f7f4"/>
+<text x="180" y="24" font-size="15" font-weight="700" fill="#222" text-anchor="middle">리뷰는 ‘제품’, 회고는 ‘팀’을 봐요</text><rect x="16" y="40" width="156" height="150" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="94" y="64" font-size="15" font-weight="700" fill="#2f7d4a" text-anchor="middle">스프린트 리뷰</text><text x="94" y="90" font-size="13" fill="#333" text-anchor="middle">무엇을 만들었나</text><text x="94" y="111" font-size="13" fill="#333" text-anchor="middle">증분을 검사</text><text x="94" y="132" font-size="13" fill="#333" text-anchor="middle">이해관계자 참석</text><text x="94" y="153" font-size="13" fill="#333" text-anchor="middle">제품 백로그 조정</text><text x="94" y="174" font-size="13" fill="#333" text-anchor="middle">최대 4시간</text><rect x="188" y="40" width="156" height="150" rx="8" fill="#f1e9f8" stroke="#6a3d9a" stroke-width="2"/><text x="266" y="64" font-size="15" font-weight="700" fill="#6a3d9a" text-anchor="middle">스프린트 회고</text><text x="266" y="90" font-size="13" fill="#333" text-anchor="middle">어떻게 일했나</text><text x="266" y="111" font-size="13" fill="#333" text-anchor="middle">사람·과정·도구</text><text x="266" y="132" font-size="13" fill="#333" text-anchor="middle">스크럼 팀만</text><text x="266" y="153" font-size="13" fill="#333" text-anchor="middle">다음 개선점 결정</text><text x="266" y="174" font-size="13" fill="#333" text-anchor="middle">최대 3시간 · 마지막</text>
+</svg><figcaption>순서도 시험에 나와요. 리뷰가 먼저, 회고가 스프린트의 맨 마지막이에요.</figcaption></figure>
+
+
+<h2>5. 역할 3·산출물 3 — 이벤트와 엮어서</h2>
+<p>이벤트를 정리했으면, 그 이벤트에서 <b>누가</b> 무엇을 들고 나오는지 연결해야 문제가 풀려요. 스크럼 팀은 세 역할로 이뤄져요. <b>제품 책임자(PO)</b>는 제품 가치를 극대화하는 사람으로, 제품 백로그 항목을 쓰고 <b>순서(우선순위)를 결정</b>해요(D003에서 맞혔던 그 문제). <b>스크럼 마스터(SM)</b>는 스크럼이 잘 돌아가도록 팀을 코칭하고 <b>장애물을 제거</b>하는 섬기는 리더예요. 지시하는 관리자가 아니라는 점이 단골 함정이에요. <b>개발자</b>는 스프린트 백로그를 만들고 매 스프린트 증분을 완성해요(2020 가이드 전에는 “개발팀”).</p>
+<figure><svg viewBox="0 0 360 300" font-family="sans-serif" role="img" aria-label="역할 3: 제품 책임자, 스크럼 마스터, 개발자">
+<rect width="360" height="300" rx="12" fill="#f7f7f4"/>
+<text x="180" y="24" font-size="15" font-weight="700" fill="#222" text-anchor="middle">역할 3 — 누가 무엇을 책임지나</text><rect x="16" y="40" width="328" height="76" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="30" y="64" font-size="15" font-weight="700" fill="#2a5db0">제품 책임자 (PO)</text><text x="30" y="86" font-size="13" fill="#333">제품 백로그 작성·순서 결정</text><text x="30" y="105" font-size="13" fill="#555">가치 극대화 · 스프린트 취소 권한</text><rect x="16" y="126" width="328" height="76" rx="8" fill="#f1e9f8" stroke="#6a3d9a" stroke-width="2"/><text x="30" y="150" font-size="15" font-weight="700" fill="#6a3d9a">스크럼 마스터 (SM)</text><text x="30" y="172" font-size="13" fill="#333">스크럼이 잘 돌아가게 코칭</text><text x="30" y="191" font-size="13" fill="#555">장애물 제거 · 섬기는 리더</text><rect x="16" y="212" width="328" height="76" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="30" y="236" font-size="15" font-weight="700" fill="#b5730d">개발자 (Developers)</text><text x="30" y="258" font-size="13" fill="#333">스프린트 백로그 작성·증분 완성</text><text x="30" y="277" font-size="13" fill="#555">일일 스크럼의 주인공</text>
+</svg><figcaption>백로그 순서는 PO, 진행 방식은 SM, 실제로 만드는 건 개발자. SM은 지시하는 관리자가 아니에요.</figcaption></figure>
+
+<p>산출물도 이벤트와 짝이 있어요. <b>제품 백로그</b>(PO가 관리하는 제품 전체 할 일 목록, 약속 = 제품 목표)에서 스프린트 계획 때 이번에 할 것을 뽑으면 <b>스프린트 백로그</b>(개발자가 관리, 약속 = 스프린트 목표)가 되고, 일일 스크럼으로 매일 조정하며 만든 결과가 <b>증분</b>(약속 = 완료 정의 DoD)이에요. 증분은 리뷰에서 검사받고, 그 결과로 제품 백로그가 다시 조정돼요.</p>
+<figure class="mermaid"><img src="../assets/72ce2c414e914f2b.png" alt="도식" loading="lazy" style="width:309px"></figure>
+<p>마지막으로 진행 상황을 보여 주는 도구 <b>번다운 차트</b>도 함께 나와요. 가로축이 시간, 세로축이 <b>남은</b> 작업량이라 선이 오른쪽 아래로 타고 내려가요(burn down).</p>
+<figure><svg viewBox="0 0 360 265" font-family="sans-serif" role="img" aria-label="번다운 차트: 가로축 시간, 세로축 남은 작업량, 이상선과 실제선">
+<rect width="360" height="265" rx="12" fill="#f7f7f4"/>
+<defs><marker id="s01c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker></defs><text x="180" y="24" font-size="15" font-weight="700" fill="#222" text-anchor="middle">번다운 차트 — 남은 일이 타고 내려가요</text><path d="M44 210 L44 44" stroke="#333" stroke-width="2" fill="none" marker-end="url(#s01c)"/><path d="M44 210 L336 210" stroke="#333" stroke-width="2" fill="none" marker-end="url(#s01c)"/><text x="14" y="50" font-size="12" fill="#333">남은</text><text x="14" y="66" font-size="12" fill="#333">작업</text><text x="300" y="230" font-size="12" fill="#333" text-anchor="middle">시간(일)</text><path d="M44 60 L320 210" stroke="#999" stroke-width="2" stroke-dasharray="6 4" fill="none"/><path d="M44 60 L72 70 L100 68 L128 96 L156 110 L184 108 L212 140 L240 158 L268 176 L296 196 L320 210" stroke="#b03a2e" stroke-width="2.5" fill="none"/><text x="210" y="92" font-size="12" fill="#666">이상선(점선)</text><text x="110" y="180" font-size="12" font-weight="700" fill="#b03a2e">실제선(빨강)</text><text x="180" y="252" font-size="13" font-weight="700" fill="#333" text-anchor="middle">실제선이 이상선 위 = 늦어지는 중</text>
+</svg><figcaption>세로축은 ‘남은’ 작업이라 오른쪽 아래로 내려가요. 수험서에선 스크럼 도구로 나오고, 2020 가이드에선 공식 산출물이 아니에요.</figcaption></figure>
+
+
+<h2>6. 문제 단서 → 정답 한 장 정리</h2>
+<p>한 장 요약 — 위에서 설명한 이벤트들을 문제에 자주 나오는 단서로 다시 묶었어요. 왼쪽 단서를 문제에서 찾으면 오른쪽이 답이에요. 특히 첫 두 줄은 “계획”이라는 같은 낱말을 쓰니 범위 단어로 가르세요.</p>
+<table>
+<tr><th>문제 속 단서</th><th>정답</th><th>언제·얼마나</th></tr>
+<tr><td>매일 · 15분 · 다음 24시간 계획 조정 · 진척·장애 공유</td><td>일일 스크럼</td><td>매일, 15분</td></tr>
+<tr><td>스프린트 시작 · 스프린트 목표 · 백로그 항목 선택 · 왜/무엇/어떻게</td><td>스프린트 계획</td><td>시작 1번, 최대 8시간</td></tr>
+<tr><td>증분(결과물) 검사 · 이해관계자 · 제품 백로그 조정</td><td>스프린트 리뷰</td><td>끝 무렵, 최대 4시간</td></tr>
+<tr><td>일하는 방식·프로세스·도구 개선 · 마지막 이벤트</td><td>스프린트 회고</td><td>맨 끝, 최대 3시간</td></tr>
+<tr><td>1개월 이하 고정 기간 · 다른 이벤트를 담음</td><td>스프린트</td><td>1개월 이하</td></tr>
+<tr><td>백로그 순서 결정 · 스프린트 취소 권한</td><td>제품 책임자(PO)</td><td>—</td></tr>
+<tr><td>장애물 제거 · 코칭 · 섬기는 리더</td><td>스크럼 마스터</td><td>—</td></tr>
+</table>
+<div class="memo"><b>계일리회</b> — 계획(처음 1번) → 일일(매일) → 리뷰(제품) → 회고(팀). 시간은 <b>8 · 15분 · 4 · 3</b>. “매일”이 붙는 건 <b>일일</b> 하나뿐.</div>
+
+<h2>연습 문제</h2>
+<p>스크럼만 6문제예요. 1·2·5번이 계획 vs 일일 스크럼을 다른 각도에서 물어요. 문제를 읽을 때 “계획”보다 <b>범위 단어</b>에 먼저 동그라미를 쳐 보세요.</p>
+<ol class="quiz">
+<li>스크럼 팀이 스프린트를 시작하면서 이번 스프린트의 목표를 정하고, 제품 백로그에서 이번에 다룰 항목을 골라 실행 계획을 세우는 이벤트는?<label class="opt"><input type="radio" name="S01-q1" value="1">① 일일 스크럼</label><label class="opt"><input type="radio" name="S01-q1" value="2">② 스프린트 계획</label><label class="opt"><input type="radio" name="S01-q1" value="3">③ 스프린트 리뷰</label><label class="opt"><input type="radio" name="S01-q1" value="4">④ 스프린트 회고</label></li>
+<li>개발자들이 매일 같은 시간에 모여 15분 동안 스프린트 목표를 향한 진척을 점검하고, 다음 24시간 동안의 작업 계획을 조정하는 이벤트는?<label class="opt"><input type="radio" name="S01-q2" value="1">① 스프린트 계획</label><label class="opt"><input type="radio" name="S01-q2" value="2">② 스프린트 회고</label><label class="opt"><input type="radio" name="S01-q2" value="3">③ 일일 스크럼</label><label class="opt"><input type="radio" name="S01-q2" value="4">④ 스프린트 리뷰</label></li>
+<li>스프린트에서 만든 결과물(증분)을 이해관계자와 함께 검사하고, 그 결과를 바탕으로 제품 백로그를 조정하는 이벤트는?<label class="opt"><input type="radio" name="S01-q3" value="1">① 스프린트 리뷰</label><label class="opt"><input type="radio" name="S01-q3" value="2">② 스프린트 회고</label><label class="opt"><input type="radio" name="S01-q3" value="3">③ 일일 스크럼</label><label class="opt"><input type="radio" name="S01-q3" value="4">④ 스프린트 계획</label></li>
+<li>스프린트의 마지막에 팀이 사람·프로세스·도구 측면에서 일한 방식을 돌아보고 다음 스프린트의 개선점을 정하는 이벤트는?<label class="opt"><input type="radio" name="S01-q4" value="1">① 스프린트 계획</label><label class="opt"><input type="radio" name="S01-q4" value="2">② 일일 스크럼</label><label class="opt"><input type="radio" name="S01-q4" value="3">③ 스프린트 리뷰</label><label class="opt"><input type="radio" name="S01-q4" value="4">④ 스프린트 회고</label></li>
+<li>스크럼 이벤트에 대한 설명으로 옳은 것은?<label class="opt"><input type="radio" name="S01-q5" value="1">① 스프린트 계획은 스프린트 기간 동안 매일 15분씩 진행한다</label><label class="opt"><input type="radio" name="S01-q5" value="2">② 일일 스크럼은 다음 24시간의 작업 계획을 조정하는 자리다</label><label class="opt"><input type="radio" name="S01-q5" value="3">③ 스프린트 리뷰는 팀의 일하는 방식을 개선하는 것이 주목적이다</label><label class="opt"><input type="radio" name="S01-q5" value="4">④ 스프린트 회고는 스프린트를 시작할 때 진행한다</label></li>
+<li>스크럼에서 스프린트 목표가 쓸모없어졌을 때 스프린트를 취소할 수 있는 권한을 가진 역할은?<label class="opt"><input type="radio" name="S01-q6" value="1">① 스크럼 마스터</label><label class="opt"><input type="radio" name="S01-q6" value="2">② 개발자</label><label class="opt"><input type="radio" name="S01-q6" value="3">③ 제품 책임자(PO)</label><label class="opt"><input type="radio" name="S01-q6" value="4">④ 이해관계자</label></li>
+</ol><div class="answer-bar" data-id="S01" data-n="6"><code></code><button type="button">답안 복사</button></div><p><small>고른 뒤 <b>답안 복사</b> → 디스코드 공부 채널에 붙여넣기 하면 돼요.</small></p>
+<p>답장: <code>정처기 S01: 1)번호 2)번호 3)번호 4)번호 5)번호 6)번호</code></p>
+
+<script>
+document.querySelectorAll('.answer-bar').forEach(bar=>{
+  const id=bar.dataset.id,n=+bar.dataset.n,out=bar.querySelector('code'),btn=bar.querySelector('button');
+  const text=()=>'정처기 '+id+': '+Array.from({length:n},(_,i)=>{const c=document.querySelector('input[name="'+id+'-q'+(i+1)+'"]:checked');return (i+1)+')'+(c?c.value:'?')}).join(' ');
+  document.querySelectorAll('input[name^="'+id+'-q"]').forEach(r=>r.addEventListener('change',()=>{out.textContent=text()}));
+  out.textContent=text();
+  btn.addEventListener('click',async()=>{const t=text();try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}btn.textContent='복사됨 ✓';setTimeout(()=>btn.textContent='답안 복사',1500)});
+});
+</script>
+<footer>2027년 정기 기사 1회 정보처리기사 필기 준비 · 공식 범위: Q-Net 2027~2029 출제기준</footer>
+</main></body></html>
