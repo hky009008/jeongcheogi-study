@@ -95,11 +95,10 @@
 <tr><td>REQ-02</td><td>비밀번호 재설정</td><td>SD-04</td><td style="background:#ffe0e0;color:#b00020"><b>(없음)</b></td><td style="background:#ffe0e0;color:#b00020"><b>(없음)</b></td></tr>
 <tr><td style="background:#fff0cc;color:#8a5a00"><b>(없음)</b></td><td style="background:#fff0cc;color:#8a5a00">—</td><td>—</td><td>ExcelExport</td><td>TC-30</td></tr>
 </table>
-<ul>
+<div class="duo"><div><ul>
 <li><b>REQ-02</b>: 요구에서 오른쪽(구현·테스트)으로 따라가다 끊김 → <b>정방향 추적</b>으로 찾은 <b>누락</b>(구현·테스트 빠짐)</li>
 <li><b>ExcelExport</b>: 모듈에서 왼쪽(요구)으로 거슬러 올라가니 근거 요구가 없음 → <b>역방향 추적</b>으로 찾은 <b>근거 없는 기능</b>(“고아” 기능, 불필요·범위 밖 구현 의심)</li>
-</ul>
-<figure><svg viewBox="0 0 400 250" font-family="sans-serif">
+</ul></div><figure><svg viewBox="0 0 400 250" font-family="sans-serif">
 <defs><marker id="d6b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2a5db0"/></marker>
 <marker id="d6c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c26a00"/></marker></defs>
 <rect width="400" height="250" rx="12" fill="#f7f7f4"/>
@@ -123,7 +122,8 @@
 <text x="200" y="186" font-size="14" fill="#c26a00" text-anchor="middle">근거 없는(고아) 기능 찾기</text>
 <rect x="30" y="202" width="340" height="34" rx="8" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
 <text x="200" y="224" font-size="14" font-weight="700" fill="#2e7d32" text-anchor="middle">양방향 = 둘 다 → 변경 영향 범위 파악</text>
-</svg><figcaption>추적 방향. 요구에서 출발해 오른쪽으로 내려가면 정방향(누락 발견), 산출물에서 출발해 요구로 거슬러 오르면 역방향(근거 없는 기능 발견). 링크가 양쪽으로 걸려 있어야 요구 하나를 바꿀 때 영향받는 설계·코드·테스트가 바로 보여요.</figcaption></figure>
+</svg><figcaption>추적 방향. 요구에서 출발해 오른쪽으로 내려가면 정방향(누락 발견), 산출물에서 출발해 요구로 거슬러 오르면 역방향(근거 없는 기능 발견). 링크가 양쪽으로 걸려 있어야 요구 하나를 바꿀 때 영향받는 설계·코드·테스트가 바로 보여요.</figcaption></figure></div>
+
 <p><small>※ 교과서식 RTM은 행에 한 문서의 ID, 열에 다른 문서의 ID를 놓고 교차 칸에 체크하는 매트릭스로 그리기도 해요. 그때는 <b>체크가 하나도 없는 행·열 = 누락 의심</b>이에요. 모양만 다를 뿐 읽는 법은 같아요.</small></p>
 <div class="memo"><b>정누 · 역고</b> — <b>정</b>방향은 <b>누</b>락, <b>역</b>방향은 <b>고</b>아(근거 없는 기능). 추적성의 최종 목적은 <b>변경 영향 분석</b>.</div>
 
