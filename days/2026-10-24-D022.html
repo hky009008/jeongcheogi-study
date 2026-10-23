@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>D022 패키징과 배포 도구·DRM·애플리케이션 모니터링 도구</title>
+<link rel="icon" href="../assets/favicon/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../assets/favicon/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="apple-touch-icon" href="../assets/favicon/apple-touch-icon.png">
+<link rel="stylesheet" href="../style.css"></head>
+<body><main>
+<nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a></nav>
+<h1>D022 · 패키징과 배포 도구·DRM·애플리케이션 모니터링 도구</h1><div class="meta">2026-10-24 · A7 소프트웨어 개발 &gt; 제품소프트웨어 패키징</div><p><span class="tag">A7</span> 어제 D021에서 코드를 단위로 만들고, 형상관리로 기준선을 확정했어요. 오늘부터 1과목 마지막 장 A7 「제품소프트웨어 패키징」이에요. 다 만든 소프트웨어를 사용자에게 넘겨주는 단계라서, 묶고(패키징) · 지키고(배포 도구·DRM) · 지켜보는(APM) 세 가지를 봐요.</p>
+<ul>
+<li><b>패키징</b>의 목적과 사용자 중심 원칙, 작업 순서 6단계를 설명할 수 있다</li>
+<li><b>배포(패키징) 도구</b>의 구성 기술 8개를 하는 일로 구별할 수 있다</li>
+<li><b>DRM</b> 구성 요소(제공자·분배자·패키저·보안 컨테이너·DRM 컨트롤러·클리어링 하우스)의 역할을 짝지을 수 있다</li>
+<li><b>애플리케이션 모니터링(APM) 도구</b>의 4기능(변경·성능·정적·동적)을 구별할 수 있다</li>
+</ul>
+<div class="glance">
+<div><b>6</b>패키징 작업 단계<small>기능 식별 → … → 변경 개선</small></div>
+<div><b>8</b>배포 도구 구성 기술<small>암호화 ~ 인증</small></div>
+<div><b>7</b>DRM 구성 요소<small>소비자 포함</small></div>
+<div><b>4</b>APM 기능<small>변경·성능·정적·동적</small></div>
+</div>
+<div class="box"><b>오늘 이야기의 흐름</b>큰 그림 → 장면 1 설치 파일로 묶기 → 장면 2 콘텐츠 잠그는 기술 → 장면 3 잠근 콘텐츠를 파는 구조(DRM) → 장면 4 배포 후 지켜보기 → 정리 → 오답 복습</div>
+
+<h2>1. 큰 그림 — 만든 것을 남의 손에 넘기기</h2>
+<div class="point"><b>핵심 한 줄</b>패키징은 “사용자 PC에서 돌아가게 묶기”, 배포 도구·DRM은 “묶은 것을 허락된 만큼만 쓰게 지키기”, APM은 “넘긴 뒤에도 지켜보기”예요.</div>
+<div class="duo"><div><p>오늘은 가상의 팀이 만든 <b>동영상 강의 앱 ‘스터디캠’</b>을 처음부터 끝까지 따라가요. PC에 설치하는 프로그램이고, 안에서 유료 강의 영상을 틀어 줘요. 앱은 다 만들었고 형상관리로 v1.0 기준선도 찍었어요.</p>
+<p>형상관리까지 마친 코드는 아직 ‘우리 집 냉장고 속 반찬’이에요. 패키징은 그걸 밀폐 용기에 담고 라벨을 붙여 남의 집 식탁까지 보내는 일이에요. 아래 개념 지도에서 오늘 용어가 어느 가지에 매달리는지 먼저 보세요.</p></div><figure><svg viewBox="0 0 360 336" font-family="sans-serif" role="img" aria-label="개념 지도. 제품 소프트웨어 패키징(A7) 아래에 패키징, 매뉴얼, 버전관리가 있고 오늘은 패키징이다. 패키징 아래에 패키징 작업, 배포 도구 8기술, DRM 유통 구조, APM 4기능이 매달린다">
+<rect width="360" height="336" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d22a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">A7 안에서 오늘의 자리</text><path d="M64 140 L64 150" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d22a)"/><path d="M30 140 L30 303" stroke="#555" stroke-width="2" fill="none"/><path d="M30 177 L44 177" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d22a)"/><path d="M30 219 L44 219" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d22a)"/><path d="M30 261 L44 261" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d22a)"/><path d="M30 303 L44 303" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d22a)"/><path d="M180 76 L64 104" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d22a)"/><path d="M180 76 L180 104" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d22a)"/><path d="M180 76 L296 104" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d22a)"/><rect x="80" y="40" width="200" height="36" rx="8" fill="#ffffff" stroke="#555" stroke-width="2"/><text x="180" y="64" font-size="15" font-weight="700" fill="#222" text-anchor="middle">제품SW 패키징 (A7)</text><rect x="12" y="104" width="104" height="36" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="64" y="127" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">패키징 · 오늘</text><rect x="128" y="104" width="104" height="36" rx="8" fill="#eeeeea" stroke="#888" stroke-width="2"/><text x="180" y="127" font-size="12" font-weight="700" fill="#888" text-anchor="middle">매뉴얼 · D024</text><rect x="244" y="104" width="104" height="36" rx="8" fill="#eeeeea" stroke="#888" stroke-width="2"/><text x="296" y="127" font-size="12" font-weight="700" fill="#888" text-anchor="middle">버전관리 · D024</text><rect x="44" y="160" width="304" height="34" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="56" y="183" font-size="14" font-weight="700" fill="#2a5db0">패키징 작업</text><text x="160" y="183" font-size="14" fill="#333">사용자 손에 맞게 묶기</text><rect x="44" y="202" width="304" height="34" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="56" y="225" font-size="14" font-weight="700" fill="#2a5db0">배포 도구</text><text x="160" y="225" font-size="14" fill="#333">콘텐츠 보호 기술 8개</text><rect x="44" y="244" width="304" height="34" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="56" y="267" font-size="14" font-weight="700" fill="#2a5db0">DRM</text><text x="160" y="267" font-size="14" fill="#333">보호 기술의 유통 구조</text><rect x="44" y="286" width="304" height="34" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="56" y="309" font-size="14" font-weight="700" fill="#2a5db0">APM</text><text x="160" y="309" font-size="14" fill="#333">배포 후 지켜보기 4기능</text>
+</svg><figcaption>오늘 나오는 용어는 전부 왼쪽 파란 가지 아래 네 칸 중 하나에 매달려요. 매뉴얼·버전관리는 D024.</figcaption></figure></div>
+
+
+<div class="duo"><div><p>시간 순서로 다시 놓으면 아래와 같아요. 기준선 코드를 설치 파일로 묶고(장면 1), 강의 영상을 잠가서 팔고(장면 2·3), 사용자 PC에 깔린 뒤에는 운영 상태를 지켜봐요(장면 4).</p></div><figure><svg viewBox="0 0 360 390" font-family="sans-serif" role="img" aria-label="큰 그림. 형상관리로 확정한 기준선 코드를 패키징해 설치 파일로 묶고, 배포 도구와 DRM이 복제를 막으며 배포하고, 사용자 PC에 설치된 뒤에는 APM이 장애를 지켜본다">
+<rect width="360" height="390" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d22b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">개발 끝에서 사용자 손까지</text><rect x="12" y="44" width="336" height="44" rx="8" fill="#eeeeea" stroke="#888" stroke-width="2"/><text x="24" y="72" font-size="14" font-weight="700" fill="#888">기준선 코드</text><text x="160" y="72" font-size="14" fill="#333">D021 형상관리로 확정</text><path d="M180 88 L180 106" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d22b)"/><rect x="12" y="106" width="336" height="44" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="24" y="134" font-size="14" font-weight="700" fill="#2a5db0">패키징</text><text x="160" y="134" font-size="14" fill="#333">설치 파일로 묶기</text><path d="M180 150 L180 168" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d22b)"/><rect x="12" y="168" width="336" height="44" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="24" y="196" font-size="14" font-weight="700" fill="#2a5db0">배포 도구·DRM</text><text x="160" y="196" font-size="14" fill="#333">복제·무단 이용 막기</text><path d="M180 212 L180 230" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d22b)"/><rect x="12" y="230" width="336" height="44" rx="8" fill="#eeeeea" stroke="#888" stroke-width="2"/><text x="24" y="258" font-size="14" font-weight="700" fill="#888">사용자 설치</text><text x="160" y="258" font-size="14" fill="#333">제각각인 PC에서 실행</text><path d="M180 274 L180 292" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d22b)"/><rect x="12" y="292" width="336" height="44" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="24" y="320" font-size="14" font-weight="700" fill="#2a5db0">APM</text><text x="160" y="320" font-size="14" fill="#333">배포 후 장애 지켜보기</text><text x="180" y="372" font-size="14" fill="#2a5db0" text-anchor="middle">파란 칸이 오늘 다루는 세 가지</text>
+</svg><figcaption>회색은 앞뒤 맥락, 파랑은 오늘 배우는 칸이에요. 위에서 아래로 시간이 흘러요.</figcaption></figure></div>
+
+
+<p><b>→ 이 장면의 결과물:</b> 오늘의 지도. 그래서 첫 장면은 앱을 설치 파일로 묶는 일이에요.</p>
+
+<h2>2. 장면 1 — 스터디캠을 설치 파일로 묶기 (제품 소프트웨어 패키징)</h2>
+<div class="point"><b>핵심 한 줄</b>패키징은 개발이 끝난 소프트웨어를 <b>사용자 중심</b>으로, 모듈 단위로 묶어 배포·설치할 수 있는 형태로 만드는 일이에요.</div>
+<div class="duo"><div><p>개발자 PC에서 빌드가 성공했다고 사용자가 쓸 수 있는 건 아니에요. 사용자 PC에는 라이브러리·런타임이 없을 수도, 관리자 권한이 없을 수도 있어요. 그래서 “어떤 PC에서도 설치하고 실행할 수 있는 꾸러미”로 만드는 별도 단계가 필요해요.</p>
+<p><b>제품 소프트웨어 패키징</b>은 개발이 완료된 제품 소프트웨어를 고객에게 전달하기 위해 배포·설치가 가능한 형태로 묶고, 설치·사용에 필요한 매뉴얼을 함께 만드는 활동이에요. 스터디캠에서는 실행 파일, 영상 재생 라이브러리, 설정 파일을 설치 프로그램 하나로 묶는 일이에요.</p>
+<p>패키징의 첫째 원칙은 <b>사용자 중심</b>이에요. 개발자가 다루기 편한 구조가 아니라 사용자가 설치·실행하기 쉬운 구조로 묶어요. ‘제 PC에서는 잘 되는데요’는 개발자의 오래된 주문이지만, 패키징 단계에서는 효력이 없어요. 기준은 사용자 PC예요.</p></div><figure><svg viewBox="0 0 360 238" font-family="sans-serif" role="img" aria-label="개발자 기준과 사용자 기준 비교. 개발자 기준은 내 PC 한 대, 도구가 다 깔려 있고 관리자 권한이 있다. 사용자 기준은 PC와 OS가 제각각이고 런타임이 없을 수 있으며 권한과 네트워크가 제한된다. 패키징은 사용자 기준이다">
+<rect width="360" height="238" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">패키징의 기준은 누구의 PC인가</text><rect x="12" y="44" width="162" height="180" rx="8" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><text x="93" y="72" font-size="15" font-weight="700" fill="#b03a2e" text-anchor="middle">개발자 기준</text><text x="93" y="106" font-size="14" fill="#333" text-anchor="middle">내 PC 한 대</text><text x="93" y="134" font-size="14" fill="#333" text-anchor="middle">도구 다 깔려 있음</text><text x="93" y="162" font-size="14" fill="#333" text-anchor="middle">관리자 권한 있음</text><text x="93" y="204" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">'제 PC에선 돼요'</text><rect x="186" y="44" width="162" height="180" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="267" y="72" font-size="15" font-weight="700" fill="#2f7d4a" text-anchor="middle">사용자 기준</text><text x="267" y="106" font-size="14" fill="#333" text-anchor="middle">PC·OS 제각각</text><text x="267" y="134" font-size="14" fill="#333" text-anchor="middle">런타임 없을 수 있음</text><text x="267" y="162" font-size="14" fill="#333" text-anchor="middle">권한·망 제한</text><text x="267" y="204" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">어디서든 설치·실행</text>
+</svg><figcaption>패키징은 오른쪽(초록) 기준으로 해요. 왼쪽에서만 도는 설치 파일은 아직 제품이 아니에요.</figcaption></figure></div>
+
+
+<div class="duo"><div><p>둘째는 <b>모듈 단위</b>로 묶는 거예요. 기능을 모듈로 나눠 두면 영상 플레이어만 고쳐도 그 모듈만 다시 배포할 수 있어요. 셋째는 <b>다양한 사용자 환경</b>을 고려하는 거예요. OS 버전, CPU·메모리 같은 하드웨어 사양, 사내 방화벽 같은 네트워크 조건을 미리 정의하고 그 위에서 시험해요.</p>
+<p>작업은 여섯 단계로 진행돼요. 무엇을 담을지 정하고, 모듈로 나누고, 빌드한 다음, 사용자 환경을 분석해서 그 환경에서 시험하고, 문제가 나오면 고쳐서 다시 시험해요. 마지막 두 단계가 되돌이로 도는 게 포인트예요.</p></div><figure class="mermaid"><img src="../assets/f61aee36600da4ba.png" alt="도식" loading="lazy" style="width:183px"></figure></div>
+
+
+<p>스터디캠에 대입하면 이렇게 돼요. 단계 이름은 시험에 순서 문제로 나오니 이 표의 왼쪽 칸 순서를 그대로 기억해 두세요.</p>
+<table>
+<tr><th>단계</th><th>스터디캠에서 하는 일</th></tr>
+<tr><td>1 기능 식별</td><td>이번 v1.0에 담을 기능(강의 목록, 재생, 이어 보기)과 입출력 데이터를 정한다</td></tr>
+<tr><td>2 모듈화</td><td>목록·재생·결제 모듈로 나눠 따로 묶을 수 있게 한다</td></tr>
+<tr><td>3 빌드 진행</td><td>기준선 v1.0 소스를 꺼내 실행 파일을 만든다(D024 빌드 자동화)</td></tr>
+<tr><td>4 사용자 환경 분석</td><td>지원할 OS 버전, 최소 메모리, 네트워크 조건을 목록으로 정한다</td></tr>
+<tr><td>5 패키징 적용 시험</td><td>그 환경들에서 실제로 설치·실행해 본다</td></tr>
+<tr><td>6 패키징 변경 개선</td><td>구형 OS에서 재생이 안 되는 문제를 고치고 5단계로 돌아간다</td></tr>
+</table>
+<p>패키징이 끝나면 설치 파일과 함께 문서가 나가요. 설치 매뉴얼·사용자 매뉴얼, 그리고 이번 버전에서 무엇이 바뀌었는지 고객에게 알리는 <b>릴리즈 노트</b>예요. 문서 쪽 상세는 D024에서 다뤄요.</p>
+<p><b>→ 이 장면의 결과물:</b> 스터디캠 설치 파일 v1.0. 그런데 앱 안의 유료 강의 영상은 복사하면 그만이에요. 그래서 다음 장면은 영상을 잠그는 기술이에요.</p>
+
+<h2>3. 장면 2 — 강의 영상 잠그기 (배포 도구의 구성 기술 8개)</h2>
+<div class="point"><b>핵심 한 줄</b>배포(패키징) 도구는 패키징할 때 콘텐츠를 암호화·식별·권한 관리해 지적 재산권을 보호하는 도구이고, 구성 기술은 8개예요.</div>
+<div class="duo"><div><p>디지털 콘텐츠는 복사 비용이 0원이라, 지키지 않으면 첫 구매자가 곧 마지막 구매자가 돼요. 그래서 설치 파일과 콘텐츠를 묶을 때부터 “허락된 사람만, 허락된 만큼” 쓰게 만드는 기술을 함께 넣어요.</p>
+<p><b>애플리케이션 배포 도구(패키징 도구)</b>는 배포를 목적으로 패키징할 때 디지털 콘텐츠의 지적 재산권을 보호하고 관리하며, 안전한 유통과 배포를 보장하는 도구예요. 구성 기술 8개를 네 개의 서랍에 나눠 넣으면 외우기 쉬워요.</p>
+<p><b>잠그기 서랍</b>에는 세 가지가 있어요. <b>암호화</b>는 콘텐츠와 라이선스를 암호화하고 전자서명을 붙이는 기술이에요. <b>키 관리</b>는 암호화에 쓴 키를 저장하고 배포하는 기술이고, <b>암호화 파일 생성</b>은 콘텐츠를 암호화된 파일 형태로 만들어 내는 기술이에요.</p>
+<p><b>이름 붙이기 서랍</b>에는 두 가지예요. <b>식별 기술</b>은 콘텐츠마다 고유 번호를 붙여 구별하는 기술이고, <b>저작권 표현</b>은 그 콘텐츠의 라이선스 내용(재생 횟수, 기간 등)을 표현하는 기술이에요.</p>
+<p><b>규칙 정하기 서랍</b>의 <b>정책 관리</b>는 라이선스 발급과 사용에 대한 정책을 표현·관리하고, <b>인증</b>은 라이선스 발급·사용의 기준이 되는 사용자를 확인해요. 마지막 서랍의 <b>크랙 방지</b>는 크랙(불법 해제)으로 콘텐츠를 쓰는 걸 막는 기술이에요.</p></div><figure><svg viewBox="0 0 360 316" font-family="sans-serif" role="img" aria-label="배포 도구 구성 기술 8개를 네 묶음으로. 잠그기는 암호화, 키 관리, 암호화 파일 생성. 이름 붙이기는 식별 기술, 저작권 표현. 규칙 정하기는 정책 관리, 인증. 뚫리지 않게는 크랙 방지이고 세부 기술 예가 코드 난독화다">
+<rect width="360" height="316" rx="12" fill="#f7f7f4"/>
+<text x="180" y="28" font-size="15" font-weight="700" fill="#222" text-anchor="middle">배포 도구 구성 기술 8개 = 네 묶음</text><rect x="12" y="44" width="336" height="58" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="24" y="78" font-size="14" font-weight="700" fill="#2a5db0">잠그기</text><text x="130" y="68" font-size="14" fill="#222">암호화 · 키 관리</text><text x="130" y="91" font-size="14" fill="#222">암호화 파일 생성</text><rect x="12" y="110" width="336" height="58" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="24" y="144" font-size="14" font-weight="700" fill="#2f7d4a">이름 붙이기</text><text x="130" y="134" font-size="14" fill="#222">식별 기술</text><text x="130" y="157" font-size="14" fill="#222">저작권 표현</text><rect x="12" y="176" width="336" height="58" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="24" y="210" font-size="14" font-weight="700" fill="#b5730d">규칙 정하기</text><text x="130" y="200" font-size="14" fill="#222">정책 관리</text><text x="130" y="223" font-size="14" fill="#222">인증</text><rect x="12" y="242" width="336" height="58" rx="8" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><text x="24" y="276" font-size="14" font-weight="700" fill="#b03a2e">뚫리지 않게</text><text x="130" y="266" font-size="14" fill="#222">크랙 방지</text><text x="130" y="289" font-size="14" fill="#222">세부 예: 코드 난독화</text>
+</svg><figcaption>외울 이름은 8개, 머릿속 서랍은 4개. 코드 난독화는 크랙 방지의 세부 기술이지 8개 중 하나가 아니에요.</figcaption></figure></div>
+
+
+<p>한 장 요약 — 8기술이 하는 일과, 그 아래에서 실제로 쓰이는 세부 기술 예를 짝지으면 이래요. 세부 기술은 “어느 구성 기술 소속인가”를 묻는 형태로 나오니 오른쪽 칸을 왼쪽 칸과 짝으로 봐 두세요.</p>
+<table>
+<tr><th>구성 기술</th><th>하는 일</th><th>세부 기술 예</th></tr>
+<tr><td>암호화</td><td>콘텐츠·라이선스를 암호화하고 전자서명</td><td>대칭·비대칭 암호화, 전자서명</td></tr>
+<tr><td>키 관리</td><td>암호화 키를 저장·배포</td><td>PKI(공개키 기반 구조)</td></tr>
+<tr><td>암호화 파일 생성</td><td>콘텐츠를 암호화된 파일로 생성</td><td>Pre-packaging, On-the-fly packaging</td></tr>
+<tr><td>식별 기술</td><td>콘텐츠에 고유 식별 체계 부여</td><td>DOI, URI</td></tr>
+<tr><td>저작권 표현</td><td>라이선스 내용(허락 범위) 표현</td><td>XrML, MPEG-21</td></tr>
+<tr><td>정책 관리</td><td>라이선스 발급·사용 정책 표현·관리</td><td>XML, CMS</td></tr>
+<tr><td>크랙 방지</td><td>크랙에 의한 불법 사용 방지</td><td>코드 난독화, Secure DB</td></tr>
+<tr><td>인증</td><td>라이선스 발급·사용 기준인 사용자 인증</td><td>SSO, ID/PW, 디지털 인증</td></tr>
+</table>
+<div class="duo"><div><p>가장 헷갈리는 짝은 식별 기술과 저작권 표현이에요. 식별 기술은 “이 영상이 무엇인가”, 저작권 표현은 “이 영상으로 무엇을 해도 되나”에 답해요. DOI는 콘텐츠의 주민등록번호, XrML은 콘텐츠의 이용 약관이라 보면 돼요. 주민번호만 보고 무엇을 허락할지 정할 수 없듯, 식별만으로 권한이 정해지지 않아요.</p></div><figure><svg viewBox="0 0 360 250" font-family="sans-serif" role="img" aria-label="한 콘텐츠에 붙는 두 꼬리표. 식별 기술은 이것이 무엇인지 알려 주는 고유 번호로 DOI, URI가 예다. 저작권 표현은 무엇을 해도 되는지 허락 범위를 표현하며 XrML, MPEG-21이 예다">
+<rect width="360" height="250" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d22c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">한 콘텐츠에 붙는 두 꼬리표</text><path d="M150 84 L94 118" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d22c)"/><path d="M210 84 L266 118" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d22c)"/><rect x="110" y="40" width="140" height="44" rx="8" fill="#ffffff" stroke="#555" stroke-width="2"/><text x="180" y="67" font-size="14" font-weight="700" fill="#222" text-anchor="middle">강의 영상 1편</text><rect x="12" y="120" width="162" height="116" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="93" y="146" font-size="15" font-weight="700" fill="#2a5db0" text-anchor="middle">식별 기술</text><text x="93" y="172" font-size="14" fill="#222" text-anchor="middle">이것은 무엇인가</text><text x="93" y="198" font-size="14" font-weight="700" fill="#333" text-anchor="middle">DOI · URI</text><text x="93" y="222" font-size="14" fill="#555" text-anchor="middle">콘텐츠 고유 번호</text><rect x="186" y="120" width="162" height="116" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="267" y="146" font-size="15" font-weight="700" fill="#b5730d" text-anchor="middle">저작권 표현</text><text x="267" y="172" font-size="14" fill="#222" text-anchor="middle">무엇을 해도 되나</text><text x="267" y="198" font-size="14" font-weight="700" fill="#333" text-anchor="middle">XrML · MPEG-21</text><text x="267" y="222" font-size="14" fill="#555" text-anchor="middle">허락 범위를 표현</text>
+</svg><figcaption>왼쪽은 “누구냐”, 오른쪽은 “뭘 해도 되냐”. 둘을 바꿔 놓은 선지가 단골이에요.</figcaption></figure></div>
+
+
+<p>크랙 방지와 코드 난독화도 짝으로 봐 두세요. 크랙 방지는 8개 구성 기술의 이름이고, 코드 난독화는 그걸 구현하는 세부 기술 중 하나예요. 출제자는 둘을 나란히 놓고 “어느 쪽이 구성 기술 목록에 있냐”를 슬쩍 떠보곤 해요.</p>
+<p><b>→ 이 장면의 결과물:</b> 잠긴 강의 영상 파일과 그걸 다룰 기술 8개. 하지만 기술만 있다고 영상이 팔리지는 않아요. 누가 잠그고, 누가 팔고, 누가 열쇠를 주는지 구조가 필요해요. 그게 DRM이에요.</p>
+
+<h2>4. 장면 3 — 잠근 영상을 파는 구조 (DRM)</h2>
+<div class="point"><b>핵심 한 줄</b>DRM은 콘텐츠에 권리 정보를 붙이고 암호화해 허가된 범위 안에서만 쓰게 하는 구조이고, 라이선스·키를 발급하는 곳은 <b>클리어링 하우스</b>예요.</div>
+<div class="duo"><div><p>앞 장면의 8기술은 부품이에요. 부품을 실제 유통 구조로 조립하면 DRM이 돼요. 제작자부터 사용자 기기까지 콘텐츠가 이동하는 전 과정을 서버의 인증으로 통제하는 거예요.</p>
+<p><b>DRM(Digital Rights Management, 디지털 저작권 관리)</b>은 저작권자가 배포한 디지털 콘텐츠가 허가된 사용자에게, 허가된 권한 범위 안에서만 이용되도록 통제하는 기술과 구조예요. 넷플릭스 영상을 오프라인 저장해도 다른 기기로 옮기면 안 열리는 게 DRM 덕분이에요.</p>
+<p><b>서버 쪽</b>에는 두 요소가 있어요. <b>콘텐츠 제공자</b>는 콘텐츠를 만들고 저작권을 가진 쪽이에요. <b>패키저</b>는 그 콘텐츠를 메타데이터와 함께 암호화해 배포 가능한 단위로 묶어요. 스터디캠에서는 강사가 제공자, 영상 인코딩·암호화 서버가 패키저예요.</p>
+<p><b>중개</b>에도 두 요소가 있어요. <b>콘텐츠 분배자</b>는 쇼핑몰처럼 암호화된 콘텐츠를 유통·판매하는 쪽이에요. <b>클리어링 하우스</b>는 키 관리, 라이선스 발급, 사용 권한·사용량 관리를 맡아요. 돈을 받고 열쇠를 내주는 창구라고 보면 돼요.</p>
+<p><b>사용자 쪽</b>에는 <b>콘텐츠 소비자</b>의 기기가 있고, 그 안에서 두 요소가 일해요. <b>DRM 컨트롤러</b>는 배포된 콘텐츠의 이용 권한을 통제하고, <b>보안 컨테이너</b>는 콘텐츠 원본을 안전하게 유통하기 위해 감싸는 전자적 보안 장치예요.</p></div><figure><svg viewBox="0 0 360 390" font-family="sans-serif" role="img" aria-label="DRM 구성 요소 배치. 서버 쪽에 콘텐츠 제공자와 패키저, 중개에 클리어링 하우스와 콘텐츠 분배자, 사용자 쪽 소비자의 기기에 DRM 컨트롤러와 보안 컨테이너가 있다. 파란 화살표는 암호화 콘텐츠가 패키저에서 분배자를 거쳐 보안 컨테이너로 가는 길, 주황 화살표는 권리와 키가 제공자에서 클리어링 하우스를 거쳐 DRM 컨트롤러로 가는 길이다">
+<rect width="360" height="390" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d22d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2a5db0"/></marker></defs><defs><marker id="d22e" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b5730d"/></marker></defs><text x="180" y="28" font-size="15" font-weight="700" fill="#222" text-anchor="middle">DRM 구성 요소의 자리</text><path d="M262 120 L262 192" stroke="#2a5db0" stroke-width="2" fill="none" marker-end="url(#d22d)"/><text x="270" y="158" font-size="13" fill="#2a5db0">암호화 콘텐츠</text><path d="M98 120 L98 192" stroke="#b5730d" stroke-width="2" fill="none" stroke-dasharray="5 4" marker-end="url(#d22e)"/><text x="106" y="158" font-size="13" fill="#b5730d">권리·키 등록</text><path d="M262 240 L262 312" stroke="#2a5db0" stroke-width="2" fill="none" marker-end="url(#d22d)"/><text x="270" y="278" font-size="13" fill="#2a5db0">다운로드</text><path d="M98 240 L98 312" stroke="#b5730d" stroke-width="2" fill="none" marker-end="url(#d22e)"/><text x="106" y="278" font-size="13" fill="#b5730d">라이선스·키</text><rect x="12" y="44" width="336" height="90" rx="10" fill="#ffffff" stroke="#2a5db0" stroke-width="1.5" stroke-dasharray="6 4"/><text x="24" y="64" font-size="14" font-weight="700" fill="#2a5db0">서버 쪽 — 만들고 잠그기</text><rect x="24" y="74" width="148" height="46" rx="8" fill="#ffffff" stroke="#2a5db0" stroke-width="2"/><text x="98" y="103" font-size="14" font-weight="700" fill="#222" text-anchor="middle">콘텐츠 제공자</text><rect x="188" y="74" width="148" height="46" rx="8" fill="#ffffff" stroke="#2a5db0" stroke-width="2"/><text x="262" y="103" font-size="14" font-weight="700" fill="#222" text-anchor="middle">패키저</text><rect x="12" y="164" width="336" height="90" rx="10" fill="#ffffff" stroke="#b5730d" stroke-width="1.5" stroke-dasharray="6 4"/><text x="24" y="184" font-size="14" font-weight="700" fill="#b5730d">중개 — 팔고 권리 관리하기</text><rect x="24" y="194" width="148" height="46" rx="8" fill="#ffffff" stroke="#b5730d" stroke-width="2"/><text x="98" y="223" font-size="14" font-weight="700" fill="#222" text-anchor="middle">클리어링 하우스</text><rect x="188" y="194" width="148" height="46" rx="8" fill="#ffffff" stroke="#b5730d" stroke-width="2"/><text x="262" y="223" font-size="14" font-weight="700" fill="#222" text-anchor="middle">콘텐츠 분배자</text><rect x="12" y="284" width="336" height="90" rx="10" fill="#ffffff" stroke="#2f7d4a" stroke-width="1.5" stroke-dasharray="6 4"/><text x="24" y="304" font-size="14" font-weight="700" fill="#2f7d4a">사용자 쪽 — 소비자의 기기</text><rect x="24" y="314" width="148" height="46" rx="8" fill="#ffffff" stroke="#2f7d4a" stroke-width="2"/><text x="98" y="343" font-size="14" font-weight="700" fill="#222" text-anchor="middle">DRM 컨트롤러</text><rect x="188" y="314" width="148" height="46" rx="8" fill="#ffffff" stroke="#2f7d4a" stroke-width="2"/><text x="262" y="343" font-size="14" font-weight="700" fill="#222" text-anchor="middle">보안 컨테이너</text><path d="M172 97 L186 97" stroke="#2a5db0" stroke-width="2" fill="none" marker-end="url(#d22d)"/><path d="M172 337 L186 337" stroke="#b5730d" stroke-width="2" fill="none" marker-end="url(#d22e)"/>
+</svg><figcaption>파랑 = 잠긴 콘텐츠가 가는 길, 주황 = 라이선스·키가 가는 길. 두 길은 사용자 기기 안에서야 만나요.</figcaption></figure></div>
+
+
+<div class="duo"><div><p>실제로 영상 한 편을 사서 트는 순서를 따라가 보면 각 요소가 언제 등장하는지 보여요. 분배자에게서 받은 건 잠긴 영상뿐이고, 열쇠는 재생하는 순간 클리어링 하우스에서 따로 받아 와요.</p></div><figure class="mermaid"><img src="../assets/b5165c718fd89bcb.png" alt="도식" loading="lazy" style="width:476px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure></div>
+
+
+<p>한 장 요약 — 일곱 요소를 역할과 자리로 정리하면 이래요. 시험에는 “라이선스 발급·키 관리 = 클리어링 하우스”처럼 역할 설명을 주고 이름을 고르게 해요.</p>
+<table>
+<tr><th>요소</th><th>역할</th><th>자리</th></tr>
+<tr><td>콘텐츠 제공자</td><td>콘텐츠를 만들고 저작권을 가진 쪽</td><td>서버 쪽</td></tr>
+<tr><td>패키저</td><td>콘텐츠를 메타데이터와 함께 배포 가능한 단위로 묶고 암호화</td><td>서버 쪽</td></tr>
+<tr><td>콘텐츠 분배자</td><td>암호화된 콘텐츠를 유통·판매(쇼핑몰 등)</td><td>중개</td></tr>
+<tr><td>클리어링 하우스</td><td>키 관리, 라이선스 발급, 사용 권한·사용량 관리</td><td>중개</td></tr>
+<tr><td>콘텐츠 소비자</td><td>콘텐츠를 구매해 이용하는 사용자</td><td>사용자 쪽</td></tr>
+<tr><td>DRM 컨트롤러</td><td>배포된 콘텐츠의 이용 권한을 통제</td><td>사용자 기기</td></tr>
+<tr><td>보안 컨테이너</td><td>원본을 안전하게 유통하기 위한 전자적 보안 장치</td><td>콘텐츠를 감쌈</td></tr>
+</table>
+<div class="duo"><div><p>보안 컨테이너와 DRM 컨트롤러도 자주 섞여요. 놀이공원으로 치면 클리어링 하우스는 매표소, DRM 컨트롤러는 놀이기구 앞에서 팔찌를 확인하는 직원, 보안 컨테이너는 팔찌 없이는 안 열리는 회전문이에요. 상자는 콘텐츠와 함께 다니고, 문지기는 기기에 머물러요.</p></div><figure><svg viewBox="0 0 360 228" font-family="sans-serif" role="img" aria-label="보안 컨테이너와 DRM 컨트롤러 비교. 보안 컨테이너는 강의 콘텐츠를 감싼 잠긴 상자다. DRM 컨트롤러는 라이선스를 확인한 뒤 상자를 열어 주는 문지기다">
+<rect width="360" height="228" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d22f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">상자와 문지기</text><rect x="12" y="44" width="162" height="170" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><rect x="186" y="44" width="162" height="170" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><path d="M74 82 L74 70 A19 19 0 0 1 112 70 L112 82" stroke="#b5730d" stroke-width="4" fill="none"/><rect x="52" y="82" width="82" height="56" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="93" y="116" font-size="14" font-weight="700" fill="#222" text-anchor="middle">강의</text><text x="93" y="170" font-size="15" font-weight="700" fill="#2f7d4a" text-anchor="middle">보안 컨테이너</text><text x="93" y="194" font-size="14" fill="#333" text-anchor="middle">콘텐츠를 감싼 상자</text><circle cx="224" cy="80" r="14" fill="#ffffff" stroke="#2a5db0" stroke-width="2"/><rect x="210" y="98" width="28" height="42" rx="6" fill="#ffffff" stroke="#2a5db0" stroke-width="2"/><rect x="278" y="92" width="58" height="34" rx="8" fill="#ffffff" stroke="#b5730d" stroke-width="2"/><text x="307" y="115" font-size="12" font-weight="700" fill="#b5730d" text-anchor="middle">라이선스</text><path d="M278 109 L244 109" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d22f)"/><text x="267" y="170" font-size="15" font-weight="700" fill="#2a5db0" text-anchor="middle">DRM 컨트롤러</text><text x="267" y="194" font-size="14" fill="#333" text-anchor="middle">권한 확인 후 열어 줌</text>
+</svg><figcaption>상자(보안 컨테이너)는 콘텐츠와 함께 다니고, 문지기(DRM 컨트롤러)는 사용자 기기에 상주해요.</figcaption></figure></div>
+
+
+<p><b>→ 이 장면의 결과물:</b> 팔고, 열쇠 주고, 기기에서 확인하는 유통 구조. 이제 스터디캠은 수많은 사용자 PC에서 돌아가기 시작해요. 그다음 걱정은 “거기서 잘 돌고 있나”예요.</p>
+
+<h2>5. 장면 4 — 배포 후 지켜보기 (애플리케이션 모니터링 도구)</h2>
+<div class="point"><b>핵심 한 줄</b>APM 도구의 4기능은 변경 관리·성능 관리·정적 분석·동적 분석이고, 정적·동적은 “실행하느냐”로 갈라요.</div>
+<div class="duo"><div><p>배포는 끝이 아니라 사용자 환경에서 버그가 처음 세상 구경을 하는 날이에요. 시험 환경에서 못 본 사양, 못 본 사용 패턴이 운영에서 한꺼번에 나타나요. 그래서 배포한 뒤에도 애플리케이션 상태를 계속 지켜보는 도구가 필요해요.</p>
+<p><b>애플리케이션 모니터링 도구(APM)</b>는 사용자 환경에 배포된 애플리케이션을 모니터링해 성능과 서비스 가용성을 감시·관리하고, 장애를 미리 막는 도구예요. 현업에서 보는 응답 시간·TPS 대시보드가 이 도구의 얼굴이에요. 기능은 넷으로 나눠요.</p>
+<p><b>변경 관리</b>는 애플리케이션 사이의 종속 관계를 모니터링하고, 무언가 바뀌었을 때 그 영향이 어디까지 번지는지(변경 영향도)를 분석해요. 스터디캠의 결제 모듈을 고치면 이어 보기 기능까지 영향이 가는지 미리 보는 일이에요.</p>
+<p><b>성능 관리</b>는 실행 중인 애플리케이션의 트래픽, 응답 시간, CPU·메모리 같은 자원 사용을 모니터링해 병목을 찾아요. 신규 강의 오픈 날 접속이 몰릴 때 어느 구간이 느려지는지 보는 게 여기예요.</p>
+<p><b>정적 분석</b>은 프로그램을 실행하지 않고 소스 코드를 검사해 코딩 규칙 위반, 잠재 결함을 찾아요. CI에서 돌리는 lint가 이 쪽이에요. <b>동적 분석</b>은 프로그램을 실제로 실행하면서 메모리 누수, 런타임 오류 같은 결함을 찾아요. 정적 분석은 차를 세워 두고 보닛을 여는 정비, 동적 분석은 시동 걸고 달려 보는 시운전이에요.</p></div><figure><svg viewBox="0 0 360 274" font-family="sans-serif" role="img" aria-label="APM 4기능 2×2 지도. 코드 품질 줄에는 돌리지 않고 소스를 검사하는 정적 분석과 실행하며 검사하는 동적 분석이 있다. 운영 관리 줄에는 바뀐 것의 영향도를 보는 변경 관리와 실행 중 트래픽과 자원을 보는 성능 관리가 있다">
+<rect width="360" height="274" rx="12" fill="#f7f7f4"/>
+<text x="150" y="58" font-size="13" font-weight="700" fill="#555" text-anchor="middle">돌리지 않고 본다</text><text x="288" y="58" font-size="13" font-weight="700" fill="#555" text-anchor="middle">돌리면서 본다</text><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">APM 4기능 한 장 지도</text><text x="45" y="112" font-size="14" font-weight="700" fill="#555" text-anchor="middle">코드</text><text x="45" y="132" font-size="14" font-weight="700" fill="#555" text-anchor="middle">품질</text><text x="45" y="210" font-size="14" font-weight="700" fill="#555" text-anchor="middle">운영</text><text x="45" y="230" font-size="14" font-weight="700" fill="#555" text-anchor="middle">관리</text><rect x="84" y="72" width="132" height="90" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="150" y="102" font-size="15" font-weight="700" fill="#2f7d4a" text-anchor="middle">정적 분석</text><text x="150" y="128" font-size="13" fill="#333" text-anchor="middle">소스 코드 검사</text><text x="150" y="148" font-size="13" fill="#555" text-anchor="middle">규칙 위반·결함</text><rect x="222" y="72" width="132" height="90" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="288" y="102" font-size="15" font-weight="700" fill="#2a5db0" text-anchor="middle">동적 분석</text><text x="288" y="128" font-size="13" fill="#333" text-anchor="middle">실행하며 검사</text><text x="288" y="148" font-size="13" fill="#555" text-anchor="middle">메모리 누수·오류</text><rect x="84" y="170" width="132" height="90" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="150" y="200" font-size="15" font-weight="700" fill="#b5730d" text-anchor="middle">변경 관리</text><text x="150" y="226" font-size="13" fill="#333" text-anchor="middle">바뀐 것의 영향도</text><text x="150" y="246" font-size="13" fill="#555" text-anchor="middle">어디까지 번지나</text><rect x="222" y="170" width="132" height="90" rx="8" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><text x="288" y="200" font-size="15" font-weight="700" fill="#b03a2e" text-anchor="middle">성능 관리</text><text x="288" y="226" font-size="13" fill="#333" text-anchor="middle">실행 중 지표</text><text x="288" y="246" font-size="13" fill="#555" text-anchor="middle">트래픽·자원 사용</text>
+</svg><figcaption>정적·동적은 “실행하느냐”로 갈라요. 변경 관리는 무엇이 바뀌었나, 성능 관리는 얼마나 빠르고 무거운가.</figcaption></figure></div>
+
+
+<p>한 장 요약 — 네 기능이 무엇을 보는지와 교재에 자주 나오는 도구 이름이에요. 도구 이름은 참고용이고, 정적·동적 분석 도구 상세는 D027에서 다시 봐요.</p>
+<table>
+<tr><th>기능</th><th>무엇을 보나</th><th>예시 도구(참고)</th></tr>
+<tr><td>변경 관리</td><td>종속 관계, 변경 영향도</td><td>ChangeMiner</td></tr>
+<tr><td>성능 관리</td><td>트래픽·응답 시간·자원 사용</td><td>Jennifer, Scouter</td></tr>
+<tr><td>정적 분석</td><td>실행 없이 소스 코드 결함·규칙 위반</td><td>PMD, Cppcheck, Checkstyle</td></tr>
+<tr><td>동적 분석</td><td>실행하며 메모리 누수·오류</td><td>Valgrind, Avalanche</td></tr>
+</table>
+<p>D021의 화이트박스·블랙박스와 헷갈리지 마세요. 그쪽은 “코드 구조를 보느냐, 입출력만 보느냐”이고, 정적·동적은 “실행하느냐 마느냐”예요. 축이 달라서, 실행하며 분기 경로를 따라가는 화이트박스 테스트는 동적이면서 화이트박스예요.</p>
+<p><b>→ 이 장면의 결과물:</b> 배포 후에도 꺼지지 않는 감시 화면. 이제 네 장면을 한 번에 꿰어 봐요.</p>
+
+<h2>6. 한 장 정리 — 네 장면 꿰기</h2>
+<div class="point"><b>핵심 한 줄</b>배포 전(패키징) · 배포 중(배포 도구·DRM) · 배포 후(APM)로 시간 순서에 걸어 두면 안 섞여요.</div>
+<p>오늘 장면을 결과물 중심으로 다시 놓으면 아래 표예요. 앞 장면의 결과물이 다음 장면의 재료가 되는 흐름을 확인하세요.</p>
+<p class="hint">↔ 표가 넓어요. 옆으로 밀어서 보세요</p><table>
+<tr><th>장면</th><th>하는 일</th><th>시험 개념</th><th>결과물</th></tr>
+<tr><td>1</td><td>앱을 사용자 PC 기준으로 묶음</td><td>패키징, 사용자 중심, 6단계</td><td>설치 파일·매뉴얼·릴리즈 노트</td></tr>
+<tr><td>2</td><td>강의 영상을 잠그고 이름·규칙을 붙임</td><td>배포 도구 구성 기술 8개</td><td>암호화된 콘텐츠</td></tr>
+<tr><td>3</td><td>잠긴 영상을 팔고 열쇠를 줌</td><td>DRM 구성 요소, 클리어링 하우스</td><td>허가된 범위의 이용</td></tr>
+<tr><td>4</td><td>배포 후 상태를 지켜봄</td><td>APM 4기능</td><td>장애 예방·성능 개선</td></tr>
+</table>
+<div class="duo"><div><p>시간 축으로만 보면 더 단순해요. 패키징이 만든 설치 파일이 배포 도구·DRM의 보호를 받고 나가고, 사용자가 실행하는 순간부터 APM이 붙어요. 택배로 치면 포장(패키징), 봉인 테이프(배포 도구·DRM), 배송 조회(APM) 순서예요.</p></div><figure class="mermaid"><img src="../assets/2fd4003ce09dc152.png" alt="도식" loading="lazy" style="width:236px"></figure></div>
+
+
+
+<h2>7. 시험 포인트·암기 단서</h2>
+<div class="point"><b>핵심 한 줄</b>순서(6단계), 소속(8기술·세부 기술), 역할(클리어링 하우스), 축(정적·동적) 네 가지만 정확하면 돼요.</div>
+<p>설명을 다 읽은 뒤 정리용으로 쓰세요. 두문자어는 순서와 이름을 붙잡는 손잡이일 뿐이에요. 손잡이만 외우고 문을 안 열어 보면, 출제자가 문 이름을 살짝 바꾸는 순간 그대로 막혀요.</p>
+<div class="memo"><b>기·모·빌·환·시·개</b> — 기능 정하고, 모듈로 나누고, 빌드하고, 환경 보고, 시험하고, 개선한다. 시험과 개선은 되돌이.</div>
+<div class="memo"><b>클리어링 하우스 = 라이선스 + 키</b> — 돈 받고 열쇠 주는 창구. 분배자는 상품을 진열할 뿐 열쇠는 없어요.</div>
+<div class="memo"><b>변·성·정·동</b> — 바뀐 영향, 성능, 안 돌리고, 돌리고.</div>
+<div class="trap">배포 도구 구성 기술은 이 페이지에서 8개로 정리했지만, 교재에 따라 ‘암호화 파일 생성’을 암호화에 묶어 7개로 적기도 해요. 개수보다 이름과 하는 일로 기억하세요.</div>
+<div class="trap">코드 난독화·PKI·DOI·XrML은 구성 기술이 아니라 <b>세부 기술</b>이에요. “구성 기술이 아닌 것”을 고르라면 이 이름들이 정답 후보예요.</div>
+<div class="trap">패키징은 <b>개발자 중심</b>이 아니라 <b>사용자 중심</b>이에요. “개발자가 관리하기 편하게”라는 선지는 틀린 문장이에요.</div>
+<div class="trap">정적 분석 = 실행하지 않음, 동적 분석 = 실행함. 화이트·블랙박스와 다른 축이에요.</div>
+
+<h2>8. 오답 복습 — 워크숍, 상태 vs 전략</h2>
+<div class="point"><b>핵심 한 줄</b>부딪히는 요구는 한자리에서 맞추는 워크숍, 객체가 스스로 행동을 바꾸면 상태 패턴이에요.</div>
+<div class="duo"><div><p>세 주 만에 다시 만나는 워크숍과, 지난주에 본 상태 패턴이에요. 복습 문제는 이름표를 바꿔 단 옛 손님이라 얼굴만 기억하면 돼요.</p>
+<p><b>D001-2 다시 보기.</b> 요구분석기법 중 <b>워크숍</b>은 이해관계자들이 진행자와 함께 짧은 기간 한자리에 모여 집중 토의하고 합의를 이끌어 내는 방법이에요. 설문은 많은 사람에게 같은 질문을 던져 의견을 모으기만 하고, 관찰은 현장을 지켜볼 뿐이에요. 요구가 서로 부딪칠 때 그 자리에서 조율하는 건 워크숍뿐이에요.</p></div><figure><svg viewBox="0 0 360 268" font-family="sans-serif" role="img" aria-label="워크숍 예시. 병원 예약 앱에서 진료팀은 예약 간격을 넓게, 원무팀은 촘촘하게 원한다. 두 팀이 진행자와 함께 한자리에 모여 토의하는 워크숍을 거쳐 합의안 하나가 나온다">
+<rect width="360" height="268" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d22g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">충돌하는 요구를 한자리에서</text><path d="M86 104 L150 134" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d22g)"/><path d="M274 104 L210 134" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d22g)"/><path d="M180 190 L180 214" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d22g)"/><rect x="12" y="44" width="150" height="60" rx="8" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><text x="87" y="68" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">진료팀</text><text x="87" y="90" font-size="14" fill="#333" text-anchor="middle">예약 간격 넓게</text><rect x="198" y="44" width="150" height="60" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="273" y="68" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">원무팀</text><text x="273" y="90" font-size="14" fill="#333" text-anchor="middle">예약 촘촘하게</text><rect x="60" y="134" width="240" height="56" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="180" y="158" font-size="15" font-weight="700" fill="#b5730d" text-anchor="middle">워크숍</text><text x="180" y="180" font-size="14" fill="#333" text-anchor="middle">진행자와 함께 한자리 토의</text><rect x="100" y="214" width="160" height="40" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="180" y="239" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">합의안 하나</text>
+</svg><figcaption>설문은 의견을 모으기만 하고, 워크숍은 부딪히는 의견을 그 자리에서 맞춰요.</figcaption></figure></div>
+
+
+<div class="duo"><div><p><b>D014-2 다시 보기.</b> <b>상태 패턴</b>은 객체의 상태를 별도 클래스로 나누고 요청을 현재 상태 객체에 맡겨요. 상태가 바뀌면 객체가 스스로 상태 객체를 교체해서, 같은 요청에도 행동이 달라져요. <b>전략 패턴</b>은 바깥(클라이언트)이 알고리즘 객체를 골라 넣어 주는 구조예요. “누가 바꾸느냐”만 보면 갈려요. 안에서 스스로 바꾸면 상태, 밖에서 골라 주면 전략이에요.</p></div><figure class="mermaid"><img src="../assets/c3e6d1028e1bbdc6.png" alt="도식" loading="lazy" style="width:478px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure></div>
+
+
+
+<h2>확인 문제</h2>
+<ol class="quiz">
+<li>DRM 구성 요소 중, 사용자에게 콘텐츠 라이선스를 발급하고 암호화 키 관리와 이용 권한·사용량 관리를 맡는 것은?<label class="opt"><input type="radio" name="D022-q1" value="1">① 콘텐츠 분배자</label><label class="opt"><input type="radio" name="D022-q1" value="2">② 패키저</label><label class="opt"><input type="radio" name="D022-q1" value="3">③ 클리어링 하우스</label><label class="opt"><input type="radio" name="D022-q1" value="4">④ 보안 컨테이너</label></li>
+<li>애플리케이션 배포(패키징) 도구의 구성 기술 중, 각 콘텐츠에 DOI·URI 같은 고유 식별 체계를 부여해 콘텐츠를 구별할 수 있게 하는 것은?<label class="opt"><input type="radio" name="D022-q2" value="1">① 식별 기술</label><label class="opt"><input type="radio" name="D022-q2" value="2">② 저작권 표현</label><label class="opt"><input type="radio" name="D022-q2" value="3">③ 크랙 방지</label><label class="opt"><input type="radio" name="D022-q2" value="4">④ 정책 관리</label></li>
+<li>(누적) UML 다이어그램 중 구조(정적) 다이어그램에 해당하는 것은?<label class="opt"><input type="radio" name="D022-q3" value="1">① 시퀀스 다이어그램</label><label class="opt"><input type="radio" name="D022-q3" value="2">② 상태 다이어그램</label><label class="opt"><input type="radio" name="D022-q3" value="3">③ 활동 다이어그램</label><label class="opt"><input type="radio" name="D022-q3" value="4">④ 배치 다이어그램</label></li>
+<li>(오답 재확인) 사내 결재 시스템 개편에서 재무팀은 승인 단계를 늘리길, 영업팀은 줄이길 원한다. 두 팀 대표와 PM이 하루 동안 한자리에 모여 진행자의 진행 아래 토의하고 합의안을 만드는 요구분석기법은?<label class="opt"><input type="radio" name="D022-q4" value="1">① 설문 조사</label><label class="opt"><input type="radio" name="D022-q4" value="2">② 워크숍</label><label class="opt"><input type="radio" name="D022-q4" value="3">③ 사용자 관찰</label><label class="opt"><input type="radio" name="D022-q4" value="4">④ 정적 분석</label></li>
+<li>(오답 재확인) 자판기 객체가 '동전 없음·동전 있음·품절'을 각각 별도 클래스로 두고 '버튼 누름' 요청을 현재 상태 객체에 맡긴다. 동전이 들어오면 객체 스스로 현재 상태 객체를 바꾸어, 같은 요청에도 동작이 달라진다. 이 디자인 패턴은?<label class="opt"><input type="radio" name="D022-q5" value="1">① 전략</label><label class="opt"><input type="radio" name="D022-q5" value="2">② 템플릿 메서드</label><label class="opt"><input type="radio" name="D022-q5" value="3">③ 상태</label><label class="opt"><input type="radio" name="D022-q5" value="4">④ 옵서버</label></li>
+</ol><div class="answer-bar" data-id="D022" data-n="5"><code></code><button type="button">답안 복사</button></div><p><small>고른 뒤 <b>답안 복사</b> → 디스코드 공부 채널에 붙여넣기 하면 돼요.</small></p>
+<p>답장: <code>정처기 D022: 1)번호 2)번호 3)번호 4)번호 5)번호</code></p>
+<p>내일 D023은 일요일 주간 종합 복습이에요(A4~A6 + 지난 범위 누적, 20문항). 설치·사용자 매뉴얼, 소프트웨어 품질 표준(ISO/IEC 9126·25010 등), 버전 관리 용어와 빌드 자동화는 D024에서 이어져요.</p>
+<p class="meta"><a href="2026-10-23-D021.html">← D021</a>  </p>
+<script>
+document.querySelectorAll('.answer-bar').forEach(bar=>{
+  const id=bar.dataset.id,n=+bar.dataset.n,out=bar.querySelector('code'),btn=bar.querySelector('button');
+  const text=()=>'정처기 '+id+': '+Array.from({length:n},(_,i)=>{const c=document.querySelector('input[name="'+id+'-q'+(i+1)+'"]:checked');return (i+1)+')'+(c?c.value:'?')}).join(' ');
+  document.querySelectorAll('input[name^="'+id+'-q"]').forEach(r=>r.addEventListener('change',()=>{out.textContent=text()}));
+  out.textContent=text();
+  btn.addEventListener('click',async()=>{const t=text();try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}btn.textContent='복사됨 ✓';setTimeout(()=>btn.textContent='답안 복사',1500)});
+});
+</script>
+<footer>2027년 정기 기사 1회 정보처리기사 필기 준비 · 공식 범위: Q-Net 2027~2029 출제기준</footer>
+</main></body></html>
