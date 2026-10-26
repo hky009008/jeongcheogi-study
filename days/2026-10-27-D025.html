@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>D025 테스트 원리·오라클·레벨(V-모델)·테스트 기법과 케이스·시나리오</title>
+<link rel="icon" href="../assets/favicon/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../assets/favicon/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="apple-touch-icon" href="../assets/favicon/apple-touch-icon.png">
+<link rel="stylesheet" href="../style.css"></head>
+<body><main>
+<nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a></nav>
+<h1>D025 · 테스트 원리·오라클·레벨(V-모델)·테스트 기법과 케이스·시나리오</h1><div class="meta">2026-10-27 · A8 소프트웨어 개발 &gt; 애플리케이션 테스트 관리</div><p><span class="tag">A8</span> 오늘부터 A8 「애플리케이션 테스트 관리」예요. D021에서 단위 테스트를 화이트박스·블랙박스 두 관점으로 봤고, 어제 D024에서는 품질 특성 안에 <b>시험성</b>이 있고 Jenkins가 빌드마다 테스트를 돌린다는 걸 봤어요. 오늘은 그 테스트를 “그냥 많이 돌려 보기”가 아니라 <b>체계</b>로 만드는 지식을 모아요. 사례는 D022·D024의 스터디캠이 v1.1(유료 플랜·쿠폰 결제 추가)을 내기 전에 테스트하는 장면이에요.</p>
+<ul>
+<li><b>테스트 7원리</b>와 <b>테스트 오라클</b> 4종을 구별할 수 있다</li>
+<li><b>테스트 레벨</b>(단위·통합·시스템·인수)과 V-모델의 짝, <b>알파·베타</b>를 구별할 수 있다</li>
+<li>화이트박스·블랙박스 <b>기법</b>(기초 경로·커버리지 / 동치 분할·경계값·원인-결과 등)을 상황에 맞게 고를 수 있다</li>
+<li><b>테스트 케이스</b>와 <b>테스트 시나리오</b>의 차이를 설명할 수 있다</li>
+</ul>
+<div class="glance">
+<div><b>7</b>테스트 원리<small>한계 3 · 언제·어디 2 · 유지 2</small></div>
+<div><b>4</b>오라클<small>참·샘플링·휴리스틱·일관성</small></div>
+<div><b>4</b>테스트 레벨<small>단위·통합·시스템·인수</small></div>
+<div><b>6</b>커버리지<small>문장 ~ 다중 조건</small></div>
+</div>
+<div class="box"><b>오늘 이야기의 흐름</b>큰 그림 → 장면 1 테스트하는 태도(원리) → 장면 2 정답 판정(오라클·V&amp;V) → 장면 3 테스트 일정 짜기(레벨·V-모델) → 장면 4 입력값 고르기(기법) → 장면 5 문서로 남기기(케이스·시나리오) → 오답 복습 → 정리</div>
+
+<h2>1. 큰 그림 — 테스트는 “버그 없음”을 증명하지 못한다</h2>
+<div class="point"><b>핵심 한 줄</b>테스트는 결함을 <b>찾는</b> 활동이고, 그 활동을 체계로 만드는 지식이 원리·오라클·레벨·기법·산출물이에요.</div>
+<div class="duo"><div><p><b>테스트</b>는 프로그램을 실행하거나 산출물을 검토해서 결함을 찾아내는 활동이에요. 요구한 대로 동작하는지 확인하고, 숨은 결함을 드러내서 고칠 기회를 만들죠. 테스트를 하는 이유는 세 가지로 정리돼요. 결함을 <b>발견</b>하고, 앞 단계에서 미리 검토해 결함을 <b>예방</b>하고, 그 결과로 <b>품질을 높이는</b> 것이에요.</p>
+<p>테스트는 건강검진과 닮았어요. 검진표에 “이상 없음”이 찍혀도 절대 안 아픈 사람이 되는 건 아니고, 검사한 항목에서 못 찾았다는 뜻일 뿐이에요. 그래서 “무엇을, 언제, 어떤 기준으로 검사하나”를 정하는 체계가 필요해요. 아래 지도의 다섯 질문이 오늘 섹션 순서예요.</p></div><figure><svg viewBox="0 0 360 420" font-family="sans-serif" role="img" aria-label="개념 지도. 테스트는 결함을 찾는 활동이고, 원리·오라클·레벨·기법·케이스와 시나리오 다섯 질문으로 나뉜다">
+<rect width="360" height="420" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d25a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">테스트를 체계로 만드는 다섯 질문</text><path d="M30 92 L30 344" stroke="#555" stroke-width="2" fill="none"/><path d="M30 128 L44 128" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d25a)"/><rect x="44" y="106" width="304" height="44" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="56" y="126" font-size="15" font-weight="700" fill="#2a5db0">원리</text><text x="56" y="144" font-size="14" fill="#555">2장</text><text x="196" y="134" font-size="14" fill="#333">왜·어떤 태도로?</text><path d="M30 182 L44 182" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d25a)"/><rect x="44" y="160" width="304" height="44" rx="8" fill="#f1eaf8" stroke="#6a3d9a" stroke-width="2"/><text x="56" y="180" font-size="15" font-weight="700" fill="#6a3d9a">오라클</text><text x="56" y="198" font-size="14" fill="#555">3장</text><text x="196" y="188" font-size="14" fill="#333">무엇이 정답인가?</text><path d="M30 236 L44 236" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d25a)"/><rect x="44" y="214" width="304" height="44" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="56" y="234" font-size="15" font-weight="700" fill="#2f7d4a">레벨</text><text x="56" y="252" font-size="14" fill="#555">4장</text><text x="196" y="242" font-size="14" fill="#333">언제·어느 크기로?</text><path d="M30 290 L44 290" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d25a)"/><rect x="44" y="268" width="304" height="44" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="56" y="288" font-size="15" font-weight="700" fill="#b5730d">기법</text><text x="56" y="306" font-size="14" fill="#555">5장</text><text x="196" y="296" font-size="14" fill="#333">어떻게 고르나?</text><path d="M30 344 L44 344" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d25a)"/><rect x="44" y="322" width="304" height="44" rx="8" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><text x="56" y="342" font-size="15" font-weight="700" fill="#b03a2e">케이스·시나리오</text><text x="56" y="360" font-size="14" fill="#555">6장</text><text x="196" y="350" font-size="14" fill="#333">무엇을 남기나?</text><rect x="30" y="44" width="300" height="40" rx="8" fill="#ffffff" stroke="#555" stroke-width="2"/><text x="180" y="70" font-size="15" font-weight="700" fill="#222" text-anchor="middle">테스트 = 결함을 찾는 활동</text><text x="180" y="386" font-size="14" font-weight="700" fill="#555" text-anchor="middle">A8 세부 3개 중 오늘 = 테스트케이스</text><text x="180" y="406" font-size="14" fill="#555" text-anchor="middle">(통합 테스트·성능 개선은 내일부터)</text>
+</svg><figcaption>오늘 나오는 용어는 전부 이 다섯 가지 중 하나에 매달려요. 색은 섹션 순서예요.</figcaption></figure></div>
+
+
+<p><b>→ 이 장면의 결과물:</b> 오늘 채울 다섯 칸. 스터디캠 테스트 팀이 가장 먼저 맞추는 건 “테스트를 어떤 태도로 하나”예요. 그래서 원리부터 봐요.</p>
+
+<h2>2. 장면 1 — 테스트 팀의 태도 맞추기 (테스트 7원리)</h2>
+<div class="point"><b>핵심 한 줄</b>7원리는 “테스트로 알 수 있는 것의 한계”와 “그래서 어디에 힘을 쏟을지”를 말해요.</div>
+<p>스터디캠 v1.1 테스트 회의에서 팀장이 “다 테스트해서 버그 0개로 내자”고 말해요. 7원리는 이 말이 왜 불가능한지, 대신 무엇을 해야 하는지를 정리한 경험칙이에요. 일곱 개를 세 무리로 나눠 보면 외우기도 쉬워요.</p>
+<h3>테스트의 한계 — 존재 증명 · 완벽 불가 · 오류-부재의 궤변</h3>
+<p><b>결함 존재 증명</b>은 테스트가 결함이 <b>있음</b>은 보여 줄 수 있지만 <b>없음</b>은 증명할 수 없다는 원리예요. 100개 케이스를 통과해도 101번째 입력에서 터질 수 있으니까요. 팀장의 “버그 0개”가 바로 이 원리에 걸려요.</p>
+<p><b>완벽한 테스트 불가</b>는 모든 입력·경로 조합을 다 시험하는 건 현실적으로 불가능하다는 원리예요. 입력란 하나에 정수만 받아도 경우의 수가 수십억이에요. 그래서 위험이 큰 기능부터 우선순위를 두고 테스트 범위를 고르는 위험 기반 접근이 나와요.</p>
+<p><b>오류-부재의 궤변</b>은 결함을 다 고쳤더라도 사용자 요구를 만족하지 못하면 품질이 높다고 할 수 없다는 원리예요. 주문한 건 짜장면인데 완벽하게 조리된 짬뽕이 왔다면, 그 짬뽕에 흠이 없는 건 아무 위로가 안 되죠. 결함이 없다(부재)는 사실이 곧 좋은 제품이라는 착각(궤변)을 경계하라는 뜻이에요.</p>
+<h3>언제·어디를 — 조기 테스트 · 결함 집중</h3>
+<div class="duo"><div><p><b>조기 테스트</b>는 개발 초기(요구·설계 단계)부터 테스트를 시작해야 한다는 원리예요. 요구사항 문서를 리뷰하는 것도 테스트예요. 결함은 늦게 발견할수록 고칠 범위가 커지기 때문이에요.</p></div><figure><svg viewBox="0 0 360 316" font-family="sans-serif" role="img" aria-label="요구, 설계, 구현, 테스트, 운영 단계로 갈수록 결함 수정 비용 막대가 가파르게 커진다. 운영 단계가 가장 크다">
+<rect width="360" height="316" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">결함을 늦게 찾을수록 고치는 비용</text><rect x="30" y="240" width="44" height="10" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="52" y="274" font-size="14" font-weight="700" fill="#333" text-anchor="middle">요구</text><rect x="96" y="228" width="44" height="22" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="118" y="274" font-size="14" font-weight="700" fill="#333" text-anchor="middle">설계</text><rect x="162" y="204" width="44" height="46" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="184" y="274" font-size="14" font-weight="700" fill="#333" text-anchor="middle">구현</text><rect x="228" y="158" width="44" height="92" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="250" y="274" font-size="14" font-weight="700" fill="#333" text-anchor="middle">테스트</text><rect x="294" y="64" width="44" height="186" rx="4" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><text x="316" y="274" font-size="14" font-weight="700" fill="#333" text-anchor="middle">운영</text><path d="M16 250 L344 250" stroke="#555" stroke-width="2" fill="none"/><text x="180" y="300" font-size="14" fill="#555" text-anchor="middle">막대는 상대 크기 (일반론, 수치 아님)</text>
+</svg><figcaption>같은 결함이라도 요구 단계에서 잡으면 문서 한 줄, 운영에서 잡으면 장애 보고서 한 편이에요.</figcaption></figure></div>
+
+
+<p><b>결함 집중</b>은 결함 대부분이 소수의 모듈에 몰려 있다는 원리로, 파레토 법칙(80:20)과 연결돼요. 버그는 이웃을 잘 사귀어요. 한 모듈에서 버그 하나를 잡으면, 그 집에 사는 친척들이 아직 몇 명 더 있다고 보는 게 안전해요. 그래서 결함이 많이 나온 모듈에 테스트를 더 쏟아요.</p>
+<h3>어떻게 유지하나 — 살충제 패러독스 · 정황 의존성</h3>
+<div class="duo"><div><p><b>살충제 패러독스</b>는 같은 테스트 케이스를 반복하면 더 이상 새 결함을 찾지 못한다는 원리예요. 같은 살충제를 계속 뿌리면 내성이 생긴 벌레만 남는 것처럼요. 작년 기출만 무한 반복하면 작년 시험엔 만점이지만 올해 시험엔 처음 보는 문제가 나오죠. 그래서 테스트 케이스를 주기적으로 검토하고 새로 보태요.</p>
+<p><b>정황 의존성</b>은 소프트웨어의 성격과 상황에 따라 테스트 방법을 달리해야 한다는 원리예요. 결제 모듈과 공부 기록 화면은 같은 강도로 테스트하지 않아요. 의료기기 소프트웨어와 사내 게시판이 같은 기준일 수 없는 것도 같은 이유예요.</p></div><figure><svg viewBox="0 0 360 348" font-family="sans-serif" role="img" aria-label="테스트 7원리를 세 무리로 묶은 지도. 한계: 결함 존재 증명, 완벽한 테스트 불가, 오류-부재의 궤변. 언제 어디를: 조기 테스트, 결함 집중. 어떻게 유지: 살충제 패러독스, 정황 의존성">
+<rect width="360" height="348" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">테스트 7원리, 세 무리로 묶기</text><rect x="12" y="42" width="336" height="106" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="26" y="66" font-size="15" font-weight="700" fill="#2a5db0">테스트의 한계</text><text x="44" y="92" font-size="14" fill="#333">· 결함 존재 증명</text><text x="44" y="116" font-size="14" fill="#333">· 완벽한 테스트 불가</text><text x="44" y="140" font-size="14" fill="#333">· 오류-부재의 궤변</text><rect x="12" y="158" width="336" height="82" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="26" y="182" font-size="15" font-weight="700" fill="#2f7d4a">언제·어디를</text><text x="44" y="208" font-size="14" fill="#333">· 조기 테스트</text><text x="44" y="232" font-size="14" fill="#333">· 결함 집중 (파레토)</text><rect x="12" y="250" width="336" height="82" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="26" y="274" font-size="15" font-weight="700" fill="#b5730d">어떻게 유지하나</text><text x="44" y="300" font-size="14" fill="#333">· 살충제 패러독스</text><text x="44" y="324" font-size="14" fill="#333">· 정황 의존성</text>
+</svg><figcaption>일곱 개를 따로 외우지 말고 “한계 3 · 언제·어디 2 · 유지 2”로 묶어 보세요.</figcaption></figure></div>
+
+
+<div class="trap"><b>단골 함정</b>“결함이 없음을 증명한다”는 선지는 결함 존재 증명을 뒤집은 오답이에요. 또 “같은 케이스 반복 → 새 결함 못 찾음”은 <b>살충제 패러독스</b>, “결함이 특정 모듈에 몰림”은 <b>결함 집중</b>이에요. 반복이냐 몰림이냐로 가르세요.</div>
+<p><b>→ 이 장면의 결과물:</b> 위험한 결제 모듈부터, 요구 단계부터, 케이스는 계속 갱신. 그런데 테스트를 돌리면 “이 결과가 맞나?”를 판정할 기준이 필요해요.</p>
+
+<h2>3. 장면 2 — 결과가 맞는지 판정하기 (오라클·정적/동적·V&amp;V)</h2>
+<div class="point"><b>핵심 한 줄</b>오라클은 결과가 맞는지 판정하는 기준이고, 정답을 아는 범위에 따라 참·샘플링·휴리스틱·일관성 검사로 나뉘어요.</div>
+<div class="duo"><div><p>테스트를 실행하면 결과가 나와요. 그런데 “할인가가 9,000원이 나왔다”는 결과만으로는 맞는지 틀린지 몰라요. 이걸 판정해 주는 기준이나 장치를 <b>테스트 오라클(Test Oracle)</b>이라고 해요. 오라클은 시험지 뒤의 정답지예요. 정답지가 전 문항에 있느냐, 일부만 있느냐에 따라 종류가 나뉘어요.</p>
+<p><b>참(True) 오라클</b>은 모든 입력값에 대해 기대 결과를 알고 있어서 모든 오류를 검출할 수 있는 오라클이에요. 할인 계산 공식처럼 정답을 계산할 수 있을 때 쓰지만, 만들기 비싸요. <b>샘플링(Sampling) 오라클</b>은 특정 몇 개 입력값에 대해서만 기대 결과를 주는 오라클이에요. 정답지가 홀수 번에만 있는 셈이라, 고르지 않은 입력의 오류는 놓칠 수 있어요.</p>
+<p><b>휴리스틱(Heuristic) 오라클</b>은 특정 입력에는 정확한 정답을 주고, 나머지는 추정(경험적 규칙)으로 판정하는 오라클이에요. 정답지에 “대충 이 근처면 맞음”이라고 적힌 문항이 섞인 셈이죠. <b>일관성 검사(Consistent) 오라클</b>은 애플리케이션이 바뀌었을 때 이전 버전과 결과가 같은지 비교하는 오라클이라, 회귀 테스트와 짝이에요.</p></div><figure><svg viewBox="0 0 360 314" font-family="sans-serif" role="img" aria-label="오라클 4종. 참 오라클은 모든 입력의 정답, 샘플링은 고른 일부 입력만, 휴리스틱은 일부 정답과 나머지 추정, 일관성 검사는 이전 버전 결과와 비교">
+<rect width="360" height="314" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">오라클 4종 — 정답을 얼마나 아나</text><rect x="12" y="42" width="336" height="56" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="24" y="65" font-size="15" font-weight="700" fill="#2f7d4a">참 오라클</text><text x="24" y="87" font-size="14" fill="#333">모든 입력의 정답을 앎</text><rect x="236" y="60" width="100" height="20" rx="3" fill="#2f7d4a" stroke="#2f7d4a" stroke-width="1"/><rect x="12" y="108" width="336" height="56" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="24" y="131" font-size="15" font-weight="700" fill="#2a5db0">샘플링 오라클</text><text x="24" y="153" font-size="14" fill="#333">고른 일부 입력만 정답</text><rect x="236" y="126" width="20" height="20" rx="3" fill="#2a5db0" stroke="#2a5db0" stroke-width="1"/><rect x="274" y="126" width="20" height="20" rx="3" fill="#2a5db0" stroke="#2a5db0" stroke-width="1"/><rect x="312" y="126" width="20" height="20" rx="3" fill="#2a5db0" stroke="#2a5db0" stroke-width="1"/><rect x="12" y="174" width="336" height="56" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="24" y="197" font-size="15" font-weight="700" fill="#b5730d">휴리스틱 오라클</text><text x="24" y="219" font-size="14" fill="#333">일부 정답 + 나머지 추정</text><rect x="236" y="192" width="40" height="20" rx="3" fill="#b5730d" stroke="#b5730d" stroke-width="1"/><rect x="278" y="192" width="58" height="20" rx="3" fill="#ffffff" stroke="#b5730d" stroke-width="2" stroke-dasharray="4 3"/><rect x="12" y="240" width="336" height="56" rx="8" fill="#f1eaf8" stroke="#6a3d9a" stroke-width="2"/><text x="24" y="263" font-size="15" font-weight="700" fill="#6a3d9a">일관성 검사</text><text x="24" y="285" font-size="14" fill="#333">이전 버전 결과와 비교</text><rect x="236" y="254" width="36" height="28" rx="4" fill="#ffffff" stroke="#6a3d9a" stroke-width="2"/><text x="254" y="273" font-size="14" font-weight="700" fill="#6a3d9a" text-anchor="middle">v1</text><text x="286" y="273" font-size="15" font-weight="700" fill="#6a3d9a" text-anchor="middle">↔</text><rect x="300" y="254" width="36" height="28" rx="4" fill="#ffffff" stroke="#6a3d9a" stroke-width="2"/><text x="318" y="273" font-size="14" font-weight="700" fill="#6a3d9a" text-anchor="middle">v2</text>
+</svg><figcaption>오른쪽 막대는 정답을 아는 범위예요. 위에서 아래로 갈수록 “정답지”가 얇아져요.</figcaption></figure></div>
+
+
+<p>한 장 요약 — 오라클 4종이에요.</p>
+<table>
+<tr><th>오라클</th><th>정답을 아는 범위</th><th>주로 쓰는 때</th></tr>
+<tr><td>참</td><td>모든 입력</td><td>정답을 계산할 수 있는 핵심 로직(모든 오류 검출)</td></tr>
+<tr><td>샘플링</td><td>고른 일부 입력</td><td>범위가 넓어 대표값만 확인할 때</td></tr>
+<tr><td>휴리스틱</td><td>일부 정확 + 나머지 추정</td><td>정답을 다 알기 어려운 검색·추천 결과</td></tr>
+<tr><td>일관성 검사</td><td>이전 버전 결과</td><td>수정 후 회귀 테스트</td></tr>
+</table>
+<h3>정적 테스트 vs 동적 테스트</h3>
+<p>오라클은 “실행해서 나온 결과”를 판정하는데, 실행하지 않고도 결함을 찾을 수 있어요. <b>정적 테스트</b>는 프로그램을 실행하지 않고 명세서·설계서·코드를 검토해 결함을 찾는 테스트예요. 사람이 읽는 리뷰(동료 검토·워크스루·인스펙션)와 도구가 코드를 분석하는 정적 분석(예: SonarQube 같은 린트)이 여기 들어가요. 조기 테스트 원리를 실현하는 방법이 바로 정적 테스트예요.</p>
+<p><b>동적 테스트</b>는 프로그램을 실제로 실행하며 결함을 찾는 테스트예요. 화이트박스·블랙박스·경험 기반 기법이 모두 동적 테스트에 속하고, 장면 4에서 자세히 봐요.</p>
+<div class="vs"><div><b>정적 테스트</b>실행하지 않음. 리뷰(동료 검토·워크스루·인스펙션), 정적 분석 도구. 요구·설계 단계부터 가능</div><div><b>동적 테스트</b>실행함. 화이트박스·블랙박스·경험 기반 기법. 코드가 있어야 가능</div></div>
+<h3>Verification vs Validation</h3>
+<div class="duo"><div><p>판정 기준이 “무엇이냐”에 따라 질문이 둘로 갈려요. <b>Verification</b>은 “제품을 올바르게 만들었나?”를 묻는 활동이에요. 개발 과정의 산출물이 명세서대로 만들어졌는지 개발자 시각에서 확인해요. <b>Validation</b>은 “올바른 제품을 만들었나?”를 묻는 활동이에요. 완성된 결과가 사용자의 실제 요구에 맞는지 사용자 시각에서 확인해요.</p>
+<p>둘의 차이는 오류-부재의 궤변과 연결돼요. 명세대로 완벽한 짬뽕은 Verification은 통과하지만, 짜장면을 원한 손님 기준의 Validation에서는 떨어져요.</p></div><figure><svg viewBox="0 0 360 332" font-family="sans-serif" role="img" aria-label="완성된 제품을 명세서와 비교하는 Verification(제품을 올바르게 만들었나, 개발자 시각)과 사용자 요구와 비교하는 Validation(올바른 제품을 만들었나, 사용자 시각)">
+<rect width="360" height="332" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d25b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2a5db0"/></marker></defs><defs><marker id="d25c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b5730d"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">같은 제품, 두 가지 질문</text><rect x="12" y="42" width="160" height="44" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="92" y="70" font-size="15" font-weight="700" fill="#2a5db0" text-anchor="middle">명세서</text><rect x="188" y="42" width="160" height="44" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="268" y="70" font-size="15" font-weight="700" fill="#b5730d" text-anchor="middle">사용자 요구</text><path d="M36 236 L36 92" stroke="#2a5db0" stroke-width="2" fill="none" marker-end="url(#d25b)"/><path d="M212 236 L212 92" stroke="#b5730d" stroke-width="2" fill="none" marker-end="url(#d25c)"/><text x="50" y="118" font-size="14" font-weight="700" fill="#2a5db0">Verification</text><text x="50" y="142" font-size="14" fill="#333">제품을 올바르게</text><text x="50" y="166" font-size="14" fill="#333">만들었나?</text><text x="50" y="190" font-size="14" fill="#333">명세 대비</text><text x="50" y="214" font-size="14" fill="#333">개발자 시각</text><text x="226" y="118" font-size="14" font-weight="700" fill="#b5730d">Validation</text><text x="226" y="142" font-size="14" fill="#333">올바른 제품을</text><text x="226" y="166" font-size="14" fill="#333">만들었나?</text><text x="226" y="190" font-size="14" fill="#333">요구 대비</text><text x="226" y="214" font-size="14" fill="#333">사용자 시각</text><rect x="12" y="242" width="336" height="44" rx="8" fill="#ffffff" stroke="#555" stroke-width="2"/><text x="180" y="270" font-size="15" font-weight="700" fill="#222" text-anchor="middle">완성된 제품 (스터디캠 v1.1)</text><text x="180" y="316" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">한글 이름(검증·확인)은 교재마다 반대!</text>
+</svg><figcaption>시험장에서는 영어 단어와 “무엇에 대어 보나(명세 vs 요구)”로 구별하세요.</figcaption></figure></div>
+
+
+<div class="trap"><b>단골 함정</b>Verification·Validation의 한글 이름(검증·확인)은 교재마다 서로 반대로 붙어 있어요. 한글 이름에 기대지 말고 <b>명세 대비 = Verification, 사용자 요구 대비 = Validation</b>으로 외우세요.</div>
+<p><b>→ 이 장면의 결과물:</b> 결제 금액은 참 오라클로, 추천 강의 목록은 휴리스틱으로, v1.0과 같은 화면은 일관성 검사로 판정하기로 했어요. 이제 이 테스트들을 “언제, 어느 크기로” 할지 일정을 짜요.</p>
+
+<h2>4. 장면 3 — 테스트 일정 짜기 (테스트 레벨·V-모델·알파/베타)</h2>
+<div class="point"><b>핵심 한 줄</b>테스트 레벨은 단위 → 통합 → 시스템 → 인수 순으로 커지고, V-모델에서 개발 단계와 높이로 짝을 이뤄요.</div>
+<p>판정 기준이 생겼으니 이제 순서를 정해요. <b>테스트 레벨</b>은 함께 편성·관리되는 테스트 활동의 묶음이에요. 작은 조각부터 확인하고 점점 큰 단위로 넓혀 가야 결함이 어디서 생겼는지 추적하기 쉬워요.</p>
+<p><b>단위 테스트</b>는 함수·클래스 같은 가장 작은 모듈을 개별로 확인하는 테스트예요. D021에서 본 드라이버·스텁과 화이트박스 관점이 주로 여기서 쓰여요(<a href="./2026-10-23-D021.html">D021 다시 보기</a>). <b>통합 테스트</b>는 단위 테스트를 통과한 모듈을 결합하며 인터페이스·상호작용의 결함을 찾는 테스트예요. 하향식·상향식 같은 결합 방식은 내일 D026에서 자세히 봐요.</p>
+<p><b>시스템 테스트</b>는 통합된 전체 시스템이 요구사항을 만족하는지 실제 운영과 비슷한 환경에서 확인하는 테스트예요. 기능 요구뿐 아니라 성능·보안 같은 비기능 요구도 이 레벨에서 확인해요. <b>인수 테스트</b>는 사용자(발주처)가 요구한 대로 만들어졌는지 사용자 입장에서 최종 확인하고 받아들이는 테스트예요.</p>
+<p>한 장 요약 — 테스트 레벨 4단계예요.</p>
+<table>
+<tr><th>레벨</th><th>무엇을 확인하나</th><th>V-모델 짝</th></tr>
+<tr><td>단위</td><td>모듈 하나의 기능·내부 로직</td><td>구현(코드 상세)</td></tr>
+<tr><td>통합</td><td>모듈 사이 인터페이스·상호작용</td><td>상세 설계</td></tr>
+<tr><td>시스템</td><td>전체 시스템의 기능·비기능 요구</td><td>시스템 설계</td></tr>
+<tr><td>인수</td><td>사용자 요구 충족, 받아들일지 결정</td><td>요구 분석</td></tr>
+</table>
+<h3>V-모델 — 개발과 테스트를 거울처럼</h3>
+<div class="duo"><div><p><b>V-모델</b>은 폭포수 모델을 확장해, 왼쪽에 개발 단계를 내려 그리고 오른쪽에 그에 대응하는 테스트 단계를 올려 그린 모델이에요. 각 개발 단계의 산출물이 곧 맞은편 테스트의 기준이 돼요. 요구 분석서는 인수 테스트의 기준이 되고, 상세 설계서는 통합 테스트의 기준이 되는 식이에요. 나선형 모델처럼 위험 분석을 반복하는 단계는 없어요.</p>
+<p>출제자는 V자의 왼쪽 팔과 오른쪽 팔을 한 칸씩 어긋나게 이어 놓고 “옳은 것은?”이라고 물어요. 높이만 맞추면 되는데, 시험장에선 다들 V를 거꾸로 그려요. 위가 크고 아래가 작다고 기억하세요.</p></div><figure><svg viewBox="0 0 360 370" font-family="sans-serif" role="img" aria-label="V-모델. 왼쪽 위에서 아래로 요구 분석, 시스템 설계, 상세 설계, 구현, 바닥에 코딩, 오른쪽 아래에서 위로 단위, 통합, 시스템, 인수 테스트. 같은 높이끼리 점선 짝">
+<rect width="360" height="370" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d25d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="24" font-size="15" font-weight="700" fill="#222" text-anchor="middle">V-모델 — 같은 높이끼리 짝</text><path d="M122 62 L238 62" stroke="#888" stroke-width="2" fill="none" stroke-dasharray="5 4"/><rect x="12" y="44" width="110" height="36" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="67" y="67" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">요구 분석</text><rect x="238" y="44" width="110" height="36" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="293" y="67" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">인수 테스트</text><path d="M67 80 L81 102" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d25d)"/><path d="M279 104 L293 82" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d25d)"/><path d="M136 122 L224 122" stroke="#888" stroke-width="2" fill="none" stroke-dasharray="5 4"/><rect x="26" y="104" width="110" height="36" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="81" y="127" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">시스템 설계</text><rect x="224" y="104" width="110" height="36" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="279" y="127" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">시스템 테스트</text><path d="M81 140 L95 162" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d25d)"/><path d="M265 164 L279 142" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d25d)"/><path d="M150 182 L210 182" stroke="#888" stroke-width="2" fill="none" stroke-dasharray="5 4"/><rect x="40" y="164" width="110" height="36" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="95" y="187" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">상세 설계</text><rect x="210" y="164" width="110" height="36" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="265" y="187" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">통합 테스트</text><path d="M95 200 L109 222" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d25d)"/><path d="M251 224 L265 202" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d25d)"/><path d="M164 242 L196 242" stroke="#888" stroke-width="2" fill="none" stroke-dasharray="5 4"/><rect x="54" y="224" width="110" height="36" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="109" y="247" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">구현</text><rect x="196" y="224" width="110" height="36" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="251" y="247" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">단위 테스트</text><path d="M109 262 L146 296" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d25d)"/><path d="M214 296 L251 262" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d25d)"/><rect x="140" y="296" width="80" height="34" rx="8" fill="#ffffff" stroke="#555" stroke-width="2"/><text x="180" y="318" font-size="14" font-weight="700" fill="#222" text-anchor="middle">코딩</text><text x="12" y="356" font-size="14" font-weight="700" fill="#2a5db0">← 왼쪽: 만들기</text><text x="348" y="356" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="end">오른쪽: 확인하기 →</text>
+</svg><figcaption>점선이 짝이에요. 가장 위(요구 분석 ↔ 인수), 가장 아래(구현 ↔ 단위)만 확실히 잡으면 가운데는 저절로 맞아요.</figcaption></figure></div>
+
+
+<h3>인수 테스트의 종류와 알파·베타</h3>
+<div class="duo"><div><p>인수 테스트는 누가, 무엇을 기준으로 받아들이냐에 따라 나뉘어요. <b>사용자 인수</b>는 최종 사용자가 쓰기에 적합한지, <b>운영상 인수</b>는 관리자가 백업·복구·보안 같은 운영 기능이 되는지, <b>계약 인수</b>는 계약서의 인수 조건을 만족하는지, <b>규정 인수</b>는 법·정부 규정에 맞는지 확인해요.</p>
+<p><b>알파 테스트</b>는 개발사 내부의 통제된 환경에서 사용자가 테스트하고, 개발자가 옆에서 지켜보며 문제를 기록하는 인수 테스트예요. <b>베타 테스트</b>는 개발자 없이 사용자 현장의 실제 환경에서 다수 사용자가 쓰며 문제를 기록해 개발사에 보고하는 인수 테스트예요. 알파는 집들이 리허설이라 개발자가 “그 서랍은 살살 여세요”라고 말해 줄 수 있고, 베타는 손님이 혼자 와서 서랍을 세게 당겨 보는 날이에요.</p></div><figure><svg viewBox="0 0 360 334" font-family="sans-serif" role="img" aria-label="알파 테스트는 개발사 안 통제된 환경에서 개발자가 옆에서 지켜보며 소수 사용자가 수행, 베타 테스트는 개발자 없이 사용자 현장 실제 환경에서 다수가 수행. 순서는 알파, 베타, 정식 출시">
+<rect width="360" height="334" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d25e" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">알파 vs 베타 테스트</text><rect x="12" y="42" width="162" height="180" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="93" y="70" font-size="16" font-weight="700" fill="#2a5db0" text-anchor="middle">알파</text><text x="24" y="104" font-size="14" fill="#333">장소: 개발사 안</text><text x="24" y="134" font-size="14" fill="#333">개발자: 옆에서 관찰</text><text x="24" y="164" font-size="14" fill="#333">환경: 통제됨</text><text x="24" y="194" font-size="14" fill="#333">사용자: 소수</text><rect x="186" y="42" width="162" height="180" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="267" y="70" font-size="16" font-weight="700" fill="#b5730d" text-anchor="middle">베타</text><text x="198" y="104" font-size="14" fill="#333">장소: 사용자 현장</text><text x="198" y="134" font-size="14" fill="#333">개발자: 없음</text><text x="198" y="164" font-size="14" fill="#333">환경: 실제 사용</text><text x="198" y="194" font-size="14" fill="#333">사용자: 다수</text><path d="M110 272 L130 272" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d25e)"/><path d="M225 272 L245 272" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d25e)"/><rect x="20" y="254" width="90" height="36" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="65.0" y="277" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">알파</text><rect x="135" y="254" width="90" height="36" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="180.0" y="277" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">베타</text><rect x="250" y="254" width="96" height="36" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="298.0" y="277" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">정식 출시</text><text x="180" y="318" font-size="14" fill="#555" text-anchor="middle">둘 다 인수 테스트의 한 종류</text>
+</svg><figcaption>순서도 시험에 나와요. 알파(집 안 리허설) → 베타(바깥 공개) → 출시.</figcaption></figure></div>
+
+
+<div class="trap"><b>단골 함정</b>“개발자가 관여하지 않고 실사용 환경에서” = <b>베타</b>, “개발자 앞에서 통제된 환경” = <b>알파</b>. 두 설명을 바꿔 붙인 선지가 단골이에요.</div>
+<h3>목적에 따른 테스트</h3>
+<p>레벨이 “얼마나 큰 단위를”이라면, 목적별 분류는 “무엇을 확인하려고”예요. 특히 <b>회귀 테스트</b>는 수정한 뒤 기존 기능에 새 결함이 생기지 않았는지 다시 확인하는 테스트로, 어제 본 Jenkins가 커밋마다 자동으로 돌리는 바로 그 테스트예요(<a href="./2026-10-26-D024.html">D024</a>). 일관성 검사 오라클이 회귀 테스트의 판정 기준이 돼요.</p>
+<p>한 장 요약 — 목적별 테스트예요. 이름에 목적이 그대로 들어 있어서 “무엇을 확인하나”만 짝지으면 돼요.</p>
+<table>
+<tr><th>테스트</th><th>확인하는 것</th></tr>
+<tr><td>회복(Recovery)</td><td>고의로 실패를 일으켜 정상 복귀되는지</td></tr>
+<tr><td>안전(Security)</td><td>불법 침입·접근으로부터 시스템을 보호하는지</td></tr>
+<tr><td>강도(Stress)</td><td>평소보다 훨씬 많은 부하·자원 요구를 견디는지</td></tr>
+<tr><td>성능(Performance)</td><td>응답 시간·처리량 같은 성능 목표를 만족하는지</td></tr>
+<tr><td>구조(Structure)</td><td>내부 논리 경로·소스 코드 복잡도</td></tr>
+<tr><td>회귀(Regression)</td><td>변경 후 기존 기능에 새 결함이 없는지</td></tr>
+<tr><td>병행(Parallel)</td><td>같은 데이터를 새 시스템과 기존 시스템에 넣고 결과 비교</td></tr>
+</table>
+<p><b>→ 이 장면의 결과물:</b> 단위 → 통합 → 시스템 → 알파 → 베타 → 출시 일정표. 그런데 각 레벨에서 “어떤 입력으로” 테스트할지가 아직 비어 있어요.</p>
+
+<h2>5. 장면 4 — 입력값 고르기 (화이트박스·블랙박스 기법)</h2>
+<div class="point"><b>핵심 한 줄</b>코드 내부 경로를 덮으려면 화이트박스(기초 경로·커버리지), 명세의 입력·출력을 덮으려면 블랙박스(동치 분할·경계값·결정 테이블 등)를 골라요.</div>
+<p>완벽한 테스트가 불가능하니, 적은 케이스로 결함을 많이 찾을 입력을 골라야 해요. D021에서 본 두 관점, 즉 코드 안을 보는 <b>화이트박스</b>와 명세만 보는 <b>블랙박스</b>가 각각 구체적인 기법을 갖고 있어요. 오늘은 관점이 아니라 기법 이름과 쓰임에 집중해요.</p>
+<h3>화이트박스 — 기초 경로 검사</h3>
+<div class="duo"><div><p><b>기초 경로 검사(Base Path Testing)</b>는 맥케이브가 제안한 기법으로, 코드의 제어 흐름을 그래프로 그리고 논리적 복잡도를 측정해 그만큼의 독립 경로를 테스트하는 기법이에요. 복잡도는 V(G) = E − N + 2(간선 수 − 노드 수 + 2)로 구해요. 아래 함수는 간선 7개, 노드 6개라 V(G) = 3, 즉 독립 경로 3개를 지나는 케이스가 필요해요. 계산 연습은 D027에서 다시 해요.</p></div><figure class="mermaid"><img src="../assets/86e75747b5e960c5.png" alt="도식" loading="lazy" style="width:375px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure></div>
+
+<p><b>제어 구조 검사</b>는 코드의 제어 구조를 직접 겨냥하는 기법 묶음이에요. <b>조건 검사</b>는 프로그램 안의 논리적 조건을 하나하나 테스트하고, <b>루프 검사</b>는 반복문을 0번·1번·여러 번 도는 경우를 테스트하고, <b>데이터 흐름 검사</b>는 변수가 정의되고 사용되는 위치를 따라가며 테스트해요. 위 그림의 ④ 루프는 루프 검사, ② 조건은 조건 검사의 대상이에요.</p>
+<h3>화이트박스 — 커버리지 종류</h3>
+<div class="duo"><div><p><b>커버리지</b>는 테스트가 코드를 얼마나 덮었는지 재는 기준이에요. <b>문장(구문) 커버리지</b>는 모든 문장을 한 번 이상 실행, <b>결정(분기) 커버리지</b>는 각 결정문의 전체 결과가 참·거짓을 한 번씩 갖게, <b>조건 커버리지</b>는 결정문 안의 개별 조건이 참·거짓을 한 번씩 갖게 하는 기준이에요. 여기에 결정과 조건을 함께 만족하는 <b>조건/결정</b>, 각 조건이 다른 조건과 상관없이 결과에 독립적으로 영향을 주는지 보는 <b>MC/DC</b>, 모든 조건 조합을 다 시험하는 <b>다중 조건</b> 커버리지가 이어져요.</p>
+<p>함정은 조건 커버리지예요. <code>if (a &amp;&amp; b)</code>에서 (a참, b거짓)·(a거짓, b참) 두 케이스면 a·b 각각 참·거짓이 나왔으니 조건 커버리지는 100%인데, 결정 전체는 두 번 다 거짓이라 참 분기를 한 번도 안 지나요. 이름은 더 꼼꼼해 보이는데 결정보다 못한 구멍이 생기는 거예요.</p></div><figure><svg viewBox="0 0 360 358" font-family="sans-serif" role="img" aria-label="커버리지 종류. 문장 1개, 결정 2개, 조건 2개, 조건 결정 2개, MC/DC 3개, 다중 조건 4개의 케이스가 if a and b 예에서 필요하다. 조건 커버리지만으로는 결정 커버리지가 보장되지 않는다">
+<rect width="360" height="358" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">커버리지 — 아래로 갈수록 꼼꼼</text><text x="16" y="68" font-size="14" font-weight="700" fill="#2a5db0">문장(구문)</text><rect x="126" y="50" width="40" height="26" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="172" y="69" font-size="14" fill="#333">1개</text><text x="16" y="112" font-size="14" font-weight="700" fill="#2a5db0">결정(분기)</text><rect x="126" y="94" width="72" height="26" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="204" y="113" font-size="14" fill="#333">2개</text><text x="16" y="156" font-size="14" font-weight="700" fill="#b03a2e">조건</text><rect x="126" y="138" width="72" height="26" rx="4" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><text x="204" y="157" font-size="14" fill="#333">2개</text><text x="16" y="200" font-size="14" font-weight="700" fill="#2a5db0">조건/결정</text><rect x="126" y="182" width="72" height="26" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="204" y="201" font-size="14" fill="#333">2개</text><text x="16" y="244" font-size="14" font-weight="700" fill="#2a5db0">MC/DC</text><rect x="126" y="226" width="112" height="26" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="244" y="245" font-size="14" fill="#333">3개</text><text x="16" y="288" font-size="14" font-weight="700" fill="#2a5db0">다중 조건</text><rect x="126" y="270" width="196" height="26" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="328" y="289" font-size="14" fill="#333">4개</text><text x="16" y="320" font-size="14" fill="#555">막대 = if (a and b)에 필요한 케이스 수</text><text x="16" y="344" font-size="14" font-weight="700" fill="#b03a2e">조건만 채워도 결정(참·거짓)은 보장 안 됨</text>
+</svg><figcaption>빨간 “조건” 줄이 함정이에요. 케이스 수는 결정과 같지만, 결정을 덮는다는 보장은 없어요.</figcaption></figure></div>
+
+
+<p>한 장 요약 — 커버리지 종류와 <code>if (a &amp;&amp; b)</code>에서 필요한 케이스예요.</p>
+<table>
+<tr><th>커버리지</th><th>만족 조건</th><th>케이스 예 (a, b)</th></tr>
+<tr><td>문장(구문)</td><td>모든 문장 1번 이상 실행</td><td>(참, 참) 1개</td></tr>
+<tr><td>결정(분기)</td><td>결정 전체가 참·거짓 한 번씩</td><td>(참, 참) (거짓, 참) 2개</td></tr>
+<tr><td>조건</td><td>개별 조건이 참·거짓 한 번씩</td><td>(참, 거짓) (거짓, 참) 2개 — 결정은 모두 거짓</td></tr>
+<tr><td>조건/결정</td><td>조건과 결정을 모두 만족</td><td>(참, 참) (거짓, 거짓) 2개</td></tr>
+<tr><td>MC/DC</td><td>각 조건이 독립적으로 결과를 바꿈</td><td>(참, 참) (거짓, 참) (참, 거짓) 3개</td></tr>
+<tr><td>다중 조건</td><td>모든 조건 조합</td><td>4개 전부</td></tr>
+</table>
+<h3>블랙박스 — 동치 분할과 경계값 분석</h3>
+<div class="duo"><div><p>스터디캠 v1.1에는 “주간 목표 공부 시간”을 1~100시간으로 입력하는 칸이 생겼어요. <b>동치 분할(Equivalence Partitioning)</b>은 입력 자료를 유효·무효 구간으로 나누고, 같은 구간의 값은 같은 결과를 낼 것이라 보고 구간마다 대표값 하나씩 테스트하는 기법이에요. 이 칸이라면 무효(1 미만)에서 −5, 유효에서 50, 무효(100 초과)에서 150을 고르면 돼요.</p>
+<p><b>경계값 분석(Boundary Value Analysis)</b>은 오류가 입력 범위의 경계에서 자주 생긴다는 점을 이용해, 경계값과 그 바로 안팎 값을 테스트하는 기법이에요. 같은 칸이라면 0·1·100·101이에요. 버그는 울타리 근처에 살아요. <code>&lt;</code>와 <code>&lt;=</code> 하나 차이로 100시간 목표가 거절되는 일이 생기니까, 울타리 바로 안쪽과 바깥쪽을 일부러 밟아 보는 거예요.</p></div><figure><svg viewBox="0 0 360 246" font-family="sans-serif" role="img" aria-label="입력 범위 1~100이 유효인 수직선. 동치 분할은 무효 구간에서 -5, 유효 구간에서 50, 무효 구간에서 150처럼 구간마다 대표값 하나. 경계값 분석은 0, 1, 100, 101처럼 경계 바로 안과 밖">
+<rect width="360" height="246" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">주간 목표 시간 입력: 1~100만 유효</text><text x="16" y="56" font-size="14" font-weight="700" fill="#2a5db0">동치 분할 — 구간마다 대표 하나</text><rect x="20" y="120" width="70" height="30" rx="4" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><text x="55" y="140" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">무효</text><rect x="90" y="120" width="180" height="30" rx="4" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="180" y="140" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">유효 1~100</text><rect x="270" y="120" width="70" height="30" rx="4" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><text x="305" y="140" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">무효</text><circle cx="55" cy="104" r="6" fill="#2a5db0" stroke="#2a5db0" stroke-width="2"/><text x="55" y="90" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">-5</text><circle cx="180" cy="104" r="6" fill="#2a5db0" stroke="#2a5db0" stroke-width="2"/><text x="180" y="90" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">50</text><circle cx="305" cy="104" r="6" fill="#2a5db0" stroke="#2a5db0" stroke-width="2"/><text x="305" y="90" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">150</text><path d="M84 150 L84 164" stroke="#b5730d" stroke-width="2" fill="none"/><circle cx="84" cy="168" r="5" fill="#b5730d" stroke="#b5730d" stroke-width="2"/><path d="M84 168 L70 182" stroke="#b5730d" stroke-width="1" fill="none"/><text x="70" y="198" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">0</text><path d="M96 150 L96 164" stroke="#b5730d" stroke-width="2" fill="none"/><circle cx="96" cy="168" r="5" fill="#b5730d" stroke="#b5730d" stroke-width="2"/><path d="M96 168 L108 182" stroke="#b5730d" stroke-width="1" fill="none"/><text x="108" y="198" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">1</text><path d="M264 150 L264 164" stroke="#b5730d" stroke-width="2" fill="none"/><circle cx="264" cy="168" r="5" fill="#b5730d" stroke="#b5730d" stroke-width="2"/><path d="M264 168 L250 182" stroke="#b5730d" stroke-width="1" fill="none"/><text x="250" y="198" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">100</text><path d="M276 150 L276 164" stroke="#b5730d" stroke-width="2" fill="none"/><circle cx="276" cy="168" r="5" fill="#b5730d" stroke="#b5730d" stroke-width="2"/><path d="M276 168 L292 182" stroke="#b5730d" stroke-width="1" fill="none"/><text x="292" y="198" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">101</text><text x="16" y="230" font-size="14" font-weight="700" fill="#b5730d">경계값 분석 — 울타리 바로 안·밖</text>
+</svg><figcaption>위쪽 파란 점 3개가 동치 분할, 아래쪽 주황 점 4개가 경계값 분석이에요.</figcaption></figure></div>
+
+
+<div class="trap"><b>단골 함정</b>문제에 0·1·100·101처럼 <b>경계 근처 값들</b>이 나오면 경계값 분석, 구간마다 <b>하나씩 대표값</b>이 나오면 동치 분할이에요. 둘 다 같은 “범위”를 다뤄서 선지에 나란히 나와요.</div>
+<h3>블랙박스 — 조건 조합·상태·버전 비교</h3>
+<div class="duo"><div><p><b>원인-결과 그래프(Cause-Effect Graph)</b>는 입력 조건(원인)과 출력(결과) 사이의 관계를 AND·OR 같은 논리 그래프로 분석한 뒤, 효용성이 높은 케이스를 골라 테스트하는 기법이에요. 스터디캠의 “유료 회원이면서 쿠폰이 있으면 할인가” 규칙을 그래프로 그리면 아래 모양이 돼요. 이 관계를 표로 옮긴 것이 <b>결정 테이블</b>이에요. 결정 테이블 테스트는 조건 조합과 그에 따른 행동을 표로 만들고 규칙(열)마다 케이스를 하나씩 만드는 기법이에요.</p></div><figure class="mermaid"><img src="../assets/a6051d3c0baf7d3b.png" alt="도식" loading="lazy" style="width:403px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure></div>
+
+<p><b>상태 전이 테스트</b>는 시스템의 상태와 이벤트, 그에 따른 전이를 상태 전이도로 그리고 전이마다 케이스를 만드는 기법이에요. 구독이 “무료 → 유료 → 해지 예약 → 만료”로 바뀌는 흐름이 대상이에요. <b>비교 검사</b>는 같은 요구로 만든 여러 버전의 프로그램에 같은 입력을 넣고 결과를 비교하는 기법이에요. 목적별의 병행 테스트와 비슷한 발상이에요.</p>
+<h3>경험 기반 — 오류 예측·탐색적 테스트</h3>
+<div class="duo"><div><p>명세가 부족하거나 시간이 없을 땐 테스터의 경험이 기법이 돼요. <b>오류 예측(오류 추정)</b>은 다른 기법으로 놓치기 쉬운 결함을 테스터의 감각과 경험으로 예상해 테스트하는 기법이에요. “쿠폰 코드에 공백을 붙이면?” 같은 질문이 여기서 나와요. <b>탐색적 테스트</b>는 미리 케이스를 다 짜 두지 않고, 테스트하면서 배우고 설계하고 실행하는 방식이에요.</p>
+<p>상황별로 고르는 길잡이는 아래 사다리예요. 위에서부터 질문하고 “예”가 나오면 오른쪽 기법을 써요.</p></div><figure><svg viewBox="0 0 360 434" font-family="sans-serif" role="img" aria-label="기법 고르기 질문 사다리. 코드 안을 볼 수 있으면 기초 경로·조건·루프 검사, 입력이 범위면 동치 분할·경계값, 조건 조합이 많으면 결정 테이블·원인-결과 그래프, 상태가 바뀌면 상태 전이, 여러 버전이 있으면 비교 검사, 명세가 부족하면 오류 예측·탐색적 테스트">
+<rect width="360" height="434" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d25f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">상황 → 기법 고르기 (예면 오른쪽)</text><path d="M60 92 L60 102" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d25f)"/><path d="M198 68 L224 68" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d25f)"/><rect x="12" y="44" width="186" height="48" rx="8" fill="#ffffff" stroke="#555" stroke-width="2"/><text x="24" y="73" font-size="14" font-weight="700" fill="#222">코드 안을 볼 수 있나?</text><rect x="226" y="44" width="122" height="48" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="287" y="65" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">기초 경로</text><text x="287" y="84" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">조건·루프 검사</text><path d="M60 152 L60 162" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d25f)"/><path d="M198 128 L224 128" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d25f)"/><rect x="12" y="104" width="186" height="48" rx="8" fill="#ffffff" stroke="#555" stroke-width="2"/><text x="24" y="133" font-size="14" font-weight="700" fill="#222">입력이 값의 범위인가?</text><rect x="226" y="104" width="122" height="48" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="287" y="125" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">동치 분할</text><text x="287" y="144" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">경계값 분석</text><path d="M60 212 L60 222" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d25f)"/><path d="M198 188 L224 188" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d25f)"/><rect x="12" y="164" width="186" height="48" rx="8" fill="#ffffff" stroke="#555" stroke-width="2"/><text x="24" y="193" font-size="14" font-weight="700" fill="#222">조건 조합이 많은가?</text><rect x="226" y="164" width="122" height="48" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="287" y="185" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">결정 테이블</text><text x="287" y="204" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">원인-결과</text><path d="M60 272 L60 282" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d25f)"/><path d="M198 248 L224 248" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d25f)"/><rect x="12" y="224" width="186" height="48" rx="8" fill="#ffffff" stroke="#555" stroke-width="2"/><text x="24" y="253" font-size="14" font-weight="700" fill="#222">상태가 바뀌는가?</text><rect x="226" y="224" width="122" height="48" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="287" y="253" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">상태 전이</text><path d="M60 332 L60 342" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d25f)"/><path d="M198 308 L224 308" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d25f)"/><rect x="12" y="284" width="186" height="48" rx="8" fill="#ffffff" stroke="#555" stroke-width="2"/><text x="24" y="313" font-size="14" font-weight="700" fill="#222">여러 버전이 있나?</text><rect x="226" y="284" width="122" height="48" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="287" y="313" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">비교 검사</text><path d="M198 368 L224 368" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d25f)"/><rect x="12" y="344" width="186" height="48" rx="8" fill="#ffffff" stroke="#555" stroke-width="2"/><text x="24" y="373" font-size="14" font-weight="700" fill="#222">명세가 부족한가?</text><rect x="226" y="344" width="122" height="48" rx="8" fill="#f1eaf8" stroke="#6a3d9a" stroke-width="2"/><text x="287" y="365" font-size="14" font-weight="700" fill="#6a3d9a" text-anchor="middle">오류 예측</text><text x="287" y="384" font-size="14" font-weight="700" fill="#6a3d9a" text-anchor="middle">탐색적 테스트</text><text x="12" y="420" font-size="14" fill="#555">초록 화이트 · 주황 블랙 · 보라 경험</text>
+</svg><figcaption>실무에서는 여러 칸에 동시에 “예”가 나와요. 그러면 기법을 섞어 쓰면 돼요.</figcaption></figure></div>
+
+
+<p>한 장 요약 — 기법별 구분과 쓰는 때예요.</p>
+<table>
+<tr><th>기법</th><th>구분</th><th>언제 쓰나</th></tr>
+<tr><td>기초 경로 검사</td><td>화이트박스</td><td>복잡도만큼 독립 경로를 덮을 때</td></tr>
+<tr><td>조건·루프·데이터 흐름 검사</td><td>화이트박스</td><td>조건식·반복문·변수 사용을 겨냥할 때</td></tr>
+<tr><td>동치 분할</td><td>블랙박스</td><td>입력이 구간으로 나뉠 때(대표값)</td></tr>
+<tr><td>경계값 분석</td><td>블랙박스</td><td>입력 범위의 경계를 확인할 때</td></tr>
+<tr><td>결정 테이블·원인-결과 그래프</td><td>블랙박스</td><td>여러 조건 조합이 결과를 바꿀 때</td></tr>
+<tr><td>상태 전이</td><td>블랙박스</td><td>상태와 이벤트에 따라 동작이 바뀔 때</td></tr>
+<tr><td>비교 검사</td><td>블랙박스</td><td>여러 버전에 같은 입력을 넣어 비교할 때</td></tr>
+<tr><td>오류 예측·탐색적</td><td>경험 기반</td><td>명세가 부족하거나 시간이 없을 때</td></tr>
+</table>
+<p><b>→ 이 장면의 결과물:</b> 입력값 목록(−5·50·150, 0·1·100·101, 회원×쿠폰 4조합 …). 이 값들을 팀이 함께 실행하려면 문서로 남겨야 해요.</p>
+
+<h2>6. 장면 5 — 문서로 남기기 (테스트 케이스·시나리오)</h2>
+<div class="point"><b>핵심 한 줄</b>테스트 케이스는 한 번의 확인(입력·조건·기대 결과), 테스트 시나리오는 케이스들을 사용자 흐름 순서로 엮은 이야기예요.</div>
+<div class="duo"><div><p>장면 4에서 고른 입력값은 아직 메모 수준이에요. <b>테스트 케이스</b>는 특정 요구사항을 만족하는지 확인하려고 설계한 입력값·실행 조건·기대 결과의 집합이에요. 기대 결과가 들어 있으니 장면 2의 오라클이 케이스 안에 들어간다고 보면 돼요. 구성 요소는 D021에서 본 7요소(식별자·테스트 항목·입력 명세·출력 명세·환경 설정·특수 절차 요구·의존성 기술)이고, 교재에 따라 식별자·항목·입력·기대 결과·절차 5가지로 줄여 말하기도 해요.</p>
+<p>예를 들어 “TC-12 쿠폰 적용”은 입력(유료 회원, 쿠폰 SAVE10), 조건(결제 화면), 기대 결과(10% 할인가 표시)로 이뤄져요. 케이스는 계획 → 설계 → 실행 → 결과 리포팅 순으로 다뤄요.</p>
+<p><b>테스트 시나리오</b>는 테스트할 기능과 상황을 사용자 흐름 단위로 정리해, 여러 테스트 케이스를 어떤 순서로 실행할지 적은 문서예요. 케이스가 영화 한 컷이라면 시나리오는 줄거리예요. 컷이 아무리 예뻐도 주인공이 로그인 없이 결제부터 하면 이야기가 안 되죠. 그래서 시나리오는 순서와 연결(앞 케이스의 결과가 뒤 케이스의 전제)을 챙겨요.</p>
+<p>함께 나오는 산출물도 구별해 두세요. <b>테스트 슈트</b>는 테스트 케이스를 묶은 집합이고, <b>테스트 스크립트</b>는 케이스의 실행 순서·절차를 자세히 적은 것(자동화 도구가 돌리는 코드 포함)이에요. 이들 앞에는 범위·일정·자원을 정한 <b>테스트 계획서</b>, 뒤에는 결과를 정리한 <b>테스트 결과서</b>가 있어요.</p></div><figure class="mermaid"><img src="../assets/4d2dc653bd1fc25d.png" alt="도식" loading="lazy" style="width:456px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure></div>
+
+<div class="duo"><div><p>아래는 스터디캠의 “유료 플랜 구매” 시나리오예요. ①로그인(TC-01) → ②플랜 담기(TC-07) → ③쿠폰 적용(TC-12) → ④결제(TC-15) 케이스가 사용자 흐름 순서로 엮여 있어요.</p></div><figure class="mermaid"><img src="../assets/ffd33d25ac23e96e.png" alt="도식" loading="lazy" style="width:396px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure></div>
+
+<div class="vs"><div><b>테스트 케이스</b>한 번의 확인 단위. 입력값·실행 조건·기대 결과. 예: TC-12 쿠폰 적용</div><div><b>테스트 시나리오</b>여러 케이스를 사용자 흐름 순서로 엮은 문서. 예: 로그인 → 담기 → 쿠폰 → 결제</div></div>
+<p><b>→ 이 장면의 결과물:</b> 케이스 묶음(슈트)과 구매 시나리오. 오늘 새 내용은 여기까지이고, 이제 지난 오답을 다시 봐요.</p>
+
+<h2>7. 오답 복습 — 결합도 방향 · UML 구조 · 상태 vs 전략</h2>
+<div class="point"><b>핵심 한 줄</b>결합도는 “강 → 약” 방향을, UML은 “이름이 상태여도 행위”를, 패턴은 “누가 갈아 끼우나”를 확인해요.</div>
+<div class="duo"><div><p><b>D016-6 결합도 순서.</b> 결합도는 모듈끼리 얼마나 얽혀 있는지를 나타내고, 약할수록 좋아요. 강한 것부터 <b>내용 → 공통 → 외부 → 제어 → 스탬프 → 자료</b> 순이에요. 지난번 오답은 순서는 알았는데 문제의 방향(강 → 약인지 약 → 강인지)을 거꾸로 읽은 경우였어요. 문제에서 방향 단어부터 동그라미 치세요(<a href="./2026-10-18-D016.html">D016</a>).</p></div><figure class="mermaid"><img src="../assets/db9455e7900ed35c.png" alt="도식" loading="lazy" style="width:216px"></figure></div>
+
+<p><b>D022-3 UML 구조 다이어그램.</b> 구조(정적) 다이어그램은 시스템을 이루는 요소와 관계를 보여 주는 클래스·객체·컴포넌트·배치·복합 구조·패키지 다이어그램이에요. <b>상태 다이어그램</b>은 이름에 “상태”가 들어가지만 객체가 이벤트에 따라 어떻게 바뀌는지를 보여 주므로 <b>행위</b> 다이어그램이에요. 오늘 본 상태 전이 테스트가 바로 이 상태 다이어그램을 보고 케이스를 만드는 기법이라, 함께 기억하면 좋아요.</p>
+<p><b>D014-2 상태 vs 전략.</b> 둘 다 처리를 다른 객체에 맡기는 같은 모양이지만, 상태 패턴은 객체가 자기 상태에 따라 <b>스스로</b> 맡길 객체를 바꾸고, 전략 패턴은 <b>클라이언트</b>가 알고리즘 객체를 골라 넣어 줘요. 상태 패턴은 기분이 바뀌면 말투가 저절로 바뀌는 사람이고, 전략 패턴은 매니저가 “오늘은 이 대본으로 해”라고 대본을 갈아 끼워 주는 배우예요(<a href="./2026-10-26-S02.html">S02 보충</a>).</p>
+<div class="memo"><b>결합도: 내·공·외·제·스·자</b> — 왼쪽일수록 강하고 나빠요. 문제의 화살표 방향부터 확인.</div>
+
+<h2>8. 한 장 정리 — 시험 포인트와 암기 단서</h2>
+<div class="point"><b>핵심 한 줄</b>원리는 키워드(반복·몰림·없음 증명 불가·요구 미충족), 레벨은 높이 짝, 기법은 문제 속 입력값 모양으로 고르세요.</div>
+<p>오늘 장면을 한 번 더 꿰면 아래와 같아요. 스터디캠 팀은 태도를 맞추고(원리), 정답 판정 기준을 정하고(오라클), 일정을 짜고(레벨), 입력값을 고르고(기법), 문서로 남겼어요(케이스·시나리오). 스터디캠 v1.1은 아직 출시 전이지만, 적어도 “버그가 없을 거예요”라는 말 대신 “여기까지 확인했어요”라고 말할 근거는 생겼어요.</p>
+<table>
+<tr><th>장면 · 하는 일</th><th>시험 개념</th><th>결과물</th></tr>
+<tr><td>1 · 태도 맞추기</td><td>테스트 7원리</td><td>위험 기반 우선순위, 케이스 갱신 원칙</td></tr>
+<tr><td>2 · 정답 판정</td><td>오라클 4종, 정적/동적, Verification/Validation</td><td>판정 기준표</td></tr>
+<tr><td>3 · 일정 짜기</td><td>레벨 4, V-모델, 알파/베타, 목적별 테스트</td><td>테스트 일정표</td></tr>
+<tr><td>4 · 입력값 고르기</td><td>기초 경로, 커버리지, 동치·경계값, 결정 테이블 등</td><td>입력값 목록</td></tr>
+<tr><td>5 · 문서로 남기기</td><td>테스트 케이스, 시나리오, 슈트, 스크립트</td><td>케이스 묶음·구매 시나리오</td></tr>
+</table>
+<div class="memo"><b>원리 7 = 한계 3(존재·불가·궤변) + 언제·어디 2(조기·집중) + 유지 2(살충제·정황)</b> — 반복하면 살충제, 몰리면 집중.</div>
+<div class="memo"><b>오라클 “참·샘·휴·일”</b> — 정답지가 전부 → 일부 → 일부+추정 → 지난 버전.</div>
+<div class="memo"><b>V는 위가 크다</b> — 요구 분석 ↔ 인수, 구현 ↔ 단위. 가운데는 순서대로 채우기.</div>
+<div class="memo"><b>알파는 개발자 옆, 베타는 고객 집</b> — 순서는 알파 → 베타 → 출시.</div>
+<div class="memo"><b>동치는 구간마다 대표 하나, 경계는 울타리 양옆</b> — 경계 바로 안쪽·바깥쪽 값이 짝으로 보이면 경계값.</div>
+<div class="trap"><b>마지막 함정 점검</b>“테스트로 결함이 없음을 증명할 수 있다”(✗), “조건 커버리지를 만족하면 결정 커버리지도 만족한다”(✗), “V-모델에서 통합 테스트는 요구 분석과 짝”(✗, 상세 설계와 짝).</div>
+
+<h2>확인 문제</h2>
+<ol class="quiz">
+<li>몇 달째 같은 테스트 케이스 묶음만 반복 실행했더니 결함이 더 이상 발견되지 않는다. 그런데 운영 중에는 새로운 버그가 계속 보고된다. 이 상황을 설명하고 “테스트 케이스를 주기적으로 검토·보완해야 한다”는 결론을 주는 테스트 원리는?<label class="opt"><input type="radio" name="D025-q1" value="1">① 결함 집중</label><label class="opt"><input type="radio" name="D025-q1" value="2">② 살충제 패러독스</label><label class="opt"><input type="radio" name="D025-q1" value="3">③ 오류-부재의 궤변</label><label class="opt"><input type="radio" name="D025-q1" value="4">④ 정황 의존성</label></li>
+<li>회원 가입 나이 입력란은 14 이상 65 이하만 유효하다. 테스터가 13, 14, 65, 66을 입력값으로 골라 테스트 케이스를 만들었다. 이 테스트 기법은?<label class="opt"><input type="radio" name="D025-q2" value="1">① 동치 분할</label><label class="opt"><input type="radio" name="D025-q2" value="2">② 원인-결과 그래프</label><label class="opt"><input type="radio" name="D025-q2" value="3">③ 기초 경로 검사</label><label class="opt"><input type="radio" name="D025-q2" value="4">④ 경계값 분석</label></li>
+<li>(누적) 스크럼에서 팀이 스크럼 규칙과 가치를 이해하고 지키도록 돕고, 스프린트 진행을 막는 <b>장애 요소를 제거</b>하는 데 책임이 있는 역할은?<label class="opt"><input type="radio" name="D025-q3" value="1">① 제품 책임자(PO)</label><label class="opt"><input type="radio" name="D025-q3" value="2">② 스크럼 마스터</label><label class="opt"><input type="radio" name="D025-q3" value="3">③ 개발자(개발팀)</label><label class="opt"><input type="radio" name="D025-q3" value="4">④ 이해관계자</label></li>
+<li>(오답 재확인) 모듈 간 결합도를 <b>강한 것 → 약한 것</b> 순서로 바르게 나열한 것은?<label class="opt"><input type="radio" name="D025-q4" value="1">① 자료 → 스탬프 → 제어 → 외부 → 공통 → 내용</label><label class="opt"><input type="radio" name="D025-q4" value="2">② 공통 → 내용 → 외부 → 스탬프 → 제어 → 자료</label><label class="opt"><input type="radio" name="D025-q4" value="3">③ 내용 → 공통 → 외부 → 제어 → 스탬프 → 자료</label><label class="opt"><input type="radio" name="D025-q4" value="4">④ 내용 → 외부 → 공통 → 제어 → 자료 → 스탬프</label></li>
+<li>(오답 재확인) UML 다이어그램 중 <b>구조(정적) 다이어그램</b>에 해당하는 것은?<label class="opt"><input type="radio" name="D025-q5" value="1">① 패키지 다이어그램</label><label class="opt"><input type="radio" name="D025-q5" value="2">② 상태 다이어그램</label><label class="opt"><input type="radio" name="D025-q5" value="3">③ 시퀀스 다이어그램</label><label class="opt"><input type="radio" name="D025-q5" value="4">④ 활동 다이어그램</label></li>
+<li>(오답 재확인) 자판기 객체가 ‘동전없음’·‘동전있음’·‘품절’ 클래스에 처리를 맡긴다. 같은 “버튼 누름” 요청이라도 현재 단계 객체에 따라 처리가 달라지고, <b>각 단계 객체가 처리 후 자판기의 다음 단계를 스스로 바꾼다.</b> 클라이언트는 알고리즘을 골라 넣지 않는다. 이 디자인 패턴은?<label class="opt"><input type="radio" name="D025-q6" value="1">① 전략</label><label class="opt"><input type="radio" name="D025-q6" value="2">② 템플릿 메서드</label><label class="opt"><input type="radio" name="D025-q6" value="3">③ 옵서버</label><label class="opt"><input type="radio" name="D025-q6" value="4">④ 상태</label></li>
+</ol><div class="answer-bar" data-id="D025" data-n="6"><code></code><button type="button">답안 복사</button></div><p><small>고른 뒤 <b>답안 복사</b> → 디스코드 공부 채널에 붙여넣기 하면 돼요.</small></p>
+<p>답장: <code>정처기 D025: 1)번호 2)번호 3)번호 4)번호 5)번호 6)번호</code></p>
+<p>내일 D026은 통합 테스트 방식(하향식·상향식·빅뱅·샌드위치)과 결함 관리, 테스트 자동화 도구예요. 오늘 본 드라이버·스텁이 어디서 쓰이는지 거기서 이어져요. D023·D024 답장도 아직 기다리고 있어요. 편할 때 한꺼번에 보내 주세요.</p>
+<p class="meta"><a href="2026-10-26-D024.html">← D024</a>  </p>
+<script>
+document.querySelectorAll('.answer-bar').forEach(bar=>{
+  const id=bar.dataset.id,n=+bar.dataset.n,out=bar.querySelector('code'),btn=bar.querySelector('button');
+  const text=()=>'정처기 '+id+': '+Array.from({length:n},(_,i)=>{const c=document.querySelector('input[name="'+id+'-q'+(i+1)+'"]:checked');return (i+1)+')'+(c?c.value:'?')}).join(' ');
+  document.querySelectorAll('input[name^="'+id+'-q"]').forEach(r=>r.addEventListener('change',()=>{out.textContent=text()}));
+  out.textContent=text();
+  btn.addEventListener('click',async()=>{const t=text();try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}btn.textContent='복사됨 ✓';setTimeout(()=>btn.textContent='답안 복사',1500)});
+});
+</script>
+<footer>2027년 정기 기사 1회 정보처리기사 필기 준비 · 공식 범위: Q-Net 2027~2029 출제기준</footer>
+</main></body></html>
