@@ -9,188 +9,185 @@
 <link rel="stylesheet" href="../style.css"></head>
 <body><main>
 <nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a></nav>
-<h1>D023 · 4주차 주간 종합 복습 — 인터페이스부터 형상관리까지</h1><div class="meta">2026-10-25 · A4·A5·A6 주간 종합 복습</div><p><span class="tag">복습</span><span class="tag">A4</span><span class="tag">A5</span><span class="tag">A6</span> 이번 주(D017~D021)는 인터페이스 연계 기술(A4)로 시작해, 개발 방법론·비용 산정·테일러링(A5)을 지나, 단위 모듈 구현·테스트와 형상관리(A6)까지 왔어요. 오늘은 새 진도 없이 한 주를 다시 꿰고, 3주 넘게 지난 A1~A3을 10문항으로 꺼내 봐요.</p>
-<p>일요일 복습은 이사 다음 날 짐 정리 같아요. 박스는 다 옮겼는데, 어느 박스에 뭐가 들었는지 라벨을 다시 확인해야 월요일에 출근복을 찾을 수 있거든요.</p>
+<h1>D023 · 4주차 주간 종합 복습 — 인터페이스부터 형상관리까지</h1><div class="meta">2026-10-25 · A4·A5·A6 주간 종합 복습</div><p><span class="tag">복습</span><span class="tag">A4</span><span class="tag">A5</span><span class="tag">A6</span> 이번 주(D017~D021)는 범위가 넓었어요. 시스템끼리 잇는 기술(A4), 어떤 방식으로 얼마에 만들지(A5), 만든 코드를 검사하고 지키는 법(A6)까지요. 오늘은 이걸 요약표로 압축하지 않고, D015에서 시작한 <b>쇼핑몰 프로젝트</b>를 이어서 따라가며 한 줄기로 다시 꿰어요.</p>
 <ul>
-<li>A4 <b>송수신 구조·통신 유형·EAI·미들웨어</b>를 하는 일로 구별할 수 있다</li>
-<li>A5 <b>생명주기 모델·방법론·비용 산정(COCOMO 유형)·CMMI</b>를 상황에 맞게 고를 수 있다</li>
-<li>A6 <b>드라이버·스텁, 형상관리 활동, 버전관리 방식</b>을 구별할 수 있다</li>
-<li>A1~A3 누적 문항으로 요구 분석·UML·응집도·SOLID의 헷갈리는 짝을 다시 설명할 수 있다</li>
+<li>A4 연계 기술·통신 유형·EAI·미들웨어를 쇼핑몰 연결 하나하나에 맞춰 고를 수 있다</li>
+<li>A5 생명주기·방법론·비용 산정·테일러링·CMMI가 각각 어떤 질문에 답하는지 설명할 수 있다</li>
+<li>A6 드라이버·스텁, 형상관리 4활동, 버전관리 3방식을 구별할 수 있다</li>
 </ul>
-<div class="glance">
-<div><b>3</b>이번 주 범위<small>A4 · A5 · A6</small></div>
-<div><b>6</b>개념 묶음<small>연계·미들웨어·방법론·비용·표준·형상관리</small></div>
-<div><b>16</b>그림<small>지도부터 버전관리까지</small></div>
-<div><b>20</b>확인 문제<small>이번 주 10 + 누적 10</small></div>
-</div>
-<div class="box"><b>오늘 이야기의 흐름</b>이번 주 지도 → A4 시스템끼리 잇기 → A5 어떤 방식으로 얼마에 만들까 → A6 만들고 지키기 → 이번 주 약점 → A1~A3 한 장 요약 → 암기 단서 → 20문항</div>
+<div class="box"><b>오늘 이야기의 흐름</b>① 개념 지도 → ② 장면 1~2: 외부 시스템과 잇기(A4) → ③ 장면 3~5: 방식·비용·우리 조직에 맞추기(A5) → ④ 장면 6~7: 만들고 지키기(A6) → ⑤ 한 장으로 꿰기 → ⑥ A1~A3 누적, 헷갈린 짝만.</div>
 
-<h2>1. 이번 주 지도 — 연결, 방법, 만들고 지키기</h2>
-<div class="point"><b>핵심 한 줄</b>A4는 “우리 시스템이 남과 어떻게 이어지나”, A5는 “어떤 방식으로 얼마 들여 만드나”, A6은 “만든 코드를 어떻게 검사하고 지키나”예요.</div>
-<div class="duo"><div><p>세 범위는 따로 노는 단원이 아니라 실제 프로젝트에서 차례로 등장해요. 요구를 받고 나면 먼저 다른 시스템과의 연결부(인터페이스)를 정해야 설계가 끝나고, 그다음 팀이 어떤 생명주기와 방법론으로, 얼마의 비용으로 일할지 정해요. 그 방식대로 코드를 짜기 시작하면 모듈 단위로 테스트하고, 바뀌는 코드를 형상관리로 붙잡아요. 이사로 치면 새 집 문과 주소를 먼저 정하고(A4), 업체와 견적을 고른 뒤(A5), 짐을 하나씩 확인하며 들이는(A6) 순서예요.</p></div><figure><svg viewBox="0 0 360 348" font-family="sans-serif" role="img" aria-label="이번 주 지도. A4 연결(D015, D017: 인터페이스 요구와 대상 식별, 연계 기술·EAI·미들웨어) 다음 A5 방법(D018~D020: 생명주기·방법론·비용 산정, 테일러링·개발 표준·프레임워크), 다음 A6 만들고 지키기(D021: 단위 모듈·테스트·하네스, 형상관리·버전관리)">
-<rect width="360" height="348" rx="12" fill="#f7f7f4"/>
-<defs><marker id="d23a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">이번 주 = 연결 → 방법 → 만들고 지키기</text><rect x="12" y="44" width="336" height="78" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="24" y="70" font-size="15" font-weight="700" fill="#2a5db0">A4 연결</text><text x="336" y="70" font-size="14" fill="#555" text-anchor="end">D015 · D017</text><text x="24" y="94" font-size="14" fill="#222">인터페이스 요구·대상 식별</text><text x="24" y="114" font-size="14" fill="#222">연계 기술·EAI·미들웨어</text><path d="M180 122 L180 142" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d23a)"/><rect x="12" y="144" width="336" height="78" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="24" y="170" font-size="15" font-weight="700" fill="#b5730d">A5 방법</text><text x="336" y="170" font-size="14" fill="#555" text-anchor="end">D018 ~ D020</text><text x="24" y="194" font-size="14" fill="#222">생명주기·방법론·비용 산정</text><text x="24" y="214" font-size="14" fill="#222">테일러링·개발 표준·프레임워크</text><path d="M180 222 L180 242" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d23a)"/><rect x="12" y="244" width="336" height="78" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="24" y="270" font-size="15" font-weight="700" fill="#2f7d4a">A6 만들고 지키기</text><text x="336" y="270" font-size="14" fill="#555" text-anchor="end">D021</text><text x="24" y="294" font-size="14" fill="#222">단위 모듈·테스트·하네스</text><text x="24" y="314" font-size="14" fill="#222">형상관리·버전관리</text>
-</svg><figcaption>위에서 아래로 실제 프로젝트가 흘러가는 순서예요. 오늘 섹션 2·3·4가 이 세 칸이에요.</figcaption></figure></div>
+<h2>1. 개념 지도</h2>
+<div class="point"><b>핵심 한 줄</b> 이번 주 = <b>잇고(A4) → 방법·비용을 정하고(A5) → 만들고 지킨다(A6)</b>.</div>
+<div class="duo"><div><p>D015에서 진수 님은 쇼핑몰 주문 시스템의 인터페이스 담당이 되어, 외부 시스템 4개(PG사·국세청·물류사·사내 회계)와의 연결 목록을 만들었어요. 이번 주는 그다음 이야기예요. 연결을 실제로 무엇으로 이을지 정하고, 팀이 어떤 방식으로 얼마 들여 만들지 정하고, 코드를 짜기 시작하면서 검사하고 관리하는 데까지 가요.</p></div><figure><svg viewBox="0 0 360 304" font-family="sans-serif" role="img" aria-label="이번 주 개념 지도: A4 잇기, A5 방법과 비용, A6 만들고 지키기 아래 하위 개념들">
+<rect width="360" height="304" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d23m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="24" font-size="15" font-weight="700" fill="#222" text-anchor="middle">이번 주 개념 지도 — 쇼핑몰 프로젝트 순서</text><rect x="12" y="40" width="104" height="40" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="64" y="65" font-size="13" font-weight="700" fill="#2a5db0" text-anchor="middle">A4 잇기</text><rect x="18" y="96" width="92" height="34" rx="6" fill="#fff" stroke="#2a5db0" stroke-width="1.5"/><text x="64" y="118" font-size="12" fill="#222" text-anchor="middle">연계 기술</text><rect x="18" y="140" width="92" height="34" rx="6" fill="#fff" stroke="#2a5db0" stroke-width="1.5"/><text x="64" y="162" font-size="12" fill="#222" text-anchor="middle">통신 유형</text><rect x="18" y="184" width="92" height="34" rx="6" fill="#fff" stroke="#2a5db0" stroke-width="1.5"/><text x="64" y="206" font-size="12" fill="#222" text-anchor="middle">EAI 4모양</text><rect x="18" y="228" width="92" height="34" rx="6" fill="#fff" stroke="#2a5db0" stroke-width="1.5"/><text x="64" y="250" font-size="12" fill="#222" text-anchor="middle">미들웨어 6종</text><rect x="128" y="40" width="104" height="40" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="180" y="65" font-size="13" font-weight="700" fill="#b5730d" text-anchor="middle">A5 방법·비용</text><rect x="134" y="96" width="92" height="34" rx="6" fill="#fff" stroke="#b5730d" stroke-width="1.5"/><text x="180" y="118" font-size="12" fill="#222" text-anchor="middle">생명주기 모델</text><rect x="134" y="140" width="92" height="34" rx="6" fill="#fff" stroke="#b5730d" stroke-width="1.5"/><text x="180" y="162" font-size="12" fill="#222" text-anchor="middle">개발 방법론</text><rect x="134" y="184" width="92" height="34" rx="6" fill="#fff" stroke="#b5730d" stroke-width="1.5"/><text x="180" y="206" font-size="12" fill="#222" text-anchor="middle">비용 산정</text><rect x="134" y="228" width="92" height="34" rx="6" fill="#fff" stroke="#b5730d" stroke-width="1.5"/><text x="180" y="250" font-size="12" fill="#222" text-anchor="middle">테일러링·표준</text><rect x="244" y="40" width="104" height="40" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="296" y="65" font-size="13" font-weight="700" fill="#2f7d4a" text-anchor="middle">A6 구현·관리</text><rect x="250" y="96" width="92" height="34" rx="6" fill="#fff" stroke="#2f7d4a" stroke-width="1.5"/><text x="296" y="118" font-size="12" fill="#222" text-anchor="middle">단위 모듈</text><rect x="250" y="140" width="92" height="34" rx="6" fill="#fff" stroke="#2f7d4a" stroke-width="1.5"/><text x="296" y="162" font-size="12" fill="#222" text-anchor="middle">드라이버·스텁</text><rect x="250" y="184" width="92" height="34" rx="6" fill="#fff" stroke="#2f7d4a" stroke-width="1.5"/><text x="296" y="206" font-size="12" fill="#222" text-anchor="middle">형상관리 4활동</text><rect x="250" y="228" width="92" height="34" rx="6" fill="#fff" stroke="#2f7d4a" stroke-width="1.5"/><text x="296" y="250" font-size="12" fill="#222" text-anchor="middle">버전관리 3방식</text><path d="M116 60 L126 60" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d23m)"/><path d="M232 60 L242 60" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d23m)"/><text x="180" y="290" font-size="12" font-weight="700" fill="#555" text-anchor="middle">왼쪽에서 오른쪽 = 프로젝트에서 등장하는 순서</text>
+</svg><figcaption>세 칸은 따로 노는 단원이 아니라 한 프로젝트의 순서예요. 이 페이지도 이 순서로 내려가요.</figcaption></figure></div>
 
 
-<p>이 순서를 머리에 두면 “방법론 테일러링은 언제 하나”, “형상관리는 개발 중에만 하나” 같은 문제를 흐름으로 풀 수 있어요. <b>→ 다음:</b> 지도 맨 위, 시스템끼리 잇는 A4부터 다시 봐요.</p>
 
-<h2>2. A4 다시 보기 — 시스템끼리 잇기</h2>
-<div class="point"><b>핵심 한 줄</b>누가 보내고(송신) 누가 거치고(중계) 누가 받나(수신)를 정한 뒤, 무엇으로 잇고(연계 기술) 어떻게 기다리고(통신 유형) 어떤 모양으로 묶을지(EAI·미들웨어)를 고르는 단원이에요.</div>
-<div class="duo"><div><p><b>인터페이스 요구사항</b>은 시스템이 다른 시스템·모듈과 주고받는 데이터와 방식에 대한 요구예요. 같은 시스템 안 모듈끼리면 내부, 다른 기관의 시스템과면 외부 인터페이스예요. 요구는 다시 “무엇을 주고받나”인 <b>기능</b>과 “얼마나 빠르고 안전하게”인 <b>비기능</b>으로 나뉘어요. 주문번호를 보낸다는 기능, 5분 안에 암호화해서 보낸다는 비기능이에요.</p>
-<p><b>대상 식별</b>은 연계에 참여하는 시스템을 송신·중계·수신으로 나누는 일이에요. 송신 시스템은 데이터를 만들어 보내고, 수신 시스템은 받아서 자기 쪽에 반영해요. 가운데 <b>중계 서버</b>는 단순 전달자가 아니라 송수신 현황을 모니터링하는 관제탑 역할까지 해요.</p></div><figure><svg viewBox="0 0 360 328" font-family="sans-serif" role="img" aria-label="인터페이스 대상 식별. 송신 시스템이 데이터를 만들어 보내고, 중계 서버가 받아 전달하며 송수신을 모니터링하고, 수신 시스템이 받아 자기 DB에 반영한다. 같은 시스템 안 모듈끼리면 내부, 다른 기관과면 외부 인터페이스">
+<h2>2. 장면 1 — 무엇으로 잇나 (연계 기술·통신 유형)</h2>
+<div class="point"><b>핵심 한 줄</b> 연계 기술은 <b>선의 종류</b>, 통신 유형은 <b>보내고 기다리는 법</b>.</div>
+<p>D015의 인터페이스 목록에는 “누가 보내고 누가 받나”까지 적혀 있었어요. 이제 그 선을 실제로 무엇으로 이을지 골라야 해요. 상대가 DB를 열어 주면 DB로 붙고, 함수를 공개하면 API로 부르고, 포트만 열어 두면 소켓으로 붙어요.</p>
+<table>
+<tr><th>연계 기술</th><th>어떻게 잇나</th><th>쇼핑몰 예</th></tr>
+<tr><td>DB Link</td><td>DB에 링크 객체를 만들어 상대 DB를 직접 조회</td><td>사내 회계 DB에서 매출 조회</td></tr>
+<tr><td>DB Connection</td><td>커넥션 풀로 DB에 접속</td><td>주문 서비스 → 주문 DB</td></tr>
+<tr><td>API / Open API</td><td>상대가 공개한 함수로 접근</td><td>PG사 결제 승인 API</td></tr>
+<tr><td>JDBC</td><td>자바 프로그램이 DB에 붙는 드라이버</td><td>스프링 앱의 DB 연결</td></tr>
+<tr><td>Hyperlink</td><td>웹 링크로 이동</td><td>배송 조회 페이지로 링크</td></tr>
+<tr><td>Socket</td><td>서버가 포트를 열면 클라이언트가 연결</td><td>물류사 실시간 출고 연동</td></tr>
+</table>
+<div class="duo"><div><p>선을 골랐으면 “보낸 다음 어떻게 기다리나”를 정해요. 이게 <b>통신 유형</b>이에요. 보내고 끝이면 <b>단방향</b>, 응답이 올 때까지 기다리면 <b>동기</b>, 요청해 두고 딴 일을 하다가 응답을 따로 받으면 <b>비동기</b>예요. 결제 승인은 결과를 받아야 주문을 완료하니 동기, 출고 요청은 물류사가 나중에 완료 신호를 보내니 비동기예요.</p>
+<p>통신 유형과 자주 섞이는 게 <b>처리 유형</b>이에요. 처리 유형은 기다리는 법이 아니라 <b>모으는 법</b>이에요. 한 건씩 바로(실시간), 조금 모았다가(지연), 정해진 시각에 한꺼번에(배치). 세금계산서를 매일 23시에 몰아 보내는 건 처리 유형으로 배치예요. 출제자는 “통신 유형이 아닌 것”에 배치를 끼워 넣어요.</p>
+<p>누가 보내고 받는지, 가운데 누가 거치는지는 D015에서 정했어요. 아래는 그 구조를 다시 본 그림이에요.</p></div><figure><svg viewBox="0 0 360 328" font-family="sans-serif" role="img" aria-label="인터페이스 대상 식별. 송신 시스템이 데이터를 만들어 보내고, 중계 서버가 받아 전달하며 송수신을 모니터링하고, 수신 시스템이 받아 자기 DB에 반영한다. 같은 시스템 안 모듈끼리면 내부, 다른 기관과면 외부 인터페이스">
 <rect width="360" height="328" rx="12" fill="#f7f7f4"/>
 <defs><marker id="d23b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">인터페이스 대상 식별 세 칸</text><rect x="12" y="44" width="336" height="50" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="24" y="75" font-size="15" font-weight="700" fill="#2a5db0">송신 시스템</text><text x="132" y="75" font-size="14" fill="#333">데이터를 만들고 보낸다</text><path d="M180 94 L180 116" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d23b)"/><rect x="12" y="118" width="336" height="50" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="24" y="149" font-size="15" font-weight="700" fill="#b5730d">중계 서버</text><text x="132" y="149" font-size="14" fill="#333">받아 전달 · 송수신 모니터링</text><path d="M180 168 L180 190" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d23b)"/><rect x="12" y="192" width="336" height="50" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="24" y="223" font-size="15" font-weight="700" fill="#2f7d4a">수신 시스템</text><text x="132" y="223" font-size="14" fill="#333">받아서 자기 DB에 반영</text><text x="180" y="290" font-size="14" fill="#333" text-anchor="middle">같은 시스템 안 모듈끼리 = 내부</text><text x="180" y="312" font-size="14" fill="#333" text-anchor="middle">다른 기관·시스템과 = 외부 인터페이스</text>
 </svg><figcaption>가운데 주황 칸이 “중계 서버”예요. 전달만이 아니라 현황 모니터링까지 하는 칸이라는 게 시험 포인트.</figcaption></figure></div>
 
+<p><b>→ 이 장면의 결과물:</b> 연결마다 선의 종류와 통신 방식이 정해졌어요. 그런데 연결이 4개를 넘어가면 선이 엉키기 시작해요. 그걸 묶는 방법이 다음 장면이에요.</p>
 
-<div class="duo"><div><p><b>연계 기술</b>은 실제로 선을 잇는 수단이에요. DB Link는 DB에 링크 객체를 만들어 상대 DB를 직접 조회하고, DB Connection은 커넥션 풀로 DB에 붙고, API·Open API는 상대가 공개한 함수로 접근해요. JDBC는 자바 프로그램이 DB에 연결하는 드라이버, Hyperlink는 웹에서 링크로 이동하는 방식이에요. <b>Socket</b>은 서버가 통신용 객체를 만들고 포트를 열어 두면 클라이언트가 연결을 맺는 방식이라, 네트워크 프로그래밍을 해 본 분이면 가장 익숙한 그림이에요.</p>
-<p>다음은 “보낸 뒤 어떻게 기다리나”예요. <b>통신 유형</b>은 세 가지예요. 단방향은 보내고 끝이고, 동기는 응답이 올 때까지 기다리고, 비동기는 요청과 응답을 떼어 기다리지 않아요. 동기는 전화, 비동기는 문자예요. 전화는 상대가 받을 때까지 수화기를 들고 서 있어야 하지만, 문자는 보내 놓고 라면을 끓이러 가도 돼요.</p></div><figure class="mermaid"><img src="../assets/cdcf875c32873c63.png" alt="도식" loading="lazy" style="width:284px"></figure></div>
-
-
-<div class="duo"><div><p>통신 유형과 자주 섞이는 게 <b>처리 유형</b>이에요. 처리 유형은 “한 건씩 바로(실시간), 조금 모았다가(지연 처리), 정해진 시각에 한꺼번에(배치)”라서 기다리는 법이 아니라 모으는 법이에요. 출제자는 “통신 유형이 아닌 것”에 배치를 끼워 넣어요. 배치도 데이터를 보내는 방식처럼 들리길 바라면서요.</p>
-<p><b>EAI(Enterprise Application Integration)</b>는 기업 안 여러 애플리케이션을 묶는 통합 솔루션이고, 묶는 모양이 네 가지예요. <b>Point-to-Point</b>는 1:1로 직접 잇는 그물이라 단순하지만 시스템이 늘면 선이 폭증해요. <b>Hub &amp; Spoke</b>는 가운데 허브 하나를 거치는 별 모양이라 확장·유지보수가 쉽지만 허브가 장애 나면 전체가 멈춰요. 환승 허브 공항과 같아서, 어디든 한 번만 갈아타면 가지만 허브 공항에 폭설이 오면 전국 항공편이 함께 묶여요.</p>
-<p><b>Message Bus</b>는 애플리케이션 사이에 미들웨어 버스를 두는 방식이라 확장성이 좋고 대용량 처리에 유리해요. <b>Hybrid</b>는 그룹 안은 허브로, 그룹 사이는 버스로 섞어 쓰는 방식이에요. 서비스 단위로 버스를 쓰는 <b>ESB</b>는 Message Bus를 웹 서비스·표준 기반으로 발전시킨 형태예요.</p></div><figure><svg viewBox="0 0 360 384" font-family="sans-serif" role="img" aria-label="EAI 네 가지 모양. Point-to-Point는 모든 시스템이 서로 직접 선으로 이어진 그물. Hub &amp; Spoke는 가운데 허브 하나에 모든 시스템이 별 모양으로 연결. Message Bus는 가운데 버스 막대에 시스템들이 매달림. Hybrid는 그룹마다 작은 허브가 있고 허브끼리는 버스로 연결">
+<h2>3. 장면 2 — 연결이 많아지면 어떻게 묶나 (EAI·미들웨어)</h2>
+<div class="point"><b>핵심 한 줄</b> EAI는 <b>묶는 모양</b>(4가지), 미들웨어는 <b>가운데서 무엇을 들고 다니나</b>(6가지).</div>
+<p>쇼핑몰이 커져 연결할 시스템이 열 개, 스무 개가 되면 하나하나 직접 잇는 게 감당이 안 돼요. 그래서 기업 안 애플리케이션들을 한 구조로 묶는 <b>EAI</b>(Enterprise Application Integration)를 써요. 묶는 모양이 네 가지예요.</p>
+<table>
+<tr><th>EAI 모양</th><th>구조</th><th>얻는 것 / 내주는 것</th></tr>
+<tr><td>Point-to-Point</td><td>1:1로 직접 연결(그물)</td><td>단순 / 시스템이 늘면 선이 폭증, 변경·재사용 어려움</td></tr>
+<tr><td>Hub &amp; Spoke</td><td>가운데 허브 하나를 거침(별)</td><td>확장·유지보수 쉬움 / 허브 장애 시 전체 멈춤</td></tr>
+<tr><td>Message Bus</td><td>애플리케이션 사이에 미들웨어 버스</td><td>확장성·대용량 처리 유리</td></tr>
+<tr><td>Hybrid</td><td>그룹 안은 허브, 그룹 사이는 버스</td><td>둘의 장점을 섞음</td></tr>
+</table>
+<div class="duo"><div><p>Hub &amp; Spoke는 환승 허브 공항과 같아요. 어디든 한 번만 갈아타면 가지만, 허브 공항에 폭설이 오면 전국 항공편이 같이 묶여요.</p></div><figure><svg viewBox="0 0 360 384" font-family="sans-serif" role="img" aria-label="EAI 네 가지 모양. Point-to-Point는 모든 시스템이 서로 직접 선으로 이어진 그물. Hub &amp; Spoke는 가운데 허브 하나에 모든 시스템이 별 모양으로 연결. Message Bus는 가운데 버스 막대에 시스템들이 매달림. Hybrid는 그룹마다 작은 허브가 있고 허브끼리는 버스로 연결">
 <rect width="360" height="384" rx="12" fill="#f7f7f4"/>
 <text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">EAI 네 가지 모양</text><rect x="12" y="44" width="162" height="156" rx="8" fill="#ffffff" stroke="#999" stroke-width="1"/><text x="93" y="66" font-size="14" font-weight="700" fill="#222" text-anchor="middle">Point-to-Point</text><rect x="186" y="44" width="162" height="156" rx="8" fill="#ffffff" stroke="#999" stroke-width="1"/><text x="267" y="66" font-size="14" font-weight="700" fill="#222" text-anchor="middle">Hub &amp; Spoke</text><rect x="12" y="214" width="162" height="156" rx="8" fill="#ffffff" stroke="#999" stroke-width="1"/><text x="93" y="236" font-size="14" font-weight="700" fill="#222" text-anchor="middle">Message Bus</text><rect x="186" y="214" width="162" height="156" rx="8" fill="#ffffff" stroke="#999" stroke-width="1"/><text x="267" y="236" font-size="14" font-weight="700" fill="#222" text-anchor="middle">Hybrid</text><line x1="50" y1="90" x2="136" y2="90" stroke="#b03a2e" stroke-width="2"/><line x1="50" y1="90" x2="50" y2="170" stroke="#b03a2e" stroke-width="2"/><line x1="50" y1="90" x2="136" y2="170" stroke="#b03a2e" stroke-width="2"/><line x1="136" y1="90" x2="50" y2="170" stroke="#b03a2e" stroke-width="2"/><line x1="136" y1="90" x2="136" y2="170" stroke="#b03a2e" stroke-width="2"/><line x1="50" y1="170" x2="136" y2="170" stroke="#b03a2e" stroke-width="2"/><circle cx="50" cy="90" r="11" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><circle cx="136" cy="90" r="11" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><circle cx="50" cy="170" r="11" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><circle cx="136" cy="170" r="11" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><line x1="267" y1="130" x2="215" y2="82" stroke="#2a5db0" stroke-width="2"/><circle cx="215" cy="82" r="11" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><line x1="267" y1="130" x2="319" y2="82" stroke="#2a5db0" stroke-width="2"/><circle cx="319" cy="82" r="11" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><line x1="267" y1="130" x2="215" y2="178" stroke="#2a5db0" stroke-width="2"/><circle cx="215" cy="178" r="11" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><line x1="267" y1="130" x2="319" y2="178" stroke="#2a5db0" stroke-width="2"/><circle cx="319" cy="178" r="11" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><circle cx="267" cy="130" r="16" fill="#2a5db0" stroke="#2a5db0" stroke-width="2"/><text x="267" y="135" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">허브</text><rect x="24" y="294" width="138" height="12" rx="6" fill="#b5730d"/><line x1="44" y1="268" x2="44" y2="294" stroke="#b5730d" stroke-width="2"/><circle cx="44" cy="262" r="11" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><line x1="93" y1="268" x2="93" y2="294" stroke="#b5730d" stroke-width="2"/><circle cx="93" cy="262" r="11" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><line x1="142" y1="268" x2="142" y2="294" stroke="#b5730d" stroke-width="2"/><circle cx="142" cy="262" r="11" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><line x1="68" y1="306" x2="68" y2="330" stroke="#b5730d" stroke-width="2"/><circle cx="68" cy="338" r="11" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><line x1="118" y1="306" x2="118" y2="330" stroke="#b5730d" stroke-width="2"/><circle cx="118" cy="338" r="11" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><rect x="198" y="324" width="138" height="10" rx="5" fill="#b5730d"/><line x1="232" y1="290" x2="232" y2="324" stroke="#b5730d" stroke-width="2"/><line x1="232" y1="290" x2="208" y2="258" stroke="#2f7d4a" stroke-width="2"/><circle cx="208" cy="258" r="9" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><line x1="232" y1="290" x2="256" y2="258" stroke="#2f7d4a" stroke-width="2"/><circle cx="256" cy="258" r="9" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><circle cx="232" cy="290" r="13" fill="#2f7d4a" stroke="#2f7d4a" stroke-width="2"/><line x1="302" y1="290" x2="302" y2="324" stroke="#b5730d" stroke-width="2"/><line x1="302" y1="290" x2="278" y2="258" stroke="#2f7d4a" stroke-width="2"/><circle cx="278" cy="258" r="9" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><line x1="302" y1="290" x2="326" y2="258" stroke="#2f7d4a" stroke-width="2"/><circle cx="326" cy="258" r="9" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><circle cx="302" cy="290" r="13" fill="#2f7d4a" stroke="#2f7d4a" stroke-width="2"/>
 </svg><figcaption>그물(선 6개, 하나 늘면 폭증) · 별(허브가 멈추면 전부 멈춤) · 버스(미들웨어 막대) · 섞기(그룹 안은 허브, 그룹 사이는 버스).</figcaption></figure></div>
 
-
-<div class="duo"><div><p><b>미들웨어</b>는 서로 다른 시스템 사이에서 통신을 대신 해 주는 소프트웨어예요. 여섯 가지는 “중간에서 무엇을 들고 다니나”로 구별하면 빨라요. RPC는 함수 호출을, MOM은 편지(메시지)를, ORB는 객체 요청을, TP-Monitor는 거래 장부를 들고 다녀요. WAS는 웹의 동적 요청을 처리하고, DB 미들웨어는 DB 접속을 대신해요.</p></div><figure><svg viewBox="0 0 360 396" font-family="sans-serif" role="img" aria-label="미들웨어 위치. 클라이언트와 서버 사이에서 RPC는 원격 함수 호출, MOM은 메시지, ORB는 객체 요청을 실어 나른다. 애플리케이션 서버 층에는 동적 콘텐츠를 처리하는 WAS와 트랜잭션을 처리·감시하는 TP-Monitor가 있고, 그 아래 DB 미들웨어가 데이터베이스 접속을 대신한다">
+<p>묶는 모양을 정했으면, 그 가운데서 실제로 통신을 대신해 주는 소프트웨어가 필요해요. 그게 <b>미들웨어</b>예요. 여섯 가지는 “가운데서 무엇을 들고 다니나”로 가르면 빨라요.</p>
+<table>
+<tr><th>미들웨어</th><th>들고 다니는 것</th><th>시험 키워드</th></tr>
+<tr><td>DB 미들웨어</td><td>DB 접속</td><td>ODBC, IDAPI</td></tr>
+<tr><td>RPC</td><td>원격 함수 호출</td><td>원격 프로시저를 로컬처럼</td></tr>
+<tr><td>MOM</td><td>메시지(편지)</td><td>큐, 비동기, 느려도 안정</td></tr>
+<tr><td>TP-Monitor</td><td>거래(트랜잭션)</td><td>항공 예약·은행, 빠른 응답</td></tr>
+<tr><td>ORB</td><td>객체 요청</td><td>CORBA</td></tr>
+<tr><td>WAS</td><td>동적 웹 요청</td><td>Tomcat, JEUS, WebLogic</td></tr>
+</table>
+<figure><svg viewBox="0 0 360 396" font-family="sans-serif" role="img" aria-label="미들웨어 위치. 클라이언트와 서버 사이에서 RPC는 원격 함수 호출, MOM은 메시지, ORB는 객체 요청을 실어 나른다. 애플리케이션 서버 층에는 동적 콘텐츠를 처리하는 WAS와 트랜잭션을 처리·감시하는 TP-Monitor가 있고, 그 아래 DB 미들웨어가 데이터베이스 접속을 대신한다">
 <rect width="360" height="396" rx="12" fill="#f7f7f4"/>
 <defs><marker id="d23c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">미들웨어는 어디에 끼나</text><rect x="12" y="40" width="336" height="36" rx="8" fill="#eeeeea" stroke="#888" stroke-width="2"/><text x="180" y="64" font-size="14" font-weight="700" fill="#333" text-anchor="middle">클라이언트 · 다른 시스템</text><path d="M66 76 L66 94" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d23c)"/><rect x="12" y="94" width="108" height="52" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="66" y="116" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">RPC</text><text x="66" y="137" font-size="14" fill="#333" text-anchor="middle">함수 호출</text><path d="M66 146 L66 166" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d23c)"/><path d="M180 76 L180 94" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d23c)"/><rect x="126" y="94" width="108" height="52" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="180" y="116" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">MOM</text><text x="180" y="137" font-size="14" fill="#333" text-anchor="middle">메시지</text><path d="M180 146 L180 166" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d23c)"/><path d="M294 76 L294 94" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d23c)"/><rect x="240" y="94" width="108" height="52" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="294" y="116" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">ORB</text><text x="294" y="137" font-size="14" fill="#333" text-anchor="middle">객체</text><path d="M294 146 L294 166" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d23c)"/><rect x="12" y="166" width="336" height="70" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="24" y="190" font-size="14" font-weight="700" fill="#b5730d">애플리케이션 서버 층</text><text x="24" y="214" font-size="14" fill="#222">WAS — 동적 콘텐츠·웹 요청 처리</text><rect x="12" y="244" width="336" height="34" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="24" y="266" font-size="14" fill="#222">TP-Monitor — 트랜잭션 처리·감시</text><path d="M180 278 L180 298" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d23c)"/><rect x="12" y="298" width="336" height="34" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="24" y="320" font-size="14" fill="#222">DB 미들웨어 — DB 접속을 대신</text><path d="M180 332 L180 350" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d23c)"/><rect x="110" y="350" width="140" height="32" rx="8" fill="#eeeeea" stroke="#888" stroke-width="2"/><text x="180" y="371" font-size="14" font-weight="700" fill="#333" text-anchor="middle">데이터베이스</text>
-</svg><figcaption>위쪽 파란 세 칸은 “무엇을 실어 나르나”, 가운데 주황은 서버 안에서 일하는 쪽, 초록은 DB 앞이에요.</figcaption></figure></div>
+</svg><figcaption>위쪽 파란 세 칸은 “무엇을 실어 나르나”, 가운데 주황은 서버 안에서 일하는 쪽, 초록은 DB 앞이에요.</figcaption></figure>
+<div class="trap">MOM과 TP-Monitor는 둘 다 “서버 사이 중계”처럼 들려요. <b>메시지·비동기면 MOM</b>, <b>트랜잭션·즉시 응답이면 TP-Monitor</b>예요.</div>
+<p><b>→ 이 장면의 결과물:</b> 연결 설계가 끝났어요. 이제 팀이 이걸 <b>어떤 방식으로, 얼마 들여</b> 만들지 정할 차례예요. A5로 넘어가요.</p>
 
-
-<p>한 장 요약 — 여섯 미들웨어를 하는 일과 키워드로 정리하면 이래요. 각 항목은 바로 위 문단과 그림에서 설명한 내용이에요.</p>
-<table>
-<tr><th>미들웨어</th><th>하는 일</th><th>시험 키워드</th></tr>
-<tr><td>DB 미들웨어</td><td>애플리케이션과 DB 사이의 접속·통신을 대신</td><td>ODBC, IDAPI</td></tr>
-<tr><td>RPC</td><td>원격 프로시저를 로컬 함수처럼 호출</td><td>원격 함수 호출</td></tr>
-<tr><td>MOM</td><td>메시지를 큐에 넣어 비동기로 전달</td><td>메시지, 비동기, 느려도 안정</td></tr>
-<tr><td>TP-Monitor</td><td>온라인 트랜잭션을 처리·감시</td><td>항공 예약·은행, 빠른 응답</td></tr>
-<tr><td>ORB</td><td>객체 지향 환경에서 객체 요청을 중개</td><td>CORBA</td></tr>
-<tr><td>WAS</td><td>동적 웹 콘텐츠 처리</td><td>Tomcat, JEUS, WebLogic</td></tr>
-</table>
-<div class="trap">MOM과 TP-Monitor는 둘 다 “서버 사이 중계”처럼 들려요. MOM은 <b>메시지·비동기</b>, TP-Monitor는 <b>트랜잭션·즉시 응답</b>이에요. 은행 이체처럼 “지금 처리돼야 하는 거래”면 TP-Monitor예요.</div>
-<p><b>→ 다음:</b> 연결 설계까지 끝났어요. 이제 이걸 어떤 순서·관점으로, 얼마의 비용으로 만들지 정할 차례예요.</p>
-
-<h2>3. A5 다시 보기 — 어떤 방식으로, 얼마에 만들까</h2>
-<div class="point"><b>핵심 한 줄</b>생명주기는 “순서”, 방법론은 “관점”, 비용 산정은 “얼마”, 테일러링·개발 표준·프레임워크는 “우리 조직에 맞게 맞추고 지키는 장치”예요.</div>
-<div class="duo"><div><p>A5의 용어가 많아 보이는 건 서로 다른 질문에 대한 답이 섞여 있어서예요. <b>생명주기 모델</b>은 분석·설계·구현·테스트를 어떤 순서로 돌지 정하고, <b>개발 방법론</b>은 시스템을 기능·데이터·객체·컴포넌트 중 무엇을 중심으로 쪼갤지 정해요. <b>요구공학</b>은 어떤 조합을 고르든 빠지지 않는 공통 활동이에요.</p></div><figure><svg viewBox="0 0 360 326" font-family="sans-serif" role="img" aria-label="세 층위. 생명주기 모델은 언제 무엇을 하는지 순서(폭포수·프로토타입·나선형·애자일), 개발 방법론은 무엇을 중심으로 쪼개는지 관점(구조적·정보공학·객체지향·CBD), 요구공학은 어느 조합에서든 하는 공통 활동(도출·분석·명세·확인)">
+<h2>4. 장면 3 — 어떤 순서·관점으로 만드나 (생명주기·방법론)</h2>
+<div class="point"><b>핵심 한 줄</b> 생명주기 모델은 <b>순서</b>, 개발 방법론은 <b>관점</b>. 둘은 서로 다른 질문의 답이에요.</div>
+<div class="duo"><div><p>A5 용어가 많아 보이는 건 서로 다른 질문의 답이 섞여 있어서예요. “분석·설계·구현·테스트를 어떤 순서로 돌까?”의 답이 생명주기 모델이고, “시스템을 무엇을 중심으로 쪼갤까?”의 답이 개발 방법론이에요.</p></div><figure><svg viewBox="0 0 360 326" font-family="sans-serif" role="img" aria-label="세 층위. 생명주기 모델은 언제 무엇을 하는지 순서(폭포수·프로토타입·나선형·애자일), 개발 방법론은 무엇을 중심으로 쪼개는지 관점(구조적·정보공학·객체지향·CBD), 요구공학은 어느 조합에서든 하는 공통 활동(도출·분석·명세·확인)">
 <rect width="360" height="326" rx="12" fill="#f7f7f4"/>
 <text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">생명주기 · 방법론 · 요구공학</text><rect x="12" y="44" width="336" height="86" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="24" y="70" font-size="15" font-weight="700" fill="#2a5db0">생명주기 모델 = 순서</text><text x="24" y="96" font-size="14" fill="#222">언제 무엇을 하나</text><text x="24" y="118" font-size="14" fill="#333">폭포수 · 프로토타입 · 나선형 · 애자일</text><rect x="12" y="142" width="336" height="86" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="24" y="168" font-size="15" font-weight="700" fill="#b5730d">개발 방법론 = 관점</text><text x="24" y="194" font-size="14" fill="#222">무엇을 중심으로 쪼개나</text><text x="24" y="216" font-size="14" fill="#333">구조적 · 정보공학 · 객체지향 · CBD</text><rect x="12" y="240" width="336" height="70" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2" stroke-dasharray="6 4"/><text x="24" y="266" font-size="15" font-weight="700" fill="#2f7d4a">요구공학 = 공통 활동</text><text x="24" y="292" font-size="14" fill="#222">어느 조합이든 도출·분석·명세·확인</text>
 </svg><figcaption>파랑과 주황은 서로 다른 축이라 “폭포수 + 객체지향” 같은 조합이 가능해요. 초록 점선은 어디에나 끼는 공통 활동.</figcaption></figure></div>
 
-
-<h3>생명주기 모델의 계보</h3>
-<div class="duo"><div><p><b>폭포수 모델</b>은 단계를 순서대로 밟고 단계마다 문서로 승인받아 넘어가요. 관리가 쉽지만 요구를 늦게 확인하는 게 약점이라, 요구가 불분명하면 견본부터 보여 주는 <b>프로토타입 모델</b>이 나왔어요. 큰 프로젝트에서 위험을 다루지 못하는 문제를 고치려고 <b>나선형 모델</b>이 위험 분석을 매 바퀴에 넣었고, 이후 작게 나눠 여러 번 내놓는 반복·점진 모델과 애자일로 이어졌어요.</p></div><figure class="mermaid"><img src="../assets/e12976141463cf47.png" alt="도식" loading="lazy" style="width:194px"></figure></div>
-
-
-<div class="duo"><div><p><b>나선형 모델</b>은 보헴이 제안한 모델로, 계획 수립 → 위험 분석 → 개발(공학적 개발) → 고객 평가를 한 바퀴로 반복해요. 바퀴를 돌 때마다 만든 결과가 커지고, 매 바퀴에 위험 분석이 있어 대규모·고위험 프로젝트에 맞아요. 대가는 위험 분석 역량이 없으면 바퀴만 도는 회의가 된다는 점이에요.</p></div><figure><svg viewBox="0 0 360 342" font-family="sans-serif" role="img" aria-label="나선형 모델 한 바퀴. 왼쪽 위 ① 계획 수립, 오른쪽 위 ② 위험 분석, 오른쪽 아래 ③ 개발, 왼쪽 아래 ④ 고객 평가 순으로 시계 방향으로 돌며, 바퀴를 돌 때마다 나선이 커진다">
+<div class="duo"><div><p><b>생명주기 모델</b>은 앞 모델의 약점을 고치며 이어졌어요. <b>폭포수</b>는 단계를 순서대로 밟고 문서로 승인받아 넘어가요. 요구를 늦게 확인하는 게 약점이라, 견본부터 보여 주고 피드백을 받는 <b>프로토타입</b> 모델이 나왔어요.</p>
+<p>큰 프로젝트의 위험을 다루려고 <b>나선형</b> 모델(보헴)이 나왔어요. 계획 수립 → 위험 분석 → 개발 → 고객 평가를 한 바퀴로 돌며, 바퀴마다 위험 분석이 있어 대규모·고위험 프로젝트에 맞아요. 이후 작게 나눠 여러 번 내놓는 반복·점진 모델과 애자일로 이어졌어요.</p></div><figure><svg viewBox="0 0 360 342" font-family="sans-serif" role="img" aria-label="나선형 모델 한 바퀴. 왼쪽 위 ① 계획 수립, 오른쪽 위 ② 위험 분석, 오른쪽 아래 ③ 개발, 왼쪽 아래 ④ 고객 평가 순으로 시계 방향으로 돌며, 바퀴를 돌 때마다 나선이 커진다">
 <rect width="360" height="342" rx="12" fill="#f7f7f4"/>
 <defs><marker id="d23d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6a3d9a"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">나선형 모델 한 바퀴</text><line x1="180" y1="50" x2="180" y2="330" stroke="#bbb" stroke-width="1"/><line x1="20" y1="190" x2="340" y2="190" stroke="#bbb" stroke-width="1"/><path d="M180 170 A20 20 0 0 1 200 190 A44 44 0 0 1 180 234 A72 72 0 0 1 108 190 A104 104 0 0 1 180 86 A130 130 0 0 1 308 170" stroke="#6a3d9a" stroke-width="2.5" fill="none" marker-end="url(#d23d)"/><text x="30" y="70" font-size="15" font-weight="700" fill="#6a3d9a">① 계획 수립</text><text x="30" y="90" font-size="14" fill="#333">목표·제약 정하기</text><text x="330" y="70" font-size="15" font-weight="700" fill="#6a3d9a" text-anchor="end">② 위험 분석</text><text x="330" y="90" font-size="14" fill="#333" text-anchor="end">위험 찾고 줄이기</text><text x="330" y="300" font-size="15" font-weight="700" fill="#6a3d9a" text-anchor="end">③ 개발</text><text x="330" y="320" font-size="14" fill="#333" text-anchor="end">만들고 검증</text><text x="30" y="300" font-size="15" font-weight="700" fill="#6a3d9a">④ 고객 평가</text><text x="30" y="320" font-size="14" fill="#333">보여 주고 피드백</text>
 </svg><figcaption>시계 방향으로 계·위·개·고. 바퀴가 커질수록 만든 게 커져요. 두 번째 칸 “위험 분석”이 이 모델의 이름표예요.</figcaption></figure></div>
 
+<p><b>개발 방법론</b>은 무엇을 중심에 두느냐로 구별해요.</p>
+<table>
+<tr><th>방법론</th><th>중심</th></tr>
+<tr><td>구조적</td><td>기능(처리 흐름)을 DFD로 분할</td></tr>
+<tr><td>정보공학</td><td>기업 전체의 데이터, 계획부터 구축까지</td></tr>
+<tr><td>객체지향</td><td>데이터와 행위를 묶은 객체</td></tr>
+<tr><td>CBD</td><td>재사용 가능한 컴포넌트 조립</td></tr>
+<tr><td>제품 계열</td><td>비슷한 제품군의 공통 부분 재사용</td></tr>
+</table>
+<p>쇼핑몰은 요구가 자주 바뀌고 빨리 내놓아야 하니 반복형·애자일에, 객체지향 방법론을 고르는 게 자연스러워요.</p>
+<p><b>→ 이 장면의 결과물:</b> 일하는 순서와 관점이 정해졌어요. 다음은 “그래서 얼마 드는데?”예요.</p>
 
-<p><b>개발 방법론</b>은 다섯 가지를 관점으로 기억해요. <b>구조적</b>은 기능(처리 흐름)을 DFD로 분할, <b>정보공학</b>은 기업 전체의 데이터를 중심으로 계획부터 구축까지, <b>객체지향</b>은 데이터와 행위를 묶은 객체로, <b>CBD</b>는 재사용 가능한 컴포넌트를 조립하는 방식이에요. <b>제품 계열 방법론</b>은 비슷한 제품군의 공통 부분을 재사용하는 데 초점을 둬요.</p>
-<h3>비용 산정 — 얼마 들까</h3>
-<div class="duo"><div><p>비용 산정은 크게 <b>하향식</b>과 <b>상향식</b>으로 갈려요. 하향식은 경험 많은 사람의 판단으로 전체를 먼저 정하는 방식으로, 전문가 감정과 여러 전문가의 의견을 조정자가 모으는 델파이 기법이 있어요. 상향식은 작업을 잘게 세서 합치는 방식으로 LOC(줄 수)·개발 단계별 인원수 기법이 있고, 그 계열의 <b>수학적 산정 기법</b>으로 COCOMO·Putnam·FP가 있어요.</p></div><figure class="mermaid"><img src="../assets/0ca5c276ce9d740c.png" alt="도식" loading="lazy" style="width:380px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure></div>
-
-
-<div class="duo"><div><p><b>COCOMO</b>는 보헴이 만든 모형으로, 예상 코드 줄 수(LOC)로 비용을 계산해요. 프로젝트 성격에 따라 <b>개발 유형</b> 셋으로 나누는데, 사내 업무용처럼 작고 익숙한 조직형(5만 라인 이하), 컴파일러·운영체제 같은 반분리형(30만 라인 이하), 실시간·하드웨어 제어처럼 크고 빡빡한 내장형(30만 라인 초과)이에요. 반분리형은 이름부터 중간 반이에요. 조직형만큼 익숙하지도, 내장형만큼 빡빡하지도 않은 쪽이에요.</p></div><figure><svg viewBox="0 0 360 348" font-family="sans-serif" role="img" aria-label="COCOMO 개발 유형은 규모 축이다. 조직형은 5만 라인 이하 사내 업무용, 반분리형은 30만 라인 이하로 컴파일러나 OS, 내장형은 30만 라인 초과로 실시간·하드웨어 제어. 아래 점선 띠: 종류(기본·중간·발전)는 얼마나 자세히 계산하느냐로 다른 축">
-<rect width="360" height="348" rx="12" fill="#f7f7f4"/>
-<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">COCOMO 개발 유형 = 규모 축</text><rect x="12" y="44" width="110" height="28" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="20" y="64" font-size="14" font-weight="700" fill="#2f7d4a">조직형</text><text x="24" y="94" font-size="14" fill="#222">5만 라인 이하 · 사내 업무용</text><rect x="12" y="118" width="220" height="28" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="20" y="138" font-size="14" font-weight="700" fill="#b5730d">반분리형</text><text x="24" y="168" font-size="14" fill="#222">30만 라인 이하 · 컴파일러 · OS</text><rect x="12" y="192" width="336" height="28" rx="8" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><text x="20" y="212" font-size="14" font-weight="700" fill="#b03a2e">내장형</text><text x="24" y="242" font-size="14" fill="#222">30만 라인 초과 · 실시간 · HW 제어</text><rect x="12" y="272" width="336" height="62" rx="8" fill="#eeeeea" stroke="#888" stroke-width="2" stroke-dasharray="6 4"/><text x="24" y="296" font-size="15" font-weight="700" fill="#444">종류: 기본 · 중간 · 발전</text><text x="24" y="320" font-size="14" fill="#333">= 얼마나 자세히 계산하나 (다른 축)</text>
-</svg><figcaption>막대가 길수록 크고 빡빡한 프로젝트. 아래 회색 띠의 “중간”은 유형이 아니라 종류예요.</figcaption></figure></div>
-
-
-<p>COCOMO의 함정은 축이 둘이라는 거예요. 조직형·반분리형·내장형은 <b>유형</b>(규모·성격)이고, 기본·중간·발전은 <b>종류</b>(계산을 얼마나 자세히 하나)예요. 선지에 “중간형”이 유형인 척 섞여 있으면 바로 걸러 내야 해요.</p>
-<p><b>Putnam 모형</b>은 시간에 따라 투입 인력이 어떻게 변하는지를 Rayleigh-Norden 곡선으로 보고, 이를 자동화한 도구가 SLIM이에요. <b>FP(기능 점수)</b> 모형은 알브레히트가 제안한 것으로 코드 줄이 아니라 입력·출력·조회·파일 같은 기능의 수와 복잡도로 점수를 매기며, 자동화 도구가 ESTIMACS예요.</p>
-<p>한 장 요약 — 네 수학적 모형이 무엇을 세서 무엇을 내놓는지예요.</p>
+<h2>5. 장면 4 — 얼마 드나 (비용 산정)</h2>
+<div class="point"><b>핵심 한 줄</b> COCOMO = 코드 줄 수, Putnam = 시간에 따른 인력, FP = 기능 수. COCOMO <b>유형</b>(조직·반분리·내장)과 <b>종류</b>(기본·중간·발전)는 다른 축.</div>
+<p>비용 산정은 크게 두 갈래예요. 경험 많은 사람이 전체를 먼저 정하는 <b>하향식</b>(전문가 감정, 델파이)과, 작업을 잘게 세어 합치는 <b>상향식</b>(LOC, 단계별 인원수)이에요. 그 위에 수학적 모형 셋이 있어요.</p>
 <table>
 <tr><th>모형</th><th>무엇을 세나</th><th>짝 키워드</th></tr>
 <tr><td>COCOMO</td><td>예상 코드 줄 수(LOC)</td><td>보헴, 조직형·반분리형·내장형</td></tr>
 <tr><td>Putnam</td><td>시간에 따른 인력 분포</td><td>Rayleigh-Norden 곡선, SLIM</td></tr>
 <tr><td>FP</td><td>기능의 수와 복잡도</td><td>알브레히트, ESTIMACS</td></tr>
-<tr><td>LOC 기법</td><td>낙관·비관·중간치로 줄 수 추정</td><td>(낙관 + 4×중간 + 비관) ÷ 6</td></tr>
 </table>
-<div class="trap">PERT·CPM·간트 차트는 <b>일정 관리</b> 도구예요. “비용 산정 모형이 아닌 것”의 단골 정답이에요.</div>
-<h3>테일러링·개발 표준·프레임워크 — 우리 조직에 맞추고 지키기</h3>
-<p><b>테일러링</b>은 표준 방법론을 그대로 쓰지 않고 프로젝트 특성에 맞게 절차·산출물을 더하고 빼는 일이에요. 기준은 내부와 외부로 나뉘는데, 내부 기준은 목표 환경·요구사항·프로젝트 규모·보유 기술 넷이고, 외부 기준은 법적 제약과 표준 품질 기준 둘뿐이에요. 외부는 “우리가 바꿀 수 없는 것”이라고 기억하면 갈려요.</p>
-<table>
-<tr><th>구분</th><th>기준</th><th>예</th></tr>
-<tr><td>내부</td><td>목표 환경, 요구사항, 프로젝트 규모, 보유 기술</td><td>모바일 앱인가, 팀이 처음 쓰는 기술인가</td></tr>
-<tr><td>외부</td><td>법적 제약, 표준 품질 기준</td><td>개인정보보호법, 금융권 품질 기준</td></tr>
-</table>
-<div class="duo"><div><p><b>개발 표준</b>은 조직의 프로세스를 국제 기준에 맞춰 평가·개선하는 틀이에요. ISO/IEC 12207은 생명주기 프로세스를 기본·지원·조직 생명주기로 나눈 표준이고, CMMI는 조직의 프로세스 성숙도를 5단계로, SPICE(ISO/IEC 15504)는 프로세스 능력을 0~5의 6단계로 평가해요. CMMI 2단계는 “프로젝트마다 각자 알아서 잘 굴러가는” 회사, 3단계는 “회사 전체가 같은 레시피북을 펴 놓고 요리하는” 회사예요.</p></div><figure><svg viewBox="0 0 360 370" font-family="sans-serif" role="img" aria-label="CMMI 성숙도 5단계 계단. 1 초기는 개인 역량에 의존, 2 관리는 프로젝트별로 일정과 비용 관리, 3 정의는 조직 표준 프로세스를 맞춤 적용, 4 정량적 관리는 프로세스를 수치로 측정·통제, 5 최적화는 측정 결과로 지속 개선">
+<div class="duo"><div><p>COCOMO는 프로젝트 성격에 따라 <b>유형</b>을 셋으로 나눠요. 사내 업무용처럼 작고 익숙한 <b>조직형</b>(5만 라인 이하), 컴파일러·OS 같은 중간 규모 <b>반분리형</b>(30만 라인 이하), 실시간·하드웨어 제어처럼 크고 빡빡한 <b>내장형</b>(30만 초과)이에요. 쇼핑몰 주문 시스템은 조직형에 가까워요.</p></div><figure><svg viewBox="0 0 360 348" font-family="sans-serif" role="img" aria-label="COCOMO 개발 유형은 규모 축이다. 조직형은 5만 라인 이하 사내 업무용, 반분리형은 30만 라인 이하로 컴파일러나 OS, 내장형은 30만 라인 초과로 실시간·하드웨어 제어. 아래 점선 띠: 종류(기본·중간·발전)는 얼마나 자세히 계산하느냐로 다른 축">
+<rect width="360" height="348" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">COCOMO 개발 유형 = 규모 축</text><rect x="12" y="44" width="110" height="28" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="20" y="64" font-size="14" font-weight="700" fill="#2f7d4a">조직형</text><text x="24" y="94" font-size="14" fill="#222">5만 라인 이하 · 사내 업무용</text><rect x="12" y="118" width="220" height="28" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="20" y="138" font-size="14" font-weight="700" fill="#b5730d">반분리형</text><text x="24" y="168" font-size="14" fill="#222">30만 라인 이하 · 컴파일러 · OS</text><rect x="12" y="192" width="336" height="28" rx="8" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><text x="20" y="212" font-size="14" font-weight="700" fill="#b03a2e">내장형</text><text x="24" y="242" font-size="14" fill="#222">30만 라인 초과 · 실시간 · HW 제어</text><rect x="12" y="272" width="336" height="62" rx="8" fill="#eeeeea" stroke="#888" stroke-width="2" stroke-dasharray="6 4"/><text x="24" y="296" font-size="15" font-weight="700" fill="#444">종류: 기본 · 중간 · 발전</text><text x="24" y="320" font-size="14" fill="#333">= 얼마나 자세히 계산하나 (다른 축)</text>
+</svg><figcaption>막대가 길수록 크고 빡빡한 프로젝트. 아래 회색 띠의 “중간”은 유형이 아니라 종류예요.</figcaption></figure></div>
+
+<div class="trap">“기본·중간·발전”은 유형이 아니라 계산을 얼마나 자세히 하느냐의 <b>종류</b>예요. 선지에 “중간형”이 유형인 척 섞이면 걸러요. 그리고 PERT·CPM·간트 차트는 <b>일정 관리</b> 도구라 비용 산정 모형이 아니에요.</div>
+<p><b>→ 이 장면의 결과물:</b> 인력과 기간이 나왔어요. 이제 회사 표준 방법론을 이 프로젝트 크기에 맞게 고칠 차례예요.</p>
+
+<h2>6. 장면 5 — 우리 조직에 맞추고 지키기 (테일러링·개발 표준·프레임워크)</h2>
+<div class="point"><b>핵심 한 줄</b> 테일러링 = 방법론을 <b>프로젝트</b>에, 개발 표준 = 프로세스를 <b>국제 기준</b>에, 프레임워크 = 코드를 <b>공통 뼈대</b>에 맞추기.</div>
+<div class="duo"><div><p><b>테일러링</b>은 표준 방법론을 그대로 쓰지 않고 프로젝트 특성에 맞게 절차·산출물을 더하고 빼는 일이에요. 기준은 둘로 갈려요. 팀 회의로 바꿀 수 있는 <b>내부 기준</b>(목표 환경·요구사항·프로젝트 규모·보유 기술)과, 바꿀 수 없는 <b>외부 기준</b>(법적 제약·표준 품질 기준)이에요. 쇼핑몰은 규모가 작으니 산출물을 합치고, 결제가 있으니 개인정보·보안 검토는 빼지 못해요.</p>
+<p>고친 프로세스가 괜찮은지 재는 잣대가 <b>개발 표준</b>이에요. ISO/IEC 12207은 어떤 프로세스가 있어야 하는지의 <b>목록</b>(기본·지원·조직), CMMI는 조직이 그걸 얼마나 성숙하게 운영하는지의 <b>5단계</b>, SPICE(ISO/IEC 15504)는 프로세스 능력을 <b>0~5의 6단계</b>로 매겨요.</p>
+<p>CMMI 단계는 순서가 중요해요. 1 초기(개인 역량 의존) → 2 관리(프로젝트별로 관리) → <b>3 정의(조직 표준이 있고 프로젝트가 그걸 테일러링해서 씀)</b> → 4 정량적 관리(수치로 측정·통제) → 5 최적화(측정 결과로 지속 개선). 방금 장면에서 한 테일러링이 바로 3단계의 모습이에요. 2단계가 “프로젝트마다 각자 잘하는 회사”라면, 3단계는 “회사 전체가 같은 레시피북을 펴 놓고 요리하는 회사”예요.</p></div><figure><svg viewBox="0 0 360 370" font-family="sans-serif" role="img" aria-label="CMMI 성숙도 5단계 계단. 1 초기는 개인 역량에 의존, 2 관리는 프로젝트별로 일정과 비용 관리, 3 정의는 조직 표준 프로세스를 맞춤 적용, 4 정량적 관리는 프로세스를 수치로 측정·통제, 5 최적화는 측정 결과로 지속 개선">
 <rect width="360" height="370" rx="12" fill="#f7f7f4"/>
 <text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">CMMI 성숙도 5단계</text><rect x="12" y="150" width="64" height="30" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="44" y="170" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">1</text><text x="44" y="200" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">초기</text><rect x="79" y="124" width="64" height="56" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="111" y="144" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">2</text><text x="111" y="200" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">관리</text><rect x="146" y="98" width="64" height="82" rx="4" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="178" y="118" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">3</text><text x="178" y="200" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">정의</text><rect x="213" y="72" width="64" height="108" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="245" y="92" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">4</text><text x="245" y="200" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">정량적</text><rect x="280" y="46" width="64" height="134" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="312" y="66" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">5</text><text x="312" y="200" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">최적화</text><text x="280" y="218" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">관리</text><text x="16" y="248" font-size="14" font-weight="700" fill="#2a5db0">1 초기</text><text x="126" y="248" font-size="14" fill="#333">개인 역량에 의존, 매번 다름</text><text x="16" y="272" font-size="14" font-weight="700" fill="#2a5db0">2 관리</text><text x="126" y="272" font-size="14" fill="#333">프로젝트별로 일정·비용 관리</text><text x="16" y="296" font-size="14" font-weight="700" fill="#b5730d">3 정의</text><text x="126" y="296" font-size="14" fill="#333">조직 표준 프로세스를 맞춤 적용</text><text x="16" y="320" font-size="14" font-weight="700" fill="#2a5db0">4 정량적 관리</text><text x="126" y="320" font-size="14" fill="#333">프로세스를 수치로 측정·통제</text><text x="16" y="344" font-size="14" font-weight="700" fill="#2a5db0">5 최적화</text><text x="126" y="344" font-size="14" fill="#333">측정 결과로 지속 개선</text>
 </svg><figcaption>주황 3단계 “정의”가 프로젝트별(2)에서 조직 표준(3)으로 넘어가는 문턱이에요.</figcaption></figure></div>
 
+<p>마지막으로 코드 쪽 뼈대가 <b>개발 프레임워크</b>예요. 공통 기능을 미리 만들어 둔 반제품이고, 특성은 모듈화·재사용성·확장성·<b>제어의 역흐름(IoC)</b>이에요. 내가 부르는 게 라이브러리, 나를 부르는 게 프레임워크예요. 스프링 컨트롤러를 직접 호출한 적이 없는데 요청이 오면 실행되는 게 IoC예요.</p>
+<p><b>→ 이 장면의 결과물:</b> 방식·비용·뼈대가 다 정해졌어요. 이제 진짜 코드를 짜요. A6으로 넘어가요.</p>
 
-<div class="duo"><div><p><b>개발 프레임워크</b>는 공통 기능을 미리 만들어 둔 재사용 가능한 뼈대예요. 특성은 모듈화·재사용성·확장성·<b>제어의 역흐름(IoC)</b> 넷이고, 시험에서 가장 많이 묻는 건 IoC예요. 라이브러리는 내 코드가 필요할 때 부르지만, 프레임워크는 흐름을 쥐고 내 코드를 불러요. 스프링 컨트롤러 메서드를 직접 호출한 적이 없는데도 요청이 오면 실행되는 게 IoC예요.</p></div><figure class="mermaid"><img src="../assets/fc65497708663ac3.png" alt="도식" loading="lazy" style="width:408px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure></div>
-
-
-<p><b>→ 다음:</b> 방식과 비용, 뼈대까지 정했어요. 이제 실제로 모듈을 만들고, 그 코드를 검사하고 지키는 A6이에요.</p>
-
-<h2>4. A6 다시 보기 — 만들고 지키기</h2>
-<div class="point"><b>핵심 한 줄</b>단위 모듈은 대역(드라이버·스텁)을 세워 검사하고, 바뀌는 코드는 형상관리 4활동과 버전관리 도구로 붙잡아요.</div>
-<div class="duo"><div><p><b>단위 모듈</b>은 하나의 기능을 수행하는 독립된 코드 단위이고, 모듈끼리는 IPC(공유 메모리·소켓·메시지 큐 등)로 데이터를 주고받아요. 다 만든 모듈은 단위 테스트를 거치는데, 코드 내부 경로를 보며 검사하면 <b>화이트박스</b>, 입력과 출력만 보며 명세대로 동작하는지 보면 <b>블랙박스</b>예요.</p>
-<p>문제는 테스트 대상의 위·아래 모듈이 아직 없을 때예요. 그래서 대역을 세워요. <b>테스트 드라이버</b>는 대상 모듈을 호출하고 결과를 받아 주는 가짜 상위 모듈, <b>테스트 스텁</b>은 대상 모듈이 호출하면 미리 정한 값을 돌려주는 가짜 하위 모듈이에요. 드라이버는 큐 사인을 주는 감독, 스텁은 대사 한 줄만 받은 단역이에요. 둘 다 진짜 배우가 오면 퇴장해요.</p></div><figure><svg viewBox="0 0 360 310" font-family="sans-serif" role="img" aria-label="테스트 하네스. 맨 위 테스트 드라이버는 가짜 상위 모듈로 테스트 대상 모듈을 호출하고 결과를 받는다. 가운데 테스트 대상 모듈이 지금 검사하는 진짜 코드이고, 맨 아래 테스트 스텁은 가짜 하위 모듈로 대상이 호출하면 미리 정해 둔 값을 돌려준다">
+<h2>7. 장면 6 — 만들고 검사하기 (단위 모듈·드라이버·스텁)</h2>
+<div class="point"><b>핵심 한 줄</b> 대상을 <b>부르는</b> 가짜 상위 = 드라이버, 대상에게 <b>불리는</b> 가짜 하위 = 스텁.</div>
+<div class="duo"><div><p>쇼핑몰의 주문 모듈을 다 만들었는데, 그걸 부를 화면 모듈도, 주문 모듈이 부를 결제 모듈도 아직 없어요. 그래도 주문 모듈만 먼저 검사하고 싶어요. 그래서 빈자리에 대역을 세워요.</p>
+<p><b>테스트 드라이버</b>는 주문 모듈을 대신 <b>호출</b>하고 결과를 받아 주는 가짜 상위 모듈이에요. <b>테스트 스텁</b>은 주문 모듈이 결제 모듈을 부를 때 대신 <b>불려서</b> “승인 완료” 같은 정해진 값을 돌려주는 가짜 하위 모듈이에요. 드라이버는 큐 사인을 주는 감독, 스텁은 대사 한 줄만 받은 단역이에요. 진짜 배우가 오면 둘 다 퇴장해요.</p></div><figure><svg viewBox="0 0 360 310" font-family="sans-serif" role="img" aria-label="테스트 하네스. 맨 위 테스트 드라이버는 가짜 상위 모듈로 테스트 대상 모듈을 호출하고 결과를 받는다. 가운데 테스트 대상 모듈이 지금 검사하는 진짜 코드이고, 맨 아래 테스트 스텁은 가짜 하위 모듈로 대상이 호출하면 미리 정해 둔 값을 돌려준다">
 <rect width="360" height="310" rx="12" fill="#f7f7f4"/>
 <defs><marker id="d23e" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><defs><marker id="d23f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">드라이버와 스텁의 자리</text><rect x="12" y="44" width="336" height="58" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="24" y="70" font-size="15" font-weight="700" fill="#b5730d">테스트 드라이버</text><text x="24" y="92" font-size="14" fill="#333">가짜 상위 — 대상을 호출</text><path d="M150 102 L150 138" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d23e)"/><text x="140" y="126" font-size="14" fill="#333" text-anchor="end">호출</text><path d="M210 138 L210 102" stroke="#888" stroke-width="2" fill="none" stroke-dasharray="5 4" marker-end="url(#d23f)"/><text x="220" y="126" font-size="14" fill="#666">결과</text><rect x="12" y="140" width="336" height="58" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="24" y="166" font-size="15" font-weight="700" fill="#2a5db0">테스트 대상 모듈</text><text x="24" y="188" font-size="14" fill="#333">지금 검사하는 진짜 코드</text><path d="M150 198 L150 234" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d23e)"/><text x="140" y="222" font-size="14" fill="#333" text-anchor="end">호출</text><path d="M210 234 L210 198" stroke="#888" stroke-width="2" fill="none" stroke-dasharray="5 4" marker-end="url(#d23f)"/><text x="220" y="222" font-size="14" fill="#666">결과</text><rect x="12" y="236" width="336" height="58" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="24" y="262" font-size="15" font-weight="700" fill="#2f7d4a">테스트 스텁</text><text x="24" y="284" font-size="14" fill="#333">가짜 하위 — 정해 둔 값 반환</text>
 </svg><figcaption>대상 모듈을 기준으로 위에서 부르는 대역 = 드라이버, 아래에서 불리는 대역 = 스텁.</figcaption></figure></div>
 
+<p>검사 방법은 두 갈래예요. 코드 내부 경로를 보며 검사하면 <b>화이트박스</b>, 입력과 출력만 보며 명세대로 도는지 보면 <b>블랙박스</b>예요.</p>
+<p><b>→ 이 장면의 결과물:</b> 검사한 코드가 쌓이기 시작했어요. 그런데 코드는 매일 바뀌어요. 그걸 붙잡는 게 마지막 장면이에요.</p>
 
-<div class="vs"><div><b>테스트 드라이버</b>대상을 <b>호출하는</b> 상위 대역 · 상향식 통합에서 사용</div><div><b>테스트 스텁</b>대상이 <b>호출하는</b> 하위 대역 · 하향식 통합에서 사용</div></div>
-<div class="duo"><div><p>코드는 만드는 순간부터 계속 바뀌어요. <b>형상관리</b>는 소프트웨어의 변경 사항을 체계적으로 추적·통제하는 활동이고, 소스뿐 아니라 문서·설계서까지 대상이에요. 출발점은 <b>기준선(베이스라인)</b>으로, 공식 검토를 거쳐 확정된 시점의 산출물이에요. 기준선은 바닥에 붙인 노란 테이프예요. 그 안쪽은 결재 없이 발을 들이면 안 돼요.</p>
-<p>활동은 네 가지예요. <b>형상 식별</b>은 관리할 항목을 정하고 이름·번호를 붙이고, <b>형상 통제</b>는 변경 요청을 검토·승인해 기준선에 반영되게 조정해요. <b>형상 감사</b>는 반영된 변경이 제대로 됐는지 기준선의 무결성을 확인하고, <b>형상 기록</b>은 그 결과를 기록·보고해요. 교재에 따라 <b>버전 제어</b>를 더해 5기능으로 적기도 해요.</p></div><figure class="mermaid"><img src="../assets/31a3b0b59f1429dd.png" alt="도식" loading="lazy" style="width:222px"></figure></div>
-
-
-<div class="duo"><div><p><b>버전관리 도구</b>는 형상관리를 실제로 돌리는 도구로, 저장소 구조에 따라 세 방식이에요. <b>공유 폴더</b> 방식(RCS·SCCS)은 공유 폴더에 파일을 복사해 쓰는 원시적인 방식이고, <b>클라이언트/서버</b> 방식(CVS·SVN)은 중앙 저장소 하나에 모두가 커밋해요. <b>분산 저장소</b> 방식(Git 등)은 원격 저장소를 복제한 로컬 저장소가 각자에게 있어, 오프라인에서도 커밋하고 나중에 원격에 반영해요.</p></div><figure><svg viewBox="0 0 360 390" font-family="sans-serif" role="img" aria-label="버전관리 세 방식. 공유 폴더 방식(RCS, SCCS)은 PC가 공유 폴더에 파일을 복사한다. 클라이언트/서버 방식(CVS, SVN)은 PC가 중앙 저장소 하나에 커밋한다. 분산 방식(Git)은 각 PC에 로컬 저장소가 있어 로컬에 커밋한 뒤 원격 저장소에 push한다">
+<h2>8. 장면 7 — 바뀌는 코드 붙잡기 (형상관리·버전관리)</h2>
+<div class="point"><b>핵심 한 줄</b> 형상관리 4활동 = <b>식별 → 통제 → 감사 → 기록</b>. 버전관리는 저장소가 <b>한 곳</b>이면 클라이언트/서버, <b>각자 로컬에도</b> 있으면 분산.</div>
+<p><b>형상관리</b>는 소프트웨어 변경을 체계적으로 추적·통제하는 활동이에요. 소스 코드만이 아니라 문서·설계서까지, 개발 전 과정이 대상이에요. 출발점은 공식 검토로 확정한 산출물인 <b>기준선</b>(베이스라인)이에요.</p>
+<table>
+<tr><th>활동</th><th>하는 일</th><th>쇼핑몰 예</th></tr>
+<tr><td>형상 식별</td><td>관리할 항목을 정하고 이름·번호 붙이기</td><td>주문 API 명세서 v1.0</td></tr>
+<tr><td>형상 통제</td><td>변경 요청을 검토·승인해 기준선에 반영</td><td>“쿠폰 필드 추가” 승인</td></tr>
+<tr><td>형상 감사</td><td>반영된 변경이 제대로인지 무결성 확인</td><td>v1.1이 승인 내용과 맞는지 점검</td></tr>
+<tr><td>형상 기록</td><td>결과를 기록·보고</td><td>변경 이력 보고서</td></tr>
+</table>
+<div class="duo"><div><p>형상관리를 실제로 돌리는 도구가 <b>버전관리</b>예요. 저장소가 어디 있느냐로 세 방식이 갈려요. 공유 폴더에 파일을 복사해 쓰면 <b>공유 폴더 방식</b>(RCS·SCCS), 중앙 저장소 <b>하나</b>에 모두가 바로 커밋하면 <b>클라이언트/서버 방식</b>(CVS·SVN)이에요.</p>
+<p><b>분산 저장소 방식</b>(Git)은 원격 저장소를 <b>복제한 로컬 저장소</b>가 각자에게 있어요. 그래서 먼저 내 로컬에 커밋하고, 나중에 원격에 push해요. 문제에 “원격 저장소”라는 말이 나와도 “로컬에 커밋 → 나중에 반영”이 보이면 분산이에요. 진수 님이 매일 쓰는 git commit → git push가 바로 그 순서예요.</p></div><figure><svg viewBox="0 0 360 390" font-family="sans-serif" role="img" aria-label="버전관리 세 방식. 공유 폴더 방식(RCS, SCCS)은 PC가 공유 폴더에 파일을 복사한다. 클라이언트/서버 방식(CVS, SVN)은 PC가 중앙 저장소 하나에 커밋한다. 분산 방식(Git)은 각 PC에 로컬 저장소가 있어 로컬에 커밋한 뒤 원격 저장소에 push한다">
 <rect width="360" height="390" rx="12" fill="#f7f7f4"/>
 <defs><marker id="d23g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><defs><marker id="d23h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2f7d4a"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">버전관리 세 방식의 모양</text><text x="16" y="58" font-size="14" font-weight="700" fill="#888">공유 폴더 · RCS, SCCS</text><rect x="126" y="78" width="108" height="40" rx="8" fill="#eeeeea" stroke="#888" stroke-width="2"/><text x="180" y="103" font-size="14" font-weight="700" fill="#888" text-anchor="middle">공유 폴더</text><rect x="12" y="82" width="100" height="32" rx="8" fill="#ffffff" stroke="#999" stroke-width="2"/><text x="62" y="103" font-size="14" font-weight="700" fill="#333" text-anchor="middle">PC</text><rect x="248" y="82" width="100" height="32" rx="8" fill="#ffffff" stroke="#999" stroke-width="2"/><text x="298" y="103" font-size="14" font-weight="700" fill="#333" text-anchor="middle">PC</text><path d="M112 98 L124 98" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d23g)"/><path d="M248 98 L236 98" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d23g)"/><text x="180" y="142" font-size="14" fill="#444" text-anchor="middle">각 PC → 공유 폴더 (복사)</text><text x="16" y="174" font-size="14" font-weight="700" fill="#2a5db0">클라이언트/서버 · CVS, SVN</text><rect x="126" y="194" width="108" height="40" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="180" y="219" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">중앙 저장소</text><rect x="12" y="198" width="100" height="32" rx="8" fill="#ffffff" stroke="#999" stroke-width="2"/><text x="62" y="219" font-size="14" font-weight="700" fill="#333" text-anchor="middle">PC</text><rect x="248" y="198" width="100" height="32" rx="8" fill="#ffffff" stroke="#999" stroke-width="2"/><text x="298" y="219" font-size="14" font-weight="700" fill="#333" text-anchor="middle">PC</text><path d="M112 214 L124 214" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d23g)"/><path d="M248 214 L236 214" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d23g)"/><text x="180" y="258" font-size="14" fill="#444" text-anchor="middle">각 PC → 중앙 저장소 (커밋)</text><text x="16" y="290" font-size="14" font-weight="700" fill="#2f7d4a">분산 · Git</text><rect x="126" y="310" width="108" height="40" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="180" y="335" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">원격 저장소</text><rect x="12" y="302" width="100" height="56" rx="8" fill="#ffffff" stroke="#2f7d4a" stroke-width="2"/><text x="62" y="324" font-size="14" font-weight="700" fill="#333" text-anchor="middle">PC</text><text x="62" y="346" font-size="14" fill="#2f7d4a" text-anchor="middle">로컬 저장소</text><rect x="248" y="302" width="100" height="56" rx="8" fill="#ffffff" stroke="#2f7d4a" stroke-width="2"/><text x="298" y="324" font-size="14" font-weight="700" fill="#333" text-anchor="middle">PC</text><text x="298" y="346" font-size="14" fill="#2f7d4a" text-anchor="middle">로컬 저장소</text><path d="M112 330 L124 330" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d23g)"/><path d="M248 330 L236 330" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d23g)"/><text x="180" y="374" font-size="14" fill="#444" text-anchor="middle">각 PC → 원격 저장소 (push)</text>
 </svg><figcaption>맨 아래만 PC 안에 “로컬 저장소”가 있어요. 그게 분산 방식의 전부이자 시험 포인트.</figcaption></figure></div>
 
+<div class="trap">“형상관리는 소스 코드<b>만</b>”, “유지보수 단계에서<b>만</b>” 같은 선지는 틀려요. 문서까지, 전 과정이에요.</div>
 
+<h2>9. 한 장으로 다시 꿰기</h2>
+<p>한 장 요약 — 장면 순서대로 무엇을 정했고 어떤 시험 개념이 나왔는지예요.</p>
 <table>
-<tr><th>방식</th><th>저장소</th><th>대표 도구</th></tr>
-<tr><td>공유 폴더</td><td>공유 폴더 하나에 직접 복사</td><td>RCS, SCCS</td></tr>
-<tr><td>클라이언트/서버</td><td>중앙 저장소 1개, 서버 장애 시 협업 중단</td><td>CVS, SVN</td></tr>
-<tr><td>분산 저장소</td><td>원격 + 개인별 로컬 저장소, 오프라인 커밋 가능</td><td>Git, Mercurial, Bazaar</td></tr>
+<tr><th>장면</th><th>정한 것</th><th>시험 개념</th></tr>
+<tr><td>1</td><td>무엇으로 잇고 어떻게 기다리나</td><td>연계 기술, 통신 유형(단방향·동기·비동기), 처리 유형</td></tr>
+<tr><td>2</td><td>많은 연결을 어떻게 묶나</td><td>EAI 4모양, 미들웨어 6종</td></tr>
+<tr><td>3</td><td>어떤 순서·관점으로</td><td>생명주기 모델, 개발 방법론</td></tr>
+<tr><td>4</td><td>얼마 드나</td><td>COCOMO 유형·종류, Putnam, FP</td></tr>
+<tr><td>5</td><td>조직에 맞추고 지키기</td><td>테일러링 기준, ISO 12207·CMMI·SPICE, 프레임워크·IoC</td></tr>
+<tr><td>6</td><td>만들고 검사</td><td>드라이버·스텁, 화이트·블랙박스</td></tr>
+<tr><td>7</td><td>바뀌는 코드 붙잡기</td><td>형상관리 4활동, 버전관리 3방식</td></tr>
 </table>
-<div class="trap">형상관리는 “소스 코드만”, “유지보수 단계에서만” 하는 게 아니에요. 문서까지, 개발 전 과정에서 해요. 출제자가 “만”이라는 글자를 넣었는지 먼저 보세요.</div>
-<p><b>→ 다음:</b> 이번 주 세 범위를 다 돌았어요. 이번 주 성적표를 보고, 3주 전 범위로 넘어가요.</p>
 
-<h2>5. 이번 주 약점 점검</h2>
-<div class="point"><b>핵심 한 줄</b>이번 주 정답률은 19/20, 남은 숙제는 스크럼 이벤트 하나예요.</div>
-<p>D017~D021 확인 문제는 20개 중 19개를 맞혔어요. 유일하게 틀린 문항은 일일 스크럼(D009-4 재확인)이고, 10/29에 예정된 재확인에서 다시 봐요. 짧게만 정리하면, 스프린트 계획은 스프린트 시작 때 한 번, <b>일일 스크럼</b>은 매일 15분 다음 24시간 계획 조정, 리뷰는 결과물 검사, 회고는 일하는 방식 개선이에요.</p>
-<p>열린 오답 일정은 결합도 순서(10/27), OMT 3모델·CASE(10/28), 일일 스크럼(10/29)이에요. 오늘 누적 문항은 이 개념들을 피해서 골랐어요. 예정일 전에 미리 풀어 버리면 시험 전날 벼락치기처럼 기억이 금방 휘발하니, 숙제는 날짜에 맞춰 꺼내요. 다음 주 월요일 D024부터 A7의 매뉴얼·품질 표준·빌드 자동화로 1과목을 마무리하고, 10/31부터 2과목으로 넘어가요.</p>
-
-<h2>6. A1~A3 한 장 요약 — 3주 전을 다시 꺼내기</h2>
-<div class="point"><b>핵심 한 줄</b>요구는 측정 가능하게, 관계는 마름모 색으로, 응집도는 기능적이 최고, 원칙은 SOLID 다섯 글자로.</div>
-<div class="duo"><div><p>3주 전 내용을 다시 꺼내는 건 망각 곡선과의 줄다리기예요. 줄을 놓는 쪽은 대개 “이건 확실히 안다”고 생각한 쪽이에요. 오늘 누적 10문항이 어디를 묻는지 먼저 지도로 보고, 아래 문단으로 핵심을 한 번씩 되살려요.</p></div><figure><svg viewBox="0 0 360 348" font-family="sans-serif" role="img" aria-label="누적 10문항이 묻는 곳. A1 요구 분석(도출 기법·비기능·UML 관계)은 11·12·13번, A1 방법·모델링(애자일 선언·자료 사전·추적)은 14·15·16번, A2 화면 설계(스토리보드)는 17번, A3 애플리케이션 설계(품질 속성·응집도·SOLID)는 18·19·20번">
-<rect width="360" height="348" rx="12" fill="#f7f7f4"/>
-<defs><marker id="d23i" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">누적 10문항이 묻는 곳</text><rect x="12" y="44" width="336" height="56" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="24" y="68" font-size="15" font-weight="700" fill="#2a5db0">A1 요구 분석</text><text x="336" y="68" font-size="14" font-weight="700" fill="#333" text-anchor="end">11 · 12 · 13</text><text x="24" y="90" font-size="14" fill="#333">도출 기법·비기능·UML 관계</text><path d="M180 100 L180 116" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d23i)"/><rect x="12" y="118" width="336" height="56" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="24" y="142" font-size="15" font-weight="700" fill="#2a5db0">A1 방법·모델링</text><text x="336" y="142" font-size="14" font-weight="700" fill="#333" text-anchor="end">14 · 15 · 16</text><text x="24" y="164" font-size="14" fill="#333">애자일 선언·자료 사전·추적</text><path d="M180 174 L180 190" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d23i)"/><rect x="12" y="192" width="336" height="56" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="24" y="216" font-size="15" font-weight="700" fill="#b5730d">A2 화면 설계</text><text x="336" y="216" font-size="14" font-weight="700" fill="#333" text-anchor="end">17</text><text x="24" y="238" font-size="14" fill="#333">설계 산출물(스토리보드)</text><path d="M180 248 L180 264" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d23i)"/><rect x="12" y="266" width="336" height="56" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="24" y="290" font-size="15" font-weight="700" fill="#2f7d4a">A3 애플리케이션 설계</text><text x="336" y="290" font-size="14" font-weight="700" fill="#333" text-anchor="end">18 · 19 · 20</text><text x="24" y="312" font-size="14" fill="#333">품질 속성·응집도·SOLID</text>
-</svg><figcaption>오른쪽 숫자가 확인 문제 번호예요. 21일 넘게 지난 범위부터 골랐어요.</figcaption></figure></div>
-
-
-<p><b>A1 요구 분석.</b> 요구는 도출 → 분석 → 명세 → 확인 순으로 다뤄요. 도출 기법은 상황으로 고르는데, 소수 핵심 담당자에게 깊이 묻는 건 인터뷰, 다수에게 같은 질문은 설문이에요. 비기능 요구는 “가동률 99.9%”처럼 측정·검증할 수 있게 써야 하고, “안정적이어야 한다”는 모호해서 나쁜 요구예요.</p>
-<p><b>A1 UML·애자일·추적.</b> UML 관계에서 <b>집합</b>은 빈 마름모로 부분이 전체와 따로 살 수 있고, <b>합성</b>은 채운 마름모로 전체와 생명주기를 같이해요. 애자일 선언은 “계획을 따르기보다 변화에 대응하기”처럼 오른쪽보다 왼쪽에 가치를 둬요. 자료 사전 기호는 = 정의, + 연결, ( ) 생략 가능, { } 반복, [ | ] 선택, ** ** 주석이에요. 요구 추적은 요구에서 구현·테스트로 가면 정방향(누락 찾기), 반대로 오면 역방향(근거 없는 기능 찾기)이에요.</p>
-<p><b>A2 화면 설계.</b> 설계 산출물은 와이어프레임(배치 뼈대) → 목업(실물 같은 정적 화면) → <b>스토리보드</b>(화면별 설명·정책·기능·DB 연동까지 담은 최종 참고 문서) → 프로토타입(동작하는 견본) 순으로 구체화돼요.</p>
-<p><b>A3 애플리케이션 설계.</b> 아키텍처 품질 속성은 시스템 측면(성능·보안·가용성 등), 비즈니스 측면(시장 적시성·비용과 혜택 등), 아키텍처 측면(개념적 무결성·정확성·구축 가능성 등)으로 나눠요. 응집도는 우연적 → 논리적 → 시간적 → 절차적 → 교환적 → 순차적 → 기능적 순으로 강해지고, 비슷한 처리를 모아 플래그로 고르는 게 <b>논리적</b>이에요. SOLID 중 <b>ISP</b>는 쓰지 않는 메서드에 의존하지 않도록 인터페이스를 쪼개라는 원칙이에요.</p>
-
-<h2>7. 시험 포인트·암기 단서</h2>
-<div class="point"><b>핵심 한 줄</b>축이 둘인 개념(통신/처리 유형, COCOMO 유형/종류, 드라이버/스텁 방향)에서 점수가 갈려요.</div>
-<p>설명을 다 읽은 뒤 정리용으로 쓰세요. 이번 주 오답이 거의 없었다는 건 개념은 잡혔다는 뜻이고, 남은 건 비슷한 이름끼리의 자리 바꾸기 함정이에요. 출제자는 새 개념을 내기보다 이름표 두 개를 슬쩍 바꿔 다는 걸 더 좋아하거든요.</p>
-<div class="memo"><b>연결(A4) · 방법(A5) · 만들고 지키기(A6)</b> — 이번 주 세 칸의 순서.</div>
-<div class="memo"><b>단·동·비 vs 실·지·배</b> — 통신 유형은 기다리는 법, 처리 유형은 모으는 법.</div>
-<div class="memo"><b>P2P 그물 · 허브 별 · 버스 일자 · 하이브리드 섞기</b> — EAI 네 모양.</div>
-<div class="memo"><b>조·반·내 = 5만 · 30만 · 그 이상</b> — COCOMO 유형. 기본·중간·발전은 종류.</div>
-<div class="memo"><b>초·관·정·정량·최</b> — CMMI 계단. 3단계 정의부터 조직 표준.</div>
-<div class="memo"><b>식·통·감·기</b> — 이름 붙이고, 승인하고, 확인하고, 남긴다.</div>
-<div class="trap">테일러링 외부 기준은 <b>법적 제약·표준 품질 기준 둘뿐</b>이에요. 보유 기술·프로젝트 규모는 내부예요.</div>
-<div class="trap">드라이버·스텁은 방향만 바꿔 물어요. “대상을 호출하는” 쪽이 드라이버, “대상에게 호출되는” 쪽이 스텁.</div>
+<h2>10. A1~A3 누적 — 헷갈리는 짝만</h2>
+<div class="point"><b>핵심 한 줄</b> 3주 전 범위는 다 다시 읽지 말고, <b>짝을 가르는 질문 하나</b>씩만 꺼내요.</div>
+<p>누적 10문항에서 틀린 건 세 개였어요. 셋 다 몰라서가 아니라 <b>비슷한 짝</b>에서 미끄러졌어요. 그래서 이 섹션은 짝마다 가르는 질문 하나만 남겼어요.</p>
+<table>
+<tr><th>헷갈리는 짝</th><th>가르는 질문</th><th>답</th></tr>
+<tr><td>집합 / 합성 / 연관</td><td>마름모가 있나, 색이 차 있나?</td><td>빈 ◇ = 집합(부분 독립), 채운 ◆ = 합성(같이 소멸), 마름모 없음 = 연관</td></tr>
+<tr><td>아키텍처 품질 속성 3측면</td><td>돌아갈 때의 품질인가, 돈·일정인가, 설계 자체인가?</td><td>가용성·성능·보안 = 시스템, 시장 적시성·비용 = 비즈니스, 개념적 무결성·구축 가능성 = 아키텍처</td></tr>
+<tr><td>논리적 / 기능적 응집도</td><td>플래그로 골라 실행하나, 기능이 딱 하나인가?</td><td>플래그 선택 = 논리적(약한 편), 단일 기능 = 기능적(가장 강함)</td></tr>
+<tr><td>인터뷰 / 설문</td><td>소수에게 깊게인가, 다수에게 같은 질문인가?</td><td>소수·심층 = 인터뷰, 다수·동일 = 설문</td></tr>
+<tr><td>정방향 / 역방향 추적</td><td>요구 → 구현인가, 구현 → 요구인가?</td><td>정방향 = 누락 찾기, 역방향 = 근거 없는 기능 찾기</td></tr>
+<tr><td>와이어프레임 / 목업 / 스토리보드 / 프로토타입</td><td>뼈대인가, 실물 같은 그림인가, 설명 문서인가, 동작하나?</td><td>순서대로 와이어프레임 → 목업 → 스토리보드 → 프로토타입</td></tr>
+<tr><td>SOLID의 I</td><td>쓰지 않는 메서드에 의존하나?</td><td>그렇다면 인터페이스를 쪼개라 = ISP</td></tr>
+</table>
 
 <h2>확인 문제 (채점 완료 · 15/20)</h2>
 <ol class="quiz">
