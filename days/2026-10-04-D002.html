@@ -22,6 +22,7 @@
 <div><b>6</b>클래스 관계<small>연관·집합·합성·일반화·실체화·의존</small></div>
 <div><b>6+7</b>다이어그램<small>구조 6 · 행위 7</small></div>
 </div>
+<div class="box audio"><b>🎧 듣는 강의 (약 23분)</b>오늘 내용을 이어서 설명해요. 먼저 듣고 페이지를 보면 더 빨라요.<audio controls preload="none" src="../assets/audio/D002.mp3?v=1397" style="width:100%;margin-top:8px"></audio></div>
 <div class="box"><b>오늘 이야기의 흐름</b>큰 그림(UML은 왜 생겼나) → 장면 1 UML의 단어와 문법(사물·관계·다이어그램) → 장면 2 다이어그램 분류 → 장면 3 요구를 그림으로(유스케이스) → 장면 4 구조를 그림으로(클래스) → 장면 5 움직임을 그림으로(시퀀스·상태·활동) → 장면 6 장비에 올리기(배치) → 한 장으로 다시 꿰기 → 오답 복습 → 확인 문제</div>
 
 <h2>1. 큰 그림 — UML은 왜 생겼나</h2>
@@ -338,6 +339,21 @@ document.querySelectorAll('.answer-bar').forEach(bar=>{
   btn.addEventListener('click',async()=>{const t=text();try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}btn.textContent='복사됨 ✓';setTimeout(()=>btn.textContent='답안 복사',1500)});
 });
 </script>
-
+<script>
+document.querySelectorAll('.box.audio audio').forEach(a=>{
+  const key='pos:'+a.getAttribute('src').split('?')[0],ctl=document.createElement('div'),rates=[1,1.25,1.5,1.75,2];
+  ctl.className='audio-ctl';
+  const b=(t,f)=>{const x=document.createElement('button');x.type='button';x.textContent=t;x.onclick=()=>f(x);ctl.appendChild(x);return x};
+  const seek=d=>{a.currentTime=Math.max(0,Math.min((a.duration||1e9),a.currentTime+d))};
+  b('⏪ 30초',()=>seek(-30));b('⏪ 10초',()=>seek(-10));b('10초 ⏩',()=>seek(10));b('30초 ⏩',()=>seek(30));
+  const r=b('속도 '+(+localStorage.rate||1)+'×',x=>{const i=(rates.indexOf(a.playbackRate)+1)%rates.length;a.playbackRate=rates[i];localStorage.rate=rates[i];x.textContent='속도 '+rates[i]+'×'});
+  a.addEventListener('play',()=>{a.playbackRate=+localStorage.rate||1},{once:true});
+  a.addEventListener('loadedmetadata',()=>{const p=+localStorage[key];if(p>5&&p<a.duration-5)a.currentTime=p});
+  a.addEventListener('timeupdate',()=>{localStorage[key]=a.currentTime|0});
+  a.after(ctl);
+});
+document.addEventListener('keydown',e=>{const a=document.querySelector('.box.audio audio');if(!a||/INPUT|TEXTAREA/.test(e.target.tagName))return;
+  if(e.key==='ArrowLeft'&&e.shiftKey){a.currentTime-=10;e.preventDefault()}if(e.key==='ArrowRight'&&e.shiftKey){a.currentTime+=10;e.preventDefault()}});
+</script>
 <footer>2027년 정기 기사 1회 정보처리기사 필기 준비 · 공식 범위: Q-Net 2027~2029 출제기준</footer>
 </main></body></html>
