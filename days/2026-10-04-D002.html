@@ -9,238 +9,317 @@
 <link rel="stylesheet" href="../style.css"></head>
 <body><main>
 <nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a></nav>
-<h1>D002 · UML</h1><div class="meta">2026-10-04 · A1 소프트웨어 개발 &gt; 요구사항 확인</div><p>오늘의 목표: UML을 쓰는 법보다 <b>시험이 묻는 분류와 기호</b>를 잡기. 다이어그램을 구조/행위로 나누고, 클래스 관계 6종의 선·끝 모양과 유스케이스의 include/extend 방향을 그림으로 구별할 수 있게 만들기.</p>
+<h1>D002 · UML</h1><div class="meta">2026-10-04 · A1 소프트웨어 개발 &gt; 요구사항 확인</div><p><span class="tag">A1</span> 어제(D001)는 오늘한끼 쇼핑몰의 요구를 찾고, 정리하고, 명세서로 쓰고, 검토했어요. 그런데 명세서가 글로만 수십 쪽이면 읽는 사람마다 머릿속 그림이 달라져요. 오늘은 그 요구를 <b>그림으로 적는 공용 언어, UML</b>을 봐요. 쓰는 법보다 시험이 묻는 <b>분류와 기호</b>가 중심이에요.</p>
 <ul>
-<li>UML 구성요소(사물·관계·다이어그램)와 사물 4종을 구별한다</li>
-<li>다이어그램을 구조(정적)와 행위(동적)로 분류한다</li>
-<li>클래스 관계 6종의 기호와 의미를 구별한다</li>
-<li>유스케이스 다이어그램의 include/extend/일반화를 구별한다</li>
-<li>상황(시간 순 메시지·상태 변화·처리 흐름)에 맞는 행위 다이어그램을 고른다</li>
+<li>UML의 구성요소(<b>사물·관계·다이어그램</b>)와 사물 4종을 구별한다</li>
+<li>다이어그램을 <b>구조(정적)</b>와 <b>행위(동적)</b>로 나누고, 상황에 맞는 다이어그램을 고른다</li>
+<li>유스케이스의 <b>include·extend·일반화</b> 방향을 구별한다</li>
+<li>클래스 관계 6종의 <b>선·끝 모양</b>과 의미, 특히 <b>집합과 합성</b>을 구별한다</li>
 </ul>
-
-<h2>1. UML이란 — 구성요소 큰 그림</h2>
-<p><b>UML(Unified Modeling Language)</b>은 OMG가 표준으로 관리하는 객체지향 모델링 언어예요. 요구사항 확인 단계에서는 분석한 요구를 그림(모델)으로 표현하는 도구로 나와요. 시험에서는 “UML은 프로그래밍 언어가 아니라 <b>모델링 언어</b>”, “특정 개발 방법론·언어에 종속되지 않는다”는 성격 문제도 가끔 나와요.</p>
-<div class="grid">
-<div><b>① 사물 (Things)</b>모델을 구성하는 요소 자체. 클래스, 유스케이스, 패키지, 노트…</div>
-<div><b>② 관계 (Relationships)</b>사물과 사물을 잇는 의미. 연관·집합·합성·일반화·의존·실체화</div>
-<div><b>③ 다이어그램 (Diagrams)</b>사물과 관계를 모아 한 관점으로 그린 그림. 클래스·시퀀스…</div>
+<div class="glance">
+<div><b>3</b>구성요소<small>사물·관계·다이어그램</small></div>
+<div><b>4</b>사물<small>구조·행동·그룹·주해</small></div>
+<div><b>6</b>클래스 관계<small>연관·집합·합성·일반화·실체화·의존</small></div>
+<div><b>6+7</b>다이어그램<small>구조 6 · 행위 7</small></div>
 </div>
-<div class="memo"><b>사관다</b> — 사물 · 관계 · 다이어그램</div>
+<div class="box"><b>오늘 이야기의 흐름</b>큰 그림(UML은 왜 생겼나) → 장면 1 UML의 단어와 문법(사물·관계·다이어그램) → 장면 2 다이어그램 분류 → 장면 3 요구를 그림으로(유스케이스) → 장면 4 구조를 그림으로(클래스) → 장면 5 움직임을 그림으로(시퀀스·상태·활동) → 장면 6 장비에 올리기(배치) → 한 장으로 다시 꿰기 → 오답 복습 → 확인 문제</div>
 
-<h3>사물 4종</h3>
+<h2>1. 큰 그림 — UML은 왜 생겼나</h2>
+<div class="point"><b>핵심 한 줄</b>UML(Unified Modeling Language)은 시스템을 그림으로 표현하는 <b>표준 모델링 언어</b>예요. 프로그래밍 언어가 아니고, 특정 언어·방법론에 묶이지 않아요.</div>
+<div class="duo"><div><p>1990년대 초 객체지향 분석·설계가 퍼지면서 방법론이 수십 개로 늘었어요. 방법론마다 클래스를 그리는 모양이 달라서, 같은 설계도를 두고도 “이 구름 모양은 뭐예요?”부터 물어야 했어요. 팀이 바뀌면 설계 문서를 통째로 번역해야 하는, 지금으로 치면 회사마다 Git 대신 자체 버전 관리 도구를 쓰는 상황이었어요.</p>
+<p>이 혼란을 정리한 것이 세 사람이에요. 부치(Booch) 방법의 그래디 부치, OMT의 제임스 럼바우, OOSE의 이바 야콥슨이 표기법을 하나로 합쳤고, 이것을 1997년 표준화 단체 <b>OMG</b>(Object Management Group)가 표준으로 채택했어요. 이름의 <b>Unified(통합된)</b>가 바로 이 합병의 흔적이에요. 지금은 UML 2.x(2.5) 판을 써요.</p></div><figure><svg viewBox="0 0 360 272" font-family="sans-serif" role="img" aria-label="UML 계보. 부치, OMT, OOSE 세 방법론이 합쳐져 1997년 OMG 표준 UML이 되었고 지금은 UML 2.5">
+<rect width="360" height="272" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d2a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">UML은 어떻게 하나가 됐나</text><rect x="10" y="42" width="108" height="56" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="64" y="64" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">Booch</text><text x="64" y="86" font-size="14" fill="#333" text-anchor="middle">부치 방법</text><path d="M64 98 L180 128" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d2a)"/><rect x="126" y="42" width="108" height="56" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="180" y="64" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">OMT</text><text x="180" y="86" font-size="14" fill="#333" text-anchor="middle">럼바우</text><path d="M180 98 L180 128" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d2a)"/><rect x="242" y="42" width="108" height="56" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="296" y="64" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">OOSE</text><text x="296" y="86" font-size="14" fill="#333" text-anchor="middle">야콥슨</text><path d="M296 98 L180 128" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d2a)"/><rect x="70" y="130" width="220" height="40" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="180.0" y="155.0" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">UML 1.x — 1997 OMG 표준</text><path d="M180 170 L180 190" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d2a)"/><rect x="70" y="192" width="220" height="40" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="180.0" y="217.0" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">UML 2.x — 지금은 2.5</text><text x="180" y="256" font-size="14" fill="#555" text-anchor="middle">세 방법론 저자 = 세 친구(Three Amigos)</text>
+</svg><figcaption>세 갈래 표기법이 하나로 합쳐진 것이 UML이에요. 이름의 Unified가 바로 이 “통합”이에요.</figcaption></figure></div>
+
+
+<p>시험에서는 UML의 성격을 묻는 문제가 가끔 나와요. 핵심은 세 가지예요. 첫째, UML은 <b>모델링 언어</b>라 코드처럼 실행되지 않아요. 둘째, 특정 프로그래밍 언어나 개발 방법론에 <b>종속되지 않아요</b>. 셋째, 그림을 그리는 데서 끝나지 않고 아래 네 가지 역할을 해요.</p>
+<table>
+<tr><th>UML의 역할</th><th>뜻</th></tr>
+<tr><td><b>가시화</b> 언어</td><td>머릿속 설계를 그림으로 보여 줘서 오해를 줄인다</td></tr>
+<tr><td><b>명세화</b> 언어</td><td>분석·설계 결정을 정확하고 빠짐없이 적는다</td></tr>
+<tr><td><b>구축</b> 언어</td><td>모델을 코드로 바꾸거나(순공학) 코드에서 모델을 뽑는다(역공학)</td></tr>
+<tr><td><b>문서화</b> 언어</td><td>요구·설계·테스트 산출물을 남겨 소통과 유지보수에 쓴다</td></tr>
+</table>
+<div class="duo"><div><p>오늘도 어제의 <b>오늘한끼</b> 프로젝트를 이어서 따라가요. 명세서로 확정된 요구를 유스케이스로 그리고, 그 요구를 담을 클래스를 그리고, 주문이 실제로 흘러가는 모습을 시퀀스·상태·활동으로 그리고, 마지막에 서버에 올리는 모습을 배치로 그려요. 오늘 나오는 용어가 어디에 매달리는지 지도부터 봐요.</p></div><figure><svg viewBox="0 0 360 318" font-family="sans-serif" role="img" aria-label="오늘의 개념 지도. UML 아래 사물, 관계, 다이어그램 세 가지가 있고 각각 하위 항목이 매달려 있다">
+<rect width="360" height="318" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d2b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">UML — 오늘의 지도</text><rect x="120" y="38" width="120" height="36" rx="8" fill="#fff" stroke="#888" stroke-width="2"/><text x="180.0" y="61.0" font-size="14" font-weight="700" fill="#555" text-anchor="middle">UML</text><path d="M180 74 L62 98" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d2b)"/><rect x="6" y="100" width="112" height="34" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="62.0" y="122.0" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">사물</text><rect x="6" y="142" width="112" height="118" rx="8" fill="#fff" stroke="#2a5db0" stroke-width="1"/><text x="62" y="164" font-size="14" fill="#333" text-anchor="middle">구조 사물</text><text x="62" y="187" font-size="14" fill="#333" text-anchor="middle">행동 사물</text><text x="62" y="210" font-size="14" fill="#333" text-anchor="middle">그룹 사물</text><text x="62" y="233" font-size="14" fill="#333" text-anchor="middle">주해 사물</text><path d="M180 74 L180 98" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d2b)"/><rect x="124" y="100" width="112" height="34" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="180.0" y="122.0" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">관계</text><rect x="124" y="142" width="112" height="164" rx="8" fill="#fff" stroke="#b5730d" stroke-width="1"/><text x="180" y="164" font-size="14" fill="#333" text-anchor="middle">연관</text><text x="180" y="187" font-size="14" fill="#333" text-anchor="middle">집합</text><text x="180" y="210" font-size="14" fill="#333" text-anchor="middle">합성</text><text x="180" y="233" font-size="14" fill="#333" text-anchor="middle">일반화</text><text x="180" y="256" font-size="14" fill="#333" text-anchor="middle">실체화</text><text x="180" y="279" font-size="14" fill="#333" text-anchor="middle">의존</text><path d="M180 74 L298 98" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d2b)"/><rect x="242" y="100" width="112" height="34" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="298.0" y="122.0" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">다이어그램</text><rect x="242" y="142" width="112" height="118" rx="8" fill="#fff" stroke="#2f7d4a" stroke-width="1"/><text x="298" y="164" font-size="14" fill="#333" text-anchor="middle">구조 6종</text><text x="298" y="187" font-size="14" fill="#333" text-anchor="middle">클·객·컴·배·패·복</text><text x="298" y="210" font-size="14" fill="#333" text-anchor="middle">행위 7종</text><text x="298" y="233" font-size="14" fill="#333" text-anchor="middle">유·활·상·시·커…</text>
+</svg><figcaption>오늘 용어는 전부 이 세 가지 중 하나에 매달려요. 사물이 단어, 관계가 문법, 다이어그램이 문장이에요.</figcaption></figure></div>
+
+
+<p><b>→ 이 장면의 결과물:</b> UML이 “통합된 표준 그림 언어”라는 정체. 언어라면 단어와 문법이 있겠죠? 다음 장면은 UML의 단어(사물)와 문법(관계)이에요.</p>
+
+<h2>2. 장면 1 — UML의 단어와 문법 (사물·관계·다이어그램)</h2>
+<div class="point"><b>핵심 한 줄</b>UML은 <b>사물</b>(그릴 대상)을 <b>관계</b>(선)로 이어서 <b>다이어그램</b>(한 관점의 그림)을 만들어요.</div>
+<p>문장을 만들려면 단어와 문법이 필요하듯, UML 그림도 세 가지 재료로 이루어져요. <b>사물(Things)</b>은 그림에 등장하는 대상 자체, <b>관계(Relationships)</b>는 사물끼리 어떤 사이인지를 나타내는 선, <b>다이어그램(Diagrams)</b>은 사물과 관계를 한 가지 관점으로 모아 그린 그림이에요. 오늘한끼로 치면 “주문” 클래스가 사물, 주문과 주문항목을 잇는 선이 관계, 그 둘이 그려진 클래스 다이어그램이 다이어그램이에요.</p>
+<p>사물은 다시 네 종류로 나눠요. 이 분류는 국내 수험서에서 쓰는 정리이고 시험도 이 이름으로 나와요. 구분 기준은 “품사”로 생각하면 쉬워요. 시스템을 이루는 <b>명사</b>는 구조 사물, 시간에 따라 일어나는 <b>동사</b>는 행동 사물, 여러 요소를 묶는 <b>폴더</b>는 그룹 사물, 그림 옆에 붙이는 <b>포스트잇</b>은 주해 사물이에요.</p>
 <table>
 <tr><th>사물</th><th>뜻</th><th>예</th></tr>
 <tr><td><b>구조 사물</b></td><td>시스템의 정적인 부분(명사)</td><td>클래스, 인터페이스, 유스케이스, 컴포넌트, 노드</td></tr>
-<tr><td><b>행동 사물</b></td><td>시간·공간에 따른 동작(동사)</td><td>상호작용(메시지), 상태 머신</td></tr>
+<tr><td><b>행동 사물</b></td><td>시간·공간에 따라 일어나는 동작(동사)</td><td>상호작용(메시지), 상태 머신</td></tr>
 <tr><td><b>그룹 사물</b></td><td>요소를 묶는 단위</td><td>패키지</td></tr>
 <tr><td><b>주해 사물</b></td><td>설명·제약을 덧붙이는 메모</td><td>노트(귀 접힌 사각형)</td></tr>
 </table>
-<div class="memo"><b>구행그주</b> — 구조 · 행동 · 그룹 · 주해. “패키지 = 그룹 사물”, “노트 = 주해 사물” 짝이 단골이에요.</div>
-<p><small>※ 사물 4종 분류는 국내 수험서에서 쓰는 정리예요(UML 2.5 명세 본문 용어와는 조금 달라요). 시험은 이 분류로 출제돼요.</small></p>
+<div class="duo"><div><p>네 사물은 생김새도 달라서 그림을 보면 바로 구별돼요. 특히 <b>패키지 = 그룹 사물</b>, <b>노트 = 주해 사물</b> 짝이 단골이에요. 노트는 코드의 주석과 같은 역할이라 그림의 의미를 바꾸지 않아요. 다만 실무의 주석처럼 “나중에 고칠 것”만 잔뜩 적혀 있으면 아무도 안 고친다는 점까지 닮았어요.</p></div><figure><svg viewBox="0 0 360 262" font-family="sans-serif" role="img" aria-label="사물 4종의 모양. 구조 사물은 사각형 클래스와 타원 유스케이스, 행동 사물은 메시지 화살표와 둥근 상태, 그룹 사물은 탭이 달린 패키지, 주해 사물은 귀가 접힌 노트">
+<rect width="360" height="262" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">사물 4종은 생긴 것도 다르다</text><rect x="8" y="40" width="168" height="102" rx="8" fill="#fff" stroke="#2a5db0" stroke-width="1"/><text x="18" y="62" font-size="14" font-weight="700" fill="#2a5db0">구조 사물</text><rect x="184" y="40" width="168" height="102" rx="8" fill="#fff" stroke="#b5730d" stroke-width="1"/><text x="194" y="62" font-size="14" font-weight="700" fill="#b5730d">행동 사물</text><rect x="8" y="150" width="168" height="102" rx="8" fill="#fff" stroke="#2f7d4a" stroke-width="1"/><text x="18" y="172" font-size="14" font-weight="700" fill="#2f7d4a">그룹 사물</text><rect x="184" y="150" width="168" height="102" rx="8" fill="#fff" stroke="#6a3d9a" stroke-width="1"/><text x="194" y="172" font-size="14" font-weight="700" fill="#6a3d9a">주해 사물</text><rect x="20" y="74" width="64" height="32" rx="2" fill="#fff" stroke="#333" stroke-width="1.5"/><text x="52" y="95" font-size="14" fill="#222" text-anchor="middle">주문</text><ellipse cx="130" cy="90" rx="38" ry="18" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="130" y="95" font-size="14" fill="#222" text-anchor="middle">주문하기</text><text x="52" y="130" font-size="14" fill="#555" text-anchor="middle">클래스</text><text x="130" y="130" font-size="14" fill="#555" text-anchor="middle">유스케이스</text><defs><marker id="d2c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker></defs><line x1="196" y1="88" x2="252" y2="88" stroke="#333" stroke-width="2"/><polyline points="243,81 256,88 243,95" fill="none" stroke="#333" stroke-width="2"/><text x="226" y="80" font-size="14" fill="#222" text-anchor="middle">결제()</text><rect x="274" y="72" width="84" height="32" rx="16" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="316" y="93" font-size="14" fill="#222" text-anchor="middle">배송중</text><text x="226" y="130" font-size="14" fill="#555" text-anchor="middle">메시지</text><text x="316" y="130" font-size="14" fill="#555" text-anchor="middle">상태</text><rect x="40" y="182" width="50" height="16" rx="0" fill="#fff" stroke="#333" stroke-width="1.5"/><rect x="40" y="196" width="104" height="40" rx="0" fill="#fff" stroke="#333" stroke-width="1.5"/><text x="92" y="222" font-size="14" fill="#222" text-anchor="middle">주문 패키지</text><path d="M210 182 L310 182 L326 198 L326 236 L210 236 Z" fill="#fffde8" stroke="#333" stroke-width="1.5"/><path d="M310 182 L310 198 L326 198" fill="none" stroke="#333" stroke-width="1.5"/><text x="266" y="214" font-size="14" fill="#222" text-anchor="middle">재고 0이면</text><text x="266" y="232" font-size="14" fill="#222" text-anchor="middle">주문 불가</text>
+</svg><figcaption>패키지는 탭 달린 폴더, 노트는 귀 접힌 메모지 모양이에요. 그룹·주해는 그림만 봐도 맞힐 수 있어요.</figcaption></figure></div>
 
-<h2>2. 다이어그램 분류 — 구조(정적) vs 행위(동적)</h2>
+
+<div class="memo"><b>사관다</b> — 사물 · 관계 · 다이어그램. <b>구행그주</b> — 구조 · 행동 · 그룹 · 주해. “명사·동사·폴더·포스트잇”으로 떠올리면 순서까지 따라와요.</div>
+<div class="trap">유스케이스는 “기능”이라 행동 사물 같지만, 그림 속 타원 하나는 시스템이 가진 기능 단위라서 <b>구조 사물</b>로 분류해요. 반면 유스케이스 <b>다이어그램</b>은 행위 다이어그램이에요. 사물 분류와 다이어그램 분류를 섞은 선지에 주의하세요.</div>
+<p><b>→ 이 장면의 결과물:</b> 단어 4종과 문법(관계)이라는 재료. 관계 6종은 장면 4 클래스에서 자세히 보고, 먼저 이 재료로 만드는 다이어그램이 어떤 종류가 있는지 나눠 봐요.</p>
+
+<h2>3. 장면 2 — 다이어그램 분류 (구조 vs 행위)</h2>
+<div class="point"><b>핵심 한 줄</b>시간 개념이 없으면 <b>구조(정적)</b>, 시간에 따라 움직이면 <b>행위(동적)</b>. 구조 6종만 외우면 나머지는 전부 행위예요.</div>
+<p>UML 2.x에는 다이어그램이 열 개가 넘어요. 다 외우려면 막막하지만, 기준은 하나예요. 그 그림이 “시스템이 <b>무엇으로 이루어졌나</b>”를 보여 주면 구조 다이어그램, “시스템이 <b>어떻게 움직이나</b>”를 보여 주면 행위 다이어그램이에요. 사진과 동영상의 차이라고 보면 돼요. 구조 다이어그램은 어느 순간을 찍어도 같은 모습이고, 행위 다이어그램은 시간이 흘러야 의미가 생겨요.</p>
 <div class="vs">
-<div><b>구조 다이어그램</b>시스템이 <b>무엇으로 이루어졌나</b><br>시간 개념 없음 = 정적</div>
-<div><b>행위 다이어그램</b>시스템이 <b>어떻게 움직이나</b><br>시간에 따른 변화 = 동적</div>
+<div><b>구조 다이어그램</b>시스템이 무엇으로 이루어졌나. 시간 개념 없음 = 정적. 사진 한 장.</div>
+<div><b>행위 다이어그램</b>시스템이 어떻게 움직이나. 시간에 따른 변화 = 동적. 동영상.</div>
 </div>
-<figure class="mermaid"><img src="../assets/2cdafdaa021c29d3.png" alt="도식" loading="lazy" style="width:400px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure>
-<figure class="mermaid"><img src="../assets/67a7e6ee6b22c724.png" alt="도식" loading="lazy" style="width:592px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure>
-<div class="memo"><b>클객컴배패복</b>은 구조, 나머지는 전부 행위. 구조 6개만 외우면 분류 문제는 끝나요.</div>
-<div class="trap">유스케이스 다이어그램은 “요구사항을 정리하는 그림”이라 정적으로 착각하기 쉽지만 <b>행위</b> 다이어그램이에요.</div>
-<p><small>※ UML 2.5 명세에는 구조 쪽에 <b>프로파일 다이어그램</b>도 있어요(7종). 시험 선지는 보통 위 6종 기준으로 판단하면 돼요.</small></p>
+<div class="duo"><div><p>행위 다이어그램 안에는 객체끼리 메시지를 주고받는 모습을 그리는 <b>상호작용 다이어그램</b> 묶음이 따로 있어요. 시퀀스·커뮤니케이션·상호작용 개요·타이밍 네 개가 여기에 들어가요. 상호작용 개요는 여러 상호작용을 활동 다이어그램처럼 이어 붙인 큰 흐름도이고, 타이밍은 시간 축 위에서 상태가 언제 바뀌는지 시간 제약까지 그려요.</p></div><figure><svg viewBox="0 0 360 376" font-family="sans-serif" role="img" aria-label="다이어그램 분류 트리. 구조 쪽에 클래스, 객체, 컴포넌트, 배치, 패키지, 복합 구조. 행위 쪽에 유스케이스, 활동, 상태, 그리고 상호작용 묶음 아래 시퀀스, 커뮤니케이션, 상호작용 개요, 타이밍">
+<rect width="360" height="376" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">다이어그램 분류 — 구조 6 · 나머지는 행위</text><rect x="8" y="40" width="164" height="36" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="90.0" y="63.0" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">구조 (정적)</text><rect x="188" y="40" width="164" height="36" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="270.0" y="63.0" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">행위 (동적)</text><rect x="20" y="86" width="140" height="30" rx="8" fill="#fff" stroke="#2a5db0" stroke-width="1.5"/><text x="90" y="106" font-size="14" fill="#222" text-anchor="middle">클래스</text><rect x="20" y="124" width="140" height="30" rx="8" fill="#fff" stroke="#2a5db0" stroke-width="1.5"/><text x="90" y="144" font-size="14" fill="#222" text-anchor="middle">객체</text><rect x="20" y="162" width="140" height="30" rx="8" fill="#fff" stroke="#2a5db0" stroke-width="1.5"/><text x="90" y="182" font-size="14" fill="#222" text-anchor="middle">컴포넌트</text><rect x="20" y="200" width="140" height="30" rx="8" fill="#fff" stroke="#2a5db0" stroke-width="1.5"/><text x="90" y="220" font-size="14" fill="#222" text-anchor="middle">배치</text><rect x="20" y="238" width="140" height="30" rx="8" fill="#fff" stroke="#2a5db0" stroke-width="1.5"/><text x="90" y="258" font-size="14" fill="#222" text-anchor="middle">패키지</text><rect x="20" y="276" width="140" height="30" rx="8" fill="#fff" stroke="#2a5db0" stroke-width="1.5"/><text x="90" y="296" font-size="14" fill="#222" text-anchor="middle">복합 구조</text><rect x="200" y="86" width="140" height="30" rx="8" fill="#fff" stroke="#b5730d" stroke-width="1.5"/><text x="270" y="106" font-size="14" fill="#222" text-anchor="middle">유스케이스</text><rect x="200" y="124" width="140" height="30" rx="8" fill="#fff" stroke="#b5730d" stroke-width="1.5"/><text x="270" y="144" font-size="14" fill="#222" text-anchor="middle">활동</text><rect x="200" y="162" width="140" height="30" rx="8" fill="#fff" stroke="#b5730d" stroke-width="1.5"/><text x="270" y="182" font-size="14" fill="#222" text-anchor="middle">상태</text><rect x="196" y="200" width="148" height="162" rx="8" fill="#fff8ee" stroke="#b5730d" stroke-width="1.5" stroke-dasharray="5 4"/><text x="270" y="220" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">상호작용</text><rect x="206" y="230" width="128" height="26" rx="8" fill="#fff" stroke="#b5730d" stroke-width="1.2"/><text x="270" y="248" font-size="14" fill="#222" text-anchor="middle">시퀀스</text><rect x="206" y="262" width="128" height="26" rx="8" fill="#fff" stroke="#b5730d" stroke-width="1.2"/><text x="270" y="280" font-size="14" fill="#222" text-anchor="middle">커뮤니케이션</text><rect x="206" y="294" width="128" height="26" rx="8" fill="#fff" stroke="#b5730d" stroke-width="1.2"/><text x="270" y="312" font-size="14" fill="#222" text-anchor="middle">상호작용 개요</text><rect x="206" y="326" width="128" height="26" rx="8" fill="#fff" stroke="#b5730d" stroke-width="1.2"/><text x="270" y="344" font-size="14" fill="#222" text-anchor="middle">타이밍</text><text x="90" y="330" font-size="14" fill="#555" text-anchor="middle">시간 축 없음</text><text x="90" y="350" font-size="14" fill="#555" text-anchor="middle">= 무엇으로 이루어졌나</text>
+</svg><figcaption>왼쪽 여섯 칸만 외우면 나머지는 전부 오른쪽이에요. 상호작용 네 개는 “메시지 주고받기” 묶음이에요.</figcaption></figure></div>
 
-<h2>3. 다이어그램 한눈 표</h2>
-<p class="hint">↔ 표가 넓어요. 옆으로 밀어서 보세요</p><table>
-<tr><th>다이어그램</th><th>분류</th><th>무엇을 보여 주나</th><th>시험 키워드</th></tr>
-<tr><td><b>클래스</b></td><td>구조</td><td>클래스의 속성·연산과 클래스 간 관계</td><td>속성·오퍼레이션, 관계 기호</td></tr>
-<tr><td><b>객체</b></td><td>구조</td><td>특정 시점의 인스턴스와 링크</td><td>인스턴스, 스냅샷</td></tr>
-<tr><td><b>컴포넌트</b></td><td>구조</td><td>소프트웨어 구성요소와 인터페이스</td><td>모듈·라이브러리, 구현 관점</td></tr>
-<tr><td><b>배치</b></td><td>구조</td><td>물리 노드(서버·장비)와 그 위의 산출물</td><td>노드, 하드웨어, 물리적 배치</td></tr>
-<tr><td><b>패키지</b></td><td>구조</td><td>요소를 묶은 그룹과 그룹 간 의존</td><td>그룹화, 네임스페이스</td></tr>
-<tr><td><b>복합 구조</b></td><td>구조</td><td>클래스·컴포넌트의 내부 구조</td><td>내부 파트, 포트</td></tr>
-<tr><td><b>유스케이스</b></td><td>행위</td><td>사용자(액터) 관점의 기능</td><td>액터, 시스템 경계, 요구 분석</td></tr>
-<tr><td><b>시퀀스</b></td><td>행위</td><td>객체 간 메시지를 <b>시간 순서</b>로</td><td>생명선, 활성 박스, 메시지</td></tr>
-<tr><td><b>커뮤니케이션</b></td><td>행위</td><td>객체 간 메시지를 <b>연결(링크) 중심</b>으로</td><td>링크, 메시지 번호</td></tr>
-<tr><td><b>상태</b></td><td>행위</td><td>한 객체가 <b>이벤트</b>에 따라 바뀌는 상태</td><td>상태 전이, 이벤트</td></tr>
-<tr><td><b>활동</b></td><td>행위</td><td>처리 흐름(로직·업무 절차)</td><td>분기, 병렬, 스윔레인</td></tr>
-<tr><td><b>타이밍</b></td><td>행위</td><td>시간 제약에 따른 상태 변화</td><td>시간 축, 제약</td></tr>
+
+<p>한 장 요약 — 다이어그램별로 무엇을 보여 주는지 정리하면 아래 표예요. 클래스·유스케이스·시퀀스·상태·활동·배치는 아래 장면에서 오늘한끼 예로 하나씩 그려 볼 거고, 나머지는 표의 설명 정도로 충분해요. 객체 다이어그램은 클래스 다이어그램의 “특정 순간 스냅숏”, 컴포넌트 다이어그램은 라이브러리·모듈 같은 구현 단위와 그 인터페이스, 복합 구조 다이어그램은 클래스 하나의 내부를 들여다본 그림이에요.</p>
+<table>
+<tr><th>다이어그램</th><th>분류</th><th>무엇을 보여 주나</th></tr>
+<tr><td><b>클래스</b></td><td>구조</td><td>클래스의 속성·연산과 클래스 간 관계</td></tr>
+<tr><td><b>객체</b></td><td>구조</td><td>특정 시점의 인스턴스와 링크(스냅숏)</td></tr>
+<tr><td><b>컴포넌트</b></td><td>구조</td><td>모듈·라이브러리 같은 구현 단위와 인터페이스</td></tr>
+<tr><td><b>배치</b></td><td>구조</td><td>물리 노드(서버·장비)와 그 위에 올라간 산출물</td></tr>
+<tr><td><b>패키지</b></td><td>구조</td><td>요소를 묶은 그룹과 그룹 간 의존</td></tr>
+<tr><td><b>복합 구조</b></td><td>구조</td><td>클래스·컴포넌트의 내부 파트와 포트</td></tr>
+<tr><td><b>유스케이스</b></td><td>행위</td><td>사용자(액터) 관점에서 본 시스템 기능</td></tr>
+<tr><td><b>활동</b></td><td>행위</td><td>처리 흐름(분기·병렬·스윔레인)</td></tr>
+<tr><td><b>상태</b></td><td>행위</td><td>한 객체가 이벤트에 따라 바뀌는 상태</td></tr>
+<tr><td><b>시퀀스</b></td><td>행위(상호작용)</td><td>객체 간 메시지를 시간 순서로</td></tr>
+<tr><td><b>커뮤니케이션</b></td><td>행위(상호작용)</td><td>객체 간 메시지를 연결(링크) 중심으로</td></tr>
+<tr><td><b>상호작용 개요</b></td><td>행위(상호작용)</td><td>여러 상호작용을 흐름으로 묶은 개요</td></tr>
+<tr><td><b>타이밍</b></td><td>행위(상호작용)</td><td>시간 제약에 따른 상태 변화</td></tr>
 </table>
+<div class="memo"><b>클객컴배패복</b>은 구조, 나머지는 전부 행위. “클래스 객체가 컴퓨터에 배치돼 패키지로 복구됐다”처럼 이어 읽으면 여섯 개가 한 줄로 붙어요.</div>
+<div class="trap">이름에 속는 문제가 두 개 있어요. <b>상태</b> 다이어그램은 이름이 “상태”라 정적처럼 들리지만, 상태가 <b>바뀌는</b> 과정을 그리니 <b>행위</b>예요. <b>유스케이스</b> 다이어그램도 “요구를 정리하는 그림”이라 정적으로 착각하기 쉽지만 <b>행위</b>예요. 출제자는 이 둘을 구조 선지 옆에 나란히 세워 두는 걸 좋아해요.</div>
+<p><small>※ UML 2.5 명세에는 구조 쪽에 프로파일 다이어그램도 있어요(7종). 시험 선지는 위 6종 기준으로 판단하면 돼요.</small></p>
+<p><b>→ 이 장면의 결과물:</b> 다이어그램을 두 서랍에 나눠 담았어요. 이제 오늘한끼 프로젝트로 돌아가, 어제 확정한 요구부터 그림으로 옮겨 봐요. 첫 그림은 유스케이스예요.</p>
 
-<h3>시퀀스 다이어그램 — 시간 순서</h3>
-<div class="duo"><div><p>세로 점선이 <b>생명선</b>(객체가 살아 있는 시간), 위에서 아래로 시간이 흘러요. 가로 화살표가 메시지, 실선은 호출이고 점선은 응답이에요.</p></div><figure class="mermaid"><img src="../assets/b2f836462e567259.png" alt="도식" loading="lazy" style="width:650px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure></div>
-
-<p>시퀀스 구성요소: <span class="tag">액터</span><span class="tag">객체</span><span class="tag">생명선</span><span class="tag">활성 박스(실행)</span><span class="tag">메시지</span><span class="tag">프레임(alt·loop)</span></p>
-
-<h3>상태 다이어그램 — 이벤트에 따른 상태 변화</h3>
-<figure class="mermaid"><img src="../assets/2208784193013201.png" alt="도식" loading="lazy" style="width:328px"></figure>
-<p>검은 점이 시작, 테두리 있는 점이 종료예요. 화살표 위의 글자가 상태를 바꾸는 <b>이벤트</b>예요.</p>
-
-<div class="vs">
-<div><b>시퀀스</b>같은 상호작용을 <b>시간 축</b>으로 정렬<br>“메시지 순서”가 키워드</div>
-<div><b>커뮤니케이션</b>같은 상호작용을 <b>객체 연결</b>로 배치<br>순서는 메시지 번호(1, 1.1…)로 표시</div>
-</div>
-<div class="point">문제 속 키워드 → 다이어그램: “시간 순서·메시지” → 시퀀스 / “상태 변화·이벤트” → 상태 / “처리 흐름·분기·스윔레인” → 활동 / “물리적 노드·하드웨어” → 배치 / “사용자 관점 기능” → 유스케이스</div>
-
-<h2>4. 클래스 관계 6종 — 선과 끝 모양</h2>
-<div class="duo"><div><p>선은 <b>실선/점선</b> 두 가지, 끝 모양은 <b>없음·빈 마름모·채운 마름모·빈 삼각형·열린 화살표</b>로 구별해요. 그림의 왼쪽·오른쪽 배치가 그대로 실제 표기예요.</p></div><figure><svg viewBox="0 0 400 440" font-family="sans-serif">
-<rect width="400" height="440" rx="12" fill="#f7f7f4"/>
-<g fill="#222" font-size="15" font-weight="700">
-<text x="20" y="28">① 연관 — 실선</text>
-<text x="20" y="98">② 집합 — 실선 + 빈 마름모(전체 쪽)</text>
-<text x="20" y="168">③ 합성 — 실선 + 채운 마름모(전체 쪽)</text>
-<text x="20" y="238">④ 일반화 — 실선 + 빈 삼각형(부모 쪽)</text>
-<text x="20" y="308">⑤ 실체화 — 점선 + 빈 삼각형(인터페이스 쪽)</text>
-<text x="20" y="378">⑥ 의존 — 점선 + 열린 화살표</text>
-</g>
-<g fill="#fff" stroke="#333" stroke-width="1.5">
-<rect x="20" y="38" width="100" height="30"/><rect x="280" y="38" width="100" height="30"/>
-<rect x="20" y="108" width="100" height="30"/><rect x="280" y="108" width="100" height="30"/>
-<rect x="20" y="178" width="100" height="30"/><rect x="280" y="178" width="100" height="30"/>
-<rect x="20" y="248" width="100" height="30"/><rect x="280" y="248" width="100" height="30"/>
-<rect x="20" y="318" width="100" height="30"/><rect x="280" y="318" width="100" height="30"/>
-<rect x="20" y="388" width="100" height="30"/><rect x="280" y="388" width="100" height="30"/>
-</g>
-<g fill="#222" font-size="14" text-anchor="middle">
-<text x="70" y="58">학생</text><text x="330" y="58">강의</text>
-<text x="70" y="128">컴퓨터</text><text x="330" y="128">모니터</text>
-<text x="70" y="198">주문</text><text x="330" y="198">주문항목</text>
-<text x="70" y="268">개</text><text x="330" y="268">동물</text>
-<text x="70" y="338">카드결제</text><text x="330" y="338">«인터페이스»</text>
-<text x="70" y="408">주문</text><text x="330" y="408">쿠폰</text>
-</g>
-<g stroke="#333" stroke-width="2" fill="none">
-<line x1="120" y1="53" x2="280" y2="53"/>
-<line x1="148" y1="123" x2="280" y2="123"/>
-<line x1="148" y1="193" x2="280" y2="193"/>
-<line x1="120" y1="263" x2="264" y2="263"/>
-<line x1="120" y1="333" x2="264" y2="333" stroke-dasharray="7 5"/>
-<line x1="120" y1="403" x2="278" y2="403" stroke-dasharray="7 5"/>
-<polyline points="266,396 279,403 266,410"/>
-</g>
-<polygon points="120,123 134,115 148,123 134,131" fill="#fff" stroke="#333" stroke-width="2"/>
-<polygon points="120,193 134,185 148,193 134,201" fill="#222" stroke="#333" stroke-width="2"/>
-<polygon points="280,263 264,254 264,272" fill="#fff" stroke="#333" stroke-width="2"/>
-<polygon points="280,333 264,324 264,342" fill="#fff" stroke="#333" stroke-width="2"/>
-</svg><figcaption>클래스 관계 6종의 실제 표기. 마름모는 전체 쪽, 삼각형은 부모·인터페이스 쪽에 붙어요</figcaption></figure></div>
-
-
-<p class="hint">↔ 표가 넓어요. 옆으로 밀어서 보세요</p><table>
-<tr><th>관계 (예)</th><th>선</th><th>끝 모양</th><th>의미</th></tr>
-<tr><td><b>연관</b> Association<br><small>학생 — 강의</small></td><td>실선</td><td>없음(방향 있으면 열린 화살표)</td><td>서로 알고 참조하는 관계</td></tr>
-<tr><td><b>집합</b> Aggregation<br><small>컴퓨터 ◇— 모니터</small></td><td>실선</td><td>빈 마름모 ◇ (전체 쪽)</td><td>전체–부분, 부분은 <b>독립적으로 존재</b> 가능</td></tr>
-<tr><td><b>합성</b> Composition (포함)<br><small>주문 ◆— 주문항목</small></td><td>실선</td><td>채운 마름모 ◆ (전체 쪽)</td><td>전체–부분, <b>생명주기 공유</b>: 전체가 사라지면 부분도 사라짐</td></tr>
-<tr><td><b>일반화</b> Generalization<br><small>개 —▷ 동물</small></td><td>실선</td><td>빈 삼각형 △ (부모 쪽)</td><td>상속, is-a</td></tr>
-<tr><td><b>실체화</b> Realization<br><small>카드결제 ┄▷ 결제수단</small></td><td>점선</td><td>빈 삼각형 △ (인터페이스 쪽)</td><td>인터페이스 구현</td></tr>
-<tr><td><b>의존</b> Dependency<br><small>주문 ┄&gt; 쿠폰</small></td><td>점선</td><td>열린 화살표 (쓰이는 쪽)</td><td>잠깐 사용(매개변수·지역 변수), 상대가 바뀌면 영향</td></tr>
+<h2>4. 장면 3 — 요구를 그림으로 (유스케이스 다이어그램)</h2>
+<div class="point"><b>핵심 한 줄</b>유스케이스 다이어그램은 <b>사용자(액터) 관점</b>에서 시스템이 제공하는 기능을 그려요. 시험은 <b>include와 extend의 방향·성격</b>을 물어요.</div>
+<p>요구사항 명세서는 개발자에게는 충분하지만, 고객에게 보여 주기엔 너무 길어요. 유스케이스 다이어그램은 “누가 이 시스템으로 무엇을 할 수 있나”를 한 장에 보여 주는 그림이라, 요구사항 단계에서 고객과 범위를 맞출 때 가장 먼저 그려요. 어제 D001에서 도출 기법으로도 잠깐 나왔던 바로 그 그림이에요.</p>
+<p>구성요소는 네 가지예요. 각 요소가 오늘한끼에서 무엇인지 함께 보세요.</p>
+<table>
+<tr><th>구성요소</th><th>뜻</th><th>오늘한끼 예</th></tr>
+<tr><td><b>액터</b></td><td>시스템 <b>밖</b>에서 시스템과 상호작용하는 사람·외부 시스템. 사람 모양(졸라맨)으로 그림</td><td>고객, 결제대행사(외부 시스템)</td></tr>
+<tr><td><b>유스케이스</b></td><td>액터에게 제공하는 기능 하나. 타원으로 그림</td><td>상품 검색, 주문하기</td></tr>
+<tr><td><b>시스템 경계</b></td><td>시스템 범위를 나타내는 사각형. 안쪽이 만들 범위</td><td>“오늘한끼” 사각형</td></tr>
+<tr><td><b>관계</b></td><td>연관(실선), 포함 «include», 확장 «extend», 일반화</td><td>고객 — 주문하기</td></tr>
 </table>
+<p>액터에서 눈여겨볼 점은 “사람이 아니어도 된다”는 거예요. 결제대행사(PG)처럼 시스템 밖에서 우리 시스템과 주고받는 외부 시스템도 액터예요. 반대로 우리 시스템 안의 DB나 모듈은 액터가 아니에요. 사람 모양으로 그려진 결제 API를 처음 보면 좀 어색하지만, 규칙상 그게 맞아요.</p>
+<h3>포함 «include» — 반드시 실행하는 공통 기능</h3>
+<p>오늘한끼에서는 주문하기, 주문 취소, 리뷰 쓰기가 모두 로그인을 먼저 해야 해요. 세 유스케이스에 로그인 단계를 각각 적으면 같은 내용이 세 번 반복되겠죠. 그래서 공통 부분을 “로그인” 유스케이스로 따로 빼고 <b>«include»</b>로 끌어와요. 코드에서 중복 로직을 메서드로 추출하고 여러 곳에서 호출하는 것과 똑같은 발상이에요.</p>
+<p>포함 관계에서 기본 유스케이스(주문하기)는 포함된 유스케이스(로그인) 없이는 <b>완결되지 않아요</b>. 그래서 포함은 항상 실행되는 <b>필수</b> 관계이고, 점선 화살표는 <b>기본 → 포함되는 쪽</b>으로 그려요. 호출하는 쪽에서 호출되는 쪽으로 화살표가 간다고 생각하면 돼요.</p>
+<h3>확장 «extend» — 조건이 맞을 때만 끼어드는 부가 기능</h3>
+<div class="duo"><div><p>쿠폰 적용은 다르게 생겼어요. 쿠폰이 있는 고객만, 원할 때만 쓰는 기능이라 주문하기는 쿠폰 없이도 혼자 완결돼요. 이렇게 기본 흐름에 <b>조건부로 덧붙는</b> 기능을 <b>«extend»</b>로 그려요. 기본 유스케이스 안에 “여기서 끼어들 수 있음”이라고 표시한 지점을 <b>확장점(extension point)</b>이라고 해요.</p>
+<p>확장 관계의 점선 화살표는 <b>확장하는 쪽 → 기본 쪽</b>으로 그려요. include와 방향이 정반대예요. 기본 유스케이스는 쿠폰이 존재하는지조차 몰라도 되고, 쿠폰 적용이 알아서 “저 거기 붙을게요” 하고 찾아오는 모양이에요. 스프링의 AOP처럼 원래 코드는 그대로 두고 바깥에서 기능을 끼워 넣는 느낌이에요.</p></div><figure><svg viewBox="0 0 360 290" font-family="sans-serif" role="img" aria-label="오늘한끼 유스케이스 다이어그램. 액터 고객이 경계 안의 상품 검색과 주문하기에 연결되고, 주문하기에서 로그인으로 include 점선, 쿠폰 적용에서 주문하기로 extend 점선">
+<rect width="360" height="290" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d2d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker></defs><rect x="86" y="14" width="266" height="262" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/><text x="219" y="36" font-size="14" fill="#555" text-anchor="middle">오늘한끼 (시스템 경계)</text><g stroke="#333" stroke-width="2" fill="none"><circle cx="40" cy="110" r="9" fill="#fff"/><line x1="40" y1="119" x2="40" y2="148"/><line x1="24" y1="130" x2="56" y2="130"/><line x1="40" y1="148" x2="28" y2="168"/><line x1="40" y1="148" x2="52" y2="168"/></g><text x="40" y="188" font-size="14" font-weight="700" fill="#222" text-anchor="middle">고객</text><line x1="56" y1="128" x2="116" y2="84" stroke="#333" stroke-width="2"/><line x1="56" y1="132" x2="112" y2="172" stroke="#333" stroke-width="2"/><ellipse cx="162" cy="80" rx="48" ry="20" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="162" y="85" font-size="14" fill="#222" text-anchor="middle">상품 검색</text><ellipse cx="162" cy="176" rx="52" ry="22" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="162" y="181" font-size="14" fill="#222" text-anchor="middle">주문하기</text><ellipse cx="292" cy="112" rx="44" ry="20" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="292" y="117" font-size="14" fill="#222" text-anchor="middle">로그인</text><ellipse cx="290" cy="242" rx="54" ry="22" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="290" y="247" font-size="14" fill="#222" text-anchor="middle">쿠폰 적용</text><path d="M204 162 L254 126" stroke="#333" stroke-width="2" fill="none" stroke-dasharray="6 4" marker-end="url(#d2d)"/><text x="232" y="160" font-size="14" fill="#b03a2e">«include»</text><path d="M256 226 L200 194" stroke="#333" stroke-width="2" fill="none" stroke-dasharray="6 4" marker-end="url(#d2d)"/><text x="224" y="230" font-size="14" fill="#b03a2e" text-anchor="end">«extend»</text>
+</svg><figcaption>주문하기 → 로그인은 include, 쿠폰 적용 → 주문하기는 extend. 두 점선의 출발점이 서로 반대예요.</figcaption></figure></div>
 
-<div class="vs">
-<div><b>집합 ◇</b>부분이 다른 전체와 <b>공유·분리</b> 가능<br>컴퓨터를 버려도 모니터는 남는다</div>
-<div><b>합성 ◆</b>부분은 <b>한 전체에만</b> 속함<br>주문을 지우면 주문항목도 지워진다</div>
-</div>
-<p>코드로 보면 감이 와요. 합성은 전체가 부분을 직접 만들어 소유하고, 집합은 밖에서 만든 걸 받아서 써요.</p>
-<pre>// 합성: Order가 OrderItem을 만들고 소유
-class Order {
-  List&lt;OrderItem&gt; items = new ArrayList&lt;&gt;();
-}
-// 집합: 밖에서 만든 Monitor를 받아 연결
-class Computer {
-  Monitor monitor;
-  Computer(Monitor m) { monitor = m; }
-}
-// 의존: 메서드 안에서 잠깐 사용
-class OrderService {
-  void apply(Coupon c) { ... }
-}</pre>
 
-<div class="duo"><div><p>Mermaid 표기로도 같은 관계를 볼 수 있어요(이름은 영어로 표기).</p></div><figure class="mermaid"><img src="../assets/5afab017b31c5cec.png" alt="도식" loading="lazy" style="width:349px"></figure></div>
+<div class="duo"><div><p>두 관계를 나란히 놓으면 방향 차이가 더 잘 보여요. 아래 그림에서 기본 유스케이스 “주문하기”가 위에서는 화살표의 출발점, 아래에서는 도착점이에요.</p></div><figure><svg viewBox="0 0 360 258" font-family="sans-serif" role="img" aria-label="include와 extend 방향 비교. include는 기본 유스케이스 주문하기에서 로그인으로, extend는 쿠폰 적용에서 기본 유스케이스 주문하기로 점선 화살표">
+<rect width="360" height="258" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d2e" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">화살표는 어디서 출발하나</text><rect x="8" y="40" width="344" height="96" rx="8" fill="#fff" stroke="#2a5db0" stroke-width="1"/><text x="18" y="60" font-size="14" font-weight="700" fill="#2a5db0">포함 «include» — 반드시 실행</text><ellipse cx="80" cy="100" rx="56" ry="20" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="80" y="105" font-size="14" fill="#222" text-anchor="middle">주문하기</text><ellipse cx="280" cy="100" rx="56" ry="20" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="280" y="105" font-size="14" fill="#222" text-anchor="middle">로그인</text><path d="M138 100 L220 100" stroke="#333" stroke-width="2" fill="none" stroke-dasharray="6 4" marker-end="url(#d2e)"/><text x="180" y="128" font-size="14" fill="#555" text-anchor="middle">기본 → 포함</text><rect x="8" y="148" width="344" height="96" rx="8" fill="#fff" stroke="#b5730d" stroke-width="1"/><text x="18" y="168" font-size="14" font-weight="700" fill="#b5730d">확장 «extend» — 조건 맞을 때만</text><ellipse cx="80" cy="208" rx="56" ry="20" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="80" y="213" font-size="14" fill="#222" text-anchor="middle">쿠폰 적용</text><ellipse cx="280" cy="208" rx="56" ry="20" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="280" y="213" font-size="14" fill="#222" text-anchor="middle">주문하기</text><path d="M138 208 L220 208" stroke="#333" stroke-width="2" fill="none" stroke-dasharray="6 4" marker-end="url(#d2e)"/><text x="180" y="236" font-size="14" fill="#555" text-anchor="middle">확장 → 기본</text>
+</svg><figcaption>기본 유스케이스(주문하기)가 위에서는 출발점, 아래에서는 도착점이에요.</figcaption></figure></div>
 
-<figure class="mermaid"><img src="../assets/a9b76e0ac97fe6c1.png" alt="도식" loading="lazy" style="width:343px"></figure>
-
-<div class="memo"><b>빈 마름모 = 빈 관계</b>(헤어져도 각자 산다), <b>꽉 찬 마름모 = 운명 공동체</b>(같이 죽는다). <b>점선</b>은 약하거나(의존) 약속만 하는(실체화) 관계.</div>
-<div class="trap">마름모는 <b>부분 쪽이 아니라 전체 쪽</b>에 붙어요. 일반화 화살표는 <b>자식 → 부모</b>(삼각형이 부모에 닿음). 그림 문제에서 방향을 뒤집은 선지가 나와요.</div>
-<div class="trap">“합성”을 “포함 관계”라고도 불러요. 유스케이스의 <b>«include»(포함)</b>와는 전혀 다른 개념이니 섞지 마세요.</div>
-
-<h2>5. 유스케이스 다이어그램 — include vs extend</h2>
-<div class="grid">
-<div><b>액터</b>시스템 밖에서 시스템과 상호작용하는 사람·외부 시스템(졸라맨)</div>
-<div><b>유스케이스</b>액터에게 제공하는 기능(타원)</div>
-<div><b>시스템 경계</b>시스템 범위를 나타내는 사각형</div>
-<div><b>관계</b>연관(실선), 포함 «include», 확장 «extend», 일반화</div>
-</div>
-<figure><svg viewBox="0 0 400 300" font-family="sans-serif">
-<defs><marker id="uo" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#333" stroke-width="1.5"/></marker></defs>
-<rect width="400" height="300" rx="12" fill="#f7f7f4"/>
-<rect x="100" y="20" width="290" height="265" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<text x="245" y="40" font-size="14" fill="#555" text-anchor="middle">쇼핑몰 (시스템 경계)</text>
-<g stroke="#333" stroke-width="2" fill="none">
-<circle cx="45" cy="112" r="11" fill="#fff"/>
-<line x1="45" y1="123" x2="45" y2="158"/>
-<line x1="25" y1="135" x2="65" y2="135"/>
-<line x1="45" y1="158" x2="30" y2="182"/>
-<line x1="45" y1="158" x2="60" y2="182"/>
-</g>
-<text x="45" y="204" font-size="14" fill="#222" text-anchor="middle">고객</text>
-<line x1="66" y1="140" x2="130" y2="150" stroke="#333" stroke-width="2"/>
-<g fill="#e6efff" stroke="#2f5bd3" stroke-width="2">
-<ellipse cx="190" cy="150" rx="60" ry="24"/>
-<ellipse cx="320" cy="85" rx="52" ry="22"/>
-<ellipse cx="320" cy="225" rx="56" ry="22"/>
-</g>
-<g font-size="14" fill="#222" text-anchor="middle">
-<text x="190" y="155">주문하기</text>
-<text x="320" y="90">로그인</text>
-<text x="320" y="230">쿠폰 적용</text>
-</g>
-<g stroke="#333" stroke-width="1.8" fill="none" stroke-dasharray="6 4">
-<line x1="232" y1="133" x2="276" y2="100" marker-end="url(#uo)"/>
-<line x1="272" y1="209" x2="234" y2="168" marker-end="url(#uo)"/>
-</g>
-<g font-size="14" fill="#b23b3b" text-anchor="middle">
-<text x="200" y="100">«include»</text>
-<text x="205" y="212">«extend»</text>
-</g>
-</svg><figcaption>include는 기본(주문하기) → 포함(로그인), extend는 확장(쿠폰 적용) → 기본(주문하기). 화살표 방향이 반대예요</figcaption></figure>
 
 <table>
-<tr><th></th><th>포함 «include»</th><th>확장 «extend»</th></tr>
+<tr><th>구분</th><th>포함 «include»</th><th>확장 «extend»</th></tr>
 <tr><td>성격</td><td><b>반드시</b> 실행(필수)</td><td>조건이 맞을 때만 실행(<b>선택</b>)</td></tr>
 <tr><td>화살표</td><td>점선, <b>기본 → 포함되는 쪽</b></td><td>점선, <b>확장 → 기본 쪽</b></td></tr>
-<tr><td>용도</td><td>여러 유스케이스의 <b>공통 기능 추출</b> (함수 호출처럼)</td><td>기본 흐름에 <b>부가 기능</b>을 덧붙임, 확장점(extension point)에서 끼어듦</td></tr>
+<tr><td>용도</td><td>여러 유스케이스의 <b>공통 기능 추출</b></td><td>기본 흐름에 <b>부가 기능</b>을 덧붙임(확장점)</td></tr>
 <tr><td>기본 유스케이스는</td><td>포함된 것 없이는 완결되지 않음</td><td>확장 없이도 혼자 완결</td></tr>
-<tr><td>예</td><td>주문하기 ┄&gt; 로그인</td><td>쿠폰 적용 ┄&gt; 주문하기</td></tr>
+<tr><td>예</td><td>주문하기 → 로그인</td><td>쿠폰 적용 → 주문하기</td></tr>
 </table>
-<p><b>일반화</b>: 액터끼리(회원 —▷ 고객), 유스케이스끼리(카드 결제 —▷ 결제) 상속 관계를 실선 + 빈 삼각형으로 그려요. 클래스 일반화와 같은 기호예요.</p>
-<div class="memo"><b>include는 “인(in)”으로 끌어들인다</b> → 기본이 포함 쪽을 가리킴. <b>extend는 밖에서 붙는다</b> → 확장 쪽이 기본을 가리킴.</div>
-<div class="trap">extend 화살표는 <b>확장 쪽에서 기본 쪽으로</b> 향해요. include와 방향이 반대라서 “둘 다 기본에서 나간다”는 선지는 틀려요.</div>
+<h3>일반화 — 액터끼리, 유스케이스끼리의 상속</h3>
+<div class="duo"><div><p>마지막 관계는 <b>일반화</b>예요. 클래스의 상속과 같은 개념을 액터와 유스케이스에 쓰는 거예요. 오늘한끼에서 회원은 고객이 할 수 있는 일을 다 하면서 적립금 사용 같은 일을 더 할 수 있으니 “회원은 고객의 한 종류”예요. 결제도 카드 결제와 간편 결제로 나뉘죠. 이런 is-a 관계를 <b>실선 + 빈 삼각형</b>으로 그리고, 삼각형은 부모 쪽에 붙어요.</p></div><figure><svg viewBox="0 0 360 240" font-family="sans-serif" role="img" aria-label="일반화 예. 회원에서 고객으로 실선과 빈 삼각형, 카드 결제와 간편 결제에서 결제로 실선과 빈 삼각형">
+<rect width="360" height="240" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">일반화 — 자식이 부모를 가리킨다</text><rect x="40" y="48" width="100" height="34" rx="8" fill="#fff" stroke="#333" stroke-width="2"/><text x="90.0" y="70.0" font-size="14" font-weight="700" fill="#222" text-anchor="middle">고객</text><rect x="40" y="164" width="100" height="34" rx="8" fill="#fff" stroke="#333" stroke-width="2"/><text x="90.0" y="186.0" font-size="14" font-weight="700" fill="#222" text-anchor="middle">회원</text><line x1="90" y1="164" x2="90" y2="98" stroke="#333" stroke-width="2"/><polygon points="90,82 81,98 99,98" fill="#fff" stroke="#333" stroke-width="2"/><text x="90" y="222" font-size="14" fill="#555" text-anchor="middle">액터 일반화</text><ellipse cx="270" cy="65" rx="44" ry="18" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="270" y="70" font-size="14" fill="#222" text-anchor="middle">결제</text><line x1="222" y1="166" x2="222" y2="130" stroke="#333" stroke-width="2"/><line x1="318" y1="166" x2="318" y2="130" stroke="#333" stroke-width="2"/><line x1="222" y1="130" x2="318" y2="130" stroke="#333" stroke-width="2"/><line x1="270" y1="130" x2="270" y2="99" stroke="#333" stroke-width="2"/><polygon points="270,83 261,99 279,99" fill="#fff" stroke="#333" stroke-width="2"/><ellipse cx="222" cy="184" rx="48" ry="18" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="222" y="189" font-size="14" fill="#222" text-anchor="middle">카드 결제</text><ellipse cx="318" cy="184" rx="40" ry="18" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="318" y="189" font-size="14" fill="#222" text-anchor="middle">간편 결제</text><text x="270" y="222" font-size="14" fill="#555" text-anchor="middle">유스케이스 일반화</text>
+</svg><figcaption>실선 + 빈 삼각형, 삼각형은 부모 쪽. 클래스 상속과 똑같은 기호를 액터·유스케이스에도 써요.</figcaption></figure></div>
 
-<h2>6. 시험 포인트 정리</h2>
-<div class="point">
+
+<div class="memo"><b>include는 “인(in)”으로 끌어들인다</b> → 기본이 포함 쪽을 가리킴. <b>extend는 밖에서 붙는다</b> → 확장 쪽이 기본을 가리킴. 둘 다 점선이고 «» 안의 단어로 구별해요.</div>
+<div class="trap">“include와 extend 모두 기본 유스케이스에서 화살표가 나간다”는 선지는 틀려요. 또 extend를 “반드시 실행”으로, include를 “선택”으로 바꿔 놓는 선지도 단골이에요.</div>
+<p><b>→ 이 장면의 결과물:</b> “누가 무엇을 할 수 있나”가 그려진 유스케이스 다이어그램. 기능 목록이 정해졌으니, 이제 그 기능이 다룰 데이터와 책임을 담을 <b>클래스</b>를 그릴 차례예요.</p>
+
+<h2>5. 장면 4 — 구조를 그림으로 (클래스 다이어그램과 관계 6종)</h2>
+<div class="point"><b>핵심 한 줄</b>클래스는 <b>이름·속성·연산</b> 세 칸으로 그리고, 클래스 사이는 <b>선(실선/점선)</b>과 <b>끝 모양</b>으로 관계 6종을 구별해요.</div>
+<p>유스케이스 “주문하기”를 실제로 만들려면 주문, 주문항목, 고객, 결제수단 같은 클래스가 필요해요. 클래스 다이어그램은 이 클래스들이 각각 무엇을 가지고(속성) 무엇을 하며(연산) 서로 어떤 사이인지(관계)를 그린 설계도예요. 구조 다이어그램의 대표이고, 실무에서 가장 많이 그리는 UML이기도 해요.</p>
+<h3>클래스 한 칸 — 이름·속성·연산</h3>
+<div class="duo"><div><p>클래스는 세로로 세 칸 나뉜 사각형이에요. 맨 위가 <b>이름</b>, 가운데가 <b>속성</b>(필드), 아래가 <b>연산</b>(메서드)이에요. 속성과 연산 앞의 기호는 <b>접근 제어자(가시성)</b>로, 자바를 쓰는 진수 님에게는 익숙한 그 public·private이에요. 기호 네 개만 짝지어 두면 돼요.</p></div><figure><svg viewBox="0 0 360 298" font-family="sans-serif" role="img" aria-label="클래스 표기. 맨 위 칸 이름 주문, 가운데 칸 속성 주문번호 주문일 상태, 아래 칸 연산 결제 취소. 앞의 기호는 접근 제어자로 더하기 public, 빼기 private, 샵 protected, 물결 package">
+<rect width="360" height="298" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">클래스 한 칸의 해부도</text><rect x="20" y="40" width="200" height="172" rx="2" fill="#fff" stroke="#333" stroke-width="1.5"/><line x1="20" y1="74" x2="220" y2="74" stroke="#333" stroke-width="1.5"/><line x1="20" y1="146" x2="220" y2="146" stroke="#333" stroke-width="1.5"/><text x="120" y="63" font-size="15" font-weight="700" fill="#222" text-anchor="middle">주문</text><text x="32" y="94" font-size="14" fill="#222">- 주문번호: int</text><text x="32" y="116" font-size="14" fill="#222">- 주문일: Date</text><text x="32" y="138" font-size="14" fill="#222"># 상태: String</text><text x="32" y="170" font-size="14" fill="#222">+ 결제(): void</text><text x="32" y="192" font-size="14" fill="#222">+ 취소(): boolean</text><text x="236" y="60" font-size="14" font-weight="700" fill="#2a5db0">① 이름</text><text x="236" y="114" font-size="14" font-weight="700" fill="#2a5db0">② 속성</text><text x="236" y="182" font-size="14" font-weight="700" fill="#2a5db0">③ 연산</text><rect x="20" y="226" width="320" height="58" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="1"/><text x="32" y="248" font-size="14" fill="#222">+ public   - private</text><text x="32" y="272" font-size="14" fill="#222"># protected   ~ package</text>
+</svg><figcaption>세 칸 = 이름 · 속성 · 연산. 앞의 기호는 접근 제어자예요. 자바의 그 public·private 그대로예요.</figcaption></figure></div>
+
+
+<h3>관계 6종 — 선과 끝 모양</h3>
+<p>클래스 사이의 관계는 여섯 가지예요. 하나씩 “왜 따로 이름이 붙었는지”부터 봐요. 기호는 선 두 종류(실선·점선)와 끝 모양 다섯 종류(없음·빈 마름모·채운 마름모·빈 삼각형·열린 화살표)의 조합이에요.</p>
+<p><b>연관(Association)</b>은 두 클래스가 서로를 알고 참조하는 가장 기본적인 관계예요. 학생과 강의처럼 서로 필드로 상대를 가리키는 사이이고, 실선 하나로 그려요. 한쪽만 상대를 안다면 그쪽에 열린 화살표를 달아 방향을 표시해요. 연관에는 소유 개념이 없어서, 둘 중 하나가 사라져도 다른 쪽은 아무 영향이 없어요.</p>
+<div class="duo"><div><p><b>집합(Aggregation)</b>은 연관 중에서도 “전체와 부분” 사이인 관계예요. 컴퓨터와 모니터처럼 하나가 다른 하나의 부품이지만, 부분이 <b>독립적으로 존재</b>할 수 있어요. 컴퓨터를 버려도 모니터는 남아서 다른 컴퓨터에 연결할 수 있죠. 실선에 <b>빈 마름모</b>를 <b>전체 쪽</b>에 붙여요.</p>
+<p><b>합성(Composition)</b>은 집합보다 강한 전체–부분 관계로, <b>포함 관계</b>라고도 불러요. 주문과 주문항목처럼 부분이 <b>한 전체에만</b> 속하고, 전체가 사라지면 부분도 함께 사라져요(생명주기 공유). 주문 없이 떠도는 주문항목은 의미가 없으니까요. 실선에 <b>채운 마름모</b>를 전체 쪽에 붙여요. DB로 치면 <code>ON DELETE CASCADE</code>가 걸린 외래 키와 같은 사이예요.</p>
+<p><b>일반화(Generalization)</b>는 상속, 즉 is-a 관계예요. “개는 동물이다”처럼 자식이 부모의 성질을 물려받아요. 실선에 <b>빈 삼각형</b>을 <b>부모 쪽</b>에 붙이고, 그래서 화살표 방향은 자식 → 부모예요. 자바의 <code>extends</code>예요.</p>
+<p><b>실체화(Realization)</b>는 인터페이스와 그 구현 클래스의 관계예요. 결제수단 인터페이스가 “결제한다”는 약속만 정하고, 카드결제 클래스가 그 약속을 실제로 지켜요. <b>점선</b>에 빈 삼각형을 <b>인터페이스 쪽</b>에 붙여요. 자바의 <code>implements</code>이고, 일반화와 삼각형은 같지만 선이 점선이라는 점이 다르죠.</p>
+<p><b>의존(Dependency)</b>은 가장 약한 관계로, 한 클래스가 다른 클래스를 <b>잠깐 사용</b>하는 사이예요. 주문이 할인 계산 메서드의 매개변수로 쿠폰을 받아 쓰고 끝나는 경우예요. 필드로 붙들고 있지는 않지만, 쿠폰 클래스가 바뀌면 주문 코드도 영향을 받아요. <b>점선 + 열린 화살표</b>로 그리고, 화살표는 쓰이는 쪽을 가리켜요.</p></div><figure><svg viewBox="0 0 360 466" font-family="sans-serif" role="img" aria-label="클래스 관계 6종의 실제 표기. 연관은 실선, 집합은 실선과 전체 쪽 빈 마름모, 합성은 실선과 전체 쪽 채운 마름모, 일반화는 실선과 부모 쪽 빈 삼각형, 실체화는 점선과 인터페이스 쪽 빈 삼각형, 의존은 점선과 열린 화살표">
+<rect width="360" height="466" rx="12" fill="#f7f7f4"/>
+<text x="180" y="24" font-size="15" font-weight="700" fill="#222" text-anchor="middle">클래스 관계 6종 — 실제 표기</text><text x="14" y="54" font-size="14" font-weight="700" fill="#222">① 연관 · 실선</text><rect x="14" y="64" width="92" height="30" rx="8" fill="#fff" stroke="#333" stroke-width="2"/><text x="60.0" y="84.0" font-size="14" fill="#222" text-anchor="middle">학생</text><rect x="254" y="64" width="92" height="30" rx="8" fill="#fff" stroke="#333" stroke-width="2"/><text x="300.0" y="84.0" font-size="14" fill="#222" text-anchor="middle">강의</text><line x1="106" y1="79" x2="254" y2="79" stroke="#333" stroke-width="2"/><text x="14" y="124" font-size="14" font-weight="700" fill="#222">② 집합 · 실선 + 빈 마름모</text><rect x="14" y="134" width="92" height="30" rx="8" fill="#fff" stroke="#333" stroke-width="2"/><text x="60.0" y="154.0" font-size="14" fill="#222" text-anchor="middle">컴퓨터</text><rect x="254" y="134" width="92" height="30" rx="8" fill="#fff" stroke="#333" stroke-width="2"/><text x="300.0" y="154.0" font-size="14" fill="#222" text-anchor="middle">모니터</text><line x1="134" y1="149" x2="254" y2="149" stroke="#333" stroke-width="2"/><polygon points="106,149 120,141 134,149 120,157" fill="#fff" stroke="#333" stroke-width="2"/><text x="14" y="194" font-size="14" font-weight="700" fill="#222">③ 합성 · 실선 + 채운 마름모</text><rect x="14" y="204" width="92" height="30" rx="8" fill="#fff" stroke="#333" stroke-width="2"/><text x="60.0" y="224.0" font-size="14" fill="#222" text-anchor="middle">주문</text><rect x="254" y="204" width="92" height="30" rx="8" fill="#fff" stroke="#333" stroke-width="2"/><text x="300.0" y="224.0" font-size="14" fill="#222" text-anchor="middle">주문항목</text><line x1="134" y1="219" x2="254" y2="219" stroke="#333" stroke-width="2"/><polygon points="106,219 120,211 134,219 120,227" fill="#333" stroke="#333" stroke-width="2"/><text x="14" y="264" font-size="14" font-weight="700" fill="#222">④ 일반화 · 실선 + 빈 삼각형</text><rect x="14" y="274" width="92" height="30" rx="8" fill="#fff" stroke="#333" stroke-width="2"/><text x="60.0" y="294.0" font-size="14" fill="#222" text-anchor="middle">개</text><rect x="254" y="274" width="92" height="30" rx="8" fill="#fff" stroke="#333" stroke-width="2"/><text x="300.0" y="294.0" font-size="14" fill="#222" text-anchor="middle">동물</text><line x1="106" y1="289" x2="238" y2="289" stroke="#333" stroke-width="2"/><polygon points="254,289 238,280 238,298" fill="#fff" stroke="#333" stroke-width="2"/><text x="14" y="334" font-size="14" font-weight="700" fill="#222">⑤ 실체화 · 점선 + 빈 삼각형</text><rect x="14" y="344" width="92" height="30" rx="8" fill="#fff" stroke="#333" stroke-width="2"/><text x="60.0" y="364.0" font-size="14" fill="#222" text-anchor="middle">카드결제</text><rect x="254" y="344" width="92" height="30" rx="8" fill="#fff" stroke="#333" stroke-width="2"/><text x="300.0" y="364.0" font-size="14" fill="#222" text-anchor="middle">«결제수단»</text><line x1="106" y1="359" x2="238" y2="359" stroke="#333" stroke-width="2" stroke-dasharray="7 5"/><polygon points="254,359 238,350 238,368" fill="#fff" stroke="#333" stroke-width="2"/><text x="14" y="404" font-size="14" font-weight="700" fill="#222">⑥ 의존 · 점선 + 열린 화살표</text><rect x="14" y="414" width="92" height="30" rx="8" fill="#fff" stroke="#333" stroke-width="2"/><text x="60.0" y="434.0" font-size="14" fill="#222" text-anchor="middle">주문</text><rect x="254" y="414" width="92" height="30" rx="8" fill="#fff" stroke="#333" stroke-width="2"/><text x="300.0" y="434.0" font-size="14" fill="#222" text-anchor="middle">쿠폰</text><line x1="106" y1="429" x2="252" y2="429" stroke="#333" stroke-width="2" stroke-dasharray="7 5"/><polyline points="240,422 253,429 240,436" fill="none" stroke="#333" stroke-width="2"/>
+</svg><figcaption>마름모는 전체 쪽(왼쪽), 삼각형은 부모·인터페이스 쪽(오른쪽)에 붙어요. 그림의 좌우가 실제 표기 그대로예요.</figcaption></figure></div>
+
+
+<p>한 장 요약 — 여섯 관계를 표로 다시 모으면 이래요. 각 줄은 위 문단에서 설명한 내용 그대로예요.</p>
+<table>
+<tr><th>관계 (예)</th><th>선 · 끝 모양</th><th>의미</th></tr>
+<tr><td><b>연관</b><br><small>학생 — 강의</small></td><td>실선, 끝 없음(방향 있으면 열린 화살표)</td><td>서로 알고 참조</td></tr>
+<tr><td><b>집합</b><br><small>컴퓨터 — 모니터</small></td><td>실선 + 빈 마름모(전체 쪽)</td><td>전체–부분, 부분이 독립적으로 존재 가능</td></tr>
+<tr><td><b>합성</b>(포함)<br><small>주문 — 주문항목</small></td><td>실선 + 채운 마름모(전체 쪽)</td><td>전체–부분, 생명주기 공유</td></tr>
+<tr><td><b>일반화</b><br><small>개 — 동물</small></td><td>실선 + 빈 삼각형(부모 쪽)</td><td>상속, is-a</td></tr>
+<tr><td><b>실체화</b><br><small>카드결제 — 결제수단</small></td><td>점선 + 빈 삼각형(인터페이스 쪽)</td><td>인터페이스 구현</td></tr>
+<tr><td><b>의존</b><br><small>주문 — 쿠폰</small></td><td>점선 + 열린 화살표(쓰이는 쪽)</td><td>잠깐 사용, 상대가 바뀌면 영향</td></tr>
+</table>
+<div class="duo"><div><p>기호를 외울 때는 선부터 보고 끝을 보는 순서가 편해요. 실선은 “제대로 붙어 있는 사이”라 연관·집합·합성·일반화 넷이고, 점선은 “잠깐 쓰거나(의존) 약속만 한(실체화)” 느슨한 사이 둘이에요. 빈 삼각형이 양쪽 칸에 다 있다는 점이 함정 포인트예요.</p></div><figure><svg viewBox="0 0 360 260" font-family="sans-serif" role="img" aria-label="관계 기호 가르기. 실선은 끝 모양이 없으면 연관, 빈 마름모 집합, 채운 마름모 합성, 빈 삼각형 일반화. 점선은 열린 화살표 의존, 빈 삼각형 실체화">
+<rect width="360" height="260" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">선부터 보고, 끝을 본다</text><rect x="30" y="42" width="120" height="34" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="90.0" y="64.0" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">실선</text><rect x="210" y="42" width="120" height="34" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="270.0" y="64.0" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">점선</text><rect x="10" y="92" width="160" height="32" rx="8" fill="#fff" stroke="#2a5db0" stroke-width="1.2"/><text x="20" y="113" font-size="14" fill="#333">끝 없음</text><text x="160" y="113" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="end">연관</text><rect x="10" y="132" width="160" height="32" rx="8" fill="#fff" stroke="#2a5db0" stroke-width="1.2"/><text x="20" y="153" font-size="14" fill="#333">빈 마름모</text><text x="160" y="153" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="end">집합</text><rect x="10" y="172" width="160" height="32" rx="8" fill="#fff" stroke="#2a5db0" stroke-width="1.2"/><text x="20" y="193" font-size="14" fill="#333">채운 마름모</text><text x="160" y="193" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="end">합성</text><rect x="10" y="212" width="160" height="32" rx="8" fill="#fff" stroke="#2a5db0" stroke-width="1.2"/><text x="20" y="233" font-size="14" fill="#333">빈 삼각형</text><text x="160" y="233" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="end">일반화</text><rect x="190" y="92" width="160" height="32" rx="8" fill="#fff" stroke="#b5730d" stroke-width="1.2"/><text x="200" y="113" font-size="14" fill="#333">열린 화살표</text><text x="340" y="113" font-size="14" font-weight="700" fill="#b5730d" text-anchor="end">의존</text><rect x="190" y="132" width="160" height="32" rx="8" fill="#fff" stroke="#b5730d" stroke-width="1.2"/><text x="200" y="153" font-size="14" fill="#333">빈 삼각형</text><text x="340" y="153" font-size="14" font-weight="700" fill="#b5730d" text-anchor="end">실체화</text><text x="270" y="200" font-size="14" fill="#555" text-anchor="middle">점선 = 약하거나</text><text x="270" y="220" font-size="14" fill="#555" text-anchor="middle">약속만 하는 사이</text>
+</svg><figcaption>빈 삼각형은 두 칸에 다 있어요. 실선이면 일반화(상속), 점선이면 실체화(구현)예요.</figcaption></figure></div>
+
+
+<h3>집합 vs 합성 — 부분이 살아남느냐</h3>
+<div class="duo"><div><p>여섯 관계 중 시험이 가장 집요하게 묻는 짝이 집합과 합성이에요. 둘 다 마름모를 전체 쪽에 달고 “전체–부분”을 뜻해서, 차이는 딱 하나 <b>생명주기</b>예요. 집합의 부분은 전체와 헤어져도 각자 살고, 합성의 부분은 전체와 운명을 같이해요. 마름모 속을 비웠으면 “관계도 비어 있다(느슨하다)”, 꽉 채웠으면 “꽉 묶였다”로 기억하면 돼요.</p></div><figure><svg viewBox="0 0 360 250" font-family="sans-serif" role="img" aria-label="집합과 합성의 생명주기 비교. 집합은 컴퓨터를 삭제해도 모니터가 남고, 합성은 주문을 삭제하면 주문항목도 함께 삭제된다">
+<rect width="360" height="250" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d2f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">전체를 지우면 부분은?</text><rect x="8" y="40" width="168" height="196" rx="8" fill="#fff" stroke="#2a5db0" stroke-width="1"/><text x="92" y="62" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">집합 (빈 마름모)</text><rect x="22" y="76" width="140" height="36" rx="8" fill="#f1f1f1" stroke="#999" stroke-width="2" stroke-dasharray="5 4"/><text x="92" y="99" font-size="14" fill="#555" text-anchor="middle">컴퓨터 삭제</text><path d="M92 112 L92 140" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d2f)"/><rect x="22" y="142" width="140" height="36" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="92" y="165" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">모니터는 남음</text><text x="92" y="210" font-size="14" fill="#555" text-anchor="middle">다른 컴퓨터에 연결</text><rect x="184" y="40" width="168" height="196" rx="8" fill="#fff" stroke="#b03a2e" stroke-width="1"/><text x="268" y="62" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">합성 (채운 마름모)</text><rect x="198" y="76" width="140" height="36" rx="8" fill="#f1f1f1" stroke="#999" stroke-width="2" stroke-dasharray="5 4"/><text x="268" y="99" font-size="14" fill="#555" text-anchor="middle">주문 삭제</text><path d="M268 112 L268 140" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d2f)"/><rect x="198" y="142" width="140" height="36" rx="8" fill="#fbeaea" stroke="#b03a2e" stroke-width="2" stroke-dasharray="5 4"/><text x="268" y="165" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">주문항목도 삭제</text><text x="268" y="210" font-size="14" fill="#555" text-anchor="middle">한 주문에만 속함</text>
+</svg><figcaption>집합은 “헤어져도 각자 산다”, 합성은 “운명 공동체”. 점선 상자가 사라지는 쪽이에요.</figcaption></figure></div>
+
+
+<p>코드로 보면 감이 더 와요. 합성은 전체가 부분을 직접 만들어 소유하고, 집합은 밖에서 만든 것을 받아서 연결만 해요. 의존은 필드가 아니라 메서드 안에서만 잠깐 등장해요.</p>
+<pre>// 합성: Order가 OrderItem을 직접 만들고 소유한다
+class Order {
+  private final List&lt;OrderItem&gt; items = new ArrayList&lt;&gt;();
+  void add(Product p, int qty) { items.add(new OrderItem(p, qty)); }
+}
+// 집합: 밖에서 만든 Monitor를 받아 연결만 한다
+class Computer {
+  private Monitor monitor;
+  Computer(Monitor m) { this.monitor = m; }
+}
+// 의존: 메서드 안에서 잠깐 쓰고 끝
+class Order {
+  int discount(Coupon c) { return c.rate() * total(); }
+}</pre>
+<h3>다중성 — 몇 대 몇인가</h3>
+<div class="duo"><div><p>관계선 양 끝에 붙는 숫자는 <b>다중성(multiplicity)</b>이에요. 한 객체가 상대 객체를 몇 개 가질 수 있는지를 적어요. <code>1</code>은 정확히 하나, <code>0..1</code>은 없거나 하나, <code>*</code> 또는 <code>0..*</code>는 0개 이상, <code>1..*</code>은 하나 이상이에요. 오늘한끼에서 고객 한 명은 주문을 0개 이상 할 수 있고, 주문 하나에는 주문항목이 최소 1개 있어야 해요. 빈 장바구니로 주문 버튼을 누르는 고객은 기획서에만 존재하길 바라는 거죠.</p>
+<p>아래는 오늘한끼 주문 영역을 실제 클래스 다이어그램 도구로 그린 모습이에요. 이름은 도구 표기상 영어로 적었어요. Customer–Order는 연관(1 대 0..*), Order–OrderItem은 합성, Order–Coupon은 의존, PayMethod–CardPay는 실체화예요.</p></div><figure class="mermaid"><img src="../assets/b295072e1ad1d5c6.png" alt="도식" loading="lazy" style="width:391px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure></div>
+
+
+<div class="memo"><b>빈 마름모 = 빈 관계</b>(헤어져도 각자 산다), <b>꽉 찬 마름모 = 운명 공동체</b>(같이 사라진다). <b>점선</b>은 약하거나(의존) 약속만 하는(실체화) 사이. 삼각형은 언제나 <b>윗사람(부모·인터페이스)</b> 쪽.</div>
+<div class="trap">마름모는 <b>부분 쪽이 아니라 전체 쪽</b>에 붙어요. 그리고 “부분이 독립적으로 존재할 수 있다”는 설명은 연관이 아니라 <b>집합</b>이에요. 연관에는 애초에 전체–부분 개념이 없어요. 출제자는 빈 마름모 그림 옆에 “연관”을 슬쩍 세워 두고 기다려요.</div>
+<div class="trap">합성을 “포함 관계”라고도 부르지만, 유스케이스의 <b>«include»(포함)</b>와는 전혀 다른 개념이에요. 한쪽은 클래스의 소유, 다른 쪽은 유스케이스의 공통 기능 추출이에요.</div>
+<p><b>→ 이 장면의 결과물:</b> 오늘한끼 주문 영역의 클래스 다이어그램. 지금까지는 “무엇이 있나”를 그렸으니, 이제 이 객체들이 “어떻게 움직이나”를 그릴 차례예요.</p>
+
+<h2>6. 장면 5 — 움직임을 그림으로 (시퀀스·커뮤니케이션·상태·활동)</h2>
+<div class="point"><b>핵심 한 줄</b>같은 “주문”도 무엇을 보고 싶으냐에 따라 그림이 달라요. <b>메시지 순서</b>는 시퀀스, <b>객체 연결</b>은 커뮤니케이션, <b>한 객체의 상태 변화</b>는 상태, <b>처리 흐름</b>은 활동이에요.</div>
+<p>클래스 다이어그램은 사진이라, 고객이 주문 버튼을 눌렀을 때 실제로 무슨 일이 일어나는지는 보여 주지 못해요. 행위 다이어그램은 이 움직임을 서로 다른 각도에서 찍은 동영상이에요. 같은 주문 장면을 네 가지 카메라로 찍어 볼게요.</p>
+<h3>시퀀스 다이어그램 — 시간 순서로 본 메시지</h3>
+<div class="duo"><div><p>시퀀스 다이어그램은 객체끼리 주고받는 메시지를 <b>시간 순서</b>대로 위에서 아래로 그려요. 장애가 났을 때 로그를 시간순으로 따라가며 “누가 누구를 언제 불렀나” 보는 것과 같은 시선이에요. 그래서 문제에 “시간 순서”, “메시지 순서”라는 말이 보이면 시퀀스예요.</p>
+<p>구성요소를 하나씩 보면, 맨 위에 <b>액터와 객체</b>가 가로로 서고, 각 객체 아래로 내려가는 세로 점선이 <b>생명선</b>(객체가 살아 있는 시간)이에요. 생명선 위의 가는 막대는 <b>활성 박스</b>(실행 중인 구간)이고, 가로 화살표가 <b>메시지</b>예요. 실선 화살표는 호출, 점선 화살표는 응답이에요. 조건 분기나 반복은 <b>프레임</b>(alt, opt, loop 같은 이름표가 달린 사각형)으로 감싸요.</p></div><figure class="mermaid"><img src="../assets/01484900d59570ad.png" alt="도식" loading="lazy" style="width:384px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure></div>
+
+
+<h3>커뮤니케이션 다이어그램 — 연결로 본 메시지</h3>
+<div class="duo"><div><p>같은 장면을 객체 사이의 <b>연결(링크)</b> 중심으로 다시 그린 것이 커뮤니케이션 다이어그램이에요(UML 1에서는 협력 다이어그램이라고 불렀어요). 시간 축이 없으니 순서는 메시지 앞의 <b>번호</b>(1, 1.1, 2…)로 표시해요. 누가 누구와 직접 연결돼 있는지가 한눈에 보여서, “이 서비스는 대체 몇 군데와 얽혀 있나”를 볼 때 유리해요.</p></div><figure><svg viewBox="0 0 360 262" font-family="sans-serif" role="img" aria-label="커뮤니케이션 다이어그램. 고객, 주문서비스, 결제서비스 객체가 연결선으로 이어지고 메시지에 1, 1.1, 2 번호가 붙는다">
+<rect width="360" height="262" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">같은 대화, 연결선 + 번호로</text><rect x="124" y="64" width="112" height="38" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="180.0" y="88.0" font-size="14" fill="#222" text-anchor="middle">:주문서비스</text><rect x="8" y="176" width="88" height="38" rx="8" fill="#fff" stroke="#333" stroke-width="2"/><text x="52.0" y="200.0" font-size="14" fill="#222" text-anchor="middle">고객</text><rect x="258" y="176" width="94" height="38" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="305.0" y="200.0" font-size="14" fill="#222" text-anchor="middle">:결제서비스</text><line x1="52" y1="176" x2="150" y2="102" stroke="#333" stroke-width="2"/><line x1="212" y1="102" x2="304" y2="176" stroke="#333" stroke-width="2"/><text x="14" y="130" font-size="14" font-weight="700" fill="#b03a2e">1: 주문 요청</text><text x="262" y="128" font-size="14" font-weight="700" fill="#b03a2e">1.1: 결제 요청</text><text x="102" y="166" font-size="14" font-weight="700" fill="#b03a2e">2: 주문 완료</text><text x="180" y="244" font-size="14" fill="#555" text-anchor="middle">순서는 위치가 아니라 번호가 말한다</text>
+</svg><figcaption>시퀀스와 같은 장면이지만 시간 축이 없어요. 1.1은 “1번 처리 도중에 생긴 하위 메시지”라는 뜻이에요.</figcaption></figure></div>
+
+
+<div class="vs">
+<div><b>시퀀스</b>같은 상호작용을 시간 축으로 정렬. 키워드는 “시간 순서·메시지 순서·생명선”.</div>
+<div><b>커뮤니케이션</b>같은 상호작용을 객체 연결로 배치. 키워드는 “링크·메시지 번호”.</div>
+</div>
+<h3>상태 다이어그램 — 한 객체의 일생</h3>
+<div class="duo"><div><p>이번에는 카메라를 객체 하나에 고정해요. 주문 객체는 접수되고, 결제되고, 배송되고, 끝나는 일생을 살아요. 상태 다이어그램은 한 객체가 <b>이벤트</b>에 따라 어떤 <b>상태</b>로 바뀌는지(상태 전이)를 그려요. 주문 상태 enum과 그 전이 규칙을 그대로 그림으로 옮긴 거라고 보면 돼요.</p>
+<p>검은 점이 시작 상태, 테두리가 있는 점이 종료 상태, 둥근 사각형이 상태, 화살표 위의 글자가 상태를 바꾸는 이벤트예요. 아래 그림에서 배송이 시작된 주문에는 “취소 요청” 화살표가 없다는 점도 보세요. 이미 트럭에 실린 밀키트를 취소하고 싶다는 고객의 마음은 그림 밖의 영역이에요.</p></div><figure class="mermaid"><img src="../assets/2208784193013201.png" alt="도식" loading="lazy" style="width:328px"></figure></div>
+
+
+<h3>활동 다이어그램 — 처리 흐름과 책임 분담</h3>
+<div class="duo"><div><p>활동 다이어그램은 업무나 로직의 <b>처리 흐름</b>을 그려요. 생김새는 순서도와 비슷하지만, 병렬 처리와 “누가 하는 일인지”까지 표현할 수 있어요. 문제에 “처리 흐름”, “분기”, “병렬”, “스윔레인”이 보이면 활동 다이어그램이에요.</p>
+<p>구성요소는 이래요. 검은 점(<b>시작 노드</b>)에서 출발해 둥근 사각형(<b>액션</b>)을 거치고, 마름모(<b>결정 노드</b>)에서 조건에 따라 갈라져요. 굵은 막대 중 갈라지는 쪽이 <b>포크</b>(병렬 시작), 합쳐지는 쪽이 <b>조인</b>(병렬 합류)이에요. 세로로 나눈 칸은 <b>스윔레인</b>으로, 수영장 레인처럼 각 담당자의 구역을 나눠 줘요. 테두리 있는 점이 <b>종료 노드</b>예요.</p></div><figure><svg viewBox="0 0 360 368" font-family="sans-serif" role="img" aria-label="활동 다이어그램. 고객과 쇼핑몰 두 스윔레인. 시작점에서 주문하기, 재고 확인, 마름모 결정에서 없음이면 품절 안내, 있음이면 결제 처리, 포크 막대에서 포장과 알림 발송이 병렬로 진행되고 조인 막대에서 합쳐진 뒤 종료">
+<rect width="360" height="368" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d2g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker></defs><rect x="8" y="8" width="344" height="352" rx="4" fill="#fff" stroke="#555" stroke-width="1.5"/><line x1="120" y1="8" x2="120" y2="360" stroke="#555" stroke-width="1.5"/><line x1="8" y1="40" x2="352" y2="40" stroke="#555" stroke-width="1.5"/><text x="64" y="30" font-size="14" font-weight="700" fill="#222" text-anchor="middle">고객</text><text x="236" y="30" font-size="14" font-weight="700" fill="#222" text-anchor="middle">쇼핑몰</text><circle cx="64" cy="62" r="9" fill="#222"/><path d="M64 71 L64 84" stroke="#333" stroke-width="2" fill="none" marker-end="url(#d2g)"/><rect x="20" y="86" width="88" height="32" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="64.0" y="107.0" font-size="14" fill="#222" text-anchor="middle">주문하기</text><path d="M108 102 L178 102" stroke="#333" stroke-width="2" fill="none" marker-end="url(#d2g)"/><rect x="180" y="86" width="112" height="32" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="236.0" y="107.0" font-size="14" fill="#222" text-anchor="middle">재고 확인</text><path d="M236 118 L236 134" stroke="#333" stroke-width="2" fill="none" marker-end="url(#d2g)"/><polygon points="236,136 254,154 236,172 218,154" fill="#fff" stroke="#333" stroke-width="2"/><path d="M218 154 L110 154" stroke="#333" stroke-width="2" fill="none" marker-end="url(#d2g)"/><text x="166" y="148" font-size="14" fill="#b03a2e" text-anchor="middle">[없음]</text><rect x="20" y="138" width="88" height="32" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="64.0" y="159.0" font-size="14" fill="#222" text-anchor="middle">품절 안내</text><path d="M236 172 L236 190" stroke="#333" stroke-width="2" fill="none" marker-end="url(#d2g)"/><text x="244" y="186" font-size="14" fill="#2a5db0">[있음]</text><rect x="180" y="192" width="112" height="32" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="236.0" y="213.0" font-size="14" fill="#222" text-anchor="middle">결제 처리</text><path d="M236 224 L236 238" stroke="#333" stroke-width="2" fill="none" marker-end="url(#d2g)"/><rect x="150" y="240" width="180" height="6" rx="1" fill="#222" stroke="#222" stroke-width="0"/><path d="M190 246 L190 262" stroke="#333" stroke-width="2" fill="none" marker-end="url(#d2g)"/><path d="M290 246 L290 262" stroke="#333" stroke-width="2" fill="none" marker-end="url(#d2g)"/><rect x="146" y="264" width="88" height="32" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="190.0" y="285.0" font-size="14" fill="#222" text-anchor="middle">포장</text><rect x="246" y="264" width="96" height="32" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="294.0" y="285.0" font-size="14" fill="#222" text-anchor="middle">알림 발송</text><path d="M190 296 L190 310" stroke="#333" stroke-width="2" fill="none" marker-end="url(#d2g)"/><path d="M290 296 L290 310" stroke="#333" stroke-width="2" fill="none" marker-end="url(#d2g)"/><rect x="150" y="312" width="180" height="6" rx="1" fill="#222" stroke="#222" stroke-width="0"/><path d="M240 318 L240 330" stroke="#333" stroke-width="2" fill="none" marker-end="url(#d2g)"/><circle cx="240" cy="342" r="10" fill="#fff" stroke="#222" stroke-width="2"/><circle cx="240" cy="342" r="6" fill="#222"/><text x="160" y="236" font-size="14" fill="#555" text-anchor="end">포크</text><text x="144" y="322" font-size="14" fill="#555" text-anchor="end">조인</text>
+</svg><figcaption>세로 칸(스윔레인)이 “누가 하나”, 마름모가 분기, 굵은 막대가 병렬의 시작(포크)과 합류(조인)예요.</figcaption></figure></div>
+
+
+<div class="trap">상태 다이어그램과 활동 다이어그램은 둘 다 둥근 사각형과 화살표라 생김새가 비슷해요. 상태는 “객체 <b>하나</b>가 이벤트로 바뀌는 모습”, 활동은 “<b>일</b>이 흘러가는 순서”예요. 화살표 위에 이벤트 이름이 있으면 상태, 마름모·포크·스윔레인이 있으면 활동이에요.</div>
+<p><b>→ 이 장면의 결과물:</b> 주문 장면을 네 각도로 찍은 동영상. 마지막으로, 완성된 프로그램이 실제로 어느 장비에서 돌아가는지를 그리면 그림 세트가 끝나요.</p>
+
+<h2>7. 장면 6 — 장비에 올리기 (배치·컴포넌트·패키지)</h2>
+<div class="point"><b>핵심 한 줄</b>“물리적 노드·하드웨어”는 <b>배치</b>, “모듈·라이브러리와 인터페이스”는 <b>컴포넌트</b>, “요소를 묶은 그룹”은 <b>패키지</b> 다이어그램이에요.</div>
+<div class="duo"><div><p>설계가 끝나도 프로그램은 결국 어떤 서버 위에서 돌아야 해요. <b>배치 다이어그램</b>은 서버·PC·장비 같은 물리적 <b>노드</b>를 입체 상자로 그리고, 그 안에 올라가는 산출물(jar 파일, DB 엔진 등)과 노드 사이 통신을 그려요. 인프라 구성도를 UML 문법으로 그린 거예요. 문제에 “하드웨어”, “물리적 배치”, “노드”가 보이면 배치예요.</p></div><figure><svg viewBox="0 0 360 240" font-family="sans-serif" role="img" aria-label="배치 다이어그램. 입체 상자 모양 노드 세 개, 사용자 PC 안에 브라우저, 웹 서버 안에 shop.jar, DB 서버 안에 MySQL. 노드 사이는 HTTPS와 JDBC 통신선">
+<rect width="360" height="240" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">무엇이 어느 장비에서 도나</text><path d="M8 60 L18 50 L110 50 L110 126 L100 136" fill="#dfe7f5" stroke="#333" stroke-width="1.5"/><rect x="8" y="60" width="92" height="76" rx="0" fill="#fff" stroke="#333" stroke-width="1.5"/><text x="54.0" y="82" font-size="14" font-weight="700" fill="#222" text-anchor="middle">사용자 PC</text><rect x="18" y="94" width="72" height="28" rx="2" fill="#fff4e0" stroke="#b5730d" stroke-width="1.5"/><text x="54.0" y="113" font-size="14" fill="#222" text-anchor="middle">브라우저</text><path d="M132 60 L142 50 L234 50 L234 126 L224 136" fill="#dfe7f5" stroke="#333" stroke-width="1.5"/><rect x="132" y="60" width="92" height="76" rx="0" fill="#fff" stroke="#333" stroke-width="1.5"/><text x="178.0" y="82" font-size="14" font-weight="700" fill="#222" text-anchor="middle">웹 서버</text><rect x="142" y="94" width="72" height="28" rx="2" fill="#fff4e0" stroke="#b5730d" stroke-width="1.5"/><text x="178.0" y="113" font-size="14" fill="#222" text-anchor="middle">shop.jar</text><path d="M256 60 L266 50 L358 50 L358 126 L348 136" fill="#dfe7f5" stroke="#333" stroke-width="1.5"/><rect x="256" y="60" width="92" height="76" rx="0" fill="#fff" stroke="#333" stroke-width="1.5"/><text x="302.0" y="82" font-size="14" font-weight="700" fill="#222" text-anchor="middle">DB 서버</text><rect x="266" y="94" width="72" height="28" rx="2" fill="#fff4e0" stroke="#b5730d" stroke-width="1.5"/><text x="302.0" y="113" font-size="14" fill="#222" text-anchor="middle">MySQL</text><line x1="100" y1="98" x2="132" y2="98" stroke="#333" stroke-width="2"/><line x1="224" y1="98" x2="256" y2="98" stroke="#333" stroke-width="2"/><text x="116" y="168" font-size="14" fill="#b03a2e" text-anchor="middle">HTTPS</text><text x="240" y="168" font-size="14" fill="#b03a2e" text-anchor="middle">JDBC</text><line x1="116" y1="154" x2="116" y2="104" stroke="#999" stroke-width="1" stroke-dasharray="3 3"/><line x1="240" y1="154" x2="240" y2="104" stroke="#999" stroke-width="1" stroke-dasharray="3 3"/><text x="180" y="202" font-size="14" fill="#555" text-anchor="middle">입체 상자 = 노드(물리 장비)</text><text x="180" y="224" font-size="14" fill="#555" text-anchor="middle">안의 작은 상자 = 올라간 산출물</text>
+</svg><figcaption>배치 다이어그램은 “하드웨어·노드” 키워드의 짝이에요. 쿠버네티스 매니페스트를 그림으로 그린 느낌이에요.</figcaption></figure></div>
+
+
+<div class="duo"><div><p><b>컴포넌트 다이어그램</b>은 한 단계 위에서 소프트웨어를 조립 단위로 봐요. 주문 모듈, 결제 모듈 같은 컴포넌트가 어떤 인터페이스를 제공하고 어떤 인터페이스를 필요로 하는지를 그려요. 배치가 “어디서 도나”라면 컴포넌트는 “무엇을 조립했나”예요.</p>
+<p><b>패키지 다이어그램</b>은 클래스 등 요소를 탭 달린 폴더(패키지)로 묶고 패키지끼리의 의존을 그려요. 자바 패키지 구조를 그대로 떠올리면 돼요. 패키지 순환 의존이 이 그림에서 처음 들통나는 경우가 많아서, 그리는 사람보다 리뷰하는 사람이 더 좋아하는 그림이에요.</p>
+<p>세 그림은 모두 <b>구조</b> 다이어그램이에요. 시간 개념이 없으니까요. 이제 장면 2의 분류표에 있는 다이어그램을 오늘한끼 예로 거의 다 그려 봤어요. 문제를 풀 때는 반대로, 문제 속 키워드에서 다이어그램을 찾아가면 돼요.</p></div><figure><svg viewBox="0 0 360 366" font-family="sans-serif" role="img" aria-label="키워드로 다이어그램 고르기. 시간 순서는 시퀀스, 객체 연결과 번호는 커뮤니케이션, 상태 전이는 상태, 처리 흐름과 스윔레인은 활동, 액터는 유스케이스, 물리 노드는 배치, 속성과 연산은 클래스, 특정 시점 인스턴스는 객체">
+<rect width="360" height="366" rx="12" fill="#f7f7f4"/>
+<text x="180" y="24" font-size="15" font-weight="700" fill="#222" text-anchor="middle">문제 속 키워드 → 다이어그램</text><rect x="8" y="38" width="216" height="30" rx="8" fill="#fff" stroke="#888" stroke-width="1.2"/><text x="18" y="58" font-size="14" fill="#333">시간 순서 · 메시지 순서</text><defs><marker id="d2h0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><path d="M226 53 L244 53" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d2h0)"/><rect x="246" y="38" width="106" height="30" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="299.0" y="58.0" font-size="14" font-weight="700" fill="#222" text-anchor="middle">시퀀스</text><rect x="8" y="76" width="216" height="30" rx="8" fill="#fff" stroke="#888" stroke-width="1.2"/><text x="18" y="96" font-size="14" fill="#333">객체 연결 · 메시지 번호</text><path d="M226 91 L244 91" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d2h0)"/><rect x="246" y="76" width="106" height="30" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="299.0" y="96.0" font-size="14" font-weight="700" fill="#222" text-anchor="middle">커뮤니케이션</text><rect x="8" y="114" width="216" height="30" rx="8" fill="#fff" stroke="#888" stroke-width="1.2"/><text x="18" y="134" font-size="14" fill="#333">이벤트 · 상태 전이</text><path d="M226 129 L244 129" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d2h0)"/><rect x="246" y="114" width="106" height="30" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="299.0" y="134.0" font-size="14" font-weight="700" fill="#222" text-anchor="middle">상태</text><rect x="8" y="152" width="216" height="30" rx="8" fill="#fff" stroke="#888" stroke-width="1.2"/><text x="18" y="172" font-size="14" fill="#333">처리 흐름 · 분기 · 스윔레인</text><path d="M226 167 L244 167" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d2h0)"/><rect x="246" y="152" width="106" height="30" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="299.0" y="172.0" font-size="14" font-weight="700" fill="#222" text-anchor="middle">활동</text><rect x="8" y="190" width="216" height="30" rx="8" fill="#fff" stroke="#888" stroke-width="1.2"/><text x="18" y="210" font-size="14" fill="#333">액터 · 사용자 관점 기능</text><path d="M226 205 L244 205" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d2h0)"/><rect x="246" y="190" width="106" height="30" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="299.0" y="210.0" font-size="14" font-weight="700" fill="#222" text-anchor="middle">유스케이스</text><rect x="8" y="228" width="216" height="30" rx="8" fill="#fff" stroke="#888" stroke-width="1.2"/><text x="18" y="248" font-size="14" fill="#333">물리 노드 · 하드웨어</text><path d="M226 243 L244 243" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d2h0)"/><rect x="246" y="228" width="106" height="30" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="299.0" y="248.0" font-size="14" font-weight="700" fill="#222" text-anchor="middle">배치</text><rect x="8" y="266" width="216" height="30" rx="8" fill="#fff" stroke="#888" stroke-width="1.2"/><text x="18" y="286" font-size="14" fill="#333">속성 · 연산 · 클래스 관계</text><path d="M226 281 L244 281" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d2h0)"/><rect x="246" y="266" width="106" height="30" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="299.0" y="286.0" font-size="14" font-weight="700" fill="#222" text-anchor="middle">클래스</text><rect x="8" y="304" width="216" height="30" rx="8" fill="#fff" stroke="#888" stroke-width="1.2"/><text x="18" y="324" font-size="14" fill="#333">특정 시점 인스턴스</text><path d="M226 319 L244 319" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d2h0)"/><rect x="246" y="304" width="106" height="30" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="299.0" y="324.0" font-size="14" font-weight="700" fill="#222" text-anchor="middle">객체</text><text x="180" y="352" font-size="14" fill="#555" text-anchor="middle">주황 = 행위 · 파랑 = 구조</text>
+</svg><figcaption>선지를 보기 전에 문제 속 키워드부터 찾으세요. 키워드 하나가 다이어그램 하나와 짝이에요.</figcaption></figure></div>
+
+
+<p><b>→ 이 장면의 결과물:</b> 요구(유스케이스) → 구조(클래스) → 움직임(시퀀스·상태·활동) → 장비(배치)까지 오늘한끼 그림 세트 완성. 이 클래스·시퀀스 표기는 D004 모델링 기법(럼바우)과 D013 객체지향, D014 디자인패턴에서 다시 쓰여요.</p>
+
+<h2>8. 한 장으로 다시 꿰기</h2>
+<div class="point"><b>핵심 한 줄</b>오늘한끼의 요구를 사용자 관점 → 구조 → 움직임 → 장비 순으로 그렸어요. 시험 용어는 모두 이 장면 중 하나에 들어가요.</div>
+<p>지금까지 따라온 장면을 표 하나로 다시 꿰면 이래요. 앞 장면의 결과물이 다음 장면의 재료라는 점을 다시 보세요.</p>
+<table>
+<tr><th>장면</th><th>하는 일 · 시험 개념</th><th>결과물</th></tr>
+<tr><td>1. 단어와 문법</td><td>사물 4종(구조·행동·그룹·주해), 관계, 다이어그램</td><td>그림 재료</td></tr>
+<tr><td>2. 분류</td><td>구조 6종(클객컴배패복) vs 행위</td><td>다이어그램 두 서랍</td></tr>
+<tr><td>3. 요구 그리기</td><td>유스케이스: 액터·경계, include(필수·기본→포함), extend(선택·확장→기본), 일반화</td><td>유스케이스 다이어그램</td></tr>
+<tr><td>4. 구조 그리기</td><td>클래스 세 칸·가시성, 관계 6종, 집합 vs 합성, 다중성</td><td>클래스 다이어그램</td></tr>
+<tr><td>5. 움직임 그리기</td><td>시퀀스(시간 순서), 커뮤니케이션(링크·번호), 상태(이벤트), 활동(흐름·스윔레인)</td><td>행위 다이어그램 세트</td></tr>
+<tr><td>6. 장비에 올리기</td><td>배치(노드), 컴포넌트(모듈·인터페이스), 패키지(그룹)</td><td>배치 다이어그램</td></tr>
+</table>
+<div class="point"><b>시험 포인트</b>
 <ul>
-<li>UML 구성요소 = 사물·관계·다이어그램 / 사물 = 구조·행동·그룹·주해 (패키지=그룹, 노트=주해)</li>
-<li>구조 다이어그램 6종 <b>클객컴배패복</b>, 나머지(유스케이스·시퀀스·커뮤니케이션·상태·활동·타이밍·상호작용 개요)는 행위</li>
-<li>키워드 → 다이어그램: 시간 순서=시퀀스, 상태 전이=상태, 처리 흐름=활동, 물리 노드=배치</li>
-<li>관계 기호: 실선/점선 + 빈/채운 마름모(전체 쪽) + 빈 삼각형(부모·인터페이스 쪽) + 열린 화살표(의존)</li>
-<li>집합 vs 합성 = 부분이 독립적으로 사느냐, 같이 사라지느냐</li>
-<li>include = 필수·공통 추출·기본→포함 / extend = 선택·부가·확장→기본</li>
+<li>UML 구성요소 = 사물·관계·다이어그램. 사물 = 구조·행동·그룹·주해(패키지 = 그룹, 노트 = 주해).</li>
+<li>구조 다이어그램 6종 <b>클객컴배패복</b>, 나머지는 행위. 상태·유스케이스를 구조로 고르게 하는 함정.</li>
+<li>키워드 → 다이어그램: 시간 순서 = 시퀀스, 상태 전이 = 상태, 처리 흐름·스윔레인 = 활동, 물리 노드 = 배치.</li>
+<li>관계 기호: 실선/점선 + 빈·채운 마름모(전체 쪽) + 빈 삼각형(부모·인터페이스 쪽) + 열린 화살표(의존).</li>
+<li>집합 vs 합성 = 부분이 독립적으로 사느냐, 같이 사라지느냐. 빈 마름모는 연관이 아니라 집합.</li>
+<li>include = 필수·공통 추출·기본 → 포함 / extend = 선택·부가·확장 → 기본.</li>
 </ul>
 </div>
 
-<h2>7. 오답 복습 — D001 2번 (워크숍)</h2>
-<p>어제 “상충하는 요구를 함께 논의해 합의” 문제에서 정적 분석을 골랐어요. 두 용어는 쓰이는 단계부터 달라요.</p>
-<div class="vs">
-<div><b>워크숍</b> (요구사항 <b>도출</b> 기법)<br>이해관계자들이 <b>한자리에 모여</b> 집중 논의 → 상충 요구 조율·합의</div>
-<div><b>정적 분석</b> (테스트·품질 기법)<br>코드를 <b>실행하지 않고</b> 결함·규칙 위반을 찾음. 도출 기법이 아님</div>
-</div>
+<h2>9. 오답 복습 — D001 2번 (워크숍)</h2>
+<div class="point"><b>핵심 한 줄</b>“상충하는 요구를 모여서 조율·합의”는 요구사항 <b>도출</b> 기법인 <b>워크숍</b>이에요. 정적 분석은 코드를 검사하는 품질 기법이에요.</div>
+<div class="duo"><div><p>어제 “상충하는 요구를 함께 논의해 합의” 문제에서 정적 분석을 골랐어요. 두 용어는 쓰이는 단계부터 달라요. <b>워크숍</b>은 요구사항 단계에서 영업·운영처럼 이해관계자들을 <b>한자리에 모아</b> 집중 논의로 부딪히는 요구를 조율하고 합의하는 도출 기법이에요. 진행자가 있고, 끝나면 합의안이 남아요.</p>
+<p><b>정적 분석</b>은 구현·테스트 쪽 기법으로, 코드를 <b>실행하지 않고</b> 소스를 훑어 결함이나 코딩 규칙 위반을 찾아요. 진수 님이 매일 보는 린터나 SonarQube 경고가 바로 정적 분석이에요. 요구를 모으는 일과는 거리가 멀죠. “분석”이라는 단어가 요구 “분석”과 겹쳐서 손이 갔을 가능성이 커요.</p></div><figure><svg viewBox="0 0 360 232" font-family="sans-serif" role="img" aria-label="워크숍은 요구사항 단계의 도출 기법, 정적 분석은 구현과 테스트 단계의 품질 검사 기법">
+<rect width="360" height="232" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d2i" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">두 용어는 쓰이는 단계부터 다르다</text><rect x="8" y="44" width="82" height="34" rx="8" fill="#fff" stroke="#888" stroke-width="2"/><text x="49.0" y="66.0" font-size="14" fill="#333" text-anchor="middle">요구사항</text><rect x="95" y="44" width="82" height="34" rx="8" fill="#fff" stroke="#888" stroke-width="2"/><text x="136.0" y="66.0" font-size="14" fill="#333" text-anchor="middle">설계</text><rect x="182" y="44" width="82" height="34" rx="8" fill="#fff" stroke="#888" stroke-width="2"/><text x="223.0" y="66.0" font-size="14" fill="#333" text-anchor="middle">구현</text><rect x="269" y="44" width="82" height="34" rx="8" fill="#fff" stroke="#888" stroke-width="2"/><text x="310.0" y="66.0" font-size="14" fill="#333" text-anchor="middle">테스트</text><path d="M49 136 L49 82" stroke="#2f7d4a" stroke-width="2" fill="none" marker-end="url(#d2i)"/><rect x="8" y="138" width="150" height="54" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="83.0" y="170.0" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">워크숍</text><text x="83" y="214" font-size="14" fill="#333" text-anchor="middle">모여서 조율 · 합의</text><path d="M220 136 L220 82" stroke="#b03a2e" stroke-width="2" fill="none" marker-end="url(#d2i)"/><path d="M300 136 L300 82" stroke="#b03a2e" stroke-width="2" fill="none" marker-end="url(#d2i)"/><rect x="196" y="138" width="156" height="54" rx="8" fill="#fbeaea" stroke="#b03a2e" stroke-width="2"/><text x="274.0" y="170.0" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">정적 분석</text><text x="274" y="214" font-size="14" fill="#333" text-anchor="middle">코드를 실행하지 않고 검사</text>
+</svg><figcaption>“요구가 부딪힌다”는 말이 문제에 보이면 요구사항 칸, 그중에서도 사람을 모으는 워크숍이에요.</figcaption></figure></div>
+
+
+<p>한 장 요약 — 도출 기법을 상황과 짝지어 다시 보면 이래요.</p>
 <table>
 <tr><th>상황</th><th>도출 기법</th></tr>
 <tr><td>소수 핵심 담당자에게 깊이 묻기</td><td>인터뷰</td></tr>
-<tr><td>많은 사람에게 같은 질문 빠르게</td><td>설문</td></tr>
-<tr><td>비판 없이 아이디어 많이 내기</td><td>브레인스토밍</td></tr>
-<tr><td>여러 이해관계자 모여 충돌 조율·합의</td><td><b>워크숍</b></td></tr>
+<tr><td>많은 사람에게 같은 질문을 빠르게</td><td>설문</td></tr>
+<tr><td>비판 없이 아이디어를 많이 내기</td><td>브레인스토밍</td></tr>
+<tr><td>여러 이해관계자가 모여 충돌 조율·합의</td><td><b>워크숍</b></td></tr>
 <tr><td>실제 업무 현장을 지켜보기</td><td>관찰</td></tr>
 </table>
 <p>재확인 문제는 아래 3번이에요.</p>
+
 
 <h2>확인 문제 (채점 완료 · 3/3)</h2>
 <ol class="quiz">
