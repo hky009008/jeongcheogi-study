@@ -9,86 +9,247 @@
 <link rel="stylesheet" href="../style.css"></head>
 <body><main>
 <nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a></nav>
-<h1>D001 · 요구분석기법</h1><div class="meta">2026-10-03 · A1 소프트웨어 개발 &gt; 요구사항 확인</div><p>오늘의 목표: 요구사항 확인이 어떤 단계로 진행되는지 큰 흐름을 잡고, <b>상황을 보고 알맞은 기법을 고를 수 있게</b> 만들기.</p>
-
-<h2>1. 요구사항이란</h2>
-<p>시스템이 제공해야 할 기능과, 그 기능이 지켜야 할 제약이에요.</p>
-<div class="vs">
-<div><b>기능 요구사항</b>시스템이 <b>무엇을</b> 하는가<br><small>예) 회원은 비밀번호를 변경할 수 있다</small></div>
-<div><b>비기능 요구사항</b>그 기능을 <b>얼마나 잘</b> 하는가<br>성능·보안·가용성·사용성·호환성<br><small>예) 조회 결과를 2초 이내 표시한다</small></div>
-</div>
-<div class="point">비기능 요구사항은 “빠르다” 대신 “2초 이내”, “월 가용성 99.9%”처럼 <b>재서 확인할 수 있게</b> 씁니다. “검증 가능한 요구사항”을 고르는 문제가 여기서 나와요.</div>
-
-<h2>2. 요구사항 개발 4단계 — 도출 → 분석 → 명세 → 확인</h2>
-<div class="flow">
-<div><b>① 도출</b>요구 찾아내기</div><div class="arrow">→</div>
-<div><b>② 분석</b>정리·충돌 해결</div><div class="arrow">→</div>
-<div><b>③ 명세</b>문서로 쓰기</div><div class="arrow">→</div>
-<div><b>④ 확인</b>제대로 썼나 검토</div>
-</div>
-<div class="memo"><b>도분명확</b> — 도출 · 분석 · 명세 · 확인. 이후 변경을 통제·추적하는 일은 <i>요구사항 관리</i>(D006)로 따로 봐요.</div>
-
-<h3>① 도출 — 요구사항 찾아내기</h3>
-<figure><svg viewBox="0 0 420 230" font-family="sans-serif">
-<rect width="420" height="230" rx="12" fill="#f7f7f4"/>
-<line x1="40" y1="200" x2="400" y2="200" stroke="#555" stroke-width="2" marker-end="url(#ar)"/>
-<line x1="40" y1="200" x2="40" y2="20" stroke="#555" stroke-width="2" marker-end="url(#ar)"/>
-<defs><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8z" fill="#555"/></marker></defs>
-<text x="300" y="222" font-size="14" fill="#333">응답자 수 많음 →</text>
-<text x="48" y="22" font-size="14" fill="#333">↑ 깊이·합의</text>
-<circle cx="90" cy="70" r="34" fill="#2f5bd3" opacity=".85"/><text x="90" y="75" font-size="15" fill="#fff" text-anchor="middle">인터뷰</text>
-<circle cx="200" cy="70" r="34" fill="#e0a100" opacity=".9"/><text x="200" y="75" font-size="15" fill="#fff" text-anchor="middle">워크숍</text>
-<circle cx="340" cy="160" r="30" fill="#2a9d6f" opacity=".9"/><text x="340" y="165" font-size="15" fill="#fff" text-anchor="middle">설문</text>
-<circle cx="200" cy="150" r="30" fill="#8a5cd1" opacity=".85"/><text x="200" y="148" font-size="12" fill="#fff" text-anchor="middle">브레인</text><text x="200" y="163" font-size="12" fill="#fff" text-anchor="middle">스토밍</text>
-</svg><figcaption>상황 → 기법 지도: 깊게 묻기는 인터뷰, 여럿이 합의는 워크숍, 많이 모으기는 설문</figcaption></figure>
-<div class="grid">
-<div><b>인터뷰</b>소수 핵심 담당자 심층. 예외 업무 파악</div>
-<div><b>설문</b>다수에게 같은 질문을 빠르게</div>
-<div><b>브레인스토밍</b>아이디어 확산, 비판 금지</div>
-<div><b>워크숍</b>이해관계자 모아 <b>상충 요구 조율·합의</b></div>
-<div><b>관찰</b>실제 업무 현장을 본다</div>
-<div><b>프로토타이핑</b>시제품 보여 주고 피드백</div>
-<div><b>유스케이스</b>사용자 관점 기능 시나리오</div>
-<div><b>롤플레잉</b>역할 나눠 상황 재현</div>
-</div>
-
-<h3>② 분석 — 정리하고 충돌 풀기</h3>
+<h1>D001 · 요구분석기법</h1><div class="meta">2026-10-03 · A1 소프트웨어 개발 &gt; 요구사항 확인</div><p><span class="tag">A1</span> 정처기 공부 첫날이에요. 1과목 소프트웨어 설계의 맨 앞 칸, <b>요구사항 확인</b>에서 시작해요. 소프트웨어를 만드는 모든 일은 “무엇을 만들어야 하나”를 아는 데서 출발하니까, 순서상으로도 여기가 첫 단추예요. 오늘은 요구사항이 무엇인지, 그리고 그것을 찾고·정리하고·쓰고·검토하는 <b>요구분석기법</b>을 봐요.</p>
 <ul>
-<li>분류: 기능/비기능, 우선순위, 변경 가능성 등으로 나눈다</li>
-<li>개념 모델링: UML·DFD 같은 모델로 표현한다</li>
-<li>할당: 요구사항을 하위 시스템에 나눠 맡긴다</li>
-<li>협상: 이해관계자 간 충돌을 풀고 우선순위를 정한다</li>
-<li>정형 분석: 수학적 기법으로 모순을 찾는다</li>
+<li><b>기능 요구사항</b>과 <b>비기능 요구사항</b>을 구별하고, 검증 가능한 요구사항 문장을 고를 수 있다</li>
+<li>요구사항 개발 4단계(<b>도출 → 분석 → 명세 → 확인</b>)의 순서와 단계별 활동을 설명할 수 있다</li>
+<li>상황을 보고 알맞은 <b>도출 기법</b>(인터뷰·설문·워크숍 등)을 고를 수 있다</li>
+<li><b>정형·비정형 명세</b>, <b>동료 검토·워크스루·인스펙션</b>을 구별할 수 있다</li>
 </ul>
-
-<h3>③ 명세 — 문서로 쓰기</h3>
-<div class="vs">
-<div><b>정형 명세</b>수학 기호 기반<br><code>Z</code> <code>VDM</code> <code>Petri-net</code> <code>CSP</code> <code>LOTOS</code><br>✔ 모호성 없음 ✘ 작성·이해 어려움</div>
-<div><b>비정형 명세</b>자연어·다이어그램<br>✔ 쓰기 쉬움 ✘ 모호할 수 있음</div>
+<div class="glance">
+<div><b>4</b>개발 단계<small>도출·분석·명세·확인</small></div>
+<div><b>8</b>도출 기법<small>인터뷰·설문·워크숍 …</small></div>
+<div><b>5</b>정형 명세 언어<small>Z·VDM·Petri-net·CSP·LOTOS</small></div>
+<div><b>3</b>검토 기법<small>동료 검토·워크스루·인스펙션</small></div>
 </div>
+<div class="box"><b>오늘 이야기의 흐름</b>큰 그림(요구사항이 왜 첫 단추인가) → 장면 1 요구를 두 종류로 나누기 → 4단계 큰 흐름 → 장면 2 도출 → 장면 3 분석 → 장면 4 명세 → 장면 5 확인 → 한 장으로 다시 꿰기 → 확인 문제</div>
 
-<h3>④ 확인 — 제대로 썼는지 검토</h3>
+<h2>1. 큰 그림 — 요구사항이 왜 첫 단추인가</h2>
+<div class="point"><b>핵심 한 줄</b>요구사항은 시스템이 <b>제공해야 할 기능</b>과 그 기능이 <b>지켜야 할 제약</b>이고, 이것을 찾아 문서로 확정하는 과정이 요구분석이에요.</div>
+<div class="duo"><div><p>개발자에게 “일단 만들어 보고 고치자”는 익숙한 말이지만, 무엇을 만들지 모른 채 만든 코드는 대개 다시 만들게 돼요. 그래서 소프트웨어 공학은 개발 첫머리에 <b>요구사항</b>을 따로 다뤄요. 요구사항은 시스템이 제공해야 할 서비스와, 그 서비스가 지켜야 할 제약 조건을 말해요.</p>
+<p>오늘은 하나의 사례를 끝까지 따라가요. 밀키트 쇼핑몰 <b>오늘한끼</b>를 리뉴얼하는 프로젝트예요. 고객은 수백 명, 사내에는 주문을 늘리고 싶은 영업팀과 포장·배송을 책임지는 운영팀이 있어요. 이 프로젝트가 요구를 찾고(도출), 정리하고(분석), 문서로 쓰고(명세), 검토하는(확인) 장면이 오늘 섹션 순서예요.</p></div><figure><svg viewBox="0 0 360 300" font-family="sans-serif" role="img" aria-label="오늘의 개념 지도. 요구사항 개발 4단계 아래 도출, 분석, 명세, 확인이 있고 각각 대표 기법이 매달려 있다">
+<rect width="360" height="300" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d1a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">요구분석기법 — 오늘의 지도</text><rect x="80" y="40" width="200" height="44" rx="8" fill="#ffffff" stroke="#888" stroke-width="2"/><text x="180.0" y="67.0" font-size="14" font-weight="700" fill="#888" text-anchor="middle">요구사항 개발 4단계</text><path d="M180 84 L48 114" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d1a)"/><rect x="6" y="116" width="84" height="36" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="48.0" y="139.0" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">① 도출</text><rect x="6" y="160" width="84" height="128" rx="8" fill="#ffffff" stroke="#2a5db0" stroke-width="1"/><text x="48" y="184" font-size="14" fill="#333" text-anchor="middle">인터뷰</text><text x="48" y="207" font-size="14" fill="#333" text-anchor="middle">설문</text><text x="48" y="230" font-size="14" fill="#333" text-anchor="middle">워크숍</text><text x="48" y="253" font-size="14" fill="#333" text-anchor="middle">관찰</text><text x="48" y="276" font-size="14" fill="#333" text-anchor="middle">외 4개</text><path d="M180 84 L136 114" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d1a)"/><rect x="94" y="116" width="84" height="36" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="136.0" y="139.0" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">② 분석</text><rect x="94" y="160" width="84" height="128" rx="8" fill="#ffffff" stroke="#b5730d" stroke-width="1"/><text x="136" y="184" font-size="14" fill="#333" text-anchor="middle">분류</text><text x="136" y="207" font-size="14" fill="#333" text-anchor="middle">모델링</text><text x="136" y="230" font-size="14" fill="#333" text-anchor="middle">할당</text><text x="136" y="253" font-size="14" fill="#333" text-anchor="middle">협상</text><text x="136" y="276" font-size="14" fill="#333" text-anchor="middle">정형 분석</text><path d="M180 84 L224 114" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d1a)"/><rect x="182" y="116" width="84" height="36" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="224.0" y="139.0" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">③ 명세</text><rect x="182" y="160" width="84" height="128" rx="8" fill="#ffffff" stroke="#2f7d4a" stroke-width="1"/><text x="224" y="184" font-size="14" fill="#333" text-anchor="middle">명세서</text><text x="224" y="207" font-size="14" fill="#333" text-anchor="middle">정형 명세</text><text x="224" y="230" font-size="14" fill="#333" text-anchor="middle">비정형</text><text x="224" y="253" font-size="14" fill="#333" text-anchor="middle">조건 7개</text><path d="M180 84 L312 114" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d1a)"/><rect x="270" y="116" width="84" height="36" rx="8" fill="#f1eaf8" stroke="#6a3d9a" stroke-width="2"/><text x="312.0" y="139.0" font-size="14" font-weight="700" fill="#6a3d9a" text-anchor="middle">④ 확인</text><rect x="270" y="160" width="84" height="128" rx="8" fill="#ffffff" stroke="#6a3d9a" stroke-width="1"/><text x="312" y="184" font-size="14" fill="#333" text-anchor="middle">동료 검토</text><text x="312" y="207" font-size="14" fill="#333" text-anchor="middle">워크스루</text><text x="312" y="230" font-size="14" fill="#333" text-anchor="middle">인스펙션</text><text x="312" y="253" font-size="14" fill="#333" text-anchor="middle">시제품</text>
+</svg><figcaption>오늘 나오는 용어는 전부 이 네 가지 중 하나에 매달려요. 단계 이름부터 머리에 걸어 두세요.</figcaption></figure></div>
+
+<div class="duo"><div><p>요구사항을 첫 단추라고 부르는 이유는 비용이에요. 요구사항 단계에서 생긴 잘못은 설계·구현·테스트를 거치며 그 위에 쌓인 결과물을 함께 끌고 내려가요. 기획 회의에서는 지우개 한 번으로 끝날 일이, 운영 중에 발견되면 핫픽스와 데이터 보정, 고객 공지문, 사과 쿠폰까지 줄줄이 따라와요.</p></div><figure><svg viewBox="0 0 360 256" font-family="sans-serif" role="img" aria-label="결함 수정 비용 막대. 요구, 설계, 구현, 테스트, 운영 단계로 갈수록 막대가 크게 높아진다">
+<rect width="360" height="256" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">결함을 늦게 찾을수록 비싸진다</text><path d="M20 220 L344 220" stroke="#555" stroke-width="2"/><rect x="30" y="208" width="44" height="12" rx="4" fill="#2f7d4a"/><text x="52" y="242" font-size="14" fill="#333" text-anchor="middle">요구</text><rect x="94" y="190" width="44" height="30" rx="4" fill="#6a9a3a"/><text x="116" y="242" font-size="14" fill="#333" text-anchor="middle">설계</text><rect x="158" y="160" width="44" height="60" rx="4" fill="#b5730d"/><text x="180" y="242" font-size="14" fill="#333" text-anchor="middle">구현</text><rect x="222" y="110" width="44" height="110" rx="4" fill="#c4581f"/><text x="244" y="242" font-size="14" fill="#333" text-anchor="middle">테스트</text><rect x="286" y="54" width="44" height="166" rx="4" fill="#b03a2e"/><text x="308" y="242" font-size="14" fill="#333" text-anchor="middle">운영</text><text x="52" y="200" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">지우개</text><text x="308" y="46" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">핫픽스</text>
+</svg><figcaption>막대 높이는 경향을 보여 주는 그림이에요. 요구 단계 결함은 문서 한 줄 고치면 끝나지만, 운영에서는 코드·데이터·고객 응대까지 고쳐야 해요.</figcaption></figure></div>
+
+<p><b>→ 이 장면의 결과물:</b> “요구사항을 일찍, 제대로 잡는다”는 목표. 그래서 다음 장면은 잡아야 할 요구사항이 어떤 종류로 나뉘는지예요.</p>
+
+<h2>2. 장면 1 — 요구를 두 종류로 나누기 (기능·비기능 요구사항)</h2>
+<div class="point"><b>핵심 한 줄</b>기능 요구사항은 시스템이 <b>무엇을</b> 하는가, 비기능 요구사항은 그것을 <b>얼마나 잘</b> 하는가이고, 비기능은 <b>재서 확인할 수 있게</b> 써야 해요.</div>
+<div class="duo"><div><p>앞에서 요구사항을 일찍 잡자고 했는데, 오늘한끼 팀이 처음 모은 요구 메모를 보면 “쿠폰 적용”과 “결제가 빨라야 함”이 한 줄에 섞여 있어요. 둘은 성격이 달라서, 하나는 화면과 API로 만들고 다른 하나는 성능 테스트로 확인해요. 그래서 요구사항은 먼저 두 갈래로 나눠요.</p>
+<p><b>기능 요구사항</b>은 시스템이 수행해야 할 기능, 즉 입력을 받아 무엇을 처리하고 무엇을 내놓는지예요. 오늘한끼라면 “회원은 상품을 장바구니에 담을 수 있다”, “주문 후 1시간 안에는 주문을 취소할 수 있다”가 여기예요. 문장의 주어가 사용자나 시스템이고 서술어가 동사라는 게 특징이에요.</p>
+<p><b>비기능 요구사항</b>은 기능이 아니라 그 기능이 갖춰야 할 품질과 제약이에요. 성능, 보안, 가용성, 사용성, 호환성처럼 여러 기능에 두루 걸리는 조건이에요. “결제 응답은 3초 이내”는 결제 버튼 하나의 기능이 아니라, 결제라는 기능이 얼마나 잘 돌아야 하는지를 말해요.</p></div><figure><svg viewBox="0 0 360 290" font-family="sans-serif" role="img" aria-label="기능과 비기능 요구사항 예. 기능은 장바구니 담기, 쿠폰 적용, 주문 취소. 비기능은 결제 응답 3초, 카드번호 암호화, 월 99.9 퍼센트 가동">
+<rect width="360" height="290" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">오늘한끼 요구사항 나누기</text><rect x="12" y="40" width="164" height="36" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="94.0" y="63.0" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">기능 — 무엇을</text><rect x="184" y="40" width="164" height="36" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="266.0" y="63.0" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">비기능 — 얼마나 잘</text><rect x="12" y="88" width="164" height="52" rx="8" fill="#ffffff" stroke="#2a5db0" stroke-width="1"/><text x="94.0" y="109.0" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">장바구니에 담는다</text><text x="94.0" y="129.0" font-size="14" fill="#333" text-anchor="middle">고객 기능</text><rect x="184" y="88" width="164" height="52" rx="8" fill="#ffffff" stroke="#b5730d" stroke-width="1"/><text x="266.0" y="109.0" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">결제 응답 3초 이내</text><text x="266.0" y="129.0" font-size="14" fill="#333" text-anchor="middle">성능</text><rect x="12" y="152" width="164" height="52" rx="8" fill="#ffffff" stroke="#2a5db0" stroke-width="1"/><text x="94.0" y="173.0" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">쿠폰을 적용한다</text><text x="94.0" y="193.0" font-size="14" fill="#333" text-anchor="middle">결제 기능</text><rect x="184" y="152" width="164" height="52" rx="8" fill="#ffffff" stroke="#b5730d" stroke-width="1"/><text x="266.0" y="173.0" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">카드번호 암호화 저장</text><text x="266.0" y="193.0" font-size="14" fill="#333" text-anchor="middle">보안</text><rect x="12" y="216" width="164" height="52" rx="8" fill="#ffffff" stroke="#2a5db0" stroke-width="1"/><text x="94.0" y="237.0" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">주문을 취소한다</text><text x="94.0" y="257.0" font-size="14" fill="#333" text-anchor="middle">주문 기능</text><rect x="184" y="216" width="164" height="52" rx="8" fill="#ffffff" stroke="#b5730d" stroke-width="1"/><text x="266.0" y="237.0" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">월 99.9% 가동</text><text x="266.0" y="257.0" font-size="14" fill="#333" text-anchor="middle">가용성</text>
+</svg><figcaption>왼쪽은 동사(담는다·적용한다·취소한다), 오른쪽은 기준(3초·암호화·99.9%)이에요. 비기능은 왼쪽 기능 전체에 걸리는 품질 조건이에요.</figcaption></figure></div>
+
+<p>한 장 요약 — 비기능 요구사항의 대표 종류와 오늘한끼에서의 예예요.</p>
 <table>
-<tr><th>기법</th><th>방식</th><th>공식성</th></tr>
-<tr><td>동료 검토</td><td>작성자가 설명, 동료가 결함 찾기</td><td>★</td></tr>
-<tr><td>워크스루</td><td>자료 사전 배포 → 짧은 검토 회의</td><td>★★</td></tr>
-<tr><td><b>인스펙션</b></td><td><b>작성자 제외</b> 전문가가 결함 검출</td><td>★★★ 가장 공식적</td></tr>
+<tr><th>종류</th><th>무엇을 정하나</th><th>오늘한끼 예</th></tr>
+<tr><td>성능</td><td>응답 시간·처리량</td><td>결제 응답 3초 이내, 동시 접속 2,000명 처리</td></tr>
+<tr><td>보안</td><td>인증·암호화·접근 통제</td><td>카드번호는 암호화해 저장, 관리자 화면은 사내망에서만</td></tr>
+<tr><td>가용성</td><td>서비스가 살아 있는 비율</td><td>월 가용성 99.9% 이상</td></tr>
+<tr><td>사용성</td><td>배우고 쓰기 쉬운 정도</td><td>처음 온 사람도 3분 안에 첫 주문 완료</td></tr>
+<tr><td>호환성</td><td>다른 환경·시스템과 함께 동작</td><td>최신 두 버전의 주요 브라우저에서 동작</td></tr>
+<tr><td>유지보수성</td><td>고치고 넓히기 쉬운 정도</td><td>결제 대행사를 바꿀 때 결제 모듈만 수정</td></tr>
 </table>
-<p>그 외: 프로토타입, 테스트 설계, CASE 도구 검증</p>
+<div class="duo"><div><p>요구사항을 바라보는 눈높이로도 나눌 수 있어요. <b>사용자 요구사항</b>은 사용자가 이해하는 말로 쓴 “이런 서비스가 필요하다”이고, <b>시스템 요구사항</b>은 그것을 개발자가 구현할 수 있게 더 자세히 쓴 명세예요. 같은 요구를 고객 언어와 개발자 언어로 두 번 적는 셈이에요.</p>
+<p>비기능 요구사항에서 시험이 노리는 지점은 <b>검증 가능성</b>이에요. “빠르게 해 주세요”는 요구사항이라기보다 소원에 가까워요. 소원은 테스트 케이스로 만들 수 없어서, 다 만든 뒤 합격인지 불합격인지 가를 기준이 없어요. 그래서 “2초 이내”, “99.9%”처럼 숫자와 조건을 붙여 잴 수 있게 바꿔 써요.</p></div><figure><svg viewBox="0 0 360 250" font-family="sans-serif" role="img" aria-label="모호한 표현을 측정 가능한 표현으로 바꾸는 예. 빠르다는 2초 이내, 늘 열린다는 월 가용성 99.9 퍼센트, 쓰기 쉽다는 3분 안에 첫 주문">
+<rect width="360" height="250" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d1b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">소원을 요구사항으로 바꾸기</text><rect x="12" y="44" width="108" height="52" rx="8" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><text x="66.0" y="75.0" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">“빠르다”</text><path d="M122 70 L140 70" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d1b)"/><rect x="142" y="44" width="206" height="52" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="245.0" y="65.0" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">검색 결과를</text><text x="245.0" y="85.0" font-size="14" fill="#333" text-anchor="middle">2초 이내 표시</text><rect x="12" y="112" width="108" height="52" rx="8" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><text x="66.0" y="143.0" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">“늘 열린다”</text><path d="M122 138 L140 138" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d1b)"/><rect x="142" y="112" width="206" height="52" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="245.0" y="133.0" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">월 가용성</text><text x="245.0" y="153.0" font-size="14" fill="#333" text-anchor="middle">99.9% 이상</text><rect x="12" y="180" width="108" height="52" rx="8" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><text x="66.0" y="211.0" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">“쓰기 쉽다”</text><path d="M122 206 L140 206" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d1b)"/><rect x="142" y="180" width="206" height="52" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="245.0" y="201.0" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">처음 온 사람도</text><text x="245.0" y="221.0" font-size="14" fill="#333" text-anchor="middle">3분 안에 첫 주문</text>
+</svg><figcaption>왼쪽 빨간 칸은 테스트로 합격·불합격을 가를 수 없어요. 오른쪽 초록 칸은 숫자가 있어서 잴 수 있어요.</figcaption></figure></div>
 
-<h2>3. 좋은 요구사항 명세서의 조건</h2>
-<p><span class="tag">정확성</span><span class="tag">완전성</span><span class="tag">일관성</span><span class="tag">명확성</span><span class="tag">검증 가능성</span><span class="tag">추적 가능성</span><span class="tag">수정 용이성</span></p>
+<div class="trap">“빠르다”, “편리하다”, “안정적이다”처럼 잴 수 없는 표현이 들어간 선지는 검증 가능한 요구사항이 아니에요. 숫자·단위·조건이 붙은 선지를 고르세요. 또 “주문을 취소한다”처럼 동사로 끝나는 선지는 비기능이 아니라 기능이에요.</div>
+<p><b>→ 이 장면의 결과물:</b> 기능·비기능으로 나뉜, 측정 가능한 요구 문장. 그래서 다음은 이런 요구를 어떤 순서로 만들어 가는지, 전체 흐름이에요.</p>
 
-<h2>4. 시험 포인트</h2>
-<div class="point">
+<h2>3. 요구사항 개발 4단계 — 도출 → 분석 → 명세 → 확인</h2>
+<div class="point"><b>핵심 한 줄</b>요구사항 개발은 <b>도출 → 분석 → 명세 → 확인</b> 순서로 진행되고, 앞 단계의 결과물이 다음 단계의 재료가 돼요.</div>
+<p>앞 장면에서 좋은 요구 문장이 어떤 모양인지 봤으니, 이제 그 문장을 어디서 얻고 어떻게 다듬어 확정하는지 볼 차례예요. 요구사항 개발 프로세스는 네 단계로 나뉘어요. 이름이 곧 하는 일이라 순서만 잡으면 외울 게 많지 않아요.</p>
+<div class="flow">
+<div><b>① 도출</b>요구를 찾아낸다</div><div class="arrow">→</div>
+<div><b>② 분석</b>정리하고 충돌을 푼다</div><div class="arrow">→</div>
+<div><b>③ 명세</b>문서로 쓴다</div><div class="arrow">→</div>
+<div><b>④ 확인</b>제대로 썼는지 검토한다</div>
+</div>
+<div class="duo"><div><p>각 단계는 손에 남는 결과물로 기억하면 쉬워요. 도출이 끝나면 날것의 요구 목록이, 분석이 끝나면 정리·합의된 요구와 모델이, 명세가 끝나면 요구사항 명세서가, 확인이 끝나면 검토를 통과한 명세서가 남아요. 그 뒤 개발 도중에 들어오는 변경을 통제하고 추적하는 일은 <b>요구사항 관리</b>라는 별도 활동으로, D006에서 다뤄요.</p></div><figure><svg viewBox="0 0 360 300" font-family="sans-serif" role="img" aria-label="요구사항 개발 단계별 산출물. 도출은 요구 목록, 분석은 정리 합의된 요구와 모델, 명세는 요구사항 명세서, 확인은 검토를 통과한 명세서">
+<rect width="360" height="300" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d1c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">단계마다 손에 남는 것</text><rect x="12" y="44" width="90" height="48" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="57.0" y="73.0" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">도출</text><path d="M104 68 L122 68" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d1c)"/><rect x="124" y="44" width="224" height="48" rx="8" fill="#ffffff" stroke="#2a5db0" stroke-width="1"/><text x="236.0" y="73.0" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">날것의 요구 목록</text><path d="M57 92 L57 106" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d1c)"/><rect x="12" y="108" width="90" height="48" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="57.0" y="137.0" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">분석</text><path d="M104 132 L122 132" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d1c)"/><rect x="124" y="108" width="224" height="48" rx="8" fill="#ffffff" stroke="#b5730d" stroke-width="1"/><text x="236.0" y="137.0" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">정리·합의된 요구와 모델</text><path d="M57 156 L57 170" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d1c)"/><rect x="12" y="172" width="90" height="48" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="57.0" y="201.0" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">명세</text><path d="M104 196 L122 196" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d1c)"/><rect x="124" y="172" width="224" height="48" rx="8" fill="#ffffff" stroke="#2f7d4a" stroke-width="1"/><text x="236.0" y="201.0" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">요구사항 명세서(SRS)</text><path d="M57 220 L57 234" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d1c)"/><rect x="12" y="236" width="90" height="48" rx="8" fill="#f1eaf8" stroke="#6a3d9a" stroke-width="2"/><text x="57.0" y="265.0" font-size="14" font-weight="700" fill="#6a3d9a" text-anchor="middle">확인</text><path d="M104 260 L122 260" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d1c)"/><rect x="124" y="236" width="224" height="48" rx="8" fill="#ffffff" stroke="#6a3d9a" stroke-width="1"/><text x="236.0" y="265.0" font-size="14" font-weight="700" fill="#6a3d9a" text-anchor="middle">검토를 통과한 명세서</text>
+</svg><figcaption>앞 단계의 결과물이 다음 단계의 재료예요. 확인을 통과한 명세서부터는 요구사항 관리(D006)가 변경을 통제해요.</figcaption></figure></div>
+
+<div class="memo"><b>도분명확</b> — 도출 · 분석 · 명세 · 확인. 찾고(도), 나누고(분), 밝혀 적고(명), 확인(확)한다. 넷째 글자가 “확”이라 끝이 확실해요.</div>
+<p><b>→ 이 장면의 결과물:</b> 네 단계 지도. 그래서 다음 장면부터 한 단계씩 오늘한끼 프로젝트로 들어가요. 첫째는 요구를 찾아내는 도출이에요.</p>
+
+<h2>4. 장면 2 — 요구를 찾아내기 (도출 기법)</h2>
+<div class="point"><b>핵심 한 줄</b>도출 기법은 <b>상황</b>으로 골라요. 많은 사람에게 같은 질문은 설문, 한 사람 깊게는 인터뷰, 부서 간 충돌 조율은 워크숍이에요.</div>
+<p><b>요구사항 도출</b>은 이해관계자에게서 요구를 찾아내고 모으는 활동이에요. 쉬워 보이지만 가장 어려운 단계예요. 사용자는 자기가 원하는 걸 정확히 알고 있어요. 막상 만들어 보여 주기 전까지는요. 게다가 늘 하는 업무일수록 당연해서 말로 꺼내지 않아요. 그래서 상황에 따라 다른 기법을 꺼내 써요.</p>
+
+<h3>혼자 깊게, 여럿 넓게 — 인터뷰와 설문</h3>
+<div class="duo"><div><p><b>인터뷰</b>는 핵심 담당자를 직접 만나 질문하고 답을 듣는 방법이에요. 오늘한끼의 CS 팀장에게 “환불이 가장 꼬이는 경우가 언제인가요?”라고 묻고, 답에 따라 꼬리 질문을 이어 가며 예외 업무까지 캐낼 수 있어요. 깊이가 강점이고, 한 사람씩 만나야 해서 시간이 많이 드는 게 대가예요.</p>
+<p><b>설문</b>은 많은 사람에게 같은 질문지를 돌려 답을 모으는 방법이에요. 고객 500명에게 “평일 몇 시에 주문하나요?”를 묻는다면 설문이 맞아요. 500명을 한 명씩 인터뷰하면 요구사항보다 분석가의 목소리가 먼저 바닥나요. 빠르고 싸게 넓게 모으는 대신, 질문지에 없는 이야기는 들을 수 없고 답의 이유를 파고들기 어려워요.</p></div><figure><svg viewBox="0 0 360 300" font-family="sans-serif" role="img" aria-label="도출 기법 지도. 가로축은 인원, 세로축은 깊이. 인터뷰는 왼쪽 위, 설문은 오른쪽 아래, 워크숍은 가운데 위, 관찰은 왼쪽 가운데, 브레인스토밍은 가운데 아래">
+<rect width="360" height="300" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d1d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">기법 지도 — 깊이와 인원</text><path d="M40 262 L344 262" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d1d)"/><path d="M40 262 L40 44" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d1d)"/><text x="344" y="286" font-size="14" fill="#555" text-anchor="end">한 번에 듣는 사람 수</text><text x="48" y="50" font-size="14" fill="#555">깊이</text><circle cx="84" cy="84" r="9" fill="#2a5db0"/><text x="98" y="89" font-size="14" font-weight="700" fill="#2a5db0">인터뷰</text><circle cx="96" cy="160" r="9" fill="#555"/><text x="110" y="165" font-size="14" font-weight="700" fill="#555">관찰</text><circle cx="190" cy="104" r="9" fill="#b5730d"/><text x="204" y="109" font-size="14" font-weight="700" fill="#b5730d">워크숍</text><circle cx="200" cy="196" r="9" fill="#6a3d9a"/><text x="214" y="201" font-size="14" font-weight="700" fill="#6a3d9a">브레인스토밍</text><circle cx="320" cy="236" r="9" fill="#2f7d4a"/><text x="306" y="241" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="end">설문</text>
+</svg><figcaption>왼쪽 위는 적은 사람에게 깊게, 오른쪽 아래는 많은 사람에게 얕게예요. 워크숍은 여럿을 모으면서도 깊이 들어가는 자리에 있어요.</figcaption></figure></div>
+
+
+<h3>여럿이 모여서 — 브레인스토밍과 워크숍</h3>
+<div class="duo"><div><p><b>브레인스토밍</b>은 여러 사람이 모여 한 주제에 대해 아이디어를 최대한 많이 쏟아 내는 회의 기법이에요. “밀키트를 더 자주 사게 하려면?” 같은 열린 질문에 맞아요. 핵심 규칙은 <b>비판 금지</b>예요. 누가 엉뚱한 말을 해도 그 자리에서 평가하지 않고, 남의 아이디어에 덧붙여 키워요. 고르는 일은 회의가 끝난 뒤에 해요.</p></div><figure><svg viewBox="0 0 360 230" font-family="sans-serif" role="img" aria-label="브레인스토밍 규칙 네 가지. 비판 금지, 자유분방, 질보다 양, 결합과 개선">
+<rect width="360" height="230" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">브레인스토밍 네 가지 규칙</text><rect x="12" y="40" width="164" height="84" rx="8" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><text x="94.0" y="77.0" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">비판 금지</text><text x="94.0" y="97.0" font-size="14" fill="#333" text-anchor="middle">평가는 회의 뒤에</text><rect x="184" y="40" width="164" height="84" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="266.0" y="77.0" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">자유분방</text><text x="266.0" y="97.0" font-size="14" fill="#333" text-anchor="middle">엉뚱한 생각도 환영</text><rect x="12" y="134" width="164" height="84" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="94.0" y="171.0" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">질보다 양</text><text x="94.0" y="191.0" font-size="14" fill="#333" text-anchor="middle">많이 낼수록 좋다</text><rect x="184" y="134" width="164" height="84" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="266.0" y="171.0" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">결합·개선</text><text x="266.0" y="191.0" font-size="14" fill="#333" text-anchor="middle">남의 안에 덧붙이기</text>
+</svg><figcaption>네 규칙은 모두 “일단 많이 꺼내 놓기”를 돕는 장치예요. 고르고 다듬는 일은 회의가 끝난 뒤 분석 단계에서 해요.</figcaption></figure></div>
+
+<div class="duo"><div><p><b>워크숍</b>은 여러 이해관계자를 한자리에 모아, 진행자의 진행 아래 집중적으로 토의해 요구를 정의하고 <b>합의</b>하는 방법이에요. 오늘한끼에서 영업팀은 “주문 마감을 18시로 늦춰 매출을 늘리자”, 운영팀은 “포장 인력 때문에 14시가 한계”라고 맞서요. 두 팀을 따로 인터뷰하면 각자 “저쪽이 현실을 모른다”는 확신만 두 배로 키워서 돌아와요. 한자리에 앉혀야 절충안이 나와요.</p></div><figure><svg viewBox="0 0 360 292" font-family="sans-serif" role="img" aria-label="워크숍 장면. 영업팀은 주문 마감 18시, 운영팀은 14시를 원하고, 진행자가 이끄는 토의 끝에 16시 마감과 수도권 한정이라는 합의안이 나온다">
+<rect width="360" height="292" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d1f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">워크숍 — 부딪히는 요구를 한자리에</text><rect x="12" y="44" width="150" height="64" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="87.0" y="71.0" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">영업팀</text><text x="87.0" y="91.0" font-size="14" fill="#333" text-anchor="middle">주문 마감 18시</text><rect x="198" y="44" width="150" height="64" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="273.0" y="71.0" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">운영팀</text><text x="273.0" y="91.0" font-size="14" fill="#333" text-anchor="middle">주문 마감 14시</text><rect x="120" y="128" width="120" height="52" rx="8" fill="#f1eaf8" stroke="#6a3d9a" stroke-width="2"/><text x="180.0" y="149.0" font-size="14" font-weight="700" fill="#6a3d9a" text-anchor="middle">진행자</text><text x="180.0" y="169.0" font-size="14" fill="#333" text-anchor="middle">규칙·시간 관리</text><path d="M87 108 L124 140" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d1f)"/><path d="M273 108 L236 140" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d1f)"/><path d="M180 180 L180 220" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d1f)"/><rect x="50" y="222" width="260" height="56" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="180.0" y="245.0" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">합의안</text><text x="180.0" y="265.0" font-size="14" fill="#333" text-anchor="middle">16시 마감 + 수도권 한정</text>
+</svg><figcaption>두 팀을 따로 만나면 서로 다른 답 두 개가 남고, 한자리에 앉히면 합의안 하나가 남아요.</figcaption></figure></div>
+
+<p>브레인스토밍과 워크숍은 둘 다 여럿이 모이지만 목적이 달라요. 브레인스토밍은 아이디어를 <b>넓히는</b> 회의라 판단을 미루고, 워크숍은 요구를 <b>모아서 정하는</b> 회의라 결론을 내요. 사용자와 개발자가 함께 집중 회의로 요구를 정하는 JAD(공동 애플리케이션 설계)도 워크숍 방식의 하나예요.</p>
+
+<h3>보고, 만들어 보고, 연기해 보기 — 관찰·프로토타이핑·유스케이스·롤플레잉</h3>
+<div class="duo"><div><p><b>관찰</b>은 사용자가 실제로 일하는 현장을 지켜보며 요구를 찾는 방법이에요. 물류센터 직원에게 출고 절차를 물으면 “규정대로 해요”라고 답하는데, 옆에서 보면 엑셀 매크로 세 개와 모니터에 붙은 포스트잇으로 돌아가고 있어요. 말로는 나오지 않는 암묵적 업무를 찾는 데 강해요. 다만 지켜보는 사람이 있으면 평소와 다르게 일할 수 있어요.</p>
+<p><b>프로토타이핑</b>은 핵심 화면이나 기능을 간단한 시제품으로 먼저 만들어 보여 주고 피드백을 받는 방법이에요. 새 주문 화면을 클릭되는 시안으로 보여 주면 “쿠폰 칸이 결제 버튼 아래 있으면 못 찾겠다” 같은 말이 그제야 나와요. 요구를 구체화하는 힘이 크고, 시제품을 완성품으로 착각하게 만드는 위험이 있어요.</p>
+<p><b>유스케이스</b>는 사용자(액터)가 시스템을 통해 얻으려는 목적을 기능 단위 시나리오로 쓰는 방법이에요. “고객이 상품을 검색한다 → 장바구니에 담는다 → 주문한다”처럼 사용자 관점에서 기능을 정리해요. 그림으로는 사람 모양 액터와 타원 유스케이스로 그리고, 자세한 표기법은 내일 D002 UML에서 봐요.</p></div><figure><svg viewBox="0 0 360 252" font-family="sans-serif" role="img" aria-label="유스케이스 그림. 사람 모양 액터인 고객이 시스템 경계 상자 오늘한끼 안의 상품 검색, 주문하기, 주문 취소 타원과 선으로 연결된다">
+<rect width="360" height="252" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">유스케이스 — 사용자 눈으로 본 기능</text><circle cx="44" cy="110" r="12" fill="none" stroke="#333" stroke-width="2"/><path d="M44 122 L44 160 M28 134 L60 134 M44 160 L30 186 M44 160 L58 186" stroke="#333" stroke-width="2" fill="none"/><text x="44" y="208" font-size="14" font-weight="700" fill="#333" text-anchor="middle">고객</text><rect x="110" y="40" width="238" height="200" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/><text x="229" y="62" font-size="14" font-weight="700" fill="#555" text-anchor="middle">오늘한끼</text><line x1="62" y1="132" x2="150" y2="100" stroke="#333" stroke-width="1.5"/><ellipse cx="229" cy="100" rx="78" ry="19" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="229" y="105" font-size="14" fill="#333" text-anchor="middle">상품 검색</text><line x1="62" y1="132" x2="150" y2="150" stroke="#333" stroke-width="1.5"/><ellipse cx="229" cy="150" rx="78" ry="19" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="229" y="155" font-size="14" fill="#333" text-anchor="middle">주문하기</text><line x1="62" y1="132" x2="150" y2="200" stroke="#333" stroke-width="1.5"/><ellipse cx="229" cy="200" rx="78" ry="19" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="229" y="205" font-size="14" fill="#333" text-anchor="middle">주문 취소</text>
+</svg><figcaption>사람 모양이 액터, 상자가 시스템 경계, 타원이 유스케이스예요. 자세한 기호와 include·extend는 내일 UML에서 봐요.</figcaption></figure></div>
+
+<p><b>롤플레잉</b>은 고객·상담원·배송 기사처럼 역할을 나눠 실제 상황을 연기해 보며 요구를 찾는 방법이에요. “배송 기사가 문 앞에서 고객과 연락이 안 될 때”를 연기해 보면, 시스템에 ‘부재 시 처리 방법’ 입력 칸이 필요하다는 걸 알게 돼요. 문서로는 상상하기 어려운 상호작용을 찾는 데 쓰여요.</p>
+<p>한 장 요약 — 위에서 설명한 여덟 기법을 쓰는 상황과 대가로 나란히 놓으면 이래요.</p>
+<table>
+<tr><th>기법</th><th>이럴 때 쓴다</th><th>대가</th></tr>
+<tr><td>인터뷰</td><td>소수 핵심 담당자의 업무·예외를 깊게</td><td>시간이 많이 든다</td></tr>
+<tr><td>설문</td><td>다수에게 같은 질문을 빠르게</td><td>깊이·이유를 듣기 어렵다</td></tr>
+<tr><td>브레인스토밍</td><td>새 아이디어를 많이 모은다(비판 금지)</td><td>걸러 내는 일이 따로 필요하다</td></tr>
+<tr><td>워크숍</td><td>이해관계자 상충 요구를 조율·합의</td><td>여러 사람 일정을 맞춰야 한다</td></tr>
+<tr><td>관찰</td><td>말로 설명 안 되는 현장 업무</td><td>관찰되면 행동이 바뀔 수 있다</td></tr>
+<tr><td>프로토타이핑</td><td>시제품을 보여 주고 피드백</td><td>시제품을 완성품으로 오해</td></tr>
+<tr><td>유스케이스</td><td>사용자 관점 기능 시나리오 정리</td><td>비기능 요구는 담기 어렵다</td></tr>
+<tr><td>롤플레잉</td><td>역할을 나눠 상황 재현</td><td>참여자가 역할에 몰입해야 한다</td></tr>
+</table>
+<div class="duo"><div><p>시험은 기법 이름의 정의보다 “이 상황에 맞는 기법은?”으로 묻는 경우가 많아요. 지문에서 인원이 많은지, 깊이가 필요한지, 부서끼리 부딪히는지, 말로 설명하기 어려운 업무인지 같은 단서를 찾으면 답이 정해져요.</p></div><figure><svg viewBox="0 0 360 324" font-family="sans-serif" role="img" aria-label="상황별 도출 기법 고르기. 많은 사람에게 같은 질문은 설문, 깊게는 인터뷰, 부서 충돌은 워크숍, 말로 못 하는 업무는 관찰, 아이디어는 브레인스토밍, 화면 감은 프로토타이핑">
+<rect width="360" height="324" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d1e" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">상황 → 기법 질문 사다리</text><rect x="12" y="40" width="226" height="38" rx="8" fill="#ffffff" stroke="#b5730d" stroke-width="1"/><text x="22" y="64" font-size="14" fill="#333">많은 사람에게 같은 질문?</text><path d="M240 59 L256 59" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d1e)"/><rect x="258" y="40" width="92" height="38" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="304" y="64" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">설문</text><rect x="12" y="86" width="226" height="38" rx="8" fill="#ffffff" stroke="#b5730d" stroke-width="1"/><text x="22" y="110" font-size="14" fill="#333">한 사람의 업무를 깊게?</text><path d="M240 105 L256 105" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d1e)"/><rect x="258" y="86" width="92" height="38" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="304" y="110" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">인터뷰</text><rect x="12" y="132" width="226" height="38" rx="8" fill="#ffffff" stroke="#b5730d" stroke-width="1"/><text x="22" y="156" font-size="14" fill="#333">부서끼리 요구가 부딪힘?</text><path d="M240 151 L256 151" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d1e)"/><rect x="258" y="132" width="92" height="38" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="304" y="156" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">워크숍</text><rect x="12" y="178" width="226" height="38" rx="8" fill="#ffffff" stroke="#b5730d" stroke-width="1"/><text x="22" y="202" font-size="14" fill="#333">말로 설명 못 하는 업무?</text><path d="M240 197 L256 197" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d1e)"/><rect x="258" y="178" width="92" height="38" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="304" y="202" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">관찰</text><rect x="12" y="224" width="226" height="38" rx="8" fill="#ffffff" stroke="#b5730d" stroke-width="1"/><text x="22" y="248" font-size="14" fill="#333">새 아이디어를 많이?</text><path d="M240 243 L256 243" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d1e)"/><rect x="258" y="224" width="92" height="38" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="304" y="248" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">브레인스토밍</text><rect x="12" y="270" width="226" height="38" rx="8" fill="#ffffff" stroke="#b5730d" stroke-width="1"/><text x="22" y="294" font-size="14" fill="#333">보여 줘야 감이 오는 화면?</text><path d="M240 289 L256 289" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d1e)"/><rect x="258" y="270" width="92" height="38" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="304" y="294" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">프로토타이핑</text>
+</svg><figcaption>문제 지문에서 왼쪽 질문의 단서(인원·깊이·충돌·암묵 업무·아이디어·화면)를 찾으면 오른쪽 답이 나와요.</figcaption></figure></div>
+
+<div class="trap">출제자는 도출 기법 문제에 <b>정적 분석·코드 리뷰·부하 테스트</b> 같은 개발·테스트 활동을 선지로 섞어 둬요. 이름이 그럴듯해도 요구를 “찾아내는” 기법이 아니면 지우세요.</div>
+<p><b>→ 이 장면의 결과물:</b> 인터뷰 메모, 설문 결과, 워크숍 합의안이 뒤섞인 날것의 요구 목록. 그래서 다음 장면은 이걸 정리하고 충돌을 푸는 분석이에요.</p>
+
+<h2>5. 장면 3 — 정리하고 충돌 풀기 (요구사항 분석)</h2>
+<div class="point"><b>핵심 한 줄</b>요구사항 분석은 모은 요구를 <b>분류</b>하고 <b>모델</b>로 그리고, 하위 시스템에 <b>할당</b>하고, 충돌을 <b>협상</b>하고, 필요하면 <b>정형 분석</b>으로 모순을 찾는 단계예요.</div>
+<div class="duo"><div><p>도출이 끝난 오늘한끼 팀의 목록에는 중복도 있고, 서로 부딪히는 요구도 있고, “나중에 되면 좋은 것”과 “없으면 오픈 못 하는 것”이 같은 무게로 적혀 있어요. 이 상태로 문서를 쓰면 명세서가 메모장의 확장판이 돼요. 분석은 이 목록을 개발할 수 있는 모양으로 다듬는 단계예요.</p>
+<p><b>분류</b>는 요구를 기준에 따라 나누는 일이에요. 기능인지 비기능인지, 우선순위가 높은지, 앞으로 바뀔 가능성이 큰지 같은 기준을 써요. 예를 들어 “쿠폰 적용”은 기능·높은 우선순위·변경 가능성 높음(프로모션 정책이 자주 바뀌니까)으로 분류돼요.</p>
+<p><b>개념 모델링</b>은 요구를 그림 모델로 표현해 구조와 흐름을 드러내는 일이에요. 자연어 목록으로는 “주문 정보가 어디서 어디로 가는지”가 잘 보이지 않지만, 자료 흐름도(DFD)나 UML로 그리면 빠진 흐름이 바로 보여요. 아래는 오늘한끼의 주문 흐름을 DFD 느낌으로 그린 것이고, DFD 기호는 D004에서 자세히 봐요.</p></div><figure class="mermaid"><img src="../assets/c28d079c86dbbbe3.png" alt="도식" loading="lazy" style="width:203px"></figure></div>
+
+<div class="duo"><div><p><b>할당</b>은 요구를 어느 하위 시스템이나 구성 요소가 맡을지 나누는 일이에요. “결제 응답 3초 이내”라는 요구를 결제 서비스 2초, 주문 서비스 1초처럼 쪼개 맡기는 식이에요. 마이크로서비스로 나뉜 시스템이라면 팀별 SLA를 정하는 장면과 같아요.</p>
+<p><b>협상</b>은 이해관계자 사이의 충돌을 풀고 우선순위를 합의하는 일이에요. 모든 요구를 다 넣을 시간과 돈은 없으니, 가치는 높고 비용은 낮은 것부터 하자는 식으로 순서를 정해요. 워크숍이 “충돌을 찾고 합의하는 자리”라면, 협상은 분석 단계에서 그 합의를 요구 목록에 반영하는 활동이에요.</p></div><figure><svg viewBox="0 0 360 280" font-family="sans-serif" role="img" aria-label="우선순위 매트릭스. 가치 높고 비용 낮은 쿠폰 적용은 먼저, 가치 높고 비용 높은 실시간 배송 추적은 계획해서, 가치 낮고 비용 낮은 다크 모드는 여유 있을 때, 가치 낮고 비용 높은 AR 미리보기는 보류">
+<rect width="360" height="280" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">가치와 비용으로 순서 정하기</text><text x="130" y="46" font-size="14" font-weight="700" fill="#555" text-anchor="middle">비용 낮음</text><text x="278" y="46" font-size="14" font-weight="700" fill="#555" text-anchor="middle">비용 높음</text><text x="32" y="100" font-size="14" font-weight="700" fill="#555" text-anchor="middle">가치</text><text x="32" y="120" font-size="14" font-weight="700" fill="#555" text-anchor="middle">높음</text><text x="32" y="208" font-size="14" font-weight="700" fill="#555" text-anchor="middle">가치</text><text x="32" y="228" font-size="14" font-weight="700" fill="#555" text-anchor="middle">낮음</text><rect x="60" y="56" width="140" height="100" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="130.0" y="101.0" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">먼저 한다</text><text x="130.0" y="121.0" font-size="14" fill="#333" text-anchor="middle">쿠폰 적용</text><rect x="208" y="56" width="140" height="100" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="278.0" y="101.0" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">계획해서</text><text x="278.0" y="121.0" font-size="14" fill="#333" text-anchor="middle">실시간 배송 추적</text><rect x="60" y="164" width="140" height="100" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="130.0" y="209.0" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">여유 있을 때</text><text x="130.0" y="229.0" font-size="14" fill="#333" text-anchor="middle">다크 모드</text><rect x="208" y="164" width="140" height="100" rx="8" fill="#eeeeea" stroke="#888" stroke-width="2"/><text x="278.0" y="209.0" font-size="14" font-weight="700" fill="#888" text-anchor="middle">보류</text><text x="278.0" y="229.0" font-size="14" fill="#333" text-anchor="middle">AR 음식 미리보기</text>
+</svg><figcaption>협상 테이블에서 자주 쓰는 정리법이에요. 시험에 이 표 자체가 나오진 않지만, “분석 = 우선순위 정하기”를 떠올리는 그림으로 기억하세요.</figcaption></figure></div>
+
+<p><b>정형 분석</b>은 요구를 수학적 표기로 옮겨 모순이나 빠진 조건을 기계적으로 찾는 일이에요. “재고가 0이면 주문 불가”와 “예약 주문은 재고와 무관하게 가능”이 동시에 있으면, 수식으로 옮기는 순간 둘이 충돌한다는 게 드러나요. 다음 장면의 정형 명세와 같은 도구를 분석에 쓰는 셈이에요.</p>
+<p>한 장 요약 — 분석의 다섯 활동이에요.</p>
+<table>
+<tr><th>활동</th><th>하는 일</th><th>오늘한끼 예</th></tr>
+<tr><td>분류</td><td>기능/비기능·우선순위·변경 가능성으로 나눈다</td><td>쿠폰 = 기능, 우선 높음, 자주 바뀜</td></tr>
+<tr><td>개념 모델링</td><td>DFD·UML 등 모델로 그린다</td><td>주문 흐름 DFD</td></tr>
+<tr><td>할당</td><td>하위 시스템에 요구를 나눠 맡긴다</td><td>3초를 결제 2초 + 주문 1초로</td></tr>
+<tr><td>협상</td><td>충돌을 풀고 우선순위를 합의한다</td><td>쿠폰 먼저, AR 미리보기는 보류</td></tr>
+<tr><td>정형 분석</td><td>수학적 표기로 모순을 찾는다</td><td>재고 0 주문 불가 vs 예약 주문</td></tr>
+</table>
+<p><b>→ 이 장면의 결과물:</b> 분류·합의되고 모델로 그려진 요구. 그래서 다음 장면은 이걸 모두가 기준으로 삼을 문서로 쓰는 명세예요.</p>
+
+<h2>6. 장면 4 — 문서로 쓰기 (요구사항 명세)</h2>
+<div class="point"><b>핵심 한 줄</b>요구사항 명세는 분석한 요구를 <b>요구사항 명세서</b>로 쓰는 단계이고, 쓰는 방식은 수학 기호 기반의 <b>정형 명세</b>와 자연어·그림 기반의 <b>비정형 명세</b>로 나뉘어요.</div>
+<div class="duo"><div><p>분석까지 마친 요구도 사람들 머릿속과 회의록에 흩어져 있으면 금세 기억이 갈라져요. 석 달 뒤 영업팀은 “16시 마감이라고 했잖아요”, 운영팀은 “수도권만이라고 했잖아요”라고 말하게 돼요. 그래서 합의 내용을 하나의 문서, <b>요구사항 명세서</b>(SRS, Software Requirements Specification)로 확정해요. 이 문서가 설계·개발·테스트의 기준이 돼요.</p>
+<p><b>비정형 명세</b>는 자연어 문장과 표·다이어그램 같은 그림으로 요구를 쓰는 방식이에요. 누구나 읽을 수 있어 고객과 함께 검토하기 좋아요. 대신 문장이 여러 뜻으로 읽힐 수 있어요. “재고보다 많이 주문할 수 없다”는 재고와 같은 수량은 되는지, 장바구니에 담는 순간 기준인지 결제 순간 기준인지가 애매해요.</p>
+<p><b>정형 명세</b>는 수학적 원리와 기호로 요구를 쓰는 방식이에요. 해석이 하나뿐이라 모호함이 없고, 도구로 모순을 검사할 수도 있어요. 대가는 쓰기도 읽기도 어렵다는 점이에요. Z로 쓴 명세는 모호함이 없지만, 읽을 수 있는 사람도 드물어서 오해할 사람조차 없다는 게 장점 아닌 장점이에요. 그래서 철도 신호·항공처럼 실수 비용이 아주 큰 분야에서 주로 써요.</p></div><figure><svg viewBox="0 0 360 260" font-family="sans-serif" role="img" aria-label="같은 요구를 두 방식으로 쓴 예. 비정형은 재고보다 많이 주문할 수 없다는 자연어 문장, 정형은 주문수량이 재고 이하이고 실행 후 재고는 재고에서 주문수량을 뺀 값이라는 수식">
+<rect width="360" height="260" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">같은 요구, 두 가지 말투</text><rect x="12" y="40" width="336" height="80" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="180" y="68" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">비정형 — 자연어</text><text x="180" y="98" font-size="14" fill="#333" text-anchor="middle">재고보다 많이 주문할 수 없다.</text><rect x="12" y="136" width="336" height="108" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="180" y="164" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">정형 — Z 스타일</text><text x="180" y="196" font-size="15" fill="#333" text-anchor="middle" font-family="monospace">주문수량? ≤ 재고</text><text x="180" y="224" font-size="15" fill="#333" text-anchor="middle" font-family="monospace">재고' = 재고 - 주문수량?</text>
+</svg><figcaption>Z에서 <code>?</code>는 입력, <code>'</code>는 실행 뒤 값이에요. 위는 누구나 읽지만 “같으면 되나?”가 애매하고, 아래는 해석이 하나뿐이에요.</figcaption></figure></div>
+
+<p>정형 명세 언어는 이름이 시험에 나와요. 대표 다섯 개를 묶어서 기억하고, 자연어나 일반 다이어그램이 보이면 비정형이라고 가르면 돼요.</p>
+<table>
+<tr><th>정형 명세 언어</th><th>한 줄 특징</th></tr>
+<tr><td>Z</td><td>집합론·논리로 시스템의 상태와 연산을 쓴다</td></tr>
+<tr><td>VDM</td><td>Vienna Development Method. 모델 기반으로 자료와 연산을 정의한다</td></tr>
+<tr><td>Petri-net</td><td>원·막대·토큰 그래프로 병행·동기화 흐름을 표현한다</td></tr>
+<tr><td>CSP</td><td>Communicating Sequential Processes. 프로세스끼리 주고받는 통신을 기술한다</td></tr>
+<tr><td>LOTOS</td><td>시간 순서에 따른 상호작용을 기술하는 명세 언어</td></tr>
+</table>
+<div class="duo"><div><p>이 중 <b>페트리 넷</b>은 모양이 있는 정형 명세라 그림으로 보면 바로 이해돼요. 원은 상태(플레이스), 막대는 사건(트랜지션), 원 안의 점은 토큰이에요. 막대로 들어오는 모든 원에 토큰이 있어야 그 사건이 일어나고, 일어나면 토큰이 다음 원으로 옮겨 가요. “주문이 접수됐고 재고도 있어야 결제가 진행된다”는 동기화 조건을 그대로 그릴 수 있어요.</p></div><figure><svg viewBox="0 0 360 230" font-family="sans-serif" role="img" aria-label="페트리 넷 예. 토큰이 있는 원 주문 접수와 재고 있음이 막대 모양 전이 결제로 들어가고, 결제가 일어나면 원 결제 완료로 이어진다">
+<rect width="360" height="230" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d1g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">페트리 넷 — 원·막대·점</text><circle cx="60" cy="86" r="24" fill="#ffffff" stroke="#2a5db0" stroke-width="2"/><circle cx="60" cy="86" r="6" fill="#222"/><text x="60" y="130" font-size="14" fill="#333" text-anchor="middle">주문 접수</text><circle cx="60" cy="166" r="24" fill="#ffffff" stroke="#2a5db0" stroke-width="2"/><circle cx="60" cy="166" r="6" fill="#222"/><text x="60" y="210" font-size="14" fill="#333" text-anchor="middle">재고 있음</text><circle cx="292" cy="126" r="24" fill="#ffffff" stroke="#2a5db0" stroke-width="2"/><text x="292" y="170" font-size="14" fill="#333" text-anchor="middle">결제 완료</text><rect x="170" y="86" width="12" height="80" fill="#333"/><text x="176" y="76" font-size="14" font-weight="700" fill="#333" text-anchor="middle">결제</text><path d="M84 90 L166 116" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d1g)"/><path d="M84 162 L166 136" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d1g)"/><path d="M184 126 L266 126" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d1g)"/>
+</svg><figcaption>원(플레이스)은 상태, 막대(트랜지션)는 사건, 검은 점(토큰)은 “지금 그 상태가 참”이라는 표시예요. 들어오는 원 둘에 모두 토큰이 있어야 결제가 일어나요.</figcaption></figure></div>
+
+<div class="vs">
+<div><b>정형 명세</b>수학 기호·논리 기반<br>예: Z, VDM, Petri-net, CSP, LOTOS<br>장점: 모호하지 않고 모순 검사 가능<br>대가: 작성·이해가 어렵다</div>
+<div><b>비정형 명세</b>자연어·표·다이어그램 기반<br>예: 자연어 문장, 표, 일반 다이어그램<br>장점: 쓰기 쉽고 누구나 읽는다<br>대가: 여러 뜻으로 읽힐 수 있다</div>
+</div>
+<p>어느 방식으로 쓰든 좋은 명세서가 갖출 조건은 같아요. 시험은 이 조건 이름을 고르게 하거나, 어긴 사례를 보여 주고 어떤 조건을 어겼는지 묻곤 해요.</p>
+<table>
+<tr><th>조건</th><th>뜻</th><th>오늘한끼에서</th></tr>
+<tr><td>정확성</td><td>고객이 실제로 원하는 것을 담았다</td><td>마감 시각이 합의안대로 16시다</td></tr>
+<tr><td>완전성</td><td>필요한 요구와 예외가 빠짐없다</td><td>결제 실패·재고 부족 때 동작도 적었다</td></tr>
+<tr><td>일관성</td><td>요구끼리 서로 모순되지 않는다</td><td>“재고 0 주문 불가”와 예약 주문이 충돌하지 않게 정리</td></tr>
+<tr><td>명확성</td><td>한 가지로만 해석된다</td><td>“재고 이하”라고 등호까지 적는다</td></tr>
+<tr><td>검증 가능성</td><td>만족했는지 시험·측정할 수 있다</td><td>“빠르게” 대신 “3초 이내”</td></tr>
+<tr><td>추적 가능성</td><td>출처와 설계·코드·테스트로의 연결을 따라갈 수 있다</td><td>요구마다 번호를 붙여 테스트 케이스와 연결</td></tr>
+<tr><td>수정 용이성</td><td>바꿀 때 한 곳만 고치면 되게 정리돼 있다</td><td>같은 요구를 여러 절에 중복해 쓰지 않는다</td></tr>
+</table>
+<p><b>→ 이 장면의 결과물:</b> 요구사항 명세서 초안. 그래서 마지막 장면은 이 문서가 제대로 쓰였는지 검토하는 확인이에요.</p>
+
+<h2>7. 장면 5 — 제대로 썼는지 검토하기 (요구사항 확인)</h2>
+<div class="point"><b>핵심 한 줄</b>요구사항 확인은 명세서가 고객의 요구를 올바르게 담았는지 검토하는 단계이고, 대표 기법은 <b>동료 검토 → 워크스루 → 인스펙션</b> 순으로 공식성이 높아져요.</div>
+<div class="duo"><div><p>명세서 초안이 나오면 개발에 들어가고 싶어지지만, 앞에서 본 비용 막대를 떠올리면 여기서 한 번 더 걸러 내는 게 가장 싼 투자예요. <b>요구사항 확인</b>은 명세서가 이해관계자의 실제 요구를 정확하고 완전하게 담았는지 검토하는 활동이에요. 문서를 쓴 사람은 자기 문서의 빈칸을 잘 못 봐서, 다른 사람의 눈을 빌리는 기법들이 발달했어요.</p>
+<p>여기서 헷갈리기 쉬운 짝이 <b>확인(Validation)</b>과 <b>검증(Verification)</b>이에요. 확인은 “올바른 제품을 만들고 있나”, 즉 고객의 진짜 요구와 비교하는 것이고, 검증은 “제품을 올바르게 만들고 있나”, 즉 명세서대로 만들었는지 비교하는 것이에요. 명세서가 틀렸다면 명세서대로 완벽하게 만든 시스템도 고객에게는 틀린 시스템이에요.</p></div><figure><svg viewBox="0 0 360 240" font-family="sans-serif" role="img" aria-label="확인과 검증. 확인은 고객의 진짜 요구와 명세서를 비교해 맞는 것을 적었는지 보고, 검증은 명세서와 완성된 시스템을 비교해 적은 대로 만들었는지 본다">
+<rect width="360" height="240" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d1h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">확인과 검증 — 무엇과 비교하나</text><rect x="8" y="104" width="104" height="52" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="60.0" y="125.0" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">고객의</text><text x="60.0" y="145.0" font-size="14" fill="#333" text-anchor="middle">진짜 요구</text><rect x="128" y="104" width="104" height="52" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="180.0" y="125.0" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">요구사항</text><text x="180.0" y="145.0" font-size="14" fill="#333" text-anchor="middle">명세서</text><rect x="248" y="104" width="104" height="52" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="300.0" y="125.0" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">완성된</text><text x="300.0" y="145.0" font-size="14" fill="#333" text-anchor="middle">시스템</text><path d="M60 104 Q120 56 176 102" stroke="#6a3d9a" stroke-width="2" fill="none" marker-end="url(#d1h)"/><text x="120" y="52" font-size="14" font-weight="700" fill="#6a3d9a" text-anchor="middle">확인: 맞는 걸 적었나</text><path d="M180 156 Q240 204 296 158" stroke="#2a5db0" stroke-width="2" fill="none" marker-end="url(#d1h)"/><text x="240" y="226" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">검증: 적은 대로 만들었나</text>
+</svg><figcaption>보라 화살표(확인, Validation)는 고객 쪽을, 파랑 화살표(검증, Verification)는 명세서 쪽을 기준으로 삼아요.</figcaption></figure></div>
+
+<div class="duo"><div><p><b>동료 검토</b>(Peer Review)는 명세서 작성자가 동료들에게 내용을 직접 설명하고, 동료들이 들으며 결함을 찾는 방법이에요. 오늘한끼 기획자가 팀 회의에서 명세서를 화면에 띄워 설명하고, 동료들이 “결제 실패 시 쿠폰은 돌려주나요?” 하고 묻는 장면이에요. 가볍고 빠르지만 작성자의 설명 흐름에 끌려가기 쉬워요.</p>
+<p><b>워크스루</b>(Walkthrough)는 검토 회의 전에 명세서를 미리 나눠 주고, 참가자들이 먼저 읽어 본 뒤 짧은 회의에서 결함을 찾는 방법이에요. 코드 리뷰로 치면 PR을 하루 전에 올려 두고 회의에서는 지적할 부분만 짚는 방식이에요. 미리 읽고 오니 회의가 짧고, 형식은 인스펙션보다 느슨해요.</p>
+<p><b>인스펙션</b>(Inspection)은 <b>작성자를 제외한</b> 다른 검토 전문가들이 정해진 절차와 체크리스트에 따라 명세서를 검사해 결함을 찾는 방법이에요. 역할(진행자·검토자·기록자)과 단계가 정해져 있고 결과를 기록으로 남겨, 세 기법 중 <b>가장 공식적</b>이에요. 작성자는 피고석에 앉는 셈이라, 변론 대신 지적 목록을 받아 들고 나와요.</p></div><figure><svg viewBox="0 0 360 228" font-family="sans-serif" role="img" aria-label="요구사항 확인 기법의 공식성. 동료 검토가 가장 짧은 막대, 워크스루가 중간, 인스펙션이 가장 긴 막대로 가장 공식적">
+<rect width="360" height="228" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">확인 기법 — 공식성 사다리</text><rect x="12" y="40" width="150" height="52" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="22" y="61" font-size="14" font-weight="700" fill="#2f7d4a">동료 검토</text><text x="22" y="82" font-size="14" fill="#333">작성자가 설명</text><rect x="12" y="102" width="240" height="52" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="22" y="123" font-size="14" font-weight="700" fill="#b5730d">워크스루</text><text x="22" y="144" font-size="14" fill="#333">미리 배포 → 짧은 회의</text><rect x="12" y="164" width="336" height="52" rx="8" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><text x="22" y="185" font-size="14" font-weight="700" fill="#b03a2e">인스펙션</text><text x="22" y="206" font-size="14" fill="#333">작성자 빼고 전문가가 검사</text>
+</svg><figcaption>막대가 길수록 절차·역할·기록이 엄격해요. 맨 아래 인스펙션이 가장 공식적이에요.</figcaption></figure></div>
+
+<p>인스펙션은 정해진 순서대로 진행돼요. 계획을 세우고, 참가자에게 문서의 배경을 알려 주고, 각자 준비한 뒤 회의에서 결함을 모으고, 작성자가 고치고, 고친 결과를 다시 확인해요.</p>
+<div class="flow">
+<div><b>계획</b>범위·참가자</div><div class="arrow">→</div>
+<div><b>사전 교육</b>배경 설명</div><div class="arrow">→</div>
+<div><b>준비</b>각자 검토</div><div class="arrow">→</div>
+<div><b>인스펙션 회의</b>결함 수집</div><div class="arrow">→</div>
+<div><b>수정</b>작성자가 고침</div><div class="arrow">→</div>
+<div><b>후속 조치</b>수정 확인</div>
+</div>
+<p>세 검토 기법 말고도 확인에 쓰는 방법이 있어요. 명세서로 <b>프로토타입</b>을 만들어 고객에게 보여 주거나, 요구마다 <b>테스트 케이스를 미리 설계</b>해 보는 방법이에요. 테스트를 설계할 수 없는 요구는 검증 가능성이 없다는 뜻이라 바로 걸러져요. <b>CASE 도구</b>로 명세의 일관성을 자동 점검하기도 하는데, 이건 D005 분석 자동화 도구에서 이어져요.</p>
+<div class="memo"><b>동워인</b> — 동료 검토 · 워크스루 · 인스펙션. 동네 사람이 먼저 보고, 워밍업한 뒤, 인스펙터가 온다. 뒤로 갈수록 공식적이에요.</div>
+<div class="trap">“작성자가 직접 설명한다”는 동료 검토, “미리 배포 후 짧은 회의”는 워크스루, “작성자 제외”·“가장 공식적”은 인스펙션이에요. 출제자는 인스펙션 선지에 “작성자가 주도한다”를 슬쩍 붙여 둬요.</div>
+<p><b>→ 이 장면의 결과물:</b> 검토를 통과한 요구사항 명세서. 이 문서를 그림으로 표현하는 언어가 내일 D002의 UML이고, 이후 바뀌는 요구를 통제하는 일은 D006 요구사항 관리에서 이어져요.</p>
+
+<h2>8. 한 장으로 다시 꿰기</h2>
+<div class="point"><b>핵심 한 줄</b>오늘한끼 프로젝트는 요구를 나누고, 찾고, 다듬고, 쓰고, 검토했어요. 시험 용어는 모두 이 다섯 장면 중 하나에 들어가요.</div>
+<p>지금까지 따라온 장면을 표 하나로 다시 꿰면 이래요. 각 줄의 결과물이 다음 줄의 재료라는 점을 다시 보세요.</p>
+<p class="hint">↔ 표가 넓어요. 옆으로 밀어서 보세요</p><table>
+<tr><th>장면</th><th>하는 일</th><th>시험 개념</th><th>결과물</th></tr>
+<tr><td>1. 나누기</td><td>요구를 종류별로 가른다</td><td>기능·비기능, 검증 가능성</td><td>측정 가능한 요구 문장</td></tr>
+<tr><td>2. 도출</td><td>이해관계자에게서 요구를 찾는다</td><td>인터뷰·설문·브레인스토밍·워크숍·관찰·프로토타이핑·유스케이스·롤플레잉</td><td>날것의 요구 목록</td></tr>
+<tr><td>3. 분석</td><td>정리하고 충돌을 푼다</td><td>분류·개념 모델링·할당·협상·정형 분석</td><td>합의된 요구와 모델</td></tr>
+<tr><td>4. 명세</td><td>문서로 확정한다</td><td>정형(Z·VDM·Petri-net·CSP·LOTOS)·비정형, 명세서 조건 7가지</td><td>요구사항 명세서</td></tr>
+<tr><td>5. 확인</td><td>제대로 썼는지 검토한다</td><td>동료 검토·워크스루·인스펙션, 확인과 검증</td><td>검토를 통과한 명세서</td></tr>
+</table>
+<div class="point"><b>시험 포인트</b>
 <ul>
-<li>문제 상황을 보고 도출 기법을 고르는 유형이 많아요. 다수 → 설문, 심층 → 인터뷰, 의견 충돌 조율 → 워크숍.</li>
-<li>확인 기법에서 “작성자 제외”, “가장 공식적”이 나오면 인스펙션.</li>
-<li>정형 명세 언어 이름(Z, VDM, Petri-net)을 고르게 하는 문제도 나와요.</li>
+<li>상황을 보고 도출 기법 고르기가 가장 많이 나와요. 다수·같은 질문은 설문, 소수·심층은 인터뷰, 상충 요구 조율·합의는 워크숍, 비판 금지는 브레인스토밍.</li>
+<li>“검증 가능한 요구사항”은 숫자·단위가 붙은 선지예요. 동사로 끝나는 선지는 기능 요구사항이에요.</li>
+<li>4단계 순서(도출 → 분석 → 명세 → 확인)를 섞어 놓고 바른 순서를 고르게 해요.</li>
+<li>Z·VDM·Petri-net·CSP·LOTOS는 정형 명세. “작성자 제외”, “가장 공식적”은 인스펙션.</li>
 </ul>
 </div>
-
-<div class="trap">“빠르다”, “편리하다”처럼 잴 수 없는 표현은 검증 가능한 요구사항이 아니에요.</div>
 
 <h2>확인 문제 (채점 완료 · 2/3)</h2>
 <ol class="quiz">
