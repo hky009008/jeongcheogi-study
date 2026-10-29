@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>D028 인터페이스 구현: 데이터 표준·JSON/AJAX·인터페이스 보안·구현 검증</title>
+<link rel="icon" href="../assets/favicon/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../assets/favicon/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="apple-touch-icon" href="../assets/favicon/apple-touch-icon.png">
+<link rel="stylesheet" href="../style.css"></head>
+<body><main>
+<nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a></nav>
+<h1>D028 · 인터페이스 구현: 데이터 표준·JSON/AJAX·인터페이스 보안·구현 검증</h1><div class="meta">2026-10-30 · A9 소프트웨어 개발 &gt; 인터페이스 구현</div><p><span class="tag">A9</span> 1과목의 마지막 카드예요. 지난주 <a href="./2026-10-17-D015.html">D015</a>·<a href="./2026-10-19-D017.html">D017</a>에서 시스템끼리 무엇을, 어떤 방식으로 주고받을지 <b>설계</b>했죠. 오늘은 그 설계대로 연계를 <b>실제로 만들고, 지키고, 확인하는</b> 인터페이스 구현을 봐요. 예시는 스터디 앱 ‘공부친구’가 제휴 학원 시스템과 출석·결제 데이터를 주고받는 연계 하나로 끝까지 따라가요.</p>
+<ul>
+<li><b>데이터 표준 확인</b>의 이유와 구현 방식(데이터 통신 — JSON·XML·AJAX / 인터페이스 엔티티)을 구별할 수 있다</li>
+<li><b>인터페이스 보안</b> 기술을 네트워크(IPSec·SSL/TLS·S-HTTP)·애플리케이션·데이터베이스 영역에 짝지을 수 있다</li>
+<li><b>연계 테스트</b> 절차와 검증 도구(xUnit · STAF · FitNesse · NTAF · Selenium · watir)·감시 도구(APM)를 설명할 수 있다</li>
+<li><b>인터페이스 정의서·명세서</b>의 구성과 설계 산출물에 구현 결과를 반영하는 이유를 설명할 수 있다</li>
+</ul>
+<div class="glance">
+<div><b>2</b>구현 방식<small>데이터 통신 · 인터페이스 엔티티</small></div>
+<div><b>3</b>보안 영역<small>네트워크 · 애플리케이션 · DB</small></div>
+<div><b>6</b>검증 도구<small>xUnit · STAF · FitNesse · NTAF · Selenium · watir</small></div>
+<div><b>2</b>설계서 문서<small>정의서 · 명세서</small></div>
+</div>
+<div class="box"><b>오늘 이야기의 흐름</b>큰 그림(설계 → 구현) → 장면 1 설계 확인(같은 단어를 같은 뜻으로) → 장면 2 기능 구현(메시지냐 테이블이냐) → 장면 3 보안(어디에 자물쇠를) → 장면 4 구현 검증(잘 붙었나, 계속 잘 도나) → 장면 5 산출물·명세서(문서를 현실에 맞추기) → 오답 복습 → 1과목 지도 → 확인 문제</div>
+
+<h2>1. 큰 그림 — 설계도대로 길을 실제로 놓는다</h2>
+<div class="point"><b>핵심 한 줄</b>인터페이스 구현은 A4에서 설계한 연계를 <b>설계 확인 → 기능 구현(보안 포함) → 구현 검증</b> 순서로 실제로 동작하게 만드는 일이에요.</div>
+<div class="duo"><div><p>A4 인터페이스 설계에서는 송수신 시스템을 찾고, 주고받을 데이터와 방식을 정해 설계서를 썼어요. 그런데 설계서는 아직 종이일 뿐이에요. A4가 지도에 길을 그린 단계라면, A9는 실제로 아스팔트를 깔고 신호등을 달고 개통식 날 차를 굴려 보는 단계예요.</p>
+<p><b>인터페이스 구현</b>은 송신 시스템과 수신 시스템이 설계대로 데이터를 주고받도록 연계 기능을 만들고 검증하는 활동이에요. 공식 범위의 세부 항목은 세 칸이에요. 설계서가 지금도 맞는지 다시 확인하고(설계 확인), 연계 코드와 보안을 만들고(기능 구현), 잘 붙었는지 테스트하고 운영 중에 감시해요(구현 검증).</p></div><figure><svg viewBox="0 0 360 322" font-family="sans-serif" role="img" aria-label="A4 인터페이스 설계의 요구사항 확인, 대상 식별, 상세 설계에서 만든 설계서를 들고 A9 인터페이스 구현의 설계 확인, 기능 구현, 구현 검증으로 건너간다">
+<rect width="360" height="322" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d28a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b03a2e"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">설계도를 들고 다리를 건너요</text><path d="M164 180 L194 180" stroke="#b03a2e" stroke-width="2" fill="none" marker-end="url(#d28a)"/><rect x="12" y="42" width="150" height="48" rx="8" fill="#eeeeea" stroke="#888" stroke-width="2"/><text x="87" y="62" font-size="14" font-weight="700" fill="#555" text-anchor="middle">A4 인터페이스 설계</text><text x="87" y="82" font-size="14" fill="#555" text-anchor="middle">D015 · D017</text><rect x="198" y="42" width="150" height="48" rx="8" fill="#fdecea" stroke="#b03a2e" stroke-width="3"/><text x="273" y="62" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">A9 인터페이스 구현</text><text x="273" y="82" font-size="14" fill="#555" text-anchor="middle">오늘 D028</text><rect x="12" y="104" width="150" height="42" rx="8" fill="#ffffff" stroke="#888" stroke-width="2"/><text x="87" y="130" font-size="14" fill="#555" text-anchor="middle">요구사항 확인</text><rect x="198" y="104" width="150" height="42" rx="8" fill="#ffffff" stroke="#b03a2e" stroke-width="2"/><text x="273" y="130" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">설계 확인</text><rect x="12" y="156" width="150" height="42" rx="8" fill="#ffffff" stroke="#888" stroke-width="2"/><text x="87" y="182" font-size="14" fill="#555" text-anchor="middle">대상 식별</text><rect x="198" y="156" width="150" height="42" rx="8" fill="#ffffff" stroke="#b03a2e" stroke-width="2"/><text x="273" y="182" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">기능 구현</text><rect x="12" y="208" width="150" height="42" rx="8" fill="#ffffff" stroke="#888" stroke-width="2"/><text x="87" y="234" font-size="14" fill="#555" text-anchor="middle">상세 설계</text><rect x="198" y="208" width="150" height="42" rx="8" fill="#ffffff" stroke="#b03a2e" stroke-width="2"/><text x="273" y="234" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">구현 검증</text><text x="180" y="282" font-size="14" fill="#555" text-anchor="middle">무엇을 어떤 데이터로 잇나(A4)</text><text x="180" y="304" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">→ 정한 대로 만들고·지키고·확인(A9)</text>
+</svg><figcaption>왼쪽 회색이 지난주 설계(A4), 오른쪽 빨강이 오늘 구현(A9)이에요. 가운데 화살표가 설계서를 들고 건너가는 길이에요.</figcaption></figure></div>
+
+<div class="duo"><div><p>세 칸 아래에는 시험이 실제로 묻는 세세항목이 매달려 있어요. 데이터 표준, 구현 방식(JSON·AJAX 등), 인터페이스 보안, 연계 테스트와 도구, 설계 산출물과 명세서예요. 아래 지도의 가지 순서가 곧 오늘 장면 순서예요.</p></div><figure class="mermaid"><img src="../assets/05d3fac416629283.png" alt="도식" loading="lazy" style="width:552px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure></div>
+
+<p><b>→ 이 장면의 결과물:</b> 오늘 다룰 세 칸과 다섯 가지의 지도. 그래서 첫 장면은 코드를 짜기 전에 설계서를 다시 펼쳐 보는 설계 확인이에요.</p>
+
+<h2>2. 장면 1 — 설계 확인: 같은 단어를 같은 뜻으로 (데이터 표준 확인)</h2>
+<div class="point"><b>핵심 한 줄</b>구현 전에 모듈 간 공통 기능과 데이터 인터페이스, 연계 기능을 다시 확인하고, 송수신 데이터의 <b>형식·코드·길이·인코딩 표준</b>을 양쪽이 같은 뜻으로 쓰도록 맞춰요.</div>
+<div class="duo"><div><p>설계서를 들고 바로 코딩에 들어가면 안 되는 이유가 있어요. 설계 뒤에 요구가 바뀌었을 수도 있고, 설계서가 두 시스템 중 한쪽 사정만 반영했을 수도 있어요. 그래서 구현 첫 단계는 설계서를 현실과 대조하는 <b>설계 확인</b>이에요.</p>
+<p>설계 확인은 세 가지를 차례로 봐요. 먼저 <b>모듈 간 공통 기능과 데이터 인터페이스</b>를 확인해요. 여러 모듈이 함께 쓰는 기능(예: 회원 인증)과, 모듈 사이를 오가는 데이터가 무엇인지 정리하는 일이에요. 다음으로 <b>인터페이스 기능을 식별</b>해요. 어떤 연계가 필요하고 EAI·ESB 같은 어떤 구축 유형을 쓸지는 <a href="./2026-10-19-D017.html">D017</a>에서 본 대로예요.</p>
+<p>마지막이 오늘의 주인공 <b>데이터 표준 확인</b>이에요. 데이터 표준은 송수신하는 데이터 항목의 이름, 형식, 길이, 코드값, 필수 여부를 양쪽이 같은 규칙으로 쓰도록 정한 약속이에요. 기존 데이터 중 공통 영역을 추려 송신 쪽과 수신 쪽 표준을 하나로 정리해요.</p>
+<p>표준을 확인하지 않으면 무슨 일이 생길까요? 한쪽은 ‘1’이 출석, 다른 쪽은 ‘1’이 결석이라면, 연계는 성공했는데 학생은 전원 결석 처리돼요. 에러 하나 없이 틀리는 게 제일 무서워요. 날짜 형식이나 인코딩도 마찬가지예요. 한글이 ‘ì¶œì„’으로 보이는 순간, 두 시스템이 서로 다른 언어로 속삭였다는 증거예요.</p></div><figure><svg viewBox="0 0 360 346" font-family="sans-serif" role="img" aria-label="공부친구는 날짜 2026-10-30, 출석 Y와 N, UTF-8을 쓰고 학원 시스템은 20261030, 1과 0, EUC-KR을 쓴다. 데이터 표준 확인을 거쳐 날짜 형식, 출석 코드, 인코딩, 길이와 필수 여부를 하나로 합의한다">
+<rect width="360" height="346" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d28b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">같은 출석, 다른 표기</text><path d="M92 162 L140 188" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d28b)"/><path d="M268 162 L220 188" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d28b)"/><path d="M180 234 L180 258" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d28b)"/><rect x="12" y="42" width="160" height="120" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="92" y="64" font-size="15" font-weight="700" fill="#2a5db0" text-anchor="middle">공부친구</text><text x="28" y="92" font-size="14" fill="#333">날짜 2026-10-30</text><text x="28" y="116" font-size="14" fill="#333">출석 Y / 결석 N</text><text x="28" y="140" font-size="14" fill="#333">인코딩 UTF-8</text><rect x="188" y="42" width="160" height="120" rx="8" fill="#f1eaf8" stroke="#6a3d9a" stroke-width="2"/><text x="268" y="64" font-size="15" font-weight="700" fill="#6a3d9a" text-anchor="middle">학원 시스템</text><text x="204" y="92" font-size="14" fill="#333">날짜 20261030</text><text x="204" y="116" font-size="14" fill="#333">출석 1 / 결석 0</text><text x="204" y="140" font-size="14" fill="#333">인코딩 EUC-KR</text><rect x="60" y="190" width="240" height="44" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="3"/><text x="180" y="218" font-size="15" font-weight="700" fill="#b5730d" text-anchor="middle">데이터 표준 확인</text><rect x="12" y="260" width="336" height="72" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="180" y="282" font-size="15" font-weight="700" fill="#2f7d4a" text-anchor="middle">합의한 표준</text><text x="180" y="304" font-size="14" fill="#333" text-anchor="middle">날짜 YYYY-MM-DD · 출석 Y/N</text><text x="180" y="324" font-size="14" fill="#333" text-anchor="middle">인코딩 UTF-8 · 길이·필수 여부</text>
+</svg><figcaption>위 두 상자는 같은 사실을 서로 다르게 적고 있어요. 주황 칸에서 맞춘 결과가 아래 초록 표준이에요.</figcaption></figure></div>
+
+<p>한 장 요약 — 표준 확인 때 빠짐없이 보는 항목이에요.</p>
+<table>
+<tr><th>확인 항목</th><th>공부친구 예</th><th>어긋나면</th></tr>
+<tr><td>형식(날짜·숫자)</td><td>날짜를 YYYY-MM-DD로 통일</td><td>파싱 오류, 10월 30일이 엉뚱한 날로 저장</td></tr>
+<tr><td>코드값</td><td>출석 Y, 결석 N</td><td>오류 없이 반대 의미로 저장</td></tr>
+<tr><td>길이·타입</td><td>학생 ID 문자 10자리</td><td>잘림, 앞자리 0 사라짐</td></tr>
+<tr><td>문자 인코딩</td><td>UTF-8</td><td>한글 깨짐</td></tr>
+<tr><td>필수 여부</td><td>학생 ID·날짜는 필수</td><td>빈 값이 들어와 수신 처리 실패</td></tr>
+</table>
+<div class="trap">데이터 표준 확인은 <b>구현 단계(A9)의 설계 확인</b>에 속해요. 데이터 명세화 자체는 A4 상세 설계(<a href="./2026-10-19-D017.html">D017</a>)의 일이고, 오늘은 그 명세가 양쪽에서 같은 뜻인지 <b>확인</b>하는 쪽이에요.</div>
+<p><b>→ 이 장면의 결과물:</b> 양쪽이 합의한 데이터 표준. 그래서 다음 장면은 이 표준대로 데이터를 실제로 실어 나르는 연계 기능을 만드는 일이에요.</p>
+
+<h2>3. 장면 2 — 기능 구현: 메시지로 보낼까, 테이블에 내려놓을까</h2>
+<div class="point"><b>핵심 한 줄</b>인터페이스 구현 방식은 <b>데이터 통신 방식</b>(JSON·XML 메시지를 HTTP·AJAX로 주고받음)과 <b>인터페이스 엔티티 방식</b>(송수신 전용 테이블을 두고 DB로 주고받음) 두 가지예요.</div>
+<div class="duo"><div><p>표준이 정해졌으니 이제 데이터를 옮길 길을 만들 차례예요. 길은 크게 두 종류예요. 상대에게 메시지를 직접 던지는 길과, 중간 테이블에 내려놓고 상대가 가져가게 하는 길이에요.</p>
+<p><b>데이터 통신을 이용한 구현</b>은 애플리케이션 영역에서 송신 시스템이 데이터를 JSON이나 XML 같은 형식의 메시지로 만들어 네트워크로 보내고, 수신 시스템이 그 메시지를 풀어(파싱) 처리하는 방식이에요. 공부친구 앱이 출석 버튼을 누르는 순간 학원 API를 호출하는 게 이 방식이에요. 실시간에 가깝다는 게 장점이고, 상대 시스템이 그 순간 살아 있어야 한다는 게 대가예요.</p>
+<p><b>인터페이스 엔티티를 이용한 구현</b>은 송신 쪽과 수신 쪽에 연계 전용 테이블(인터페이스 엔티티)을 두고, 송신 시스템이 송신 테이블에 데이터를 쓰면 배치나 트리거가 수신 테이블로 옮기는 방식이에요. 결제 내역을 밤마다 학원 정산 테이블로 넘기는 게 이 방식이에요. 상대가 잠깐 죽어 있어도 데이터가 테이블에 남아 있어 안정적이지만, 즉시성은 떨어져요.</p></div><figure><svg viewBox="0 0 360 324" font-family="sans-serif" role="img" aria-label="인터페이스 구현 방식 두 가지. 위는 데이터 통신 방식으로 공부친구가 JSON 메시지를 학원 API로 HTTP나 AJAX로 보낸다. 아래는 인터페이스 엔티티 방식으로 송신 테이블의 데이터를 배치나 트리거가 수신 테이블로 옮기고 상태 플래그로 추적한다">
+<rect width="360" height="324" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d28c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2a5db0"/></marker></defs><defs><marker id="d28d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2f7d4a"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">연계 데이터를 나르는 두 길</text><rect x="12" y="40" width="336" height="124" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="26" y="62" font-size="15" font-weight="700" fill="#2a5db0">① 데이터 통신 방식</text><path d="M110 104 L134 104" stroke="#2a5db0" stroke-width="2" fill="none" marker-end="url(#d28c)"/><path d="M234 104 L258 104" stroke="#2a5db0" stroke-width="2" fill="none" marker-end="url(#d28c)"/><rect x="24" y="82" width="84" height="44" rx="8" fill="#ffffff" stroke="#2a5db0" stroke-width="2"/><text x="66" y="109" font-size="14" fill="#333" text-anchor="middle">공부친구</text><rect x="136" y="82" width="96" height="44" rx="8" fill="#ffffff" stroke="#2a5db0" stroke-width="2"/><text x="184" y="109" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">JSON 메시지</text><rect x="260" y="82" width="76" height="44" rx="8" fill="#ffffff" stroke="#2a5db0" stroke-width="2"/><text x="298" y="109" font-size="14" fill="#333" text-anchor="middle">학원 API</text><text x="180" y="150" font-size="14" fill="#333" text-anchor="middle">HTTP·AJAX로 그때그때 주고받기</text><rect x="12" y="178" width="336" height="132" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="26" y="200" font-size="15" font-weight="700" fill="#2f7d4a">② 인터페이스 엔티티 방식</text><path d="M124 242 L232 242" stroke="#2f7d4a" stroke-width="2" fill="none" marker-end="url(#d28d)"/><rect x="24" y="220" width="98" height="44" rx="8" fill="#ffffff" stroke="#2f7d4a" stroke-width="2"/><text x="73" y="247" font-size="14" fill="#333" text-anchor="middle">송신 테이블</text><rect x="234" y="220" width="102" height="44" rx="8" fill="#ffffff" stroke="#2f7d4a" stroke-width="2"/><text x="285" y="247" font-size="14" fill="#333" text-anchor="middle">수신 테이블</text><text x="178" y="234" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">배치·트리거</text><text x="180" y="290" font-size="14" fill="#333" text-anchor="middle">DB 테이블에 쌓고 상태 플래그로 추적</text>
+</svg><figcaption>파랑은 메시지를 바로 던지는 길, 초록은 중간 테이블에 내려놓고 가져가게 하는 길이에요.</figcaption></figure></div>
+
+<p>한 장 요약 — 두 방식을 나란히 놓으면 이래요.</p>
+<table>
+<tr><th>구분</th><th>데이터 통신 방식</th><th>인터페이스 엔티티 방식</th></tr>
+<tr><td>무엇을 매개로</td><td>JSON·XML 메시지, HTTP·AJAX</td><td>송신·수신 전용 DB 테이블</td></tr>
+<tr><td>실시간성</td><td>높음(호출 즉시)</td><td>낮음(배치 주기·트리거)</td></tr>
+<tr><td>장점</td><td>빠르고 유연, 웹·모바일과 잘 맞음</td><td>상대 장애에도 데이터 보존, 이력 추적 쉬움</td></tr>
+<tr><td>대가</td><td>상대가 살아 있어야 함</td><td>테이블 관리 부담, 지연</td></tr>
+</table>
+
+<h3>JSON — 키와 값의 가벼운 메모</h3>
+<div class="duo"><div><p><b>JSON(JavaScript Object Notation)</b>은 속성-값 쌍(키와 값)으로 데이터 객체를 표현하는, 텍스트 기반의 가벼운 개방형 표준 형식이에요. 이름처럼 자바스크립트 객체 표기법에서 나왔지만 거의 모든 언어가 읽고 써요. 사람이 눈으로 읽기 쉽고 기계가 파싱하기도 쉬워서, 웹 서버와 브라우저, 서버와 서버 사이 데이터 교환의 기본 형식이 됐어요.</p>
+<p>구조는 단순해요. 중괄호가 객체, 그 안의 <code>"키": 값</code>이 속성, 대괄호가 배열이에요. 값에는 문자열·숫자·참거짓·null·다른 객체·배열이 올 수 있어요.</p></div><figure><svg viewBox="0 0 360 282" font-family="sans-serif" role="img" aria-label="JSON 해부. 중괄호는 객체, 키 콜론 값은 속성과 값의 쌍, 대괄호는 배열이다. 키는 큰따옴표 문자열이고 값은 문자열, 숫자, 참거짓, null, 객체, 배열이 될 수 있다">
+<rect width="360" height="282" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d28e" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b5730d"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">JSON 한 덩어리 해부</text><path d="M232 66 L262 66" stroke="#b5730d" stroke-width="2" fill="none" marker-end="url(#d28e)"/><path d="M232 116 L262 116" stroke="#b5730d" stroke-width="2" fill="none" marker-end="url(#d28e)"/><path d="M232 164 L262 164" stroke="#b5730d" stroke-width="2" fill="none" marker-end="url(#d28e)"/><rect x="12" y="42" width="218" height="172" rx="6" fill="#ffffff" stroke="#555" stroke-width="2"/><text x="22" y="66" font-size="14" fill="#222" font-family="monospace">{</text><text x="38" y="92" font-size="14" fill="#222" font-family="monospace">&quot;student&quot;: &quot;kim&quot;,</text><text x="38" y="118" font-size="14" fill="#222" font-family="monospace">&quot;date&quot;: &quot;2026-10-30&quot;,</text><text x="38" y="144" font-size="14" fill="#222" font-family="monospace">&quot;late&quot;: false,</text><text x="38" y="170" font-size="14" fill="#222" font-family="monospace">&quot;days&quot;: [29, 30]</text><text x="22" y="196" font-size="14" fill="#222" font-family="monospace">}</text><rect x="264" y="50" width="84" height="30" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="306" y="70" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">{ } 객체</text><rect x="264" y="100" width="84" height="30" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="306" y="120" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">키 : 값</text><rect x="264" y="148" width="84" height="30" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="306" y="168" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">[ ] 배열</text><text x="180" y="240" font-size="14" fill="#333" text-anchor="middle">키는 항상 큰따옴표 문자열</text><text x="180" y="262" font-size="14" fill="#333" text-anchor="middle">값: 문자열·숫자·true/false·null·객체·배열</text>
+</svg><figcaption>왼쪽이 실제 JSON, 오른쪽 이름표가 각 부분의 이름이에요. 이 여섯 줄이 오늘 연계 메시지의 전부예요.</figcaption></figure></div>
+
+<h3>XML — 이름표를 여닫는 공문서</h3>
+<p><b>XML(eXtensible Markup Language)</b>은 사용자가 태그를 정의해 데이터의 구조와 의미를 표현하는 마크업 언어예요. 모든 값을 여는 태그와 닫는 태그로 감싸고, 스키마(XSD 등)로 어떤 태그가 어떤 순서로 와야 하는지까지 엄격하게 검증할 수 있어요. 그래서 공공·금융의 오래된 연계, SOAP 웹 서비스에 많이 남아 있어요.</p>
+<p>XML은 내용마다 여는 이름표와 닫는 이름표를 붙이는 공문서, JSON은 키와 값만 적은 메모 쪽지예요. 같은 말을 해도 쪽지가 가볍죠. 아래는 같은 출석 한 건을 두 형식으로 적은 거예요.</p>
+<div class="vs"><div><b>JSON</b><pre><code>{
+  "student": "kim",
+  "date": "2026-10-30",
+  "attend": "Y"
+}</code></pre></div><div><b>XML</b><pre><code>&lt;attendance&gt;
+  &lt;student&gt;kim&lt;/student&gt;
+  &lt;date&gt;2026-10-30&lt;/date&gt;
+  &lt;attend&gt;Y&lt;/attend&gt;
+&lt;/attendance&gt;</code></pre></div></div>
+<div class="vs"><div><b>JSON</b>속성-값 쌍 · 가볍고 간결 · 자바스크립트에서 유래 · 웹 API 기본</div><div><b>XML</b>여닫는 태그 · 스키마로 엄격 검증 · 무겁지만 구조 표현이 풍부 · SOAP</div></div>
+
+<h3>AJAX — 화면 전체 말고 필요한 칸만</h3>
+<div class="duo"><div><p><b>AJAX(Asynchronous JavaScript and XML)</b>는 웹 페이지 전체를 새로 고치지 않고, 자바스크립트로 서버와 <b>비동기</b> 통신해 필요한 부분만 갱신하는 기법이에요. 예전에는 XMLHttpRequest, 요즘은 fetch로 요청을 보내고 응답을 받아 화면의 일부만 바꿔요. 형식이 아니라 <b>통신 기법</b>이라는 점이 중요해요.</p>
+<p>공부친구에서 출석 버튼을 누르면 페이지가 하얗게 깜빡이지 않고 출석 배지만 바뀌어요. 식당에서 물 한 잔 더 달라고 했는데 테이블을 통째로 치우고 다시 차리면 곤란하죠. AJAX는 컵만 채워 주는 기술이에요.</p></div><figure class="mermaid"><img src="../assets/f7f676438240c4dd.png" alt="도식" loading="lazy" style="width:406px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure></div>
+
+<div class="trap">AJAX의 X는 XML이지만, 요즘 AJAX 응답에는 <b>JSON</b>을 더 많이 실어요. 그리고 AJAX는 데이터 <b>형식이 아니라 비동기 통신 기법</b>이에요. “형식을 고르라”는 문제에 AJAX가 선지로 나오면 함정이에요.</div>
+
+<h3>인터페이스 엔티티의 처리 흐름</h3>
+<div class="duo"><div><p>테이블로 주고받는 방식은 “잘 넘어갔는지”를 테이블 안의 <b>상태 플래그</b>로 추적해요. 송신 시스템이 행을 넣을 때 상태는 대기, 배치가 집어 가면 전송 중, 수신 쪽이 처리하면 완료나 오류로 바꿔요. 오류 행은 원인을 고친 뒤 대기로 되돌려 다시 보내요. 덕분에 “어제 결제 몇 건이 왜 안 넘어갔나”를 SQL 한 줄로 찾을 수 있어요.</p></div><figure class="mermaid"><img src="../assets/8bf8a4ac3ade6e4f.png" alt="도식" loading="lazy" style="width:341px"></figure></div>
+
+<div class="memo"><b>두 길</b> — 메시지는 던지고(데이터 통신: JSON·XML·AJAX), 테이블은 내려놓는다(인터페이스 엔티티: 송신 → 수신 테이블 + 상태 플래그).</div>
+<p><b>→ 이 장면의 결과물:</b> 출석은 JSON 메시지로, 정산은 인터페이스 테이블로 오가는 연계 기능. 그런데 이 길 위로 결제 정보가 다니니, 다음 장면은 자물쇠를 다는 일이에요.</p>
+
+<h2>4. 장면 3 — 인터페이스 보안: 어디에 자물쇠를 다나</h2>
+<div class="point"><b>핵심 한 줄</b>인터페이스 보안은 <b>네트워크</b>(IPSec·SSL/TLS·S-HTTP로 트래픽 암호화), <b>애플리케이션</b>(시큐어 코딩), <b>데이터베이스</b>(접근 권한·프로시저·트리거, 암호화·익명화) 세 영역에 적용해요.</div>
+<div class="duo"><div><p>연계 구간은 공격자가 좋아하는 자리예요. 시스템 두 개가 만나는 경계라 책임이 애매하고, 데이터가 네트워크를 건너는 동안 엿보기(스니핑)나 중간에서 바꿔치기(변조)를 당할 수 있어요. 그래서 인터페이스 구현에는 보안 기능이 함께 들어가고, 시험은 그 기능을 <b>어느 영역에 적용하나</b>로 나눠 물어요.</p>
+<p><b>네트워크 영역</b>은 오가는 트래픽 자체를 암호화해 엿보기와 변조를 막아요. 송신 시스템과 수신 시스템 사이 구간이 대상이고, 쓰는 기술이 IPSec, SSL/TLS, S-HTTP예요. 셋은 아래에서 계층 위치로 다시 갈라요.</p>
+<p><b>애플리케이션 영역</b>은 연계 코드 자체의 취약점을 막아요. 받은 데이터를 믿지 않고 형식·길이·범위를 검증하고, SQL을 문자열로 이어 붙이지 않는 식의 <b>시큐어 코딩</b> 가이드를 따르는 거예요. 취약점 목록은 5과목에서 자세히 봐요.</p>
+<p><b>데이터베이스 영역</b>은 연계 데이터가 저장되는 곳을 지켜요. 연계 계정에는 필요한 테이블에만 <b>접근 권한</b>을 주고, 데이터 처리는 프로시저·트리거로 정해진 경로로만 하게 하고, 카드번호 같은 중요 데이터는 <b>암호화</b>, 통계용 데이터는 <b>익명화</b>해요.</p></div><figure><svg viewBox="0 0 360 316" font-family="sans-serif" role="img" aria-label="인터페이스 보안 세 영역. 가장 바깥 네트워크 영역은 IPSec, SSL/TLS, S-HTTP로 트래픽을 암호화하고, 가운데 애플리케이션 영역은 시큐어 코딩으로 코드 취약점을 막고, 가장 안쪽 데이터베이스 영역은 접근 권한, 프로시저, 트리거와 암호화, 익명화로 데이터를 지킨다">
+<rect width="360" height="316" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">자물쇠는 세 겹으로</text><rect x="12" y="40" width="336" height="262" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="26" y="62" font-size="15" font-weight="700" fill="#2a5db0">네트워크 영역</text><text x="26" y="82" font-size="14" fill="#333">IPSec · SSL/TLS · S-HTTP</text><rect x="36" y="96" width="288" height="194" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="50" y="118" font-size="15" font-weight="700" fill="#b5730d">애플리케이션 영역</text><text x="50" y="138" font-size="14" fill="#333">시큐어 코딩(입력값 검증 등)</text><rect x="60" y="152" width="240" height="126" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="180" y="176" font-size="15" font-weight="700" fill="#2f7d4a" text-anchor="middle">데이터베이스 영역</text><text x="180" y="202" font-size="14" fill="#333" text-anchor="middle">접근 권한·프로시저·트리거</text><text x="180" y="226" font-size="14" fill="#333" text-anchor="middle">중요 데이터 암호화·익명화</text><rect x="124" y="240" width="112" height="28" rx="6" fill="#ffffff" stroke="#2f7d4a" stroke-width="2"/><text x="180" y="259" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">출석·결제 정보</text>
+</svg><figcaption>바깥 파랑이 길, 가운데 주황이 코드, 안쪽 초록이 금고예요. 가운데 흰 칸이 지키려는 진짜 보물이에요.</figcaption></figure></div>
+
+<p>한 장 요약 — 세 영역을 공부친구 연계에 대 보면 이래요.</p>
+<table>
+<tr><th>영역</th><th>지키는 것 · 기술</th><th>공부친구 예</th></tr>
+<tr><td>네트워크</td><td>전송 중인 트래픽 · IPSec, SSL/TLS, S-HTTP</td><td>학원 API는 HTTPS로만 호출</td></tr>
+<tr><td>애플리케이션</td><td>연계 코드의 취약점 · 시큐어 코딩</td><td>받은 학생 ID 형식·길이 검증, 파라미터 바인딩</td></tr>
+<tr><td>데이터베이스</td><td>저장된 데이터 · 권한, 프로시저·트리거, 암호화·익명화</td><td>연계 계정은 정산 테이블만, 카드번호 암호화</td></tr>
+</table>
+
+<h3>IPSec · SSL/TLS · S-HTTP — 층으로 가르기</h3>
+<div class="duo"><div><p><b>IPSec</b>은 네트워크 계층(IP)에서 패킷 단위로 인증과 암호화를 적용하는 프로토콜이에요. IP 패킷 자체를 감싸므로 그 위로 지나가는 모든 응용 트래픽이 한꺼번에 보호돼요. 본사와 지사를 잇는 VPN이 대표 쓰임이에요.</p>
+<p><b>SSL/TLS</b>는 전송 계층 위에서 두 응용 사이의 세션을 암호화해요. TLS가 SSL의 후속 표준이라 지금 실제로 쓰는 건 TLS예요. 우리가 매일 보는 <b>HTTPS</b>가 HTTP를 SSL/TLS 위에 얹은 것이에요. IPSec은 두 건물 사이에 지하 전용 통로를 뚫는 것, SSL/TLS는 오가는 대화 하나하나를 금고 가방에 넣는 거예요.</p>
+<p><b>S-HTTP(Secure HTTP)</b>는 응용 계층에서 HTTP <b>메시지 하나하나</b>를 암호화하는 방식이에요. 통신 채널 전체를 잠그는 HTTPS와 달리 메시지 단위로 서명·암호화해요. 실제로는 거의 쓰이지 않지만 시험 목록에는 꼬박꼬박 나와요.</p></div><figure><svg viewBox="0 0 360 338" font-family="sans-serif" role="img" aria-label="프로토콜 계층 위치. 응용 계층의 HTTP 메시지 단위는 S-HTTP, 전송 계층 위 세션은 SSL/TLS, 네트워크 계층의 IP 패킷은 IPSec가 암호화한다. 아래층일수록 잠그는 범위가 넓다. HTTPS는 HTTP를 SSL/TLS 위에 얹은 것이고 S-HTTP는 메시지 단위 암호화로 서로 다르다">
+<rect width="360" height="338" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d28f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">어느 층에서 잠그나</text><rect x="12" y="42" width="196" height="44" rx="8" fill="#ffffff" stroke="#999" stroke-width="2"/><text x="26" y="69" font-size="14" fill="#333">응용 · HTTP 메시지</text><rect x="218" y="42" width="130" height="44" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="3"/><text x="283" y="69" font-size="15" font-weight="700" fill="#b5730d" text-anchor="middle">S-HTTP</text><rect x="12" y="94" width="196" height="44" rx="8" fill="#ffffff" stroke="#999" stroke-width="2"/><text x="26" y="121" font-size="14" fill="#333">전송 계층 위 · 세션</text><rect x="218" y="94" width="130" height="44" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="3"/><text x="283" y="121" font-size="15" font-weight="700" fill="#2a5db0" text-anchor="middle">SSL/TLS</text><rect x="12" y="146" width="196" height="44" rx="8" fill="#ffffff" stroke="#999" stroke-width="2"/><text x="26" y="173" font-size="14" fill="#333">전송 계층 · TCP</text><rect x="218" y="146" width="130" height="44" rx="8" fill="#eeeeea" stroke="#888" stroke-width="2"/><text x="283" y="173" font-size="14" fill="#888" text-anchor="middle">(여기선 없음)</text><rect x="12" y="198" width="196" height="44" rx="8" fill="#ffffff" stroke="#999" stroke-width="2"/><text x="26" y="225" font-size="14" fill="#333">네트워크 계층 · IP</text><rect x="218" y="198" width="130" height="44" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="3"/><text x="283" y="225" font-size="15" font-weight="700" fill="#2f7d4a" text-anchor="middle">IPSec</text><path d="M30 254 L330 254" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d28f)"/><text x="180" y="278" font-size="14" font-weight="700" fill="#222" text-anchor="middle">아래층일수록 잠그는 범위가 넓어요</text><text x="180" y="300" font-size="14" fill="#2a5db0" text-anchor="middle">HTTPS = HTTP를 SSL/TLS 위에 얹은 것</text><text x="180" y="320" font-size="14" fill="#b5730d" text-anchor="middle">S-HTTP = HTTP 메시지 하나하나를 암호화</text>
+</svg><figcaption>왼쪽이 층, 오른쪽이 그 층에서 일하는 보안 기술이에요. 맨 아래 문장 두 줄이 S-HTTP 함정의 핵심이에요.</figcaption></figure></div>
+
+<div class="trap">출제자는 S-HTTP와 HTTPS의 이름이 닮았다는 걸 아주 좋아해요. <b>HTTPS</b> = HTTP over SSL/TLS(채널 전체), <b>S-HTTP</b> = HTTP 메시지 단위 암호화. 한 글자 차이로 방식이 갈려요.</div>
+
+<h3>데이터 무결성 검사 도구</h3>
+<div class="duo"><div><p>암호화가 엿보기를 막는다면, 누가 연계 서버의 설정 파일이나 실행 파일을 몰래 바꿨는지는 어떻게 알까요? <b>데이터 무결성 검사 도구</b>는 시스템 파일의 해시값을 기준으로 저장해 두고, 주기적으로 다시 계산해 비교해서 <b>변경 여부를 확인하고 관리자에게 알리는</b> 도구예요. 대표가 <b>Tripwire</b>이고, AIDE, Samhain, Claymore, Slipwire, Fcheck도 같은 계열이에요.</p></div><figure class="mermaid"><img src="../assets/c495c0da8d0e2375.png" alt="도식" loading="lazy" style="width:393px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure></div>
+
+<div class="memo"><b>자물쇠 세 겹</b> — 길(네트워크) · 코드(애플리케이션) · 금고(DB). <b>층 순서</b> — IP는 IPSec, 전송 위는 SSL/TLS, HTTP 메시지는 S-HTTP. <b>Tripwire</b> — 줄(trip wire)을 건드리면 알람이 울린다.</div>
+<p><b>→ 이 장면의 결과물:</b> 세 겹 자물쇠를 단 연계 기능. 이제 남은 질문은 “정말 설계대로 붙었나, 운영 중에도 잘 도나”예요.</p>
+
+<h2>5. 장면 4 — 구현 검증: 잘 붙었나, 지금도 잘 도나</h2>
+<div class="point"><b>핵심 한 줄</b>구현 검증은 연계가 설계대로 동작하는지 <b>검증 도구</b>로 테스트하고(연계 테스트), 운영 중에는 <b>감시 도구(APM)</b>로 계속 지켜보는 일이에요.</div>
+<div class="duo"><div><p>연계는 혼자 테스트할 수 없다는 게 특징이에요. 공부친구 쪽 단위 테스트가 다 통과해도, 학원 시스템이 날짜를 다르게 읽으면 실패예요. 그래서 송신과 수신을 실제로 이어 붙여 보는 <b>연계 테스트</b>가 따로 필요해요.</p>
+<p><b>연계 테스트</b>는 송신 시스템에서 데이터를 보내 수신 시스템에 정상 반영되기까지를 확인하는 테스트예요. <a href="./2026-10-28-D026.html">D026</a>의 통합 테스트가 한 시스템 안 <b>모듈 사이</b>의 인터페이스를 본다면, 연계 테스트는 <b>시스템 사이</b>의 인터페이스를 봐요. 절차는 케이스 작성, 환경 구축, 수행, 결과 검증 네 단계이고, 검증에서 실패하면 코드나 매핑을 고쳐 다시 돌려요.</p></div><figure class="mermaid"><img src="../assets/7231201d6aab78c6.png" alt="도식" loading="lazy" style="width:416px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure></div>
+
+<h3>검증 도구 여섯</h3>
+<div class="duo"><div><p><b>xUnit</b>은 JUnit(Java), NUnit(.NET)처럼 여러 언어를 지원하는 단위 테스트 프레임워크 묶음이에요. 연계 코드의 변환·파싱 로직을 단위로 검증할 때 써요. <b>STAF</b>는 서비스 호출과 컴포넌트 재사용 등 다양한 환경을 지원하는 테스트 프레임워크로, 각 테스트 대상 장비에 데몬을 띄워 분산 환경에서 테스트를 돌려요.</p>
+<p><b>FitNesse</b>는 웹 기반으로 테스트 케이스를 표 형태로 작성·실행하고 결과를 확인하는 프레임워크라, 기획자와 개발자가 같은 화면에서 케이스를 함께 다듬는 <b>협업</b>에 강해요. <b>NTAF</b>는 FitNesse의 협업 장점과 STAF의 재사용·확장성을 <b>통합</b>한 테스트 자동화 프레임워크예요. NTAF는 둘을 합친 합체 로봇이라, 시험은 거의 항상 “누구와 누구를 합쳤나”만 물어요.</p>
+<p><b>Selenium</b>은 여러 브라우저와 여러 언어에서 웹 애플리케이션 테스트를 자동화하는 도구예요. AJAX 출석 버튼이 실제 브라우저에서 잘 동작하는지 확인할 때 써요. <b>watir</b>는 같은 웹 테스트 계열이지만 <b>Ruby</b> 기반이라는 점으로 구별해요.</p></div><figure><svg viewBox="0 0 360 310" font-family="sans-serif" role="img" aria-label="인터페이스 구현 검증 도구. xUnit은 여러 언어 단위 테스트, Selenium은 여러 브라우저 웹 테스트, watir는 Ruby 기반이다. FitNesse의 웹 기반 협업과 STAF의 재사용과 확장성을 합친 것이 NTAF다">
+<rect width="360" height="310" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d28g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6a3d9a"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">인터페이스 구현 검증 도구 여섯</text><path d="M100 204 L150 234" stroke="#6a3d9a" stroke-width="2" fill="none" marker-end="url(#d28g)"/><path d="M260 204 L210 234" stroke="#6a3d9a" stroke-width="2" fill="none" marker-end="url(#d28g)"/><rect x="12" y="44" width="104" height="56" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="64" y="66" font-size="15" font-weight="700" fill="#2a5db0" text-anchor="middle">xUnit</text><text x="64" y="88" font-size="14" fill="#333" text-anchor="middle">단위·여러 언어</text><rect x="128" y="44" width="104" height="56" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="180" y="66" font-size="15" font-weight="700" fill="#b5730d" text-anchor="middle">Selenium</text><text x="180" y="88" font-size="14" fill="#333" text-anchor="middle">여러 브라우저</text><rect x="244" y="44" width="104" height="56" rx="8" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><text x="296" y="66" font-size="15" font-weight="700" fill="#b03a2e" text-anchor="middle">watir</text><text x="296" y="88" font-size="14" fill="#333" text-anchor="middle">Ruby 기반</text><text x="180" y="128" font-size="14" fill="#555" text-anchor="middle">두 도구가 합쳐지면</text><rect x="20" y="144" width="150" height="60" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="95" y="168" font-size="15" font-weight="700" fill="#2f7d4a" text-anchor="middle">FitNesse</text><text x="95" y="190" font-size="14" fill="#333" text-anchor="middle">웹 기반 협업</text><rect x="190" y="144" width="150" height="60" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="265" y="168" font-size="15" font-weight="700" fill="#2f7d4a" text-anchor="middle">STAF</text><text x="265" y="190" font-size="14" fill="#333" text-anchor="middle">재사용·확장</text><rect x="100" y="236" width="160" height="60" rx="8" fill="#f1eaf8" stroke="#6a3d9a" stroke-width="3"/><text x="180" y="260" font-size="16" font-weight="700" fill="#6a3d9a" text-anchor="middle">NTAF</text><text x="180" y="282" font-size="14" fill="#333" text-anchor="middle">협업 + 재사용 통합</text>
+</svg><figcaption>위 세 칸은 혼자 다니는 도구, 아래는 두 도구가 합체해 NTAF가 되는 모습이에요.</figcaption></figure></div>
+
+<p>한 장 요약 — 도구 이름과 구별 단서예요.</p>
+<table>
+<tr><th>도구</th><th>특징</th><th>연상 단서</th></tr>
+<tr><td>xUnit</td><td>여러 언어 단위 테스트(JUnit 등)</td><td>x = 언어 자리</td></tr>
+<tr><td>STAF</td><td>서비스 호출·재사용, 분산 데몬</td><td>S = Service</td></tr>
+<tr><td>FitNesse</td><td>웹 기반 표로 케이스 작성·실행, 협업</td><td>Fit = 웹에서 함께</td></tr>
+<tr><td>NTAF</td><td>FitNesse + STAF 통합</td><td>합체</td></tr>
+<tr><td>Selenium</td><td>여러 브라우저·언어 웹 테스트</td><td>브라우저</td></tr>
+<tr><td>watir</td><td>Ruby 기반 웹 테스트</td><td>Ruby</td></tr>
+<tr><td>스카우터 · 제니퍼(APM)</td><td>운영 중 성능·자원 감시</td><td>감시 도구</td></tr>
+</table>
+<div class="trap">NTAF는 <b>FitNesse + STAF</b>예요. xUnit이나 Selenium과 섞은 선지가 나오면 오답이에요. watir는 <b>Ruby</b>, Selenium은 <b>다양한 언어</b>라는 점도 짝으로 기억하세요.</div>
+
+<h3>감시 도구 — 개통 뒤의 순찰</h3>
+<div class="duo"><div><p>테스트를 통과해도 운영 중에는 학원 서버가 느려지거나 응답이 끊길 수 있어요. 그래서 구현 검증에는 <b>감시 도구</b>도 포함돼요. 애플리케이션 성능 관리 도구 <b>APM</b>(<a href="./2026-10-24-D022.html">D022</a>)으로 연계 구간의 트랜잭션·응답 시간·자원 사용을 계속 모니터링해요. 국산 대표가 오픈소스 <b>스카우터</b>와 상용 <b>제니퍼</b>예요. 스카우터라는 이름처럼, 운영 중인 연계 구간을 정찰병이 계속 돌아보는 게 감시 도구예요.</p></div><figure><svg viewBox="0 0 360 276" font-family="sans-serif" role="img" aria-label="시간축. 개발과 테스트 구간에는 xUnit, STAF, FitNesse, NTAF, Selenium, watir 같은 검증 도구로 붙여 보고 확인하고, 운영 구간에는 스카우터와 제니퍼 같은 APM 감시 도구가 연계 구간을 계속 지켜보고 알린다">
+<rect width="360" height="276" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d28h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">한 번 확인 vs 계속 지켜보기</text><path d="M12 60 L346 60" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d28h)"/><path d="M178 48 L178 72" stroke="#555" stroke-width="2" fill="none"/><text x="95" y="52" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">개발·테스트</text><text x="262" y="52" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">운영</text><rect x="12" y="84" width="158" height="150" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="91" y="108" font-size="15" font-weight="700" fill="#2a5db0" text-anchor="middle">검증 도구</text><text x="91" y="134" font-size="14" fill="#333" text-anchor="middle">xUnit · STAF</text><text x="91" y="156" font-size="14" fill="#333" text-anchor="middle">FitNesse · NTAF</text><text x="91" y="178" font-size="14" fill="#333" text-anchor="middle">Selenium · watir</text><text x="91" y="220" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">붙여 보고 확인</text><rect x="188" y="84" width="160" height="150" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="268" y="108" font-size="15" font-weight="700" fill="#2f7d4a" text-anchor="middle">감시 도구(APM)</text><text x="268" y="134" font-size="14" fill="#333" text-anchor="middle">스카우터 · 제니퍼</text><path d="M200 178 L224 178 L232 158 L242 196 L252 170 L260 178 L336 178" stroke="#2f7d4a" stroke-width="2" fill="none"/><text x="268" y="220" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">계속 보고 알림</text><text x="180" y="260" font-size="14" fill="#333" text-anchor="middle">연계 테스트로 확인 → 운영 중 APM이 감시</text>
+</svg><figcaption>왼쪽은 개통 전 점검, 오른쪽은 개통 뒤 순찰이에요. 초록 선은 운영 중 계속 찍히는 성능 신호예요.</figcaption></figure></div>
+
+<div class="vs"><div><b>검증 도구</b>개발·테스트 단계 · 연계가 설계대로 동작하는지 <b>확인</b> · xUnit, STAF, FitNesse, NTAF, Selenium, watir</div><div><b>감시 도구</b>운영 단계 · 동작 상태와 성능을 <b>지속 감시</b> · APM(스카우터, 제니퍼)</div></div>
+<div class="memo"><b>검증 여섯</b> — x(언어 다) · S(서비스) · Fit(웹 협업) · N(합체) · Sel(브라우저) · wa(Ruby). <b>감시</b>는 APM.</div>
+<p><b>→ 이 장면의 결과물:</b> 연계 테스트 결과와 운영 감시 체계. 테스트하다 고친 내용이 생겼으니, 마지막 장면은 문서를 현실에 맞추는 일이에요.</p>
+
+<h2>6. 장면 5 — 설계 산출물·명세서: 만든 대로 문서를 맞춘다</h2>
+<div class="point"><b>핵심 한 줄</b>인터페이스 설계서는 <b>정의서</b>(시스템 간 인터페이스 전체 목록·방식)와 <b>명세서</b>(인터페이스마다 데이터 항목·형식·길이·오류 코드 상세)로 이뤄지고, 구현·검증 결과를 다시 반영해요.</div>
+<div class="duo"><div><p>테스트하면서 “학생 ID를 10자리에서 12자리로 늘리자”처럼 바뀐 게 생겨요. 이걸 문서에 반영하지 않으면, 반년 뒤 연계를 고치는 사람은 틀린 문서를 믿고 일하게 돼요. 그래서 구현 검증의 마지막은 결과를 <b>설계 산출물</b>에 되돌려 적는 일이에요.</p>
+<p><b>인터페이스 정의서</b>는 시스템 사이에 오가는 인터페이스 전체를 한 장에 모은 목록이에요. 행마다 인터페이스 ID, 송신 시스템, 수신 시스템, 연계 방식(실시간·배치, 데이터 통신·엔티티), 주기가 적혀요. 공부친구라면 “IF-001 출석 전송, 공부친구 → 학원, JSON·실시간”, “IF-002 결제 정산, 공부친구 → 학원, 인터페이스 테이블·매일 02시” 같은 행이 생겨요.</p>
+<p><b>인터페이스 명세서</b>는 정의서의 한 행을 한 장으로 펼친 상세 문서예요. 데이터 항목마다 이름, 타입, 길이, 필수 여부, 허용 코드값을 적고, 실패 때 돌려줄 오류 코드도 정해요. 장면 1의 데이터 표준이 바로 여기에 기록돼요. 정의서는 아파트 단지 배치도, 명세서는 각 세대 평면도예요. 이사 업체는 평면도가 있어야 냉장고 자리를 알아요.</p></div><figure class="mermaid"><img src="../assets/0625e9d1802cd801.png" alt="도식" loading="lazy" style="width:250px"></figure></div>
+
+<p>한 장 요약 — 두 문서를 가르면 이래요.</p>
+<table>
+<tr><th>구분</th><th>인터페이스 정의서</th><th>인터페이스 명세서</th></tr>
+<tr><td>단위</td><td>시스템 전체에 한 장(목록)</td><td>인터페이스 하나에 한 장(상세)</td></tr>
+<tr><td>주요 항목</td><td>인터페이스 ID, 송수신 시스템, 방식, 주기</td><td>데이터 항목·타입·길이·필수·코드값, 오류 코드</td></tr>
+<tr><td>언제 쓰나</td><td>연계 범위를 한눈에 볼 때</td><td>실제 개발·테스트·장애 분석 때</td></tr>
+</table>
+<p>장면 · 하는 일 · 시험 개념 · 결과물을 한 번에 꿰면 이래요.</p>
+<table>
+<tr><th>장면</th><th>하는 일 · 시험 개념</th><th>결과물</th></tr>
+<tr><td>1 설계 확인</td><td>공통 기능·연계 기능 확인, 데이터 표준 확인</td><td>합의한 데이터 표준</td></tr>
+<tr><td>2 기능 구현</td><td>데이터 통신(JSON·XML·AJAX) / 인터페이스 엔티티</td><td>연계 기능</td></tr>
+<tr><td>3 보안</td><td>네트워크·애플리케이션·DB 영역, 무결성 검사 도구</td><td>세 겹 자물쇠</td></tr>
+<tr><td>4 구현 검증</td><td>연계 테스트, 검증 도구 6, 감시 도구 APM</td><td>테스트 결과·감시 체계</td></tr>
+<tr><td>5 산출물</td><td>정의서·명세서에 결과 반영</td><td>최신 인터페이스 설계서</td></tr>
+</table>
+<p><b>→ 이 장면의 결과물:</b> 현실과 맞는 인터페이스 설계서. 이걸로 A9, 그리고 1과목 진도가 끝났어요. 남은 건 예정된 오답 두 개예요.</p>
+
+<h2>7. 오답 복습 — 아키텍처 측면, 그리고 퀵 정렬의 두 얼굴</h2>
+<div class="point"><b>핵심 한 줄</b>품질 속성은 <b>누가·언제 보는 품질인가</b>로, 정렬 복잡도는 <b>평균을 묻나 최악을 묻나</b>로 갈라요.</div>
+<div class="duo"><div><p>첫 번째는 <a href="./2026-10-13-D011.html">D011</a>의 소프트웨어 아키텍처 품질 속성이에요. 품질을 보는 렌즈가 셋이에요. <b>시스템 측면</b>은 시스템이 돌아갈 때 드러나는 품질로 성능, 보안, 가용성, 사용성, 변경 용이성 같은 것들이에요. <b>비즈니스 측면</b>은 사업 관점의 품질로 시장 적시성, 비용과 혜택, 예상 시스템 수명이에요.</p>
+<p><b>아키텍처 측면</b>은 시스템을 돌리기 전, 설계도 자체가 얼마나 잘 짜였나를 봐요. 전체 설계가 하나의 일관된 생각으로 묶였는지(개념적 무결성), 요구를 빠짐없이 바르게 담았는지(정확성과 완결성), 주어진 인력·기간 안에 실제로 만들 수 있는지(구축 가능성)예요. “운영할 때 빠른가”는 시스템, “돈이 되나”는 비즈니스, “설계도가 말이 되나”는 아키텍처 렌즈예요.</p></div><figure><svg viewBox="0 0 360 316" font-family="sans-serif" role="img" aria-label="소프트웨어 아키텍처 품질 속성 세 측면. 시스템 측면은 돌아갈 때의 성능, 보안, 가용성, 사용성, 변경 용이성. 비즈니스 측면은 시장 적시성, 비용과 혜택, 예상 수명. 아키텍처 측면은 설계도 자체의 개념적 무결성, 정확성, 완결성, 구축 가능성">
+<rect width="360" height="316" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">품질을 보는 세 렌즈</text><circle cx="64" cy="70" r="26" fill="#e6efff" stroke="#2a5db0" stroke-width="3"/><text x="64" y="75" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">시스</text><rect x="12" y="106" width="104" height="196" rx="8" fill="#ffffff" stroke="#2a5db0" stroke-width="2"/><text x="64" y="128" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">시스템 측면</text><text x="64" y="150" font-size="14" fill="#555" text-anchor="middle">돌아갈 때</text><text x="64" y="180" font-size="14" fill="#333" text-anchor="middle">성능</text><text x="64" y="204" font-size="14" fill="#333" text-anchor="middle">보안</text><text x="64" y="228" font-size="14" fill="#333" text-anchor="middle">가용성</text><text x="64" y="252" font-size="14" fill="#333" text-anchor="middle">사용성</text><text x="64" y="276" font-size="14" fill="#333" text-anchor="middle">변경 용이성</text><circle cx="180" cy="70" r="26" fill="#fff4e0" stroke="#b5730d" stroke-width="3"/><text x="180" y="75" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">비즈</text><rect x="128" y="106" width="104" height="196" rx="8" fill="#ffffff" stroke="#b5730d" stroke-width="2"/><text x="180" y="128" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">비즈니스 측면</text><text x="180" y="150" font-size="14" fill="#555" text-anchor="middle">돈·일정</text><text x="180" y="180" font-size="14" fill="#333" text-anchor="middle">시장 적시성</text><text x="180" y="204" font-size="14" fill="#333" text-anchor="middle">비용과 혜택</text><text x="180" y="228" font-size="14" fill="#333" text-anchor="middle">예상 수명</text><circle cx="296" cy="70" r="26" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="3"/><text x="296" y="75" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">아키</text><rect x="244" y="106" width="104" height="196" rx="8" fill="#ffffff" stroke="#2f7d4a" stroke-width="2"/><text x="296" y="128" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">아키텍처 측면</text><text x="296" y="150" font-size="14" fill="#555" text-anchor="middle">설계도 자체</text><text x="296" y="180" font-size="14" fill="#333" text-anchor="middle">개념적 무결성</text><text x="296" y="204" font-size="14" fill="#333" text-anchor="middle">정확성</text><text x="296" y="228" font-size="14" fill="#333" text-anchor="middle">완결성</text><text x="296" y="252" font-size="14" fill="#333" text-anchor="middle">구축 가능성</text>
+</svg><figcaption>렌즈마다 보는 대상이 달라요. 파랑은 돌아가는 시스템, 주황은 사업, 초록은 설계도 그 자체예요.</figcaption></figure></div>
+
+<p>두 번째는 <a href="./2026-10-29-D027.html">D027</a>의 정렬 복잡도예요. 퀵 정렬은 피벗을 기준으로 작은 값과 큰 값을 나눈 뒤 양쪽을 다시 정렬해요. 피벗이 매번 가운데쯤 오면 반씩 쪼개져 평균 O(n log n)이지만, 이미 정렬된 배열에서 맨 앞을 피벗으로 고르는 식으로 한쪽에 쏠리면 최악 O(n²)까지 느려져요. 퀵 정렬은 평소엔 이름값을 하지만 운 나쁜 날에만 느려져요. ‘평균’과 ‘최악’ 중 어느 날을 묻는지가 문제의 전부예요.</p>
+<table>
+<tr><th>정렬</th><th>평균</th><th>최악</th></tr>
+<tr><td>버블 · 선택 · 삽입</td><td>O(n²)</td><td>O(n²)</td></tr>
+<tr><td>퀵</td><td>O(n log n)</td><td>O(n²)</td></tr>
+<tr><td>병합 · 힙</td><td>O(n log n)</td><td>O(n log n)</td></tr>
+</table>
+<div class="trap">“평균·최악이 <b>모두</b> 같다”는 조건이면 퀵은 빠져요. 퀵은 평균과 최악이 다른, 표에서 유일한 정렬이에요.</div>
+<table>
+<tr><th>헷갈리는 짝</th><th>가르는 질문</th></tr>
+<tr><td>시스템 측면 vs 아키텍처 측면</td><td>돌아가는 시스템을 보나, 설계도 자체를 보나?</td></tr>
+<tr><td>퀵 vs 병합·힙</td><td>최악일 때도 n log n을 지키나?</td></tr>
+</table>
+
+<h2>8. 1과목 지도 — A1~A9 한 장</h2>
+<div class="point"><b>핵심 한 줄</b>1과목은 요구를 받고(A1) 화면·구조·연계를 설계하고(A2~A4) 방법론에 맞춰(A5) 만들고 묶고 배포하고(A6·A7) 시험하고(A8) 연계를 완성하는(A9) 한 줄의 개발 흐름이에요.</div>
+<div class="duo"><div><p>오늘로 1과목 아홉 개 주요항목을 모두 한 번씩 돌았어요. 따로 외운 것 같지만 사실은 프로젝트 하나의 순서예요. 아홉 정류장을 따로 외운 줄 알았는데, 알고 보니 버스 노선 하나였던 셈이에요. 요구를 확인하고(A1), 화면(A2)과 애플리케이션 구조(A3)와 시스템 사이 연계(A4)를 설계하고, 그 과정을 어떤 방법론으로 진행할지 정하고(A5), 모듈을 만들어 통합하고(A6), 패키징해 배포하고(A7), 테스트하고 성능을 고치고(A8), 마지막으로 설계해 둔 연계를 구현·검증해요(A9).</p></div><figure><svg viewBox="0 0 360 318" font-family="sans-serif" role="img" aria-label="1과목 지도. A1 요구사항, A2 화면 설계, A3 애플리케이션 설계, A4 인터페이스 설계, A5 방법론, A6 통합 구현, A7 패키징, A8 테스트, A9 인터페이스 구현이 뱀 모양으로 이어지고 마지막 A9가 오늘이다">
+<rect width="360" height="318" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d28i" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">1과목 A1~A9, 개발 흐름 한 줄</text><path d="M116 72 L128 72" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d28i)"/><path d="M232 72 L244 72" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d28i)"/><path d="M296 100 L296 128" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d28i)"/><path d="M244 156 L232 156" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d28i)"/><path d="M128 156 L116 156" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d28i)"/><path d="M64 184 L64 212" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d28i)"/><path d="M116 240 L128 240" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d28i)"/><path d="M232 240 L244 240" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d28i)"/><rect x="12" y="44" width="104" height="56" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="64" y="68" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">A1 요구사항</text><text x="64" y="89" font-size="14" fill="#555" text-anchor="middle">D001~006</text><rect x="128" y="44" width="104" height="56" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="180" y="68" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">A2 화면 설계</text><text x="180" y="89" font-size="14" fill="#555" text-anchor="middle">D007~010</text><rect x="244" y="44" width="104" height="56" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="296" y="68" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">A3 앱 설계</text><text x="296" y="89" font-size="14" fill="#555" text-anchor="middle">D010~014</text><rect x="244" y="128" width="104" height="56" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="296" y="152" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">A4 IF 설계</text><text x="296" y="173" font-size="14" fill="#555" text-anchor="middle">D015·017</text><rect x="128" y="128" width="104" height="56" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="180" y="152" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">A5 방법론</text><text x="180" y="173" font-size="14" fill="#555" text-anchor="middle">D018~020</text><rect x="12" y="128" width="104" height="56" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="64" y="152" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">A6 통합 구현</text><text x="64" y="173" font-size="14" fill="#555" text-anchor="middle">D021</text><rect x="12" y="212" width="104" height="56" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="64" y="236" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">A7 패키징</text><text x="64" y="257" font-size="14" fill="#555" text-anchor="middle">D022·024</text><rect x="128" y="212" width="104" height="56" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="180" y="236" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">A8 테스트</text><text x="180" y="257" font-size="14" fill="#555" text-anchor="middle">D025~027</text><rect x="244" y="212" width="104" height="56" rx="8" fill="#fdecea" stroke="#b03a2e" stroke-width="3"/><text x="296" y="236" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">A9 IF 구현</text><text x="296" y="257" font-size="14" fill="#555" text-anchor="middle">오늘</text><text x="180" y="300" font-size="14" fill="#333" text-anchor="middle">파랑 = 설계 쪽 · 초록 = 개발·운영 쪽</text>
+</svg><figcaption>화살표를 따라가면 요구에서 시작해 오늘 인터페이스 구현에서 끝나요. 빨간 칸이 1과목 마지막 칸이에요.</figcaption></figure></div>
+
+<p>내일 D029부터 2과목을 시작하고, 일요일 D030에서 이번 주 범위와 1과목 전체를 진단 문제로 점검해요. A4(설계)와 A9(구현)처럼 이름이 닮은 짝이 진단의 단골이 될 거예요.</p>
+
+<h2>확인 문제</h2>
+<ol class="quiz">
+<li>속성-값 쌍(키와 값)으로 데이터 객체를 표현하는 가벼운 텍스트 기반 개방형 표준 형식으로, 자바스크립트 객체 표기에서 유래해 웹 서버와 브라우저 사이의 비동기 데이터 교환에 널리 쓰이는 것은?<label class="opt"><input type="radio" name="D028-q1" value="1">① XML</label><label class="opt"><input type="radio" name="D028-q1" value="2">② AJAX</label><label class="opt"><input type="radio" name="D028-q1" value="3">③ JSON</label><label class="opt"><input type="radio" name="D028-q1" value="4">④ SOAP</label></li>
+<li>인터페이스 보안 중 <b>네트워크 계층(IP)</b>에서 패킷 단위로 인증과 암호화를 적용하며, 본사·지사 사이 VPN 구축에 주로 쓰이는 프로토콜은?<label class="opt"><input type="radio" name="D028-q2" value="1">① IPSec</label><label class="opt"><input type="radio" name="D028-q2" value="2">② S-HTTP</label><label class="opt"><input type="radio" name="D028-q2" value="3">③ 시큐어 코딩</label><label class="opt"><input type="radio" name="D028-q2" value="4">④ SSL/TLS</label></li>
+<li>인터페이스 구현 검증 도구 중 <b>FitNesse의 협업 기능과 STAF의 재사용·확장성</b>을 통합한 테스트 자동화 프레임워크는?<label class="opt"><input type="radio" name="D028-q3" value="1">① xUnit</label><label class="opt"><input type="radio" name="D028-q3" value="2">② Selenium</label><label class="opt"><input type="radio" name="D028-q3" value="3">③ watir</label><label class="opt"><input type="radio" name="D028-q3" value="4">④ NTAF</label></li>
+<li>(누적) 기준선이 정해진 요구사항에 변경 요청이 들어왔다. 요청을 접수한 <b>바로 다음</b>에 해야 할 일로 가장 알맞은 것은?<label class="opt"><input type="radio" name="D028-q4" value="1">① 개발자가 코드에 먼저 반영한다</label><label class="opt"><input type="radio" name="D028-q4" value="2">② 변경이 일정·비용·다른 산출물에 미칠 영향을 분석한다</label><label class="opt"><input type="radio" name="D028-q4" value="3">③ 기준선 문서를 새 버전으로 갱신한다</label><label class="opt"><input type="radio" name="D028-q4" value="4">④ 회귀 테스트를 수행한다</label></li>
+<li>(누적) 휘어지는 디스플레이나 손에 쥔 사물 표면처럼 <b>사물 자체가 입력과 출력 장치</b>가 되는 사용자 인터페이스는?<label class="opt"><input type="radio" name="D028-q5" value="1">① CLI</label><label class="opt"><input type="radio" name="D028-q5" value="2">② GUI</label><label class="opt"><input type="radio" name="D028-q5" value="3">③ NUI</label><label class="opt"><input type="radio" name="D028-q5" value="4">④ OUI</label></li>
+<li>(오답 재확인) 소프트웨어 아키텍처 품질 속성 중 “주어진 인력·기간·기술로 이 아키텍처를 <b>실제로 만들 수 있는가</b>”를 뜻하는 <b>구축 가능성</b>이 속한 측면은?<label class="opt"><input type="radio" name="D028-q6" value="1">① 시스템 측면</label><label class="opt"><input type="radio" name="D028-q6" value="2">② 비즈니스 측면</label><label class="opt"><input type="radio" name="D028-q6" value="3">③ 아키텍처 측면</label><label class="opt"><input type="radio" name="D028-q6" value="4">④ 사용자 측면</label></li>
+<li>(오답 재확인) 다음 정렬 알고리즘 중 <b>평균 시간 복잡도는 O(n log n)</b>이지만, 피벗이 한쪽으로 쏠리는 <b>최악의 경우 O(n²)</b>까지 느려지는 것은?<label class="opt"><input type="radio" name="D028-q7" value="1">① 퀵 정렬</label><label class="opt"><input type="radio" name="D028-q7" value="2">② 병합 정렬</label><label class="opt"><input type="radio" name="D028-q7" value="3">③ 선택 정렬</label><label class="opt"><input type="radio" name="D028-q7" value="4">④ 힙 정렬</label></li>
+</ol><div class="answer-bar" data-id="D028" data-n="7"><code></code><button type="button">답안 복사</button></div><p><small>고른 뒤 <b>답안 복사</b> → 디스코드 공부 채널에 붙여넣기 하면 돼요.</small></p>
+<p>답장: <code>정처기 D028: 1)번호 2)번호 3)번호 4)번호 5)번호 6)번호 7)번호</code></p>
+<p>1과목 진도 끝이에요. 내일 D029는 2과목 첫날이고, 일요일 D030에서 1과목 전체를 진단해요. 어제 D027 답장 고마워요. 오늘 것도 편할 때 보내 주세요.</p>
+<p class="meta"><a href="2026-10-29-D027.html">← D027</a>  </p>
+<script>
+document.querySelectorAll('.answer-bar').forEach(bar=>{
+  const id=bar.dataset.id,n=+bar.dataset.n,out=bar.querySelector('code'),btn=bar.querySelector('button');
+  const text=()=>'정처기 '+id+': '+Array.from({length:n},(_,i)=>{const c=document.querySelector('input[name="'+id+'-q'+(i+1)+'"]:checked');return (i+1)+')'+(c?c.value:'?')}).join(' ');
+  document.querySelectorAll('input[name^="'+id+'-q"]').forEach(r=>r.addEventListener('change',()=>{out.textContent=text()}));
+  out.textContent=text();
+  btn.addEventListener('click',async()=>{const t=text();try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}btn.textContent='복사됨 ✓';setTimeout(()=>btn.textContent='답안 복사',1500)});
+});
+</script>
+
+<footer>2027년 정기 기사 1회 정보처리기사 필기 준비 · 공식 범위: Q-Net 2027~2029 출제기준</footer>
+</main></body></html>
