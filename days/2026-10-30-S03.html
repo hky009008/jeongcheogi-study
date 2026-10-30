@@ -15,12 +15,73 @@
 <li>정렬마다 평균·최악이 <b>왜</b> 그렇게 나오는지 한 문장으로 말할 수 있다</li>
 <li>“모두 O(n²)”, “최악만 O(n²)”, “최선 O(n)” 같은 문제 단서로 답을 가를 수 있다</li>
 </ul>
-<div class="box"><b>이 페이지의 흐름</b>① 왜 초가 아니라 횟수인가 → ② 횟수를 세고 빅오로 줄이기 → ③ 상품 찾기(탐색) → ④ 느린 정렬 셋 → ⑤ 쪼개는 정렬 셋과 퀵의 함정 → ⑥ 문제 가르는 질문 → 연습 문제</div>
+<div class="box"><b>이 페이지의 흐름</b>⓪ 전제와 용어 사전 → ① 왜 초가 아니라 횟수인가 → ② 횟수를 세고 빅오로 줄이기 → ③ 상품 찾기(탐색) → ④ 느린 정렬 셋 → ⑤ 쪼개는 정렬 셋과 퀵의 함정 → ⑥ 문제 가르는 질문 → 연습 문제</div>
 <figure><svg viewBox="0 0 360 352" font-family="sans-serif" role="img" aria-label="시간 복잡도 아래에 세는 법, 줄이는 법, 탐색, 정렬 네 칸이 매달린 지도">
 <rect width="360" height="352" rx="12" fill="#f7f7f4"/>
 <defs><marker id="s03a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">오늘 지도 — 복잡도는 네 칸</text><rect x="110" y="40" width="140" height="40" rx="8" fill="#fff" stroke="#333" stroke-width="2"/><text x="180" y="66" font-size="15" font-weight="700" fill="#222" text-anchor="middle">시간 복잡도</text><path d="M180 80 L180 96 M24 96 L180 96 M24 96 L24 310" stroke="#555" stroke-width="2" fill="none"/><path d="M24 130 L42 130" stroke="#555" stroke-width="2" fill="none" marker-end="url(#s03a)"/><rect x="44" y="106" width="304" height="48" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="58" y="127" font-size="15" font-weight="700" fill="#2a5db0">① 세는 법</text><text x="58" y="146" font-size="14" fill="#333">초가 아니라 연산 횟수를 n으로</text><path d="M24 190 L42 190" stroke="#555" stroke-width="2" fill="none" marker-end="url(#s03a)"/><rect x="44" y="166" width="304" height="48" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="58" y="187" font-size="15" font-weight="700" fill="#b5730d">② 줄이는 법</text><text x="58" y="206" font-size="14" fill="#333">최고차항만 · O 최악 Ω 최선 Θ 평균</text><path d="M24 250 L42 250" stroke="#555" stroke-width="2" fill="none" marker-end="url(#s03a)"/><rect x="44" y="226" width="304" height="48" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="58" y="247" font-size="15" font-weight="700" fill="#2f7d4a">③ 탐색</text><text x="58" y="266" font-size="14" fill="#333">순차 n · 이진 log n · 해시 1</text><path d="M24 310 L42 310" stroke="#555" stroke-width="2" fill="none" marker-end="url(#s03a)"/><rect x="44" y="286" width="304" height="48" rx="8" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><text x="58" y="307" font-size="15" font-weight="700" fill="#b03a2e">④ 정렬</text><text x="58" y="326" font-size="14" fill="#333">느린 셋 n² · 쪼개는 셋 (평균) n log n</text>
 </svg><figcaption>위 두 칸이 ‘도구’, 아래 두 칸이 그 도구를 실제 알고리즘에 쓰는 곳이에요. 섹션 순서와 같아요.</figcaption></figure>
 
+
+<h2>0. 시작 전에 — 기본 전제와 용어 사전</h2>
+<div class="point"><b>핵심 한 줄</b> 복잡도는 “<b>입력이 아주 많을 때</b>, <b>기본 연산</b>을 <b>몇 번</b> 하나”를 재는 말이에요. 이 세 단어의 뜻부터 맞춰요.</div>
+<p>복잡도 설명이 어렵게 느껴지는 건 대개 계산이 아니라 <b>약속</b>을 모르고 시작해서예요. 교재는 아래 전제를 당연하게 깔고 설명해요. 먼저 그 약속을 꺼내 놓을게요.</p>
+<h3>기본 전제 다섯 가지</h3>
+<table>
+<tr><th>전제</th><th>뜻</th><th>쇼핑몰 예</th></tr>
+<tr><td>① 입력 크기는 n</td><td>알고리즘에 들어오는 데이터 개수를 n이라 불러요.</td><td>상품 n개 (100개면 n = 100)</td></tr>
+<tr><td>② 기본 연산 한 번 = 1</td><td>비교·교환·대입·배열 칸 읽기는 각각 같은 시간이 든다고 치고 1번으로 세요.</td><td>“가격 A &lt; 가격 B?” 한 번 = 1</td></tr>
+<tr><td>③ n은 아주 크다</td><td>작은 n에서의 차이는 무시하고, n이 한없이 커질 때의 모양만 봐요(점근적 분석).</td><td>상품 10개 말고 100만 개일 때</td></tr>
+<tr><td>④ 배열은 칸 번호로 바로 접근</td><td>i번째 칸은 앞 칸을 거치지 않고 한 번에 읽어요.</td><td><code>items[500]</code> 바로 읽기 = 1</td></tr>
+<tr><td>⑤ 정렬은 오름차순</td><td>특별한 말이 없으면 작은 값 → 큰 값 순서로 정렬해요.</td><td>가격 낮은 순</td></tr>
+</table>
+<h3>용어 사전 ① 복잡도를 말할 때</h3>
+<table>
+<tr><th>용어</th><th>뜻</th><th>쇼핑몰 예</th></tr>
+<tr><td><b>알고리즘</b></td><td>문제를 푸는 정해진 단계의 순서</td><td>“가격순으로 상품 늘어놓는 방법”</td></tr>
+<tr><td><b>시간 복잡도</b></td><td>입력 n에 따라 기본 연산을 몇 번 하는지 나타낸 식</td><td>정렬에 비교를 n²번 함</td></tr>
+<tr><td><b>공간 복잡도</b></td><td>입력 n에 따라 추가 메모리를 얼마나 쓰는지</td><td>병합 정렬은 임시 배열 n칸이 더 필요</td></tr>
+<tr><td><b>점근 표기법</b></td><td>n이 아주 클 때의 증가 모양만 남겨 쓰는 표기. O·Ω·Θ 세 가지</td><td>3n²+5n+2 → O(n²)</td></tr>
+<tr><td><b>최고차항</b></td><td>식에서 n이 커질 때 가장 빨리 커지는 항</td><td>3n²+5n+2에서 3n²</td></tr>
+<tr><td><b>계수·상수항</b></td><td>항 앞의 숫자(3), n이 없는 숫자(2). 빅오에선 버려요</td><td>3n² → n²</td></tr>
+<tr><td><b>최선·평균·최악</b></td><td>입력이 가장 운 좋을 때 / 보통일 때 / 가장 운 나쁠 때의 횟수</td><td>찾는 상품이 맨 앞 / 중간쯤 / 맨 끝</td></tr>
+</table>
+<h3>용어 사전 ② 수학 기호</h3>
+<table>
+<tr><th>기호</th><th>읽는 법 · 뜻</th><th>n = 16일 때</th></tr>
+<tr><td><b>log₂n</b></td><td>로그 n. “2를 몇 번 곱해야 n이 되나” = “n을 반으로 몇 번 접어야 1이 되나”</td><td>4</td></tr>
+<tr><td><b>n log n</b></td><td>n × log n. 반씩 쪼갠 층(log n) × 층마다 n개</td><td>64</td></tr>
+<tr><td><b>n²</b></td><td>n 제곱. n × n, 모든 쌍을 한 번씩</td><td>256</td></tr>
+<tr><td><b>2ⁿ</b></td><td>2의 n제곱. 원소마다 넣을지 뺄지 두 갈래 → 모든 조합</td><td>65,536</td></tr>
+<tr><td><b>n!</b></td><td>n 팩토리얼. n × (n−1) × … × 1, 모든 순서</td><td>약 21조</td></tr>
+<tr><td><b>1+2+…+(n−1)</b></td><td>계단 합 = n(n−1)/2. 정렬에서 계속 나와요</td><td>120</td></tr>
+</table>
+<figure><svg viewBox="0 0 360 326" font-family="sans-serif" role="img" aria-label="16개를 반으로 8, 4, 2, 1개까지 네 번 줄인다. 2의 4제곱이 16이므로 로그 2의 16은 4">
+<rect width="360" height="326" rx="12" fill="#f7f7f4"/>
+<defs><marker id="s03e" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">log₂16 = 4 — 반으로 몇 번 접나</text><rect x="20" y="44" width="320" height="26" rx="4" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="1.5"/><text x="180.0" y="62" font-size="13" font-weight="700" fill="#2f7d4a" text-anchor="middle">16개</text><rect x="20" y="84" width="160" height="26" rx="4" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="1.5"/><text x="100.0" y="102" font-size="13" font-weight="700" fill="#2f7d4a" text-anchor="middle">8개</text><text x="348" y="102" font-size="13" fill="#555" text-anchor="end">1번째 반으로</text><rect x="20" y="124" width="80" height="26" rx="4" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="1.5"/><text x="60.0" y="142" font-size="13" font-weight="700" fill="#2f7d4a" text-anchor="middle">4개</text><text x="348" y="142" font-size="13" fill="#555" text-anchor="end">2번째 반으로</text><rect x="20" y="164" width="40" height="26" rx="4" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="1.5"/><text x="40.0" y="182" font-size="13" font-weight="700" fill="#2f7d4a" text-anchor="middle">2개</text><text x="348" y="182" font-size="13" fill="#555" text-anchor="end">3번째 반으로</text><rect x="20" y="204" width="40" height="26" rx="4" fill="#2f7d4a" stroke="#2f7d4a" stroke-width="1.5"/><text x="40.0" y="222" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">1개</text><text x="348" y="222" font-size="13" fill="#555" text-anchor="end">4번째 반으로</text><rect x="14" y="248" width="332" height="66" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="28" y="270" font-size="14" font-weight="700" fill="#2f7d4a">16 → 8 → 4 → 2 → 1 : 4번</text><text x="28" y="290" font-size="14" fill="#333">거꾸로 보면 2를 4번 곱해 16 (2⁴ = 16)</text><text x="28" y="308" font-size="14" font-weight="700" fill="#333">그래서 log₂16 = 4, log₂(100만) ≈ 20</text>
+</svg><figcaption>로그는 거듭제곱을 거꾸로 묻는 말이에요. ‘2를 몇 번 곱하면 n?’ = ‘n을 반으로 몇 번 접으면 1?’ 시험의 log n은 보통 밑이 2예요.</figcaption></figure>
+
+<h3>용어 사전 ③ 자료 구조와 정렬 동작</h3>
+<table>
+<tr><th>용어</th><th>뜻</th><th>쇼핑몰 예</th></tr>
+<tr><td><b>배열 · 인덱스</b></td><td>같은 종류 데이터를 한 줄로 붙여 둔 것 · 칸 번호(0부터)</td><td><code>items[0]</code>이 첫 상품</td></tr>
+<tr><td><b>탐색</b></td><td>여러 데이터 중 원하는 하나를 찾는 일</td><td>상품번호 4721 찾기</td></tr>
+<tr><td><b>정렬</b></td><td>데이터를 정해진 순서로 다시 늘어놓는 일</td><td>가격 낮은 순</td></tr>
+<tr><td><b>비교 · 교환(swap)</b></td><td>두 값의 크기를 따지는 것 · 두 칸의 값을 맞바꾸는 것</td><td>5 &gt; 3이면 두 칸 맞바꿈</td></tr>
+<tr><td><b>회차(패스)</b></td><td>배열을 처음부터 한 번 훑는 한 바퀴</td><td>버블 정렬 1회차, 2회차</td></tr>
+<tr><td><b>분할 정복</b></td><td>문제를 작게 쪼개(분할) 각각 풀고(정복) 합치는(결합) 설계 방식</td><td>병합·퀵 정렬</td></tr>
+<tr><td><b>피벗</b></td><td>퀵 정렬에서 나누는 기준이 되는 값</td><td>“가격 5,000원보다 싼 쪽 / 비싼 쪽”</td></tr>
+<tr><td><b>트리 · 이진 트리</b></td><td>부모 아래 자식이 달린 계층 구조 · 자식이 최대 2개인 트리</td><td>카테고리 → 하위 카테고리</td></tr>
+<tr><td><b>완전 이진 트리</b></td><td>위층부터, 같은 층은 왼쪽부터 빈칸 없이 채운 이진 트리</td><td>아래 힙 그림</td></tr>
+<tr><td><b>힙(최대 힙)</b></td><td>부모 값 ≥ 자식 값인 완전 이진 트리. 꼭대기가 최댓값</td><td>가장 비싼 상품이 늘 맨 위</td></tr>
+<tr><td><b>해시 함수 · 해시 테이블</b></td><td>키를 넣으면 저장 칸 번호를 계산해 주는 함수 · 그 칸들의 표</td><td>상품번호 → 사물함 번호</td></tr>
+<tr><td><b>충돌</b></td><td>서로 다른 키가 같은 칸 번호로 계산되는 것</td><td>4721과 9821이 둘 다 21번 칸</td></tr>
+</table>
+<figure><svg viewBox="0 0 360 314" font-family="sans-serif" role="img" aria-label="최대 힙. 꼭대기 9, 그 아래 7과 8, 맨 아래 3, 5, 6. 부모가 자식보다 크고 층 수는 log n">
+<rect width="360" height="314" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">최대 힙 — 꼭대기가 항상 최댓값</text><path d="M180 66 L100 136" stroke="#555" stroke-width="2"/><path d="M180 66 L260 136" stroke="#555" stroke-width="2"/><path d="M100 136 L60 206" stroke="#555" stroke-width="2"/><path d="M100 136 L140 206" stroke="#555" stroke-width="2"/><path d="M260 136 L220 206" stroke="#555" stroke-width="2"/><circle cx="180" cy="66" r="20" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><text x="180" y="72" font-size="15" font-weight="700" fill="#222" text-anchor="middle">9</text><circle cx="100" cy="136" r="20" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="100" y="142" font-size="15" font-weight="700" fill="#222" text-anchor="middle">7</text><circle cx="260" cy="136" r="20" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="260" y="142" font-size="15" font-weight="700" fill="#222" text-anchor="middle">8</text><circle cx="60" cy="206" r="20" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="60" y="212" font-size="15" font-weight="700" fill="#222" text-anchor="middle">3</text><circle cx="140" cy="206" r="20" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="140" y="212" font-size="15" font-weight="700" fill="#222" text-anchor="middle">5</text><circle cx="220" cy="206" r="20" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="220" y="212" font-size="15" font-weight="700" fill="#222" text-anchor="middle">6</text><text x="206" y="60" font-size="13" font-weight="700" fill="#b03a2e">← 먼저 꺼냄</text><text x="318" y="74" font-size="13" fill="#555">1층</text><text x="318" y="144" font-size="13" fill="#555">2층</text><text x="318" y="214" font-size="13" fill="#555">3층</text><rect x="14" y="240" width="332" height="62" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="28" y="262" font-size="14" font-weight="700" fill="#2a5db0">규칙: 부모 ≥ 자식, 왼쪽부터 빈칸 없이 채움</text><text x="28" y="284" font-size="14" fill="#333">층 수 ≈ log₂n → 꺼낸 뒤 다시 정리도 log n번</text>
+</svg><figcaption>왼쪽부터 빈칸 없이 채운 이진 트리를 ‘완전 이진 트리’라고 해요. 그래서 높이가 늘 log n으로 낮게 유지돼요.</figcaption></figure>
+
+<p><b>→ 이 장면의 결과물:</b> 아래 설명에 나오는 단어의 뜻과 약속. 막히면 이 표로 돌아와요.</p>
 
 <h2>1. 왜 ‘몇 초’가 아니라 ‘몇 번’인가</h2>
 <div class="point"><b>핵심 한 줄</b> 시간 복잡도는 <b>상품 수 n이 늘 때 연산 횟수가 얼마나 빨리 늘어나는지</b>를 재는 자예요.</div>
@@ -79,6 +140,12 @@ while (k &gt; 1) k = k / 2;               //    3번 = log₂8 → O(log n)</cod
 
 <h2>3. 상품 하나 찾기 — 탐색 세 가지</h2>
 <div class="point"><b>핵심 한 줄</b> 하나씩 보면 n, 정렬해 두고 반씩 버리면 log n, 주소를 바로 계산하면 1.</div>
+<table>
+<tr><th>탐색</th><th>전제 조건</th><th>동작 순서</th></tr>
+<tr><td>순차</td><td>없음</td><td>① 0번 칸부터 비교 ② 아니면 다음 칸 ③ 찾거나 끝날 때까지 반복</td></tr>
+<tr><td>이진</td><td><b>정렬돼 있어야 함</b></td><td>① 가운데 칸과 비교 ② 찾는 값이 작으면 왼쪽 절반, 크면 오른쪽 절반만 남김 ③ 남은 범위에서 반복</td></tr>
+<tr><td>해시</td><td>해시 테이블에 저장돼 있어야 함</td><td>① 키를 해시 함수에 넣어 칸 번호 계산 ② 그 칸으로 바로 감 ③ 충돌이 있으면 그 칸 안에서 다시 찾음</td></tr>
+</table>
 <p>고객이 상품번호 4721을 검색했어요. 가장 단순한 방법은 <b>순차 탐색</b>이에요. 첫 상품부터 하나씩 번호를 비교해요. 운 나쁘면 끝까지 가야 해서 n번, O(n)이에요. 대신 상품이 아무렇게나 섞여 있어도 쓸 수 있어요.</p>
 <p>상품을 번호순으로 <b>정렬해 두면</b> <b>이진 탐색</b>을 쓸 수 있어요. 가운데 상품 번호가 5000이면 4721은 앞쪽에 있을 테니 뒤쪽 절반을 통째로 버려요. 남은 절반의 가운데와 또 비교해요. 2장의 ④처럼 반씩 줄어드니 O(log n)이에요. 백만 개 중에서도 스무 번이면 찾아요. 단, <b>정렬돼 있지 않으면 쓸 수 없어요</b>. 이 조건이 선지에 자주 숨어요.</p>
 <p><b>해시 탐색</b>은 상품번호를 해시 함수에 넣어 저장 칸 번호를 바로 계산해요. 사물함 번호를 알고 바로 가서 여는 것과 같아서 평균 O(1)이에요. 서로 다른 번호가 같은 칸으로 몰리는 <b>충돌</b>이 심하면 그 칸 안에서 다시 하나씩 찾아야 해서 최악 O(n)까지 느려져요.</p>
@@ -93,6 +160,7 @@ while (k &gt; 1) k = k / 2;               //    3번 = log₂8 → O(log n)</cod
 <h2>4. 느린 정렬 셋 — 버블·선택·삽입</h2>
 <div class="point"><b>핵심 한 줄</b> 셋 다 <b>바깥 반복 안에 안쪽 반복</b>이라 평균·최악 O(n²)예요. 삽입만 이미 정렬된 입력에서 최선 O(n)으로 빨라져요.</div>
 <h3>버블 정렬 — 이웃끼리 비교해서 큰 걸 뒤로</h3>
+<div class="box"><b>동작 순서</b>① 0번·1번 칸 비교, 앞이 크면 교환 ② 1번·2번, 2번·3번 … 끝까지 → 최댓값이 맨 뒤로(1회차 끝) ③ 맨 뒤 확정 칸을 빼고 다시 1회차부터 반복</div>
 <div class="duo"><div><p>가격표 [5, 3, 8, 1]을 버블 정렬해 볼게요. 맨 앞부터 <b>이웃한 두 칸</b>을 비교해서 앞이 크면 자리를 바꿔요. 한 회차를 끝까지 돌면 가장 큰 8이 거품처럼 맨 뒤로 떠올라요. 그래서 이름이 버블이에요.</p>
 <p>2회차는 맨 뒤 8이 이미 자리를 잡았으니 하나 덜 비교해요. 3회차는 또 하나 덜 비교해요. 비교 횟수가 3, 2, 1로 계단처럼 줄어요. 아래 그림이 그 계단이에요.</p></div><figure><svg viewBox="0 0 360 276" font-family="sans-serif" role="img" aria-label="버블 정렬 네 칸 배열을 세 회차에 비교 3번, 2번, 1번 해서 총 6번. 일반식 n(n-1)/2는 O(n²)">
 <rect width="360" height="276" rx="12" fill="#f7f7f4"/>
@@ -102,9 +170,11 @@ while (k &gt; 1) k = k / 2;               //    3번 = log₂8 → O(log n)</cod
 
 <p>상품이 n개면 (n−1) + (n−2) + … + 1 = n(n−1)/2번이에요. 펼치면 n²/2 − n/2이고, 2장 규칙대로 최고차항만 남기고 1/2도 버리면 O(n²)이에요. 중요한 건 <b>입력이 어떻게 생겼든</b> 이 계단을 다 밟는다는 거예요. 그래서 평균도 최악도 O(n²)이에요.</p>
 <h3>선택 정렬 — 남은 것 중 최솟값을 골라 앞으로</h3>
+<div class="box"><b>동작 순서</b>① 남은 칸 전체를 훑어 최솟값 찾기 ② 그 값을 남은 칸의 맨 앞과 교환 ③ 맨 앞 확정, 나머지로 반복</div>
 <p>선택 정렬은 남은 칸을 전부 훑어서 <b>가장 작은 값</b>을 찾고, 그걸 맨 앞자리와 바꿔요. 다음엔 둘째 칸부터 다시 훑어 최솟값을 찾아요. 남은 칸을 훑는 횟수가 역시 3, 2, 1로 줄어드는 계단이라 n(n−1)/2, O(n²)이에요.</p>
 <p>선택 정렬의 특징은 <b>이미 정렬된 입력이 와도 똑같이 느리다</b>는 거예요. 최솟값인지 확인하려면 남은 걸 다 봐야 하니까요. 그래서 최선·평균·최악이 전부 O(n²)이에요.</p>
 <h3>삽입 정렬 — 하나씩 꺼내서 알맞은 자리에 끼우기</h3>
+<div class="box"><b>동작 순서</b>① 1번 칸 값을 꺼냄(0번 칸은 이미 ‘정렬된 부분’) ② 왼쪽으로 가며 자기보다 큰 값은 한 칸씩 뒤로 밀기 ③ 자기보다 작은 값을 만나면 그 뒤에 끼우기 ④ 다음 칸으로</div>
 <p>삽입 정렬은 카드 게임에서 손에 든 카드를 정리하는 방식이에요. 새 카드를 하나 받으면, 이미 정리된 카드들 사이에서 알맞은 자리를 찾아 끼워요. 앞에서부터 하나씩 꺼내 왼쪽 정렬된 부분과 비교하며 자리를 찾아요.</p>
 <p>보통은 끼울 자리를 찾느라 왼쪽을 여러 칸 거슬러 올라가요. 그래서 평균·최악은 다른 둘처럼 O(n²)이에요. 그런데 상품이 <b>이미 거의 정렬돼 있으면</b> 왼쪽 이웃 하나만 보고 “여기 맞네” 하고 멈춰요. 아래 코드처럼 한 개당 1번, 총 n−1번이라 최선 O(n)이에요.</p>
 <pre><code>// 삽입 정렬 — 이미 정렬된 [1, 3, 5, 8]이면?
@@ -122,11 +192,14 @@ for (int i = 1; i &lt; n; i++) {
 <h2>5. 쪼개는 정렬 셋 — 병합·힙·퀵, 그리고 퀵의 함정</h2>
 <div class="point"><b>핵심 한 줄</b> 병합·힙은 <b>언제나</b> O(n log n). 퀵은 <b>평균만</b> O(n log n)이고 최악은 O(n²)예요.</div>
 <h3>병합 정렬 — 무조건 반으로</h3>
+<div class="box"><b>동작 순서</b>① 분할: 한 칸이 될 때까지 반으로 쪼갬 ② 정복: 한 칸짜리는 이미 정렬된 것 ③ 결합: 정렬된 두 조각의 맨 앞끼리 비교하며 작은 것부터 새 배열에 담아 합침</div>
 <p>병합 정렬은 상품 8개를 4개·4개로, 다시 2개씩, 1개씩까지 <b>무조건 반으로</b> 쪼개요. 그다음 정렬된 조각 둘을 하나로 합치며 올라와요. 조각 두 개를 합칠 땐 각 조각 맨 앞끼리만 비교하면 되니 빨라요.</p>
 <p>8개를 1개까지 쪼개는 데 세 번(log₂8 = 3), 즉 층이 3개예요. 층마다 합치는 일은 전부 합쳐 약 8번이에요. 그래서 층 수 × 층마다 일 = log n × n = <b>n log n</b>이에요. 입력이 정렬돼 있든 뒤죽박죽이든 반으로 자르는 건 똑같으니 <b>최선·평균·최악이 모두 O(n log n)</b>이에요. 대신 합칠 때 임시 배열이 필요해요.</p>
 <h3>힙 정렬 — 최댓값을 하나씩 꺼내기</h3>
+<div class="box"><b>동작 순서</b>① 배열로 최대 힙을 만듦 ② 꼭대기(최댓값)를 배열 맨 뒤로 보냄 ③ 남은 트리를 다시 힙으로 정리(log n번) ④ 반복</div>
 <p>힙 정렬은 상품을 <b>힙</b>(부모가 자식보다 항상 큰 완전 이진 트리)에 넣고, 꼭대기의 최댓값을 하나씩 꺼내요. 꺼낸 뒤 트리를 다시 정리하는 데 트리 높이만큼, 즉 log n번이 걸려요. n개를 꺼내니 n × log n이에요. 트리 모양이 늘 균형 잡혀 있어서 병합처럼 <b>언제나 O(n log n)</b>이에요.</p>
 <h3>퀵 정렬 — 평균은 가장 빠른데, 운이 나쁘면 버블과 같아요</h3>
+<div class="box"><b>동작 순서</b>① 피벗 하나 고름 ② 분할: 피벗보다 작은 값은 왼쪽, 큰 값은 오른쪽 ③ 왼쪽·오른쪽 조각에 같은 방법을 반복(조각이 한 칸이면 끝)</div>
 <div class="duo"><div><p>퀵 정렬은 기준값 <b>피벗</b>을 하나 골라, 피벗보다 작은 상품은 왼쪽, 큰 상품은 오른쪽으로 나눠요. 그리고 양쪽을 또 같은 방식으로 정렬해요. 피벗이 가운데쯤 값이면 병합처럼 반씩 갈라져서 O(n log n)이에요. 실무에서는 보통 가장 빨라서 이름이 퀵이에요.</p>
 <p>문제는 피벗을 잘못 고른 경우예요. 이미 정렬된 [1, 2, 3, 4, 5]에서 맨 앞 1을 피벗으로 잡으면, 1보다 작은 게 하나도 없어요. 왼쪽은 텅 비고 오른쪽에 4개가 몰려요. 다음 피벗 2도 마찬가지예요. 그럼 매번 <b>딱 하나씩만</b> 줄어들어요. 비교는 4 + 3 + 2 + 1번, 버블 정렬의 계단과 똑같은 n(n−1)/2예요. 그래서 <b>최악 O(n²)</b>이에요.</p></div><figure><svg viewBox="0 0 360 290" font-family="sans-serif" role="img" aria-label="왼쪽 병합 정렬은 8을 4·4, 2·2·2·2, 1 여덟 개로 늘 반씩 나눠 층이 log n개라 n log n. 오른쪽 퀵 정렬 최악은 정렬된 다섯 개에서 첫 값을 피벗으로 잡아 한쪽이 비고 5, 4, 3, 2, 1로 하나씩만 줄어 층이 n개라 n²">
 <rect width="360" height="290" rx="12" fill="#f7f7f4"/>
