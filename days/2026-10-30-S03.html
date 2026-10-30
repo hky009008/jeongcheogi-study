@@ -15,14 +15,60 @@
 <li>정렬마다 평균·최악이 <b>왜</b> 그렇게 나오는지 한 문장으로 말할 수 있다</li>
 <li>“모두 O(n²)”, “최악만 O(n²)”, “최선 O(n)” 같은 문제 단서로 답을 가를 수 있다</li>
 </ul>
-<div class="box"><b>이 페이지의 흐름</b>⓪ 전제와 용어 사전 → ① 왜 초가 아니라 횟수인가 → ② 등급 여섯 개를 실제 상황·알고리즘으로 돌려 보기 → ③ 해시 탐색 → ④ 느린 정렬 셋 직접 돌리기 → ⑤ 쪼개는 정렬 셋 직접 돌리기 → ⑥ 문제 가르는 질문 → 연습 문제</div>
+<div class="box"><b>이 페이지의 흐름</b>⓪ O(log n) 표기 읽는 법 · 전제와 용어 → ① 왜 초가 아니라 횟수인가 → ② 등급 여섯 개를 실제 상황·알고리즘으로 돌려 보기 → ③ 해시 탐색 → ④ 느린 정렬 셋 직접 돌리기 → ⑤ 쪼개는 정렬 셋 직접 돌리기 → ⑥ 문제 가르는 질문 → 연습 문제</div>
 <figure><svg viewBox="0 0 360 352" font-family="sans-serif" role="img" aria-label="시간 복잡도 아래에 세는 법, 줄이는 법, 탐색, 정렬 네 칸이 매달린 지도">
 <rect width="360" height="352" rx="12" fill="#f7f7f4"/>
 <defs><marker id="s03a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">오늘 지도 — 복잡도는 네 칸</text><rect x="110" y="40" width="140" height="40" rx="8" fill="#fff" stroke="#333" stroke-width="2"/><text x="180" y="66" font-size="15" font-weight="700" fill="#222" text-anchor="middle">시간 복잡도</text><path d="M180 80 L180 96 M24 96 L180 96 M24 96 L24 310" stroke="#555" stroke-width="2" fill="none"/><path d="M24 130 L42 130" stroke="#555" stroke-width="2" fill="none" marker-end="url(#s03a)"/><rect x="44" y="106" width="304" height="48" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="58" y="127" font-size="15" font-weight="700" fill="#2a5db0">① 세는 법</text><text x="58" y="146" font-size="14" fill="#333">초가 아니라 연산 횟수를 n으로</text><path d="M24 190 L42 190" stroke="#555" stroke-width="2" fill="none" marker-end="url(#s03a)"/><rect x="44" y="166" width="304" height="48" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="58" y="187" font-size="15" font-weight="700" fill="#b5730d">② 줄이는 법</text><text x="58" y="206" font-size="14" fill="#333">최고차항만 · O 최악 Ω 최선 Θ 평균</text><path d="M24 250 L42 250" stroke="#555" stroke-width="2" fill="none" marker-end="url(#s03a)"/><rect x="44" y="226" width="304" height="48" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="58" y="247" font-size="15" font-weight="700" fill="#2f7d4a">③ 탐색</text><text x="58" y="266" font-size="14" fill="#333">순차 n · 이진 log n · 해시 1</text><path d="M24 310 L42 310" stroke="#555" stroke-width="2" fill="none" marker-end="url(#s03a)"/><rect x="44" y="286" width="304" height="48" rx="8" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><text x="58" y="307" font-size="15" font-weight="700" fill="#b03a2e">④ 정렬</text><text x="58" y="326" font-size="14" fill="#333">느린 셋 n² · 쪼개는 셋 (평균) n log n</text>
 </svg><figcaption>위 두 칸이 ‘도구’, 아래 두 칸이 그 도구를 실제 알고리즘에 쓰는 곳이에요. 섹션 순서와 같아요.</figcaption></figure>
 
 
-<h2>0. 시작 전에 — 기본 전제와 용어 사전</h2>
+
+<h2>0-1. 먼저 — ‘O(log n)’이라는 표기는 무슨 약속인가</h2>
+<div class="point"><b>핵심 한 줄</b> O(□)는 “<b>입력 n이 커질 때, 연산 횟수가 □ 식과 같은 모양으로 늘어난다</b>”는 약속이에요. O는 ‘등급’ 꼬리표, 괄호 안은 ‘늘어나는 모양’이에요.</div>
+<div class="duo"><div><p>O(log n)을 처음 보면 함수 같기도 하고 수식 같기도 해요. 그런데 이건 무언가를 계산하라는 식이 아니라 <b>알고리즘에 붙이는 등급 이름표</b>예요. “이 알고리즘은 O(log n)이다”는 “이 알고리즘은 상품이 늘어날 때 일이 log n 모양으로 늘어나는 부류다”라는 뜻이에요. 이 장에서는 그 이름표를 한 글자씩 뜯어봐요.</p></div><figure><svg viewBox="0 0 360 458" font-family="sans-serif" role="img" aria-label="O(log n)을 O, 괄호, log, n 네 조각으로 나눠 각각 등급 꼬리표, 늘어나는 모양, 반씩 접는 횟수, 입력 크기라고 설명한다">
+<rect width="360" height="458" rx="12" fill="#f7f7f4"/>
+<defs><marker id="s03n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><defs><marker id="s03o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b5730d"/></marker></defs><defs><marker id="s03g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2f7d4a"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">O(log n) 한 글자씩 뜯어보기</text><text x="70" y="96" font-size="54" font-weight="700" fill="#2a5db0" text-anchor="middle">O</text><text x="118" y="96" font-size="54" fill="#b5730d" text-anchor="middle">(</text><text x="178" y="96" font-size="40" font-weight="700" fill="#2f7d4a" text-anchor="middle">log</text><text x="248" y="96" font-size="46" font-weight="700" fill="#b03a2e" text-anchor="middle">n</text><text x="292" y="96" font-size="54" fill="#b5730d" text-anchor="middle">)</text><rect x="14" y="138" width="332" height="52" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="28" y="160" font-size="15" font-weight="700" fill="#2a5db0">① O = Order(차수·등급)</text><text x="28" y="180" font-size="14" fill="#333">“이 등급이다”라는 꼬리표</text><rect x="14" y="200" width="332" height="52" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="28" y="222" font-size="15" font-weight="700" fill="#b5730d">② ( ) = 안의 식처럼 늘어남</text><text x="28" y="242" font-size="14" fill="#333">괄호 안이 ‘늘어나는 모양’</text><rect x="14" y="262" width="332" height="52" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="28" y="284" font-size="15" font-weight="700" fill="#2f7d4a">③ log = 늘어나는 모양</text><text x="28" y="304" font-size="14" fill="#333">n을 반씩 접는 횟수만큼</text><rect x="14" y="324" width="332" height="52" rx="8" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><text x="28" y="346" font-size="15" font-weight="700" fill="#b03a2e">④ n = 입력 크기</text><text x="28" y="366" font-size="14" fill="#333">상품 개수 같은 데이터 수</text><text x="70" y="124" font-size="18" font-weight="700" fill="#2a5db0" text-anchor="middle">①</text><text x="118" y="124" font-size="18" font-weight="700" fill="#b5730d" text-anchor="middle">②</text><text x="178" y="124" font-size="18" font-weight="700" fill="#2f7d4a" text-anchor="middle">③</text><text x="248" y="124" font-size="18" font-weight="700" fill="#b03a2e" text-anchor="middle">④</text><rect x="14" y="392" width="332" height="54" rx="8" fill="#fff" stroke="#333" stroke-width="2"/><text x="180" y="414" font-size="14" font-weight="700" fill="#222" text-anchor="middle">합쳐 읽기: 연산 횟수가 log n처럼 늘어나는 등급</text><text x="180" y="435" font-size="14" fill="#333" text-anchor="middle">= n이 2배가 돼도 연산은 1번만 늘어난다</text>
+</svg><figcaption>수학 시간의 f(x)처럼 괄호 안에 무언가를 넣는 모양이지만, 여기서 괄호 안은 ‘계산할 값’이 아니라 ‘늘어나는 모양’이에요.</figcaption></figure></div>
+
+
+
+<h3>① O는 무엇인가 — ‘Order(차수)’의 머리글자</h3>
+<p><b>O</b>는 영어 Order(독일어 Ordnung)의 첫 글자예요. 수학에서 order는 ‘차수’, 그러니까 “식이 대략 어느 급인가”를 뜻해요. 그래서 O를 ‘빅오(Big-O)’라고 읽고, 뜻은 “<b>~ 급(등급)이다</b>”예요. 숫자 0이 아니라 알파벳 O라는 점부터 기억하세요.</p>
+<p>왜 굳이 ‘급’이라고 뭉뚱그려 말할까요? 정확한 연산 횟수는 코드를 어떻게 짰느냐에 따라 3n+5번일 수도, 2n+100번일 수도 있어요. 하지만 상품이 백만 개가 되면 두 코드 모두 “상품 수에 비례해서 늘어난다”는 점이 중요하고, 3이냐 2냐는 별 의미가 없어요. 그래서 자잘한 차이는 버리고 <b>급만</b> 말하자는 약속이 O예요.</p>
+
+<h3>② 괄호와 그 안의 식 — “이 모양으로 늘어난다”</h3>
+<p>괄호 안에는 <b>입력 n에 대한 식</b>이 들어가요. 그 식은 연산 횟수가 n에 따라 <b>어떤 모양으로 늘어나는지</b>를 나타내요. 자리를 정해 두고 그 자리에 모양을 끼워 넣는 거예요. 괄호 안이 n이면 “n에 비례”, n²이면 “n의 제곱에 비례”, log n이면 “log n에 비례”예요.</p>
+<p>그러니 O(log n)을 소리 내어 읽으면 “빅오 로그 엔”이고, 뜻으로 풀면 “<b>연산 횟수가 log n급이다</b>”예요. log₂n은 “n을 반으로 몇 번 접어야 1이 되나”(2-3의 그림)라서, 결국 “데이터를 반씩 버려 가며 일한다”는 말이 돼요.</p>
+
+<h3>③ n은 무엇인가 — 입력의 크기</h3>
+<p><b>n</b>은 알고리즘에 들어오는 데이터의 개수예요. 상품 목록을 정렬하면 상품 수, 문자열을 검사하면 글자 수가 n이에요. 괄호 안 식은 언제나 이 n을 변수로 써요. 그래서 O(1)처럼 괄호 안에 n이 아예 없으면 “n이 아무리 커져도 그대로”라는 뜻이 돼요.</p>
+
+<h3>④ 실제 횟수 T(n)에서 O(□)로 가는 길</h3>
+<p>먼저 코드를 보고 실제 연산 횟수를 n의 식으로 세요. 이 식을 보통 <b>T(n)</b>(Time의 T)이라고 써요. 예를 들어 상품마다 3번씩 계산하고 마지막에 5번 더 하면 T(n) = 3n + 5예요. 이 T(n)이 정확한 횟수고, O(□)는 거기서 등급만 뽑아낸 이름표예요.</p>
+<p>정식 약속은 이래요. “<b>n이 어느 정도 커진 뒤부터는 T(n)이 언제나 c × □ 이하가 되는 상수 c가 있으면, T(n)은 O(□)다.</b>” 말이 어렵지만 표로 보면 간단해요. T(n) = 3n + 5는 n이 5 이상이면 항상 4n 이하예요. 그러니 c = 4로 잡으면 “n급 이하”가 성립해서 O(n)이에요.</p>
+<p class="hint">↔ 표가 넓어요. 옆으로 밀어서 보세요</p><table>
+<tr><th>n</th><th>실제 T(n) = 3n+5</th><th>c×n = 4n</th><th>T(n) ≤ 4n?</th></tr>
+<tr><td>1</td><td>8</td><td>4</td><td>✘</td></tr><tr><td>3</td><td>14</td><td>12</td><td>✘</td></tr><tr><td>5</td><td>20</td><td>20</td><td>✔</td></tr><tr><td>10</td><td>35</td><td>40</td><td>✔</td></tr><tr><td>100</td><td>305</td><td>400</td><td>✔</td></tr><tr><td>1000</td><td>3005</td><td>4000</td><td>✔</td></tr>
+</table>
+<p>n이 작을 땐(1, 3) 넘기도 하지만, 우리는 n이 아주 클 때만 관심이 있으니 괜찮아요. 이 약속 때문에 앞의 숫자 3(계수)과 뒤의 +5(작은 항)를 버려도 등급은 같아요. 그래서 3n²+5n+2 = O(n²), n(n−1)/2 = O(n²)이 되는 거예요. 같은 이유로 log의 밑(2, 10 …)도 상수배 차이일 뿐이라 생략하고 그냥 log n이라고 써요.</p>
+<div class="box"><b>O(□)를 얻는 순서</b>① 코드에서 연산 횟수를 n의 식 T(n)으로 센다<br>② 가장 빨리 커지는 항 하나만 남긴다 (3n²+5n+2 → 3n²)<br>③ 앞의 숫자(계수)를 버린다 (3n² → n²)<br>④ 남은 모양을 괄호에 넣는다 → O(n²)</div>
+
+<h3>⑤ 괄호 안 모양별 번역표 — “n이 2배가 되면?”</h3>
+<p>괄호 안 식을 볼 때마다 이 질문 하나로 번역하면 돼요. “<b>상품이 2배가 되면 일은 어떻게 되나?</b>”</p>
+<table class="tight">
+<tr><th>표기</th><th>읽기</th><th>뜻</th><th>n이 2배가 되면</th></tr>
+<tr><td>O(1)</td><td>빅오 원</td><td>n과 상관없음</td><td>그대로</td></tr>
+<tr><td>O(log n)</td><td>빅오 로그 엔</td><td>반씩 접는 횟수만큼</td><td><b>1번만 늘어남</b></td></tr>
+<tr><td>O(n)</td><td>빅오 엔</td><td>n에 비례</td><td>2배</td></tr>
+<tr><td>O(n log n)</td><td>빅오 엔 로그 엔</td><td>n × 접는 횟수</td><td>2배보다 조금 더</td></tr>
+<tr><td>O(n²)</td><td>빅오 엔 제곱</td><td>n × n에 비례</td><td>4배</td></tr>
+<tr><td>O(2ⁿ)</td><td>빅오 2의 n제곱</td><td>n이 1 늘 때마다 2배</td><td>(n이 1만 늘어도 2배)</td></tr>
+</table>
+<h3>⑥ 같은 틀의 사촌 — Ω(□)와 Θ(□)</h3>
+<p>O 자리에 다른 글자를 넣으면 뜻이 바뀌어요. 괄호 안은 똑같이 ‘늘어나는 모양’이에요. <b>O(□)</b>는 “아무리 커도 □급 <b>이하</b>”(상한, 최악), <b>Ω(□)</b>(빅오메가)는 “아무리 작아도 □급 <b>이상</b>”(하한, 최선), <b>Θ(□)</b>(빅세타)는 “위아래 모두 □급, <b>딱</b> 그 급”이에요. 2-8에서 순차 탐색 예로 다시 봐요.</p>
+<p><b>→ 이 장면의 결과물:</b> O(log n)을 보면 “연산 횟수가 log n급, 즉 n이 2배가 돼도 1번만 느는 등급”이라고 번역할 수 있어요. 이제 이 번역에 필요한 기본 전제와 용어를 정리하고, 2장에서 등급마다 실제 알고리즘을 돌려 봐요.</p>
+
+<h2>0-2. 기본 전제와 용어 사전</h2>
 <div class="point"><b>핵심 한 줄</b> 복잡도는 “<b>입력이 아주 많을 때</b>, <b>기본 연산</b>을 <b>몇 번</b> 하나”를 재는 말이에요. 이 세 단어의 뜻부터 맞춰요.</div>
 <p>복잡도 설명이 어렵게 느껴지는 건 대개 계산이 아니라 <b>약속</b>을 모르고 시작해서예요. 교재는 아래 전제를 당연하게 깔고 설명해요. 먼저 그 약속을 꺼내 놓을게요.</p>
 <h3>기본 전제 다섯 가지</h3>
@@ -95,6 +141,7 @@
 <p>여기서부터는 외우는 게 아니라 손으로 따라가는 장이에요. 각 등급을 같은 순서로 봐요. 먼저 <b>어떤 상황</b>에서 생기는 일인지, 그 상황을 푸는 <b>알고리즘이 무엇</b>인지 보고, 작은 데이터로 <b>실제로 돌려 본</b> 다음, 마지막에 <b>몇 번 했는지 세서</b> 등급을 붙여요.</p>
 
 <h3>2-1. O(1) — 장바구니의 3번째 상품 열기</h3>
+<p><b>표기 읽기:</b> O(1) = “연산 횟수가 1급” — 괄호 안에 n이 없으니 n이 커져도 횟수가 그대로예요.</p>
 <div class="vs"><div><b>어떤 상황?</b>고객이 장바구니에서 <b>3번째 상품</b>을 눌렀어요. 장바구니에 3개가 있든 3만 개가 있든, 화면은 바로 떠야 해요.</div><div><b>무슨 알고리즘?</b><b>배열 인덱스 접근</b>. 칸 번호로 그 칸을 바로 읽는 것. 탐색이 아니라 ‘주소 계산’이에요.</div></div>
 
 <p>배열은 메모리에 같은 크기의 칸을 <b>빈틈없이 한 줄로</b> 붙여 둔 거예요. 칸 크기가 모두 같으니, 몇 번째 칸이 메모리 어디에 있는지는 앞 칸을 하나도 안 보고 곱셈 한 번으로 나와요. 아파트 동·호수를 알면 1층부터 문을 두드리지 않고 바로 찾아가는 것과 같아요.</p>
@@ -114,6 +161,7 @@
 <div class="trap">“i번째 상품 읽기”라도 <b>연결 리스트</b>(각 칸이 다음 칸 위치만 아는 구조)면 앞에서부터 i칸을 따라가야 해서 O(n)이에요. O(1)은 ‘배열이라 주소 계산이 된다’는 전제가 있어야 해요.</div>
 
 <h3>2-2. O(n) — 정렬 안 된 상품 중 최저가 찾기</h3>
+<p><b>표기 읽기:</b> O(n) = “연산 횟수가 n급” — 상품이 2배면 일도 2배예요.</p>
 <div class="vs"><div><b>어떤 상황?</b>‘오늘의 특가’ 배너에 상품 6개 중 <b>가장 싼 것</b>을 띄워야 해요. 가격 목록은 등록 순서대로 섞여 있어요.</div><div><b>무슨 알고리즘?</b><b>최솟값 찾기(순차 탐색)</b>. 처음부터 끝까지 하나씩 보면서 지금까지 가장 싼 값을 들고 다니는 방법.</div></div>
 
 <div class="box"><b>동작 순서</b>① 첫 상품 가격을 ‘지금까지 최저가’로 든다<br>② 다음 상품과 비교해서 더 싸면 바꿔 든다<br>③ 마지막 상품까지 반복<br>④ 손에 든 값이 답</div>
@@ -137,6 +185,7 @@ for (int i = 1; i &lt; n; i++)      // 1번 칸부터 끝까지 한 번
 <p>왜 중간에 멈출 수 없을까요? 3번 칸에서 1을 찾았지만, 정렬이 안 돼 있으니 <b>안 본 칸에 0이 있을지도</b> 몰라요. 그래서 끝까지 다 봐야 해요. 상품번호로 상품 하나를 찾는 <b>순차 탐색</b>도 같은 모양이에요. 운이 좋으면 첫 칸에서 찾고(최선 1번), 운이 나쁘면 끝까지 가요(최악 n번).</p>
 
 <h3>2-3. O(log n) — 정렬된 상품번호에서 987번 찾기</h3>
+<p><b>표기 읽기:</b> O(log n) = “연산 횟수가 log n급” — 상품이 2배가 돼도 1번만 더 하면 돼요.</p>
 <div class="vs"><div><b>어떤 상황?</b>상품이 <b>번호순으로 정렬</b>된 상태로 저장돼 있어요. 고객이 상품번호 987을 검색했어요.</div><div><b>무슨 알고리즘?</b><b>이진 탐색</b>. 가운데와 비교해서 절반을 통째로 버리는 걸 반복하는 방법. ‘업다운 숫자 맞히기’ 게임 그대로예요.</div></div>
 
 <p>업다운 게임에서 1~100 사이 숫자를 맞힐 때 1, 2, 3… 부르는 사람은 없죠. 50을 부르고 “다운”이면 1~49만 남기고, 25를 불러요. 매번 남은 범위의 <b>가운데</b>를 부르면 범위가 절반씩 줄어요. 이게 이진 탐색이에요.</p>
@@ -169,6 +218,7 @@ return -1;                             // 없음</code></pre>
 <div class="trap">이진 탐색은 <b>정렬된 자료</b>에서만 돼요. 정렬이 안 돼 있으면 “987이 가운데 523보다 크니까 왼쪽 절반엔 없다”는 판단 자체가 성립하지 않아요.</div>
 
 <h3>2-4. O(n²) — 상품명이 중복된 게 있는지 확인하기</h3>
+<p><b>표기 읽기:</b> O(n²) = “연산 횟수가 n제곱급” — 상품이 2배면 일은 4배예요.</p>
 <div class="vs"><div><b>어떤 상황?</b>판매자가 상품 4개를 한꺼번에 올렸어요. 그중 <b>이름이 같은 상품</b>이 있으면 경고를 띄워야 해요.</div><div><b>무슨 알고리즘?</b><b>모든 쌍 비교</b>. 상품 하나하나를 그 뒤의 모든 상품과 한 번씩 비교하는 방법. 반 친구 모두와 한 번씩 악수하는 것과 같아요.</div></div>
 
 <div class="box"><b>동작 순서</b>① 0번 상품을 1·2·3번과 비교<br>② 1번 상품을 2·3번과 비교(0번과는 이미 했으니 생략)<br>③ 2번 상품을 3번과 비교<br>④ 같은 이름이 나오면 중복</div>
@@ -199,11 +249,13 @@ return -1;                             // 없음</code></pre>
 <p>n이 10배가 될 때 일은 100배가 돼요. <b>for 안에 for</b>, 그러니까 “각각을 나머지 전부와”가 보이면 n²을 떠올리면 돼요. 4장의 버블·선택·삽입 정렬도 이 모양이에요.</p>
 
 <h3>2-5. O(n log n) — 상품 전체를 가격순으로 정렬</h3>
+<p><b>표기 읽기:</b> O(n log n) = “연산 횟수가 n × log n급” — 상품이 2배면 일은 2배보다 조금 더 늘어요.</p>
 <div class="vs"><div><b>어떤 상황?</b>상품 목록을 <b>가격 낮은 순</b>으로 보여 줘야 해요. 상품이 많아도 빨라야 해요.</div><div><b>무슨 알고리즘?</b><b>병합 정렬</b>(5장에서 직접 돌려 봐요). 반씩 쪼갠 다음, 정렬된 조각끼리 합치는 방법.</div></div>
 
 <p>2-3의 ‘반씩’과 2-2의 ‘한 번씩 훑기’를 합친 모양이에요. 상품을 반, 또 반으로 쪼개면 층이 log n개 생기고, 각 층에서 조각들을 합칠 때 상품 n개를 한 번씩 만져요. 그래서 층 수 × 층마다 일 = log n × n = <b>O(n log n)</b>이에요. 상품 100만 개면 약 2,000만 번으로, n²의 1조 번과 비교도 안 되게 적어요.</p>
 
 <h3>2-6. O(2ⁿ) — 쿠폰 조합을 전부 따져 보기</h3>
+<p><b>표기 읽기:</b> O(2ⁿ) = “연산 횟수가 2의 n제곱급” — n이 1만 늘어도 일이 2배예요.</p>
 <div class="vs"><div><b>어떤 상황?</b>고객이 쿠폰 3장(A, B, C)을 갖고 있어요. 어떤 조합으로 쓰면 가장 싼지 <b>모든 조합</b>을 계산해 보려고 해요.</div><div><b>무슨 알고리즘?</b><b>완전 탐색(모든 부분집합)</b>. 쿠폰마다 ‘쓴다 / 안 쓴다’ 두 갈래를 전부 시도하는 방법.</div></div>
 
 <table>
