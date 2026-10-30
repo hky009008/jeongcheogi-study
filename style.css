@@ -15,6 +15,7 @@ h3{font-size:1.05em;margin:1.4em 0 .4em}
 table{border-collapse:collapse;width:100%;margin:1em 0;font-size:15px;display:block;overflow-x:auto}
 th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top;min-width:7.5em}
 th:first-child,td:first-child{min-width:5.5em}
+table.tight th,table.tight td{min-width:0;padding:6px 7px}
 .box b:first-child{display:block;margin-bottom:4px}
 th{background:var(--code)}
 code{background:var(--code);padding:1px 5px;border-radius:5px;font-size:.92em}
