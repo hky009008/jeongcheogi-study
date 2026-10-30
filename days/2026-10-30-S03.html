@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>S03 알고리즘 복잡도 천천히 — 세고, 줄이고, 가르기</title>
+<link rel="icon" href="../assets/favicon/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../assets/favicon/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="apple-touch-icon" href="../assets/favicon/apple-touch-icon.png">
+<link rel="stylesheet" href="../style.css"></head>
+<body><main>
+<nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a></nav>
+<h1>S03 · 알고리즘 복잡도 천천히 — 세고, 줄이고, 가르기</h1><div class="meta">2026-10-30 · A8 보충 자료 · 알고리즘 복잡도</div><p><span class="tag">보충</span><span class="tag">A8</span> D027 1번에서 ‘평균·최악 모두 O(n²)’를 묻는 문제에 퀵 정렬을 골랐어요. 알고리즘 복잡도가 너무 어렵다고 해서, D027에서 한 문단에 몰아 넣었던 내용을 처음부터 천천히 다시 풀어요. 예시는 끝까지 <b>쇼핑몰 상품 목록</b> 하나로 가요.</p>
+<ul>
+<li>코드를 보고 연산 횟수를 세서 O(1)·O(log n)·O(n)·O(n log n)·O(n²)를 고를 수 있다</li>
+<li>정렬마다 평균·최악이 <b>왜</b> 그렇게 나오는지 한 문장으로 말할 수 있다</li>
+<li>“모두 O(n²)”, “최악만 O(n²)”, “최선 O(n)” 같은 문제 단서로 답을 가를 수 있다</li>
+</ul>
+<div class="box"><b>이 페이지의 흐름</b>① 왜 초가 아니라 횟수인가 → ② 횟수를 세고 빅오로 줄이기 → ③ 상품 찾기(탐색) → ④ 느린 정렬 셋 → ⑤ 쪼개는 정렬 셋과 퀵의 함정 → ⑥ 문제 가르는 질문 → 연습 문제</div>
+<figure><svg viewBox="0 0 360 352" font-family="sans-serif" role="img" aria-label="시간 복잡도 아래에 세는 법, 줄이는 법, 탐색, 정렬 네 칸이 매달린 지도">
+<rect width="360" height="352" rx="12" fill="#f7f7f4"/>
+<defs><marker id="s03a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">오늘 지도 — 복잡도는 네 칸</text><rect x="110" y="40" width="140" height="40" rx="8" fill="#fff" stroke="#333" stroke-width="2"/><text x="180" y="66" font-size="15" font-weight="700" fill="#222" text-anchor="middle">시간 복잡도</text><path d="M180 80 L180 96 M24 96 L180 96 M24 96 L24 310" stroke="#555" stroke-width="2" fill="none"/><path d="M24 130 L42 130" stroke="#555" stroke-width="2" fill="none" marker-end="url(#s03a)"/><rect x="44" y="106" width="304" height="48" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="58" y="127" font-size="15" font-weight="700" fill="#2a5db0">① 세는 법</text><text x="58" y="146" font-size="14" fill="#333">초가 아니라 연산 횟수를 n으로</text><path d="M24 190 L42 190" stroke="#555" stroke-width="2" fill="none" marker-end="url(#s03a)"/><rect x="44" y="166" width="304" height="48" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="58" y="187" font-size="15" font-weight="700" fill="#b5730d">② 줄이는 법</text><text x="58" y="206" font-size="14" fill="#333">최고차항만 · O 최악 Ω 최선 Θ 평균</text><path d="M24 250 L42 250" stroke="#555" stroke-width="2" fill="none" marker-end="url(#s03a)"/><rect x="44" y="226" width="304" height="48" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="58" y="247" font-size="15" font-weight="700" fill="#2f7d4a">③ 탐색</text><text x="58" y="266" font-size="14" fill="#333">순차 n · 이진 log n · 해시 1</text><path d="M24 310 L42 310" stroke="#555" stroke-width="2" fill="none" marker-end="url(#s03a)"/><rect x="44" y="286" width="304" height="48" rx="8" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><text x="58" y="307" font-size="15" font-weight="700" fill="#b03a2e">④ 정렬</text><text x="58" y="326" font-size="14" fill="#333">느린 셋 n² · 쪼개는 셋 (평균) n log n</text>
+</svg><figcaption>위 두 칸이 ‘도구’, 아래 두 칸이 그 도구를 실제 알고리즘에 쓰는 곳이에요. 섹션 순서와 같아요.</figcaption></figure>
+
+
+<h2>1. 왜 ‘몇 초’가 아니라 ‘몇 번’인가</h2>
+<div class="point"><b>핵심 한 줄</b> 시간 복잡도는 <b>상품 수 n이 늘 때 연산 횟수가 얼마나 빨리 늘어나는지</b>를 재는 자예요.</div>
+<p>쇼핑몰 상품을 정렬하는 코드가 내 노트북에서 1초 걸렸다고 해 볼게요. 서버에서 돌리면 0.1초일 수도 있고, 다른 프로그램이 같이 돌면 3초일 수도 있어요. 초는 기계와 상황에 따라 바뀌니까 알고리즘끼리 비교하는 자로는 못 써요.</p>
+<p>그래서 대신 <b>연산을 몇 번 하는지</b>를 세요. 비교 한 번, 값 교환 한 번을 1로 치고, 그 횟수를 상품 수 n의 식으로 써요. 이 식은 어느 컴퓨터에서 돌려도 똑같아요.</p>
+<p>그리고 진짜 궁금한 건 지금 몇 번이냐보다 <b>상품이 늘면 어떻게 되느냐</b>예요. 오픈 첫날 상품 100개일 땐 아무 방법이나 빨라요. 상품이 백만 개가 됐을 때 버티느냐가 문제예요. 아래 표가 그 차이예요. 컴퓨터가 1초에 10억 번 계산한다고 쳤어요.</p>
+<p class="hint">↔ 표가 넓어요. 옆으로 밀어서 보세요</p><table>
+<tr><th>등급</th><th>상품 1,000개</th><th>상품 1,000,000개</th><th>백만 개일 때 걸리는 시간</th></tr>
+<tr><td>O(log n)</td><td>약 10번</td><td>약 20번</td><td>눈 깜짝할 새</td></tr>
+<tr><td>O(n)</td><td>1,000번</td><td>100만 번</td><td>0.001초</td></tr>
+<tr><td>O(n log n)</td><td>약 1만 번</td><td>약 2,000만 번</td><td>0.02초</td></tr>
+<tr><td>O(n²)</td><td>100만 번</td><td>1조 번</td><td><b>약 17분</b></td></tr>
+</table>
+<p>상품 천 개일 땐 O(n²)도 0.001초라 아무도 몰라요. 백만 개가 되는 순간 정렬 버튼 하나에 17분이 걸려요. 같은 기능인데 n log n이면 0.02초예요. 시간 복잡도는 이렇게 <b>규모가 커질 때 터지는 코드</b>를 미리 알아보려고 쓰는 거예요.</p>
+<p><b>→ 이 장면의 결과물:</b> “초 대신 n에 대한 횟수”라는 자. 그럼 이제 코드를 보고 그 횟수를 직접 세 봐요.</p>
+
+<h2>2. 횟수를 세고, 빅오로 줄이기</h2>
+<div class="point"><b>핵심 한 줄</b> 반복문 모양을 보면 횟수가 나오고, 그 식에서 <b>가장 빨리 커지는 항 하나만</b> 남기면 빅오예요.</div>
+<h3>코드 모양 네 가지만 알면 돼요</h3>
+<p>상품 배열 <code>items</code>로 네 가지 코드를 써 봤어요. 주석의 횟수를 따라가 보세요.</p>
+<pre><code>// 상품 n개가 든 배열 items
+Item first = items[0];                 // ① 1번       → O(1)
+
+for (int i = 0; i &lt; n; i++)            // ② n번       → O(n)
+    total += items[i].price;
+
+for (int i = 0; i &lt; n; i++)            // ③ n × n번   → O(n²)
+    for (int j = 0; j &lt; n; j++)
+        if (items[i].name.equals(items[j].name)) dup++;
+
+int k = n;                             // ④ n이 반씩: 8 → 4 → 2 → 1
+while (k &gt; 1) k = k / 2;               //    3번 = log₂8 → O(log n)</code></pre>
+<div class="duo"><div><p>①은 첫 상품을 꺼내는 일이라 상품이 열 개든 백만 개든 1번이에요. 이게 <b>O(1) 상수</b>예요. ②는 상품을 처음부터 끝까지 한 번 훑으니 n번이에요. <b>O(n) 선형</b>이에요.</p>
+<p>③은 상품마다 다른 모든 상품과 이름을 비교해요. 바깥 반복이 n번 돌고, 한 번 돌 때마다 안쪽이 또 n번 돌아요. 그래서 n × n = n²번이에요. <b>for 안에 for가 보이면 O(n²)</b>이라고 외워도 거의 맞아요.</p>
+<p>④는 조금 다르게 생겼어요. k를 매번 반으로 줄여서 8 → 4 → 2 → 1, 세 번 만에 끝나요. “2를 몇 번 곱하면 8인가”가 log₂8 = 3이에요. 그래서 <b>반씩 줄이는 반복은 O(log n)</b>이에요. n이 백만이어도 스무 번이면 끝나요.</p>
+<p>마지막 <b>O(n log n)</b>은 ②와 ④를 합친 모양이에요. 데이터를 반씩 쪼개는 층이 log n개 있고, 층마다 n개를 한 번씩 훑어요. 층 수 × 층마다 일 = log n × n이에요. 4장에서 병합 정렬로 직접 봐요.</p></div><figure><svg viewBox="0 0 360 345" font-family="sans-serif" role="img" aria-label="n이 8일 때 상수 1번, 로그 3번, 선형 8번, 선형로그 24번, 제곱 64번 연산을 점 개수로 보여 준다">
+<rect width="360" height="345" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">코드 모양이 등급을 정한다 (n = 8)</text><text x="14" y="56" font-size="14" font-weight="700" fill="#888">O(1)</text><text x="14" y="74" font-size="12" fill="#555">배열[i] 한 번</text><circle cx="168" cy="48" r="4" fill="#888"/><text x="348" y="56" font-size="14" font-weight="700" fill="#888" text-anchor="end">1번</text><text x="14" y="96" font-size="14" font-weight="700" fill="#2f7d4a">O(log n)</text><text x="14" y="114" font-size="12" fill="#555">반씩 버리기</text><circle cx="168" cy="88" r="4" fill="#2f7d4a"/><circle cx="184" cy="88" r="4" fill="#2f7d4a"/><circle cx="200" cy="88" r="4" fill="#2f7d4a"/><text x="348" y="96" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="end">3번</text><text x="14" y="136" font-size="14" font-weight="700" fill="#2a5db0">O(n)</text><text x="14" y="154" font-size="12" fill="#555">for 한 번 훑기</text><circle cx="168" cy="128" r="4" fill="#2a5db0"/><circle cx="184" cy="128" r="4" fill="#2a5db0"/><circle cx="200" cy="128" r="4" fill="#2a5db0"/><circle cx="216" cy="128" r="4" fill="#2a5db0"/><circle cx="232" cy="128" r="4" fill="#2a5db0"/><circle cx="248" cy="128" r="4" fill="#2a5db0"/><circle cx="264" cy="128" r="4" fill="#2a5db0"/><circle cx="280" cy="128" r="4" fill="#2a5db0"/><text x="348" y="136" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="end">8번</text><text x="14" y="176" font-size="14" font-weight="700" fill="#b5730d">O(n log n)</text><text x="14" y="194" font-size="12" fill="#555">쪼갠 층(3) × 층마다 8</text><circle cx="168" cy="168" r="4" fill="#b5730d"/><circle cx="184" cy="168" r="4" fill="#b5730d"/><circle cx="200" cy="168" r="4" fill="#b5730d"/><circle cx="216" cy="168" r="4" fill="#b5730d"/><circle cx="232" cy="168" r="4" fill="#b5730d"/><circle cx="248" cy="168" r="4" fill="#b5730d"/><circle cx="264" cy="168" r="4" fill="#b5730d"/><circle cx="280" cy="168" r="4" fill="#b5730d"/><circle cx="168" cy="179" r="4" fill="#b5730d"/><circle cx="184" cy="179" r="4" fill="#b5730d"/><circle cx="200" cy="179" r="4" fill="#b5730d"/><circle cx="216" cy="179" r="4" fill="#b5730d"/><circle cx="232" cy="179" r="4" fill="#b5730d"/><circle cx="248" cy="179" r="4" fill="#b5730d"/><circle cx="264" cy="179" r="4" fill="#b5730d"/><circle cx="280" cy="179" r="4" fill="#b5730d"/><circle cx="168" cy="190" r="4" fill="#b5730d"/><circle cx="184" cy="190" r="4" fill="#b5730d"/><circle cx="200" cy="190" r="4" fill="#b5730d"/><circle cx="216" cy="190" r="4" fill="#b5730d"/><circle cx="232" cy="190" r="4" fill="#b5730d"/><circle cx="248" cy="190" r="4" fill="#b5730d"/><circle cx="264" cy="190" r="4" fill="#b5730d"/><circle cx="280" cy="190" r="4" fill="#b5730d"/><text x="348" y="176" font-size="14" font-weight="700" fill="#b5730d" text-anchor="end">24번</text><text x="14" y="231" font-size="14" font-weight="700" fill="#b03a2e">O(n²)</text><text x="14" y="249" font-size="12" fill="#555">for 안에 for</text><circle cx="168" cy="223" r="4" fill="#b03a2e"/><circle cx="184" cy="223" r="4" fill="#b03a2e"/><circle cx="200" cy="223" r="4" fill="#b03a2e"/><circle cx="216" cy="223" r="4" fill="#b03a2e"/><circle cx="232" cy="223" r="4" fill="#b03a2e"/><circle cx="248" cy="223" r="4" fill="#b03a2e"/><circle cx="264" cy="223" r="4" fill="#b03a2e"/><circle cx="280" cy="223" r="4" fill="#b03a2e"/><circle cx="168" cy="234" r="4" fill="#b03a2e"/><circle cx="184" cy="234" r="4" fill="#b03a2e"/><circle cx="200" cy="234" r="4" fill="#b03a2e"/><circle cx="216" cy="234" r="4" fill="#b03a2e"/><circle cx="232" cy="234" r="4" fill="#b03a2e"/><circle cx="248" cy="234" r="4" fill="#b03a2e"/><circle cx="264" cy="234" r="4" fill="#b03a2e"/><circle cx="280" cy="234" r="4" fill="#b03a2e"/><circle cx="168" cy="245" r="4" fill="#b03a2e"/><circle cx="184" cy="245" r="4" fill="#b03a2e"/><circle cx="200" cy="245" r="4" fill="#b03a2e"/><circle cx="216" cy="245" r="4" fill="#b03a2e"/><circle cx="232" cy="245" r="4" fill="#b03a2e"/><circle cx="248" cy="245" r="4" fill="#b03a2e"/><circle cx="264" cy="245" r="4" fill="#b03a2e"/><circle cx="280" cy="245" r="4" fill="#b03a2e"/><circle cx="168" cy="256" r="4" fill="#b03a2e"/><circle cx="184" cy="256" r="4" fill="#b03a2e"/><circle cx="200" cy="256" r="4" fill="#b03a2e"/><circle cx="216" cy="256" r="4" fill="#b03a2e"/><circle cx="232" cy="256" r="4" fill="#b03a2e"/><circle cx="248" cy="256" r="4" fill="#b03a2e"/><circle cx="264" cy="256" r="4" fill="#b03a2e"/><circle cx="280" cy="256" r="4" fill="#b03a2e"/><circle cx="168" cy="267" r="4" fill="#b03a2e"/><circle cx="184" cy="267" r="4" fill="#b03a2e"/><circle cx="200" cy="267" r="4" fill="#b03a2e"/><circle cx="216" cy="267" r="4" fill="#b03a2e"/><circle cx="232" cy="267" r="4" fill="#b03a2e"/><circle cx="248" cy="267" r="4" fill="#b03a2e"/><circle cx="264" cy="267" r="4" fill="#b03a2e"/><circle cx="280" cy="267" r="4" fill="#b03a2e"/><circle cx="168" cy="278" r="4" fill="#b03a2e"/><circle cx="184" cy="278" r="4" fill="#b03a2e"/><circle cx="200" cy="278" r="4" fill="#b03a2e"/><circle cx="216" cy="278" r="4" fill="#b03a2e"/><circle cx="232" cy="278" r="4" fill="#b03a2e"/><circle cx="248" cy="278" r="4" fill="#b03a2e"/><circle cx="264" cy="278" r="4" fill="#b03a2e"/><circle cx="280" cy="278" r="4" fill="#b03a2e"/><circle cx="168" cy="289" r="4" fill="#b03a2e"/><circle cx="184" cy="289" r="4" fill="#b03a2e"/><circle cx="200" cy="289" r="4" fill="#b03a2e"/><circle cx="216" cy="289" r="4" fill="#b03a2e"/><circle cx="232" cy="289" r="4" fill="#b03a2e"/><circle cx="248" cy="289" r="4" fill="#b03a2e"/><circle cx="264" cy="289" r="4" fill="#b03a2e"/><circle cx="280" cy="289" r="4" fill="#b03a2e"/><circle cx="168" cy="300" r="4" fill="#b03a2e"/><circle cx="184" cy="300" r="4" fill="#b03a2e"/><circle cx="200" cy="300" r="4" fill="#b03a2e"/><circle cx="216" cy="300" r="4" fill="#b03a2e"/><circle cx="232" cy="300" r="4" fill="#b03a2e"/><circle cx="248" cy="300" r="4" fill="#b03a2e"/><circle cx="264" cy="300" r="4" fill="#b03a2e"/><circle cx="280" cy="300" r="4" fill="#b03a2e"/><text x="348" y="231" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="end">64번</text>
+</svg><figcaption>점 하나가 연산 한 번이에요. n이 8밖에 안 되는데 이중 반복은 벌써 64번이에요. n이 커질수록 이 격차는 더 벌어져요.</figcaption></figure></div>
+
+
+<h3>빅오로 줄이는 법</h3>
+<p>실제 코드는 여러 모양이 섞여요. 예를 들어 ③을 하고 ②를 하고 ①을 하면 n² + n + 1번이에요. 상품이 백만 개면 n²은 1조, n은 100만, 1은 1이에요. 1조 앞에서 100만은 티도 안 나요. 그래서 <b>가장 빨리 커지는 항만 남기고</b> 앞에 붙은 숫자(상수)도 버려요. 3n² + 5n + 2도, n²/2도 전부 O(n²)이에요.</p>
+<div class="memo"><b>등급 순서</b> 1 &lt; log n &lt; n &lt; n log n &lt; n² &lt; n³ &lt; 2ⁿ &lt; n! — “한 번, 반씩, 한 줄, 쪼개서 한 줄씩, 겹쳐서, 세 겹, 모든 조합, 모든 순서”.</div>
+<h3>최선·평균·최악과 O·Ω·Θ</h3>
+<p>같은 알고리즘이라도 <b>입력이 어떻게 생겼느냐</b>에 따라 횟수가 달라요. 찾는 상품이 맨 앞에 있으면 1번 만에, 맨 끝에 있으면 n번 만에 찾아요. 그래서 운 좋은 경우(최선), 보통(평균), 운 나쁜 경우(최악)를 따로 말해요.</p>
+<p>시험에서는 이 셋을 기호와 짝지어 물어요. 셋 중 빅오가 가장 많이 나와요. “아무리 나빠도 이 이상은 안 걸린다”는 보증서라서, 시간 복잡도라고 하면 보통 빅오(최악)를 말해요.</p>
+<table>
+<tr><th>기호</th><th>뜻</th><th>쉽게</th></tr>
+<tr><td><b>O</b> 빅오</td><td>상한 · 최악의 경우</td><td>“아무리 늦어도 이 정도”</td></tr>
+<tr><td><b>Ω</b> 빅오메가</td><td>하한 · 최선의 경우</td><td>“아무리 빨라도 이 정도”</td></tr>
+<tr><td><b>Θ</b> 빅세타</td><td>상한과 하한이 같음 · 평균</td><td>“딱 이 정도”</td></tr>
+</table>
+<div class="trap">“빅오 표기법은 알고리즘의 최선의 경우를 나타낸다”(✗). 빅오는 <b>최악(상한)</b>, 최선은 빅오메가예요. 오메가(Ω)는 바닥에 붙은 말굽 모양이라 ‘바닥 = 하한’으로 기억해요.</div>
+<p><b>→ 이 장면의 결과물:</b> 반복문 모양 → 횟수 → 최고차항이라는 세는 순서. 이 순서로 먼저 ‘상품 찾기’를 세 봐요.</p>
+
+<h2>3. 상품 하나 찾기 — 탐색 세 가지</h2>
+<div class="point"><b>핵심 한 줄</b> 하나씩 보면 n, 정렬해 두고 반씩 버리면 log n, 주소를 바로 계산하면 1.</div>
+<p>고객이 상품번호 4721을 검색했어요. 가장 단순한 방법은 <b>순차 탐색</b>이에요. 첫 상품부터 하나씩 번호를 비교해요. 운 나쁘면 끝까지 가야 해서 n번, O(n)이에요. 대신 상품이 아무렇게나 섞여 있어도 쓸 수 있어요.</p>
+<p>상품을 번호순으로 <b>정렬해 두면</b> <b>이진 탐색</b>을 쓸 수 있어요. 가운데 상품 번호가 5000이면 4721은 앞쪽에 있을 테니 뒤쪽 절반을 통째로 버려요. 남은 절반의 가운데와 또 비교해요. 2장의 ④처럼 반씩 줄어드니 O(log n)이에요. 백만 개 중에서도 스무 번이면 찾아요. 단, <b>정렬돼 있지 않으면 쓸 수 없어요</b>. 이 조건이 선지에 자주 숨어요.</p>
+<p><b>해시 탐색</b>은 상품번호를 해시 함수에 넣어 저장 칸 번호를 바로 계산해요. 사물함 번호를 알고 바로 가서 여는 것과 같아서 평균 O(1)이에요. 서로 다른 번호가 같은 칸으로 몰리는 <b>충돌</b>이 심하면 그 칸 안에서 다시 하나씩 찾아야 해서 최악 O(n)까지 느려져요.</p>
+<p class="hint">↔ 표가 넓어요. 옆으로 밀어서 보세요</p><table>
+<tr><th>탐색</th><th>평균</th><th>최악</th><th>조건·특징</th></tr>
+<tr><td>순차</td><td>O(n)</td><td>O(n)</td><td>정렬 필요 없음</td></tr>
+<tr><td>이진</td><td>O(log n)</td><td>O(log n)</td><td><b>정렬된 자료만</b></td></tr>
+<tr><td>해시</td><td>O(1)</td><td>O(n)</td><td>충돌이 몰리면 느려짐</td></tr>
+</table>
+<p><b>→ 이 장면의 결과물:</b> 이진 탐색이 빠르려면 상품이 <b>정렬돼 있어야</b> 해요. 그럼 정렬은 얼마나 걸릴까요? 다음 장면이 이 페이지의 본론이에요.</p>
+
+<h2>4. 느린 정렬 셋 — 버블·선택·삽입</h2>
+<div class="point"><b>핵심 한 줄</b> 셋 다 <b>바깥 반복 안에 안쪽 반복</b>이라 평균·최악 O(n²)예요. 삽입만 이미 정렬된 입력에서 최선 O(n)으로 빨라져요.</div>
+<h3>버블 정렬 — 이웃끼리 비교해서 큰 걸 뒤로</h3>
+<div class="duo"><div><p>가격표 [5, 3, 8, 1]을 버블 정렬해 볼게요. 맨 앞부터 <b>이웃한 두 칸</b>을 비교해서 앞이 크면 자리를 바꿔요. 한 회차를 끝까지 돌면 가장 큰 8이 거품처럼 맨 뒤로 떠올라요. 그래서 이름이 버블이에요.</p>
+<p>2회차는 맨 뒤 8이 이미 자리를 잡았으니 하나 덜 비교해요. 3회차는 또 하나 덜 비교해요. 비교 횟수가 3, 2, 1로 계단처럼 줄어요. 아래 그림이 그 계단이에요.</p></div><figure><svg viewBox="0 0 360 276" font-family="sans-serif" role="img" aria-label="버블 정렬 네 칸 배열을 세 회차에 비교 3번, 2번, 1번 해서 총 6번. 일반식 n(n-1)/2는 O(n²)">
+<rect width="360" height="276" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">버블 정렬 [5, 3, 8, 1] — 회차별 비교</text><text x="14" y="72" font-size="14" font-weight="700" fill="#333">1회차</text><rect x="70" y="54" width="30" height="28" rx="4" fill="#fff" stroke="#b03a2e" stroke-width="1.5"/><text x="85" y="73" font-size="14" font-weight="700" fill="#222" text-anchor="middle">5</text><rect x="104" y="54" width="30" height="28" rx="4" fill="#fff" stroke="#b03a2e" stroke-width="1.5"/><text x="119" y="73" font-size="14" font-weight="700" fill="#222" text-anchor="middle">3</text><rect x="138" y="54" width="30" height="28" rx="4" fill="#fff" stroke="#b03a2e" stroke-width="1.5"/><text x="153" y="73" font-size="14" font-weight="700" fill="#222" text-anchor="middle">8</text><rect x="172" y="54" width="30" height="28" rx="4" fill="#fff" stroke="#b03a2e" stroke-width="1.5"/><text x="187" y="73" font-size="14" font-weight="700" fill="#222" text-anchor="middle">1</text><text x="214" y="73" font-size="14" font-weight="700" fill="#b03a2e">비교 3번</text><text x="290" y="73" font-size="13" fill="#555">→ 3 5 1 8</text><text x="14" y="118" font-size="14" font-weight="700" fill="#333">2회차</text><rect x="70" y="100" width="30" height="28" rx="4" fill="#fff" stroke="#b03a2e" stroke-width="1.5"/><text x="85" y="119" font-size="14" font-weight="700" fill="#222" text-anchor="middle">3</text><rect x="104" y="100" width="30" height="28" rx="4" fill="#fff" stroke="#b03a2e" stroke-width="1.5"/><text x="119" y="119" font-size="14" font-weight="700" fill="#222" text-anchor="middle">5</text><rect x="138" y="100" width="30" height="28" rx="4" fill="#fff" stroke="#b03a2e" stroke-width="1.5"/><text x="153" y="119" font-size="14" font-weight="700" fill="#222" text-anchor="middle">1</text><rect x="172" y="100" width="30" height="28" rx="4" fill="#eeeeea" stroke="#888" stroke-width="1.5"/><text x="187" y="119" font-size="14" font-weight="700" fill="#222" text-anchor="middle">8</text><text x="214" y="119" font-size="14" font-weight="700" fill="#b03a2e">비교 2번</text><text x="290" y="119" font-size="13" fill="#555">→ 3 1 5 8</text><text x="14" y="164" font-size="14" font-weight="700" fill="#333">3회차</text><rect x="70" y="146" width="30" height="28" rx="4" fill="#fff" stroke="#b03a2e" stroke-width="1.5"/><text x="85" y="165" font-size="14" font-weight="700" fill="#222" text-anchor="middle">3</text><rect x="104" y="146" width="30" height="28" rx="4" fill="#fff" stroke="#b03a2e" stroke-width="1.5"/><text x="119" y="165" font-size="14" font-weight="700" fill="#222" text-anchor="middle">1</text><rect x="138" y="146" width="30" height="28" rx="4" fill="#eeeeea" stroke="#888" stroke-width="1.5"/><text x="153" y="165" font-size="14" font-weight="700" fill="#222" text-anchor="middle">5</text><rect x="172" y="146" width="30" height="28" rx="4" fill="#eeeeea" stroke="#888" stroke-width="1.5"/><text x="187" y="165" font-size="14" font-weight="700" fill="#222" text-anchor="middle">8</text><text x="214" y="165" font-size="14" font-weight="700" fill="#b03a2e">비교 1번</text><text x="290" y="165" font-size="13" fill="#555">→ 1 3 5 8</text><rect x="14" y="190" width="332" height="74" rx="8" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><text x="28" y="212" font-size="15" font-weight="700" fill="#b03a2e">합계 3 + 2 + 1 = 6번</text><text x="28" y="234" font-size="14" fill="#333">일반식 (n−1)+…+1 = n(n−1)/2</text><text x="28" y="254" font-size="14" font-weight="700" fill="#333">→ 최고차항 n²/2 → 상수 버리면 O(n²)</text>
+</svg><figcaption>회색 칸은 이미 맨 뒤에 자리 잡은 값이에요. 회차마다 비교가 하나씩 줄어 계단(삼각형)이 되고, 삼각형 넓이는 n²의 절반이에요.</figcaption></figure></div>
+
+
+<p>상품이 n개면 (n−1) + (n−2) + … + 1 = n(n−1)/2번이에요. 펼치면 n²/2 − n/2이고, 2장 규칙대로 최고차항만 남기고 1/2도 버리면 O(n²)이에요. 중요한 건 <b>입력이 어떻게 생겼든</b> 이 계단을 다 밟는다는 거예요. 그래서 평균도 최악도 O(n²)이에요.</p>
+<h3>선택 정렬 — 남은 것 중 최솟값을 골라 앞으로</h3>
+<p>선택 정렬은 남은 칸을 전부 훑어서 <b>가장 작은 값</b>을 찾고, 그걸 맨 앞자리와 바꿔요. 다음엔 둘째 칸부터 다시 훑어 최솟값을 찾아요. 남은 칸을 훑는 횟수가 역시 3, 2, 1로 줄어드는 계단이라 n(n−1)/2, O(n²)이에요.</p>
+<p>선택 정렬의 특징은 <b>이미 정렬된 입력이 와도 똑같이 느리다</b>는 거예요. 최솟값인지 확인하려면 남은 걸 다 봐야 하니까요. 그래서 최선·평균·최악이 전부 O(n²)이에요.</p>
+<h3>삽입 정렬 — 하나씩 꺼내서 알맞은 자리에 끼우기</h3>
+<p>삽입 정렬은 카드 게임에서 손에 든 카드를 정리하는 방식이에요. 새 카드를 하나 받으면, 이미 정리된 카드들 사이에서 알맞은 자리를 찾아 끼워요. 앞에서부터 하나씩 꺼내 왼쪽 정렬된 부분과 비교하며 자리를 찾아요.</p>
+<p>보통은 끼울 자리를 찾느라 왼쪽을 여러 칸 거슬러 올라가요. 그래서 평균·최악은 다른 둘처럼 O(n²)이에요. 그런데 상품이 <b>이미 거의 정렬돼 있으면</b> 왼쪽 이웃 하나만 보고 “여기 맞네” 하고 멈춰요. 아래 코드처럼 한 개당 1번, 총 n−1번이라 최선 O(n)이에요.</p>
+<pre><code>// 삽입 정렬 — 이미 정렬된 [1, 3, 5, 8]이면?
+for (int i = 1; i &lt; n; i++) {
+    int key = a[i], j = i - 1;
+    while (j &gt;= 0 &amp;&amp; a[j] &gt; key) {   // 왼쪽 이웃이 이미 작으면
+        a[j + 1] = a[j]; j--;          // 한 번 비교하고 바로 멈춤
+    }
+    a[j + 1] = key;
+}
+// 비교: 3이 1과 1번, 5가 3과 1번, 8이 5와 1번 = 3번 = n−1 → 최선 O(n)</code></pre>
+<div class="memo"><b>버선삽은 n²</b> — 버블·선택·삽입은 이중 반복 삼형제. 삽입만 “거의 정렬됐으면 O(n)” 특기가 있어요.</div>
+<p><b>→ 이 장면의 결과물:</b> 이웃끼리, 혹은 하나씩 비교하면 계단(n²)을 피할 수 없어요. 그럼 더 빠르게 하려면? <b>반씩 쪼개면</b> 돼요.</p>
+
+<h2>5. 쪼개는 정렬 셋 — 병합·힙·퀵, 그리고 퀵의 함정</h2>
+<div class="point"><b>핵심 한 줄</b> 병합·힙은 <b>언제나</b> O(n log n). 퀵은 <b>평균만</b> O(n log n)이고 최악은 O(n²)예요.</div>
+<h3>병합 정렬 — 무조건 반으로</h3>
+<p>병합 정렬은 상품 8개를 4개·4개로, 다시 2개씩, 1개씩까지 <b>무조건 반으로</b> 쪼개요. 그다음 정렬된 조각 둘을 하나로 합치며 올라와요. 조각 두 개를 합칠 땐 각 조각 맨 앞끼리만 비교하면 되니 빨라요.</p>
+<p>8개를 1개까지 쪼개는 데 세 번(log₂8 = 3), 즉 층이 3개예요. 층마다 합치는 일은 전부 합쳐 약 8번이에요. 그래서 층 수 × 층마다 일 = log n × n = <b>n log n</b>이에요. 입력이 정렬돼 있든 뒤죽박죽이든 반으로 자르는 건 똑같으니 <b>최선·평균·최악이 모두 O(n log n)</b>이에요. 대신 합칠 때 임시 배열이 필요해요.</p>
+<h3>힙 정렬 — 최댓값을 하나씩 꺼내기</h3>
+<p>힙 정렬은 상품을 <b>힙</b>(부모가 자식보다 항상 큰 완전 이진 트리)에 넣고, 꼭대기의 최댓값을 하나씩 꺼내요. 꺼낸 뒤 트리를 다시 정리하는 데 트리 높이만큼, 즉 log n번이 걸려요. n개를 꺼내니 n × log n이에요. 트리 모양이 늘 균형 잡혀 있어서 병합처럼 <b>언제나 O(n log n)</b>이에요.</p>
+<h3>퀵 정렬 — 평균은 가장 빠른데, 운이 나쁘면 버블과 같아요</h3>
+<div class="duo"><div><p>퀵 정렬은 기준값 <b>피벗</b>을 하나 골라, 피벗보다 작은 상품은 왼쪽, 큰 상품은 오른쪽으로 나눠요. 그리고 양쪽을 또 같은 방식으로 정렬해요. 피벗이 가운데쯤 값이면 병합처럼 반씩 갈라져서 O(n log n)이에요. 실무에서는 보통 가장 빨라서 이름이 퀵이에요.</p>
+<p>문제는 피벗을 잘못 고른 경우예요. 이미 정렬된 [1, 2, 3, 4, 5]에서 맨 앞 1을 피벗으로 잡으면, 1보다 작은 게 하나도 없어요. 왼쪽은 텅 비고 오른쪽에 4개가 몰려요. 다음 피벗 2도 마찬가지예요. 그럼 매번 <b>딱 하나씩만</b> 줄어들어요. 비교는 4 + 3 + 2 + 1번, 버블 정렬의 계단과 똑같은 n(n−1)/2예요. 그래서 <b>최악 O(n²)</b>이에요.</p></div><figure><svg viewBox="0 0 360 290" font-family="sans-serif" role="img" aria-label="왼쪽 병합 정렬은 8을 4·4, 2·2·2·2, 1 여덟 개로 늘 반씩 나눠 층이 log n개라 n log n. 오른쪽 퀵 정렬 최악은 정렬된 다섯 개에서 첫 값을 피벗으로 잡아 한쪽이 비고 5, 4, 3, 2, 1로 하나씩만 줄어 층이 n개라 n²">
+<rect width="360" height="290" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">층 수 × 층마다 일 = 전체 일</text><text x="92" y="52" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">병합 정렬 (n = 8)</text><text x="268" y="52" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">퀵 최악 (정렬된 5개)</text><rect x="14" y="66" width="150" height="26" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><text x="89.0" y="84" font-size="13" font-weight="700" fill="#2a5db0" text-anchor="middle">8</text><rect x="14" y="102" width="74" height="26" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><text x="51.0" y="120" font-size="13" font-weight="700" fill="#2a5db0" text-anchor="middle">4</text><rect x="91" y="102" width="74" height="26" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><text x="128.0" y="120" font-size="13" font-weight="700" fill="#2a5db0" text-anchor="middle">4</text><rect x="14" y="138" width="36" height="26" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><text x="32.0" y="156" font-size="13" font-weight="700" fill="#2a5db0" text-anchor="middle">2</text><rect x="53" y="138" width="36" height="26" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><text x="71.0" y="156" font-size="13" font-weight="700" fill="#2a5db0" text-anchor="middle">2</text><rect x="92" y="138" width="36" height="26" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><text x="110.0" y="156" font-size="13" font-weight="700" fill="#2a5db0" text-anchor="middle">2</text><rect x="131" y="138" width="36" height="26" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><text x="149.0" y="156" font-size="13" font-weight="700" fill="#2a5db0" text-anchor="middle">2</text><rect x="14" y="174" width="17" height="26" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><rect x="34" y="174" width="17" height="26" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><rect x="54" y="174" width="17" height="26" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><rect x="74" y="174" width="17" height="26" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><rect x="94" y="174" width="17" height="26" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><rect x="114" y="174" width="17" height="26" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><rect x="134" y="174" width="17" height="26" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><rect x="154" y="174" width="17" height="26" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><text x="14" y="222" font-size="13" font-weight="700" fill="#2a5db0">층 log₂8 = 3번 쪼갬</text><text x="14" y="240" font-size="13" fill="#333">층마다 합치는 일 ≈ 8</text><text x="14" y="258" font-size="14" font-weight="700" fill="#2a5db0">→ n log n</text><rect x="196" y="66" width="18" height="22" rx="4" fill="#fff" stroke="#888" stroke-width="1.5"/><rect x="218" y="66" width="128" height="22" rx="4" fill="#fdecea" stroke="#b03a2e" stroke-width="1.5"/><text x="282.0" y="82" font-size="13" font-weight="700" fill="#b03a2e" text-anchor="middle">5</text><rect x="196" y="96" width="18" height="22" rx="4" fill="#fff" stroke="#888" stroke-width="1.5"/><rect x="218" y="96" width="102" height="22" rx="4" fill="#fdecea" stroke="#b03a2e" stroke-width="1.5"/><text x="269.0" y="112" font-size="13" font-weight="700" fill="#b03a2e" text-anchor="middle">4</text><rect x="196" y="126" width="18" height="22" rx="4" fill="#fff" stroke="#888" stroke-width="1.5"/><rect x="218" y="126" width="76" height="22" rx="4" fill="#fdecea" stroke="#b03a2e" stroke-width="1.5"/><text x="256.0" y="142" font-size="13" font-weight="700" fill="#b03a2e" text-anchor="middle">3</text><rect x="196" y="156" width="18" height="22" rx="4" fill="#fff" stroke="#888" stroke-width="1.5"/><rect x="218" y="156" width="50" height="22" rx="4" fill="#fdecea" stroke="#b03a2e" stroke-width="1.5"/><text x="243.0" y="172" font-size="13" font-weight="700" fill="#b03a2e" text-anchor="middle">2</text><rect x="196" y="186" width="18" height="22" rx="4" fill="#fff" stroke="#888" stroke-width="1.5"/><rect x="218" y="186" width="24" height="22" rx="4" fill="#fdecea" stroke="#b03a2e" stroke-width="1.5"/><text x="230.0" y="202" font-size="13" font-weight="700" fill="#b03a2e" text-anchor="middle">1</text><text x="196" y="232" font-size="12" fill="#555">빈 칸 = 피벗보다 작은 쪽 0개</text><text x="196" y="250" font-size="13" font-weight="700" fill="#b03a2e">층 n개, 4+3+2+1번 비교</text><text x="196" y="268" font-size="14" font-weight="700" fill="#b03a2e">→ 버블과 같은 n²</text><path d="M180 46 L180 276" stroke="#ccc" stroke-width="1.5"/>
+</svg><figcaption>병합은 무조건 반으로 자르니 층이 늘 log n개예요. 퀵은 피벗 운에 따라 반씩 갈리기도(평균), 하나씩만 떨어지기도(최악) 해요.</figcaption></figure></div>
+
+
+<p>D027 1번이 바로 이 지점을 물었어요. “평균과 최악이 <b>모두</b> O(n²)”인 걸 찾으라고 했죠. 퀵은 최악은 O(n²)가 맞지만 평균은 O(n log n)이라 ‘모두’에서 빠져요. 퀵의 최악 O(n²)만 떠오르면 낚이는 문제예요. 퀵은 ‘평균은 쪼개는 쪽, 최악은 느린 쪽’에 한 발씩 걸쳐 있다고 기억하세요.</p>
+<div class="memo"><b>힙병은 철벽, 퀵은 운빨</b> — 힙·병합은 언제나 n log n. 퀵은 평균 n log n이지만 피벗 운이 나쁘면 n².</div>
+<p><b>→ 이 장면의 결과물:</b> 정렬 여섯 개의 평균·최악이 왜 그런지 다 나왔어요. 남은 건 문제 문장에서 무엇을 보고 고르느냐예요.</p>
+
+<h2>6. 문제를 가르는 질문</h2>
+<div class="point"><b>핵심 한 줄</b> 선지를 보기 전에 문제가 <b>평균·최악·최선 중 무엇을</b> 묻는지 먼저 동그라미 치세요.</div>
+<p>복잡도 문제는 거의 다 “어느 경우의 몇 등급인가”를 물어요. 그래서 등급을 외우는 것보다 <b>어느 경우를 묻는지</b> 놓치지 않는 게 먼저예요. 아래 표 왼쪽 단서를 문제에서 찾으면 오른쪽이 답 후보예요.</p>
+<table>
+<tr><th>문제 속 단서</th><th>답 후보</th><th>이유</th></tr>
+<tr><td>평균·최악 <b>모두</b> O(n²)</td><td>버블 · 선택 · 삽입</td><td>입력과 상관없이 계단을 밟음</td></tr>
+<tr><td>평균 O(n log n)인데 <b>최악</b> O(n²)</td><td>퀵</td><td>피벗이 한쪽으로 쏠림</td></tr>
+<tr><td><b>언제나</b>(최악도) O(n log n)</td><td>병합 · 힙</td><td>늘 반으로, 늘 균형</td></tr>
+<tr><td>거의 정렬된 자료에서 <b>최선 O(n)</b></td><td>삽입</td><td>왼쪽 이웃 하나만 보고 멈춤</td></tr>
+<tr><td><b>정렬된</b> 자료에서 반씩 버리며 찾기</td><td>이진 탐색 · O(log n)</td><td>정렬이 전제 조건</td></tr>
+<tr><td>키로 저장 위치를 바로 계산</td><td>해시 탐색 · 평균 O(1)</td><td>충돌이 몰리면 최악 O(n)</td></tr>
+<tr><td>for 안에 for</td><td>O(n²)</td><td>n × n</td></tr>
+<tr><td>n을 반씩 나누는 반복</td><td>O(log n)</td><td>2를 몇 번 곱하면 n인가</td></tr>
+</table>
+<div class="trap"><b>단골 함정 세 개</b> “퀵 정렬의 최악은 O(n log n)”(✗, O(n²)). “선택 정렬은 이미 정렬된 자료에서 O(n)”(✗, 선택은 언제나 O(n²) — 최선 O(n)은 삽입). “이진 탐색은 정렬되지 않은 자료에도 쓸 수 있다”(✗).</div>
+<p>한 장 요약이에요. 시험 직전엔 이 표만 보면 돼요.</p>
+<p class="hint">↔ 표가 넓어요. 옆으로 밀어서 보세요</p><table>
+<tr><th>알고리즘</th><th>최선</th><th>평균</th><th>최악</th></tr>
+<tr><td>버블</td><td>O(n²)*</td><td>O(n²)</td><td>O(n²)</td></tr>
+<tr><td>선택</td><td>O(n²)</td><td>O(n²)</td><td>O(n²)</td></tr>
+<tr><td>삽입</td><td><b>O(n)</b></td><td>O(n²)</td><td>O(n²)</td></tr>
+<tr><td>퀵</td><td>O(n log n)</td><td>O(n log n)</td><td><b>O(n²)</b></td></tr>
+<tr><td>병합</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n log n)</td></tr>
+<tr><td>힙</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n log n)</td></tr>
+</table>
+<p><small>* 버블 정렬의 최선은 “한 회차에 교환이 없으면 멈추는” 개선판이면 O(n)이에요. 교재마다 표기가 갈려서 시험은 주로 평균·최악을 물어요.</small></p>
+
+<h2>연습 문제</h2>
+<p>6문제 모두 “어느 경우를 묻나”와 “코드 모양”을 다른 상황으로 물어요. 문제를 읽을 때 <b>평균·최악·최선·모두·언제나</b>에 먼저 동그라미를 쳐 보세요.</p>
+<ol class="quiz">
+<li>상품 n개마다 다른 모든 상품과 가격을 한 번씩 비교하려고 <code>for (i = 0; i &lt; n; i++)</code> 안에 <code>for (j = 0; j &lt; n; j++)</code>를 넣었다. 이 코드의 시간 복잡도는?<label class="opt"><input type="radio" name="S03-q1" value="1">① O(n)</label><label class="opt"><input type="radio" name="S03-q1" value="2">② O(n²)</label><label class="opt"><input type="radio" name="S03-q1" value="3">③ O(log n)</label><label class="opt"><input type="radio" name="S03-q1" value="4">④ O(n log n)</label></li>
+<li><code>while (k &gt; 1) k = k / 2;</code>처럼 처리할 범위를 매번 절반으로 줄이는 반복의 시간 복잡도는?<label class="opt"><input type="radio" name="S03-q2" value="1">① O(n)</label><label class="opt"><input type="radio" name="S03-q2" value="2">② O(n²)</label><label class="opt"><input type="radio" name="S03-q2" value="3">③ O(1)</label><label class="opt"><input type="radio" name="S03-q2" value="4">④ O(log n)</label></li>
+<li>평균 시간 복잡도는 O(n log n)이지만, 이미 정렬된 자료에서 맨 앞 원소를 기준값으로 잡으면 최악 O(n²)이 되는 정렬은?<label class="opt"><input type="radio" name="S03-q3" value="1">① 퀵 정렬</label><label class="opt"><input type="radio" name="S03-q3" value="2">② 힙 정렬</label><label class="opt"><input type="radio" name="S03-q3" value="3">③ 병합 정렬</label><label class="opt"><input type="radio" name="S03-q3" value="4">④ 삽입 정렬</label></li>
+<li>거의 정렬되어 있는 상품 목록을 정렬할 때, 원소마다 왼쪽 이웃과 한 번만 비교하고 끝나 최선의 경우 O(n)이 되는 정렬은?<label class="opt"><input type="radio" name="S03-q4" value="1">① 선택 정렬</label><label class="opt"><input type="radio" name="S03-q4" value="2">② 힙 정렬</label><label class="opt"><input type="radio" name="S03-q4" value="3">③ 삽입 정렬</label><label class="opt"><input type="radio" name="S03-q4" value="4">④ 퀵 정렬</label></li>
+<li>입력 자료의 상태와 관계없이 <b>최악의 경우에도</b> O(n log n)을 보장하는 정렬은?<label class="opt"><input type="radio" name="S03-q5" value="1">① 버블 정렬</label><label class="opt"><input type="radio" name="S03-q5" value="2">② 병합 정렬</label><label class="opt"><input type="radio" name="S03-q5" value="3">③ 퀵 정렬</label><label class="opt"><input type="radio" name="S03-q5" value="4">④ 선택 정렬</label></li>
+<li>시간 복잡도에 대한 설명으로 <b>옳지 않은 것</b>은?<label class="opt"><input type="radio" name="S03-q6" value="1">① 이진 탐색은 정렬된 자료에서 O(log n)으로 찾는다</label><label class="opt"><input type="radio" name="S03-q6" value="2">② 빅오 표기는 가장 빨리 커지는 항만 남기고 상수를 버린다</label><label class="opt"><input type="radio" name="S03-q6" value="3">③ 해시 탐색은 평균 O(1)이다</label><label class="opt"><input type="radio" name="S03-q6" value="4">④ 선택 정렬은 자료가 이미 정렬되어 있으면 O(n)으로 빨라진다</label></li>
+</ol><div class="answer-bar" data-id="S03" data-n="6"><code></code><button type="button">답안 복사</button></div><p><small>고른 뒤 <b>답안 복사</b> → 디스코드 공부 채널에 붙여넣기 하면 돼요.</small></p>
+<p>답장: <code>정처기 S03: 1)번호 2)번호 3)번호 4)번호 5)번호 6)번호</code></p>
+
+<script>
+document.querySelectorAll('.answer-bar').forEach(bar=>{
+  const id=bar.dataset.id,n=+bar.dataset.n,out=bar.querySelector('code'),btn=bar.querySelector('button');
+  const text=()=>'정처기 '+id+': '+Array.from({length:n},(_,i)=>{const c=document.querySelector('input[name="'+id+'-q'+(i+1)+'"]:checked');return (i+1)+')'+(c?c.value:'?')}).join(' ');
+  document.querySelectorAll('input[name^="'+id+'-q"]').forEach(r=>r.addEventListener('change',()=>{out.textContent=text()}));
+  out.textContent=text();
+  btn.addEventListener('click',async()=>{const t=text();try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}btn.textContent='복사됨 ✓';setTimeout(()=>btn.textContent='답안 복사',1500)});
+});
+</script>
+
+<footer>2027년 정기 기사 1회 정보처리기사 필기 준비 · 공식 범위: Q-Net 2027~2029 출제기준</footer>
+</main></body></html>
