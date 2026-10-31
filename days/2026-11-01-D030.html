@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>D030 1과목 종합 진단 — 도서관 좌석 예약 앱 한 바퀴와 20문항 (+ S03 다시 풀기)</title>
+<link rel="icon" href="../assets/favicon/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../assets/favicon/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="apple-touch-icon" href="../assets/favicon/apple-touch-icon.png">
+<link rel="stylesheet" href="../style.css"></head>
+<body><main>
+<nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a></nav>
+<h1>D030 · 1과목 종합 진단 — 도서관 좌석 예약 앱 한 바퀴와 20문항 (+ S03 다시 풀기)</h1><div class="meta">2026-11-01 · A1~A9 1과목 종합 진단</div><p><span class="tag">진단</span><span class="tag">A1~A9</span> 오늘은 새 진도가 없어요. 지난 4주 동안 1과목 소프트웨어 설계를 아홉 주요항목으로 나눠 배웠고, 어제 2과목을 시작했죠. 그래서 2과목에 깊이 들어가기 전에 1과목이 머리에 얼마나 남았는지 한 번 재 보는 날이에요. 새 진도가 없는 날이 아니라, 지난 4주 동안 실은 짐이 트렁크에 다 들어갔는지 문을 닫아 보는 날이에요. 안 닫히는 칸이 어딘지 알아야 다시 정리하죠.</p>
+<ul>
+<li>1과목 아홉 주요항목이 한 프로젝트 안에서 어떤 순서로 이어지는지 말할 수 있다</li>
+<li>헷갈리는 짝(결합도·응집도, 상태·전략, 알파·베타, IPSec·SSL/TLS 등)을 질문 하나로 가를 수 있다</li>
+<li>처음 보는 20문항으로 주요항목별 약점을 숫자로 확인한다</li>
+<li>S03 다시 풀기: 삽입·선택 최선의 차이와 병합·힙 ‘언제나’ vs 퀵 ‘평균만’을 구별할 수 있다</li>
+</ul>
+<div class="glance"><div><b>9</b>주요항목</div><div><b>15</b>그림</div><div><b>20</b>진단 문항</div><div><b>6</b>S03 다시 풀기</div></div>
+<div class="box"><b>오늘 이야기의 흐름</b>① 1과목 지도 → ② 도서관 좌석 예약 앱 ‘책자리’로 아홉 장면 한 바퀴 → ③ 헷갈리는 짝 가르는 질문 → ④ 지금까지의 약점 지도 → ⑤ 진단 20문항(페이지 보지 않고) → ⑥ S03 다시 풀기 6문항.</div>
+
+<h2>1. 1과목 지도</h2>
+<div class="point"><b>핵심 한 줄</b> 1과목 = <b>무엇을 만들지 정하고(A1~A3) → 어떻게 잇고 만들지 정하고(A4~A6) → 포장·시험·연결해 내보낸다(A7~A9)</b>.</div>
+<div class="duo"><div><p>1과목의 아홉 주요항목은 따로 노는 단원이 아니라 프로젝트 하나가 지나가는 순서예요. 요구를 모으고, 화면을 그리고, 뼈대를 설계하고, 다른 시스템과 잇는 길을 설계해요. 그다음 어떤 방식으로 얼마에 만들지 정하고, 만들면서 버전을 지키고, 포장해 내보내고, 시험하고, 실제로 연결해 확인해요.</p>
+<p>아홉 칸은 이어달리기예요. A1이 넘긴 요구 바통을 A9가 실제 연결로 받아 결승선을 끊어요. 중간에 바통을 떨어뜨린 구간이 오늘 찾을 곳이에요.</p></div><figure><svg viewBox="0 0 360 340" font-family="sans-serif" role="img" aria-label="1과목 아홉 주요항목을 프로젝트 순서로 이은 지도. A1 요구, A2 화면, A3 설계, A4 연결 설계, A5 방법과 비용, A6 구현과 형상관리, A7 포장과 배포, A8 테스트, A9 연결 구현">
+<rect width="360" height="340" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d30a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">1과목 아홉 칸 — 프로젝트 순서</text><path d="M112 76 L128 76" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d30a)"/><path d="M230 76 L246 76" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d30a)"/><path d="M298 108 L298 138" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d30a)"/><path d="M248 172 L232 172" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d30a)"/><path d="M130 172 L114 172" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d30a)"/><path d="M62 204 L62 234" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d30a)"/><path d="M112 268 L128 268" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d30a)"/><path d="M230 268 L246 268" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d30a)"/><rect x="12" y="44" width="100" height="64" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="62" y="71" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">A1 요구</text><text x="62" y="94" font-size="14" fill="#333" text-anchor="middle">D001~D006</text><rect x="130" y="44" width="100" height="64" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="180" y="71" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">A2 화면</text><text x="180" y="94" font-size="14" fill="#333" text-anchor="middle">D007~D010</text><rect x="248" y="44" width="100" height="64" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="298" y="71" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">A3 설계</text><text x="298" y="94" font-size="14" fill="#333" text-anchor="middle">D010~D014</text><rect x="248" y="140" width="100" height="64" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="298" y="167" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">A4 연결 설계</text><text x="298" y="190" font-size="14" fill="#333" text-anchor="middle">D015·D017</text><rect x="130" y="140" width="100" height="64" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="180" y="167" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">A5 방법·비용</text><text x="180" y="190" font-size="14" fill="#333" text-anchor="middle">D018~D020</text><rect x="12" y="140" width="100" height="64" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="62" y="167" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">A6 구현·형상</text><text x="62" y="190" font-size="14" fill="#333" text-anchor="middle">D021</text><rect x="12" y="236" width="100" height="64" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="62" y="263" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">A7 포장·배포</text><text x="62" y="286" font-size="14" fill="#333" text-anchor="middle">D022·D024</text><rect x="130" y="236" width="100" height="64" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="180" y="263" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">A8 테스트</text><text x="180" y="286" font-size="14" fill="#333" text-anchor="middle">D025~D027</text><rect x="248" y="236" width="100" height="64" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="298" y="263" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">A9 연결 구현</text><text x="298" y="286" font-size="14" fill="#333" text-anchor="middle">D028</text><text x="180" y="326" font-size="14" fill="#555" text-anchor="middle">파랑 = 무엇을 · 주황 = 어떻게 · 초록 = 내보내기</text>
+</svg><figcaption>화살표를 따라가면 프로젝트 하나가 처음부터 끝까지 지나가요. 칸 아래 숫자는 그 내용을 배운 카드예요.</figcaption></figure></div>
+
+<p>한 장 요약 — 주요항목마다 그 장면에서 하는 일과, 시험이 즐겨 묻는 이름을 모았어요. 아래 2장에서 장면마다 문단으로 다시 풀어요.</p>
+<table>
+<tr><th>주요항목</th><th>이 장면에서 하는 일 · 시험 단골 이름</th><th>카드</th></tr>
+<tr><td>A1 요구사항 확인</td><td>요구 도출·분석·명세·확인, 기능/비기능, UML, 스크럼·XP, DFD·자료 사전</td><td>D001~D006</td></tr>
+<tr><td>A2 화면 설계</td><td>UI 표준·지침, 설계 4원칙, 와이어프레임·목업·프로토타입, 감성공학</td><td>D007~D010</td></tr>
+<tr><td>A3 애플리케이션 설계</td><td>아키텍처 패턴·품질 속성, 결합도·응집도, SOLID, GoF 23, 3R</td><td>D010~D014</td></tr>
+<tr><td>A4 인터페이스 설계</td><td>내·외부 인터페이스, 통신·처리 유형, EAI 4유형, 미들웨어</td><td>D015·D017</td></tr>
+<tr><td>A5 통합 구현 준비</td><td>생명주기·방법론, 비용 산정(LOC·COCOMO·FP), 테일러링, CMMI</td><td>D018~D020</td></tr>
+<tr><td>A6 통합 구현</td><td>단위 모듈·IPC, 드라이버·스텁, 형상관리 4활동, 버전관리 3방식</td><td>D021</td></tr>
+<tr><td>A7 제품 SW 패키징</td><td>패키징, DRM 구성 요소, 매뉴얼, ISO 9126 → 25010, 빌드 도구</td><td>D022·D024</td></tr>
+<tr><td>A8 애플리케이션 테스트</td><td>테스트 원리·오라클·레벨, 블랙/화이트박스, 통합 방식, 성능·정렬</td><td>D025~D027</td></tr>
+<tr><td>A9 인터페이스 구현</td><td>데이터 표준, JSON·XML·AJAX, 보안 계층, 검증 도구·APM</td><td>D028</td></tr>
+</table>
+
+<h2>2. 도서관 좌석 예약 앱 ‘책자리’ 한 바퀴</h2>
+<div class="point"><b>핵심 한 줄</b> 시험 개념 하나하나를 “이 장면에서 하는 일”로 다시 만나면 정의가 순서와 함께 기억돼요.</div>
+<p>지도를 봤으니 이제 그 길을 실제로 걸어 볼게요. 사례는 구립 도서관 열람실 좌석을 앱으로 예약하는 ‘책자리’예요. 우리가 이 프로젝트의 개발 리더가 되어 첫 회의부터 운영 연결까지 아홉 장면을 지나요. 장면마다 왜 그 일이 필요한지 먼저 쓰고, 시험 이름은 그 뒤에 붙여요.</p>
+
+<h3>장면 1 — 무엇을 만들지 묻기 (A1 요구사항 확인)</h3>
+<div class="duo"><div><p>도서관 측은 “좌석 다툼을 없애 주세요”라고만 말해요. 이 말을 바로 코드로 옮기면 서로 상상한 앱이 달라서 나중에 크게 고쳐요. 그래서 요구를 체계적으로 다루는 <b>요구사항 개발 프로세스</b>를 밟아요. 요구를 찾아내는 <b>도출</b>, 정리하고 충돌을 푸는 <b>분석</b>, 문서로 적는 <b>명세</b>, 그 문서가 맞는지 따지는 <b>확인</b>의 네 단계예요.</p></div><figure><svg viewBox="0 0 360 304" font-family="sans-serif" role="img" aria-label="요구사항 개발 4단계. 도출은 인터뷰 설문 워크숍 브레인스토밍, 분석은 분류와 개념 모델링 충돌 협상, 명세는 정형과 비정형, 확인은 동료 검토 워크스루 인스펙션">
+<rect width="360" height="304" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d30b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2a5db0"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">요구사항 개발 4단계와 대표 기법</text><rect x="12" y="44" width="90" height="52" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="57" y="76" font-size="15" font-weight="700" fill="#2a5db0" text-anchor="middle">도출</text><rect x="112" y="44" width="236" height="52" rx="8" fill="#ffffff" stroke="#bbb" stroke-width="1.5"/><text x="122" y="66" font-size="14" fill="#333">인터뷰 · 설문 · 워크숍</text><text x="122" y="86" font-size="14" fill="#333">브레인스토밍 · 프로토타이핑</text><path d="M57 96 L57 106" stroke="#2a5db0" stroke-width="2" fill="none" marker-end="url(#d30b)"/><rect x="12" y="108" width="90" height="52" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="57" y="140" font-size="15" font-weight="700" fill="#2a5db0" text-anchor="middle">분석</text><rect x="112" y="108" width="236" height="52" rx="8" fill="#ffffff" stroke="#bbb" stroke-width="1.5"/><text x="122" y="130" font-size="14" fill="#333">분류 · 개념 모델링(UML)</text><text x="122" y="150" font-size="14" fill="#333">충돌 협상 · 할당</text><path d="M57 160 L57 170" stroke="#2a5db0" stroke-width="2" fill="none" marker-end="url(#d30b)"/><rect x="12" y="172" width="90" height="52" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="57" y="204" font-size="15" font-weight="700" fill="#2a5db0" text-anchor="middle">명세</text><rect x="112" y="172" width="236" height="52" rx="8" fill="#ffffff" stroke="#bbb" stroke-width="1.5"/><text x="122" y="194" font-size="14" fill="#333">정형(Z · VDM)</text><text x="122" y="214" font-size="14" fill="#333">비정형(자연어 · 그림)</text><path d="M57 224 L57 234" stroke="#2a5db0" stroke-width="2" fill="none" marker-end="url(#d30b)"/><rect x="12" y="236" width="90" height="52" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="57" y="268" font-size="15" font-weight="700" fill="#2a5db0" text-anchor="middle">확인</text><rect x="112" y="236" width="236" height="52" rx="8" fill="#ffffff" stroke="#bbb" stroke-width="1.5"/><text x="122" y="258" font-size="14" fill="#333">동료 검토 · 워크스루</text><text x="122" y="278" font-size="14" fill="#333">인스펙션 · 프로토타입 확인</text>
+</svg><figcaption>왼쪽 네 칸의 순서가 “도분명확”이에요. 오른쪽은 그 단계에서 쓰는 기법이에요.</figcaption></figure></div>
+
+<p>모은 요구는 <b>기능 요구사항</b>과 <b>비기능 요구사항</b>으로 나눠요. 기능은 시스템이 “무엇을 하나”예요. 책자리라면 좌석 예약, 연장, 반납이에요. 비기능은 “얼마나 잘 하나”예요. 예약 응답 2초 이내, 회원 정보 암호화, 시험 기간 동시 접속 500명 같은 성능·보안·가용성 조건이 여기에 들어가요.</p>
+<p>팀은 2주 단위로 조금씩 내놓는 애자일 방식 중 <b>스크럼</b>을 골랐어요. 스크럼은 역할을 셋으로 나누고, 스프린트 계획 → 일일 스크럼 → 스프린트 리뷰 → 회고를 반복해요. 역할이 시험에 자주 나와서 표로 정리해요.</p>
+<table>
+<tr><th>스크럼 역할</th><th>하는 일</th></tr>
+<tr><td>제품 책임자(PO)</td><td>제품 백로그를 만들고 우선순위를 정한다. 도서관 측 요구를 대변한다</td></tr>
+<tr><td>스크럼 마스터(SM)</td><td>팀이 스크럼 규칙을 지키도록 돕고, 일을 막는 장애 요소를 치운다. 지시하는 관리자가 아니다</td></tr>
+<tr><td>개발팀</td><td>스프린트 동안 실제로 만들고, 일을 어떻게 나눌지 스스로 정한다</td></tr>
+</table>
+<p>애자일의 다른 갈래인 <b>XP(eXtreme Programming)</b>도 가치를 다섯 개 내세워요. 두 방법론 모두 ‘용기’와 ‘존중’을 말해서 쌍둥이처럼 보이지만, ‘확약’이라는 이름표는 스크럼 쪽 가방에만 들어 있어요.</p>
+<div class="vs"><div><b>XP 5가치</b>의사소통 · 단순성 · 피드백 · 용기 · 존중</div><div><b>스크럼 5가치</b>확약 · 집중 · 개방성 · 존중 · 용기</div></div>
+<div class="duo"><div><p>요구를 그림으로 분석하는 도구도 있어요. 전통적인 <b>구조적 분석</b>은 데이터가 처리 사이를 흐르는 모양을 <b>DFD(자료 흐름도)</b>로 그리고, 그 그림에 나온 데이터 이름의 뜻을 <b>자료 사전(DD)</b>에 적어요. DFD 맨 아래 처리 하나가 입력을 어떤 절차로 출력으로 바꾸는지는 <b>소단위 명세서(Mini-Spec)</b>에 써요. 데이터끼리의 관계는 <b>ERD</b>, 시간에 따른 상태 변화는 <b>STD(상태 전이도)</b>가 맡아요.</p>
+<p>객체지향 쪽은 <b>UML</b>로 그려요. 클래스 사이 관계는 선 모양으로 구별하는데, 이름보다 모양을 먼저 외우는 편이 시험에서 빨라요. 집합은 좌석이 열람실 없이도 따로 존재할 수 있는 느슨한 포함이고, 합성은 도서관이 사라지면 열람실도 같이 사라지는 강한 포함이에요.</p></div><figure><svg viewBox="0 0 360 316" font-family="sans-serif" role="img" aria-label="UML 관계 6종의 모양. 연관은 실선, 집합은 전체 쪽 빈 마름모, 합성은 전체 쪽 채운 마름모, 일반화는 실선과 부모 쪽 빈 삼각형, 실체화는 점선과 인터페이스 쪽 빈 삼각형, 의존은 점선 화살표">
+<rect width="360" height="316" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d30c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">UML 관계 6종 — 선과 끝 모양</text><path d="M68 58 L156 58" stroke="#333" stroke-width="2" fill="none"/><rect x="12" y="43" width="56" height="30" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><text x="40" y="63" font-size="14" fill="#222" text-anchor="middle">회원</text><rect x="156" y="43" width="56" height="30" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><text x="184" y="63" font-size="14" fill="#222" text-anchor="middle">좌석</text><text x="220" y="63" font-size="14" font-weight="700" fill="#333">연관 실선</text><path d="M88 102 L156 102" stroke="#333" stroke-width="2" fill="none"/><polygon points="68,102 78,95 88,102 78,109" fill="#ffffff" stroke="#333" stroke-width="2"/><rect x="12" y="87" width="56" height="30" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><text x="40" y="107" font-size="14" fill="#222" text-anchor="middle">열람실</text><rect x="156" y="87" width="56" height="30" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><text x="184" y="107" font-size="14" fill="#222" text-anchor="middle">좌석</text><text x="220" y="107" font-size="14" font-weight="700" fill="#6a3d9a">집합 빈 마름모</text><path d="M88 146 L156 146" stroke="#333" stroke-width="2" fill="none"/><polygon points="68,146 78,139 88,146 78,153" fill="#333" stroke="#333" stroke-width="2"/><rect x="12" y="131" width="56" height="30" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><text x="40" y="151" font-size="14" fill="#222" text-anchor="middle">도서관</text><rect x="156" y="131" width="56" height="30" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><text x="184" y="151" font-size="14" fill="#222" text-anchor="middle">열람실</text><text x="220" y="151" font-size="14" font-weight="700" fill="#6a3d9a">합성 채운 마름모</text><path d="M68 190 L142 190" stroke="#333" stroke-width="2" fill="none"/><polygon points="156,190 142,182 142,198" fill="#ffffff" stroke="#333" stroke-width="2"/><rect x="12" y="175" width="56" height="30" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><text x="40" y="195" font-size="14" fill="#222" text-anchor="middle">학생</text><rect x="156" y="175" width="56" height="30" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><text x="184" y="195" font-size="14" fill="#222" text-anchor="middle">회원</text><text x="220" y="195" font-size="14" font-weight="700" fill="#b03a2e">일반화 실선 빈삼각</text><path d="M68 234 L142 234" stroke="#333" stroke-width="2" fill="none" stroke-dasharray="6 4"/><polygon points="156,234 142,226 142,242" fill="#ffffff" stroke="#333" stroke-width="2"/><rect x="12" y="219" width="56" height="30" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><text x="40" y="239" font-size="14" fill="#222" text-anchor="middle">SMS</text><rect x="156" y="219" width="56" height="30" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><text x="184" y="239" font-size="14" fill="#222" text-anchor="middle">알림</text><text x="220" y="239" font-size="14" font-weight="700" fill="#b03a2e">실체화 점선 빈삼각</text><path d="M68 278 L155 278" stroke="#333" stroke-width="2" fill="none" stroke-dasharray="6 4" marker-end="url(#d30c)"/><rect x="12" y="263" width="56" height="30" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><text x="40" y="283" font-size="14" fill="#222" text-anchor="middle">예약</text><rect x="156" y="263" width="56" height="30" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><text x="184" y="283" font-size="14" fill="#222" text-anchor="middle">달력</text><text x="220" y="283" font-size="14" font-weight="700" fill="#333">의존 점선 화살표</text>
+</svg><figcaption>마름모는 전체 쪽, 삼각형은 부모·인터페이스 쪽에 붙어요. 빨간 두 줄은 선 종류(실선·점선)만 달라요.</figcaption></figure></div>
+
+<p><b>→ 이 장면의 결과물:</b> 요구사항 명세서와 UML 모델. 그래서 다음 장면은 이 요구를 사용자가 실제로 만질 화면으로 옮겨요.</p>
+
+<h3>장면 2 — 화면 그리기 (A2 화면 설계)</h3>
+<p>화면을 그리기 전에 먼저 규칙을 정해요. 시스템 전체 화면에 공통으로 지킬 구성·이동 규약이 <b>UI 표준</b>이고, 표준을 지키며 개별 화면을 만들 때 따를 세부 권고가 <b>UI 지침</b>이에요. 표준이 “모든 화면 오른쪽 위에 로그아웃”이라면, 지침은 “버튼 글자는 네 글자 이내로”예요.</p>
+<p>좋은 화면이 갖출 성질은 <b>UI 설계 4원칙</b>으로 정리해요. 직관성은 처음 본 엘리베이터 버튼을 바로 누르는 것, 학습성은 회사 복합기를 두 번째부터 헤매지 않는 것이라고 생각하면 갈라져요.</p>
+<table>
+<tr><th>원칙</th><th>뜻</th><th>책자리 예</th></tr>
+<tr><td>직관성</td><td>누구나 처음부터 쉽게 이해하고 쓸 수 있다</td><td>빈 좌석은 초록, 찬 좌석은 회색</td></tr>
+<tr><td>유효성</td><td>사용자의 목적을 정확하고 완전하게 달성한다</td><td>예약 버튼 한 번에 좌석이 실제로 잡힌다</td></tr>
+<tr><td>학습성</td><td>초보도 쉽게 배우고 기억해 금방 숙달한다</td><td>두 번째 방문부터 안내 없이 예약</td></tr>
+<tr><td>유연성</td><td>다양한 조작 방식을 받아들이고 실수를 막는다</td><td>잘못 누른 반납을 되돌리는 확인 창</td></tr>
+</table>
+<div class="duo"><div><p>화면 모형은 얼마나 실제에 가까운지(충실도)로 나눠요. 선과 박스로 배치만 잡는 <b>와이어프레임</b>, 색과 이미지를 입혔지만 눌러도 움직이지 않는 <b>목업</b>, 실제처럼 눌러 보는 <b>프로토타입</b>이에요. <b>스토리보드</b>는 이 사다리의 한 칸이 아니라, 모형에 화면 설명·정책·흐름을 붙여 묶은 문서예요.</p></div><figure><svg viewBox="0 0 360 314" font-family="sans-serif" role="img" aria-label="와이어프레임은 선과 박스로 배치만, 목업은 색과 이미지를 더했지만 동작이 없고, 프로토타입은 눌러 보는 동작이 있다. 스토리보드는 이 모형에 설명과 정책을 붙여 묶은 문서">
+<rect width="360" height="314" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d30d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b5730d"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">화면 모형 — 아래로 갈수록 실제에 가까움</text><rect x="14" y="44" width="112" height="46" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="70" y="73" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">와이어프레임</text><text x="136" y="73" font-size="14" fill="#333">선·박스로 배치만 (뼈대)</text><path d="M70 96 L70 110" stroke="#b5730d" stroke-width="2" fill="none" marker-end="url(#d30d)"/><rect x="14" y="112" width="112" height="46" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="70" y="141" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">목업</text><text x="136" y="141" font-size="14" fill="#333">+ 색·이미지, 동작 없음 (시안)</text><path d="M70 164 L70 178" stroke="#b5730d" stroke-width="2" fill="none" marker-end="url(#d30d)"/><rect x="14" y="180" width="112" height="46" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="70" y="209" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">프로토타입</text><text x="136" y="209" font-size="14" fill="#333">+ 눌러 보는 동작 (시제품)</text><rect x="6" y="240" width="348" height="60" rx="8" fill="#ffffff" stroke="#6a3d9a" stroke-width="2" stroke-dasharray="6 4"/><text x="18" y="264" font-size="14" font-weight="700" fill="#6a3d9a">스토리보드 = 위 모형에 화면 설명·정책·</text><text x="18" y="286" font-size="14" font-weight="700" fill="#6a3d9a">흐름을 붙여 묶은 문서 (단계가 아님)</text>
+</svg><figcaption>세 칸은 충실도 사다리, 보라 점선은 그 사다리를 묶는 문서예요.</figcaption></figure></div>
+
+<p>화면이 주는 느낌까지 설계하는 분야가 <b>감성공학</b>이에요. 접근 방식을 세 갈래로 나눠요.</p>
+<table>
+<tr><th>분류</th><th>접근</th></tr>
+<tr><td>1류</td><td>‘아늑하다·깔끔하다’ 같은 감성 어휘(형용사)로 이미지를 조사해 디자인 요소로 옮긴다</td></tr>
+<tr><td>2류</td><td>나이·성별·문화 같은 개인·심리 특성에 따라 느낌이 어떻게 다른지 본다</td></tr>
+<tr><td>3류</td><td>심박·피부 전도도 같은 생리 반응을 측정하거나 수학 모델로 다룬다</td></tr>
+</table>
+<p><b>→ 이 장면의 결과물:</b> UI 표준·지침과 화면 모형. 그래서 다음 장면은 이 화면 뒤에서 돌아갈 소프트웨어의 뼈대를 세워요.</p>
+
+<h3>장면 3 — 뼈대 세우기 (A3 애플리케이션 설계)</h3>
+<p>코드를 짜기 전에 큰 구조를 고르는 게 <b>소프트웨어 아키텍처</b>예요. 자주 쓰는 구조에는 이름이 붙어 있어요. 책자리의 좌석 이용 로그를 정리하는 배치 작업은 “읽기 → 걸러내기 → 집계”를 차례로 잇는데, 이처럼 단계마다 입력을 가공해 다음 단계로 넘기는 모양이 <b>파이프-필터</b> 패턴이에요. 리눅스의 <code>cat log | grep ERROR | sort</code>가 딱 그 모양이에요.</p>
+<table>
+<tr><th>아키텍처 패턴</th><th>한 줄 모양</th></tr>
+<tr><td>레이어</td><td>위층이 바로 아래층만 부른다(표현 · 업무 · 데이터)</td></tr>
+<tr><td>클라이언트-서버</td><td>여러 클라이언트가 한 서버에 요청한다</td></tr>
+<tr><td>파이프-필터</td><td>데이터가 처리 단계를 차례로 흐른다</td></tr>
+<tr><td>MVC</td><td>모델(데이터) · 뷰(화면) · 컨트롤러(입력 처리)를 나눈다</td></tr>
+<tr><td>마스터-슬레이브</td><td>마스터가 일을 나눠 주고 결과를 모은다</td></tr>
+<tr><td>브로커</td><td>중개자가 요청을 알맞은 서버에 연결한다</td></tr>
+<tr><td>피어 투 피어</td><td>각 노드가 클라이언트이자 서버다</td></tr>
+<tr><td>이벤트-버스</td><td>이벤트를 채널에 올리면 구독자가 받는다</td></tr>
+</table>
+<div class="duo"><div><p>아키텍처가 좋은지 따지는 <b>품질 속성</b>은 세 측면으로 나눠요. 시스템 측면은 성능·보안·가용성처럼 돌아갈 때 드러나는 성질, 비즈니스 측면은 시장 적시성·비용·예상 수명, 아키텍처 측면은 개념적 무결성·정확성과 완결성·구축 가능성처럼 설계 자체의 성질이에요.</p>
+<p>모듈을 나눌 때는 모듈끼리 얼마나 얽혔나(<b>결합도</b>)와 모듈 안이 얼마나 한 가지 일에 모였나(<b>응집도</b>)를 봐요. 결합도는 낮을수록, 응집도는 높을수록 좋아요. 결합도 끝판인 내용 결합도는 남의 모듈 내부 변수를 직접 고치는 코드예요.</p></div><figure><svg viewBox="0 0 360 256" font-family="sans-serif" role="img" aria-label="결합도는 왼쪽부터 자료 스탬프 제어 외부 공통 내용 순으로 강해지고, 응집도는 왼쪽부터 기능 순차 교환 절차 시간 논리 우연 순으로 약해진다. 두 줄 모두 왼쪽이 좋은 설계">
+<rect width="360" height="256" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">왼쪽일수록 좋은 설계</text><text x="12" y="56" font-size="14" font-weight="700" fill="#2a5db0">결합도 (약 → 강)</text><rect x="12" y="66" width="54" height="40" rx="4" fill="#e9f6ec" stroke="#2a5db0" stroke-width="1.5"/><text x="39" y="91" font-size="14" fill="#222" text-anchor="middle">자료</text><rect x="68" y="66" width="54" height="40" rx="4" fill="#e9f6ec" stroke="#2a5db0" stroke-width="1.5"/><text x="95" y="91" font-size="14" fill="#222" text-anchor="middle">스탬프</text><rect x="124" y="66" width="54" height="40" rx="4" fill="#ffffff" stroke="#2a5db0" stroke-width="1.5"/><text x="151" y="91" font-size="14" fill="#222" text-anchor="middle">제어</text><rect x="180" y="66" width="54" height="40" rx="4" fill="#ffffff" stroke="#2a5db0" stroke-width="1.5"/><text x="207" y="91" font-size="14" fill="#222" text-anchor="middle">외부</text><rect x="236" y="66" width="54" height="40" rx="4" fill="#fdecea" stroke="#2a5db0" stroke-width="1.5"/><text x="263" y="91" font-size="14" fill="#222" text-anchor="middle">공통</text><rect x="292" y="66" width="54" height="40" rx="4" fill="#fdecea" stroke="#2a5db0" stroke-width="1.5"/><text x="319" y="91" font-size="14" fill="#222" text-anchor="middle">내용</text><text x="12" y="126" font-size="14" fill="#2f7d4a">← 좋음: 서로 덜 앎</text><text x="348" y="126" font-size="14" fill="#b03a2e" text-anchor="end">나쁨: 남의 속을 앎 →</text><text x="12" y="166" font-size="14" font-weight="700" fill="#b5730d">응집도 (강 → 약)</text><rect x="12" y="176" width="46" height="40" rx="4" fill="#e9f6ec" stroke="#b5730d" stroke-width="1.5"/><text x="35" y="201" font-size="14" fill="#222" text-anchor="middle">기능</text><rect x="60" y="176" width="46" height="40" rx="4" fill="#e9f6ec" stroke="#b5730d" stroke-width="1.5"/><text x="83" y="201" font-size="14" fill="#222" text-anchor="middle">순차</text><rect x="108" y="176" width="46" height="40" rx="4" fill="#ffffff" stroke="#b5730d" stroke-width="1.5"/><text x="131" y="201" font-size="14" fill="#222" text-anchor="middle">교환</text><rect x="156" y="176" width="46" height="40" rx="4" fill="#ffffff" stroke="#b5730d" stroke-width="1.5"/><text x="179" y="201" font-size="14" fill="#222" text-anchor="middle">절차</text><rect x="204" y="176" width="46" height="40" rx="4" fill="#ffffff" stroke="#b5730d" stroke-width="1.5"/><text x="227" y="201" font-size="14" fill="#222" text-anchor="middle">시간</text><rect x="252" y="176" width="46" height="40" rx="4" fill="#fdecea" stroke="#b5730d" stroke-width="1.5"/><text x="275" y="201" font-size="14" fill="#222" text-anchor="middle">논리</text><rect x="300" y="176" width="46" height="40" rx="4" fill="#fdecea" stroke="#b5730d" stroke-width="1.5"/><text x="323" y="201" font-size="14" fill="#222" text-anchor="middle">우연</text><text x="12" y="236" font-size="14" fill="#2f7d4a">← 좋음: 한 가지 일</text><text x="348" y="236" font-size="14" fill="#b03a2e" text-anchor="end">나쁨: 그냥 모임 →</text>
+</svg><figcaption>두 줄 모두 왼쪽 초록이 좋은 쪽이에요. 결합도는 낮게, 응집도는 높게.</figcaption></figure></div>
+
+<div class="memo"><b>결합도</b> 자스제외공내(약 → 강) · <b>응집도</b> 기순교절시논우(강 → 약)</div>
+<p>모듈 사이 호출 관계는 <b>fan-in</b>(나를 부르는 상위 모듈 수)과 <b>fan-out</b>(내가 부르는 하위 모듈 수)으로 세요. fan-in이 높은 모듈은 사내 단톡방 공지 담당이에요. 다들 거기서 정보를 받아 가니 한 번 틀리면 파장이 커서, 더 꼼꼼히 테스트해야 해요.</p>
+<p>객체지향 설계 원칙은 <b>SOLID</b> 다섯 가지로 외워요.</p>
+<table>
+<tr><th>원칙</th><th>뜻</th></tr>
+<tr><td>SRP 단일 책임</td><td>클래스는 바뀔 이유가 하나뿐이어야 한다</td></tr>
+<tr><td>OCP 개방-폐쇄</td><td>확장에는 열리고 수정에는 닫혀야 한다</td></tr>
+<tr><td>LSP 리스코프 치환</td><td>자식은 부모 자리에 넣어도 문제없어야 한다</td></tr>
+<tr><td>ISP 인터페이스 분리</td><td>쓰지 않는 메서드에 의존하게 만들지 않는다</td></tr>
+<tr><td>DIP 의존 역전</td><td>구체 클래스가 아니라 추상에 의존한다</td></tr>
+</table>
+<div class="duo"><div><p>자주 만나는 설계 문제의 모범 답안이 <b>GoF 디자인 패턴</b> 23개예요. 객체를 만드는 법(생성 5), 객체를 조립하는 법(구조 7), 객체끼리 일을 나누는 법(행위 11)으로 나눠요.</p></div><figure class="mermaid"><img src="../assets/42994fbfd686ddb5.png" alt="도식" loading="lazy" style="width:559px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure></div>
+
+<p>행위 패턴의 <b>상태</b>와 <b>전략</b>은 둘 다 “행동을 객체로 빼서 바꿔 끼운다”는 점이 같아서 단골 함정이에요. 가르는 질문은 “누가 바꾸나”예요. 좌석이 빈자리 → 예약됨 → 사용 중으로 바뀌며 행동이 저절로 달라지면 상태 패턴이에요. 사용자가 정렬 방식(가까운 순·창가 우선)을 골라 끼우면 전략 패턴이에요.</p>
+<p>기존 시스템을 다시 쓰는 방법은 <b>3R</b>로 묶어요. 설계 문서 없는 옛 시스템의 코드에서 설계·명세를 거꾸로 뽑아내는 <b>역공학</b>, 기존 시스템을 분석해 새 요구에 맞게 고쳐 만드는 <b>재공학</b>, 검증된 모듈을 그대로 다시 쓰는 <b>재사용</b>이에요. 도서관이 쓰던 옛 출입 시스템을 연결하려면 역공학부터 해야 해요.</p>
+<p><b>→ 이 장면의 결과물:</b> 아키텍처와 모듈·클래스 설계. 그래서 다음 장면은 이 앱이 바깥 시스템과 어떻게 이어질지 설계해요.</p>
+
+<h3>장면 4 — 바깥과 잇는 길 설계 (A4 인터페이스 설계)</h3>
+<p>책자리는 혼자 돌지 않아요. 도서관 회원 시스템에서 회원을 확인하고, 문자 알림 서버로 연장 알림을 보내고, 시청 통계 시스템에 이용 기록을 넘겨요. 시스템 안의 모듈끼리 잇는 게 <b>내부 인터페이스</b>, 다른 조직 시스템과 잇는 게 <b>외부 인터페이스</b>예요. 연결마다 데이터를 보내는 <b>송신</b>, 사이에서 받아 넘기고 현황을 지켜보는 <b>중계</b>, 받아 반영하는 <b>수신</b> 시스템을 정해요.</p>
+<p>연결 방식은 두 축으로 정해요. 헷갈리기 쉬우니 축을 먼저 구분해요.</p>
+<table>
+<tr><th>축</th><th>묻는 질문</th><th>값</th></tr>
+<tr><td>통신 유형</td><td>응답을 어떻게 주고받나?</td><td>단방향 · 동기 · 비동기</td></tr>
+<tr><td>처리 유형</td><td>한 건씩 바로냐, 모아서 한꺼번이냐?</td><td>실시간 · 지연 · 배치</td></tr>
+</table>
+<div class="duo"><div><p>동기는 응답이 올 때까지 기다렸다가 다음 일을 하고, 비동기는 요청만 던지고 다른 일을 하다가 나중에 결과를 받아요. 배치는 아파트 분리수거 날처럼 일주일치를 모아 정해진 날 한꺼번에 내놓는 방식이고, 실시간은 생기는 즉시 처리해요. 책자리가 하루 이용 기록을 모아 새벽에 시청으로 보내는 건 배치예요.</p></div><figure class="mermaid"><img src="../assets/df8b036d9c36de90.png" alt="도식" loading="lazy" style="width:300px"></figure></div>
+
+<div class="duo"><div><p>연결할 시스템이 여럿이면 기업 애플리케이션 통합, <b>EAI</b>로 묶어요. 모든 시스템을 서로 직접 잇는 <b>Point-to-Point</b>, 가운데 허브를 거치는 <b>Hub &amp; Spoke</b>, 미들웨어 버스를 두는 <b>Message Bus(ESB 방식)</b>, 둘을 섞는 <b>Hybrid</b>예요. 직접 연결은 시스템이 늘면 선이 폭발하고, 허브는 허브가 멈추면 다 멈추고, 버스는 확장에 강해요.</p></div><figure><svg viewBox="0 0 360 364" font-family="sans-serif" role="img" aria-label="EAI 네 유형. Point-to-Point는 모든 시스템이 서로 직접 선으로 연결된 그물, Hub and Spoke는 가운데 허브에 모든 시스템이 연결된 별 모양, Message Bus는 일자 버스에 시스템이 매달린 모양, Hybrid는 허브와 버스를 함께 쓰는 모양">
+<rect width="360" height="364" rx="12" fill="#f7f7f4"/>
+<text x="180" y="24" font-size="15" font-weight="700" fill="#222" text-anchor="middle">EAI 구축 유형 4가지 모양</text><rect x="12" y="38" width="164" height="152" rx="8" fill="#ffffff" stroke="#bbb" stroke-width="1.5"/><text x="94" y="60" font-size="14" font-weight="700" fill="#222" text-anchor="middle">Point-to-Point</text><path d="M42 80 L152 80" stroke="#888" stroke-width="2" fill="none"/><path d="M42 80 L42 168" stroke="#888" stroke-width="2" fill="none"/><path d="M42 80 L152 168" stroke="#888" stroke-width="2" fill="none"/><path d="M152 80 L42 168" stroke="#888" stroke-width="2" fill="none"/><path d="M152 80 L152 168" stroke="#888" stroke-width="2" fill="none"/><path d="M42 168 L152 168" stroke="#888" stroke-width="2" fill="none"/><circle cx="42" cy="80" r="11" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><circle cx="152" cy="80" r="11" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><circle cx="42" cy="168" r="11" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><circle cx="152" cy="168" r="11" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><rect x="184" y="38" width="164" height="152" rx="8" fill="#ffffff" stroke="#bbb" stroke-width="1.5"/><text x="266" y="60" font-size="14" font-weight="700" fill="#222" text-anchor="middle">Hub &amp; Spoke</text><path d="M266 124 L212 80" stroke="#888" stroke-width="2" fill="none"/><path d="M266 124 L320 80" stroke="#888" stroke-width="2" fill="none"/><path d="M266 124 L212 168" stroke="#888" stroke-width="2" fill="none"/><path d="M266 124 L320 168" stroke="#888" stroke-width="2" fill="none"/><circle cx="212" cy="80" r="11" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><circle cx="320" cy="80" r="11" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><circle cx="212" cy="168" r="11" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><circle cx="320" cy="168" r="11" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><rect x="242" y="110" width="48" height="28" rx="6" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="266" y="129" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">허브</text><rect x="12" y="200" width="164" height="152" rx="8" fill="#ffffff" stroke="#bbb" stroke-width="1.5"/><text x="94" y="222" font-size="14" font-weight="700" fill="#222" text-anchor="middle">Message Bus</text><rect x="22" y="270" width="144" height="14" rx="4" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><path d="M40 256 L40 270" stroke="#888" stroke-width="2" fill="none"/><circle cx="40" cy="246" r="11" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><path d="M94 256 L94 270" stroke="#888" stroke-width="2" fill="none"/><circle cx="94" cy="246" r="11" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><path d="M148 256 L148 270" stroke="#888" stroke-width="2" fill="none"/><circle cx="148" cy="246" r="11" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><path d="M67 284 L67 300" stroke="#888" stroke-width="2" fill="none"/><circle cx="67" cy="311" r="11" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><path d="M121 284 L121 300" stroke="#888" stroke-width="2" fill="none"/><circle cx="121" cy="311" r="11" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="94" y="342" font-size="14" fill="#b5730d" text-anchor="middle">버스 = ESB</text><rect x="184" y="200" width="164" height="152" rx="8" fill="#ffffff" stroke="#bbb" stroke-width="1.5"/><text x="266" y="222" font-size="14" font-weight="700" fill="#222" text-anchor="middle">Hybrid</text><rect x="238" y="238" width="44" height="26" rx="6" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="260" y="256" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">허브</text><path d="M238 251 L212 251" stroke="#888" stroke-width="2" fill="none"/><circle cx="204" cy="251" r="9" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><path d="M282 251 L312 251" stroke="#888" stroke-width="2" fill="none"/><circle cx="320" cy="251" r="9" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><path d="M260 264 L260 300" stroke="#888" stroke-width="2" fill="none"/><rect x="196" y="300" width="140" height="12" rx="4" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><path d="M220 312 L220 324" stroke="#888" stroke-width="2" fill="none"/><circle cx="220" cy="332" r="9" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><path d="M300 312 L300 324" stroke="#888" stroke-width="2" fill="none"/><circle cx="300" cy="332" r="9" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/>
+</svg><figcaption>그물(선이 n(n−1)/2개로 늘어남) · 별(허브가 멈추면 다 멈춤) · 버스(확장에 강함) · 둘을 섞은 하이브리드.</figcaption></figure></div>
+
+<p>이런 연결 밑에서 일하는 소프트웨어가 <b>미들웨어</b>예요.</p>
+<table>
+<tr><th>미들웨어</th><th>하는 일</th></tr>
+<tr><td>DB 미들웨어</td><td>앱과 DB를 잇는다(ODBC · JDBC)</td></tr>
+<tr><td>RPC</td><td>원격 프로시저를 로컬 함수처럼 부른다</td></tr>
+<tr><td>MOM</td><td>메시지를 큐에 넣어 비동기로 전달한다</td></tr>
+<tr><td>TP-Monitor</td><td>트랜잭션을 관리·감시한다(온라인 예약·은행)</td></tr>
+<tr><td>ORB</td><td>분산 객체끼리 통신을 중개한다(CORBA)</td></tr>
+<tr><td>WAS</td><td>동적 웹 콘텐츠를 처리한다(Tomcat 등)</td></tr>
+</table>
+<p><b>→ 이 장면의 결과물:</b> 인터페이스 목록과 통신·처리 방식. 그래서 다음 장면은 이 모든 걸 어떤 방식으로, 얼마를 들여 만들지 정해요.</p>
+
+<h3>장면 5 — 어떻게, 얼마에 만들지 (A5 통합 구현 준비)</h3>
+<div class="duo"><div><p>먼저 일의 큰 순서인 <b>생명주기 모델</b>을 골라요. 단계를 한 방향으로 밟는 <b>폭포수</b>, 견본을 먼저 보여 주는 <b>프로토타입</b>, 위험 분석을 반복하는 <b>나선형</b>, 조금씩 나눠 반복하는 <b>반복적 모델</b>이 있어요. 그 위에 구체적인 작업 규칙인 <b>개발 방법론</b>(구조적 · 정보공학 · 객체지향 · CBD · 애자일 · 제품 계열)을 얹어요.</p>
+<p>다음은 비용이에요. 크게 전체 규모를 먼저 어림잡는 <b>하향식</b>과 세부 작업을 세어 합치는 <b>상향식</b>으로 나뉘고, 상향식 안에 경험식을 쓰는 <b>수학적 산정</b>이 들어 있어요. 하향식의 <b>델파이</b>는 여러 전문가 의견을 조정자가 익명으로 모아 다시 돌리기를 반복해, 목소리 큰 한 사람의 영향을 줄여요.</p></div><figure class="mermaid"><img src="../assets/1538dcbadf9578b6.png" alt="도식" loading="lazy" style="width:552px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure></div>
+
+<p><b>LOC 기법</b>은 코드 줄 수를 낙관치·기대치·비관치 셋으로 어림해 가중 평균을 내요. 친구가 “10분이면 가”라고 할 때 속으로 잘 풀린 경우·보통·최악을 따로 굴려 보는 계산이에요. 보통값에 4배 무게를 주는 게 경험에서 나온 요령이고, 다 더한 뒤 6으로 나누는 걸 잊으면 숫자가 여섯 배로 부풀어요.</p>
+<p><b>COCOMO</b>는 LOC를 받아 노력(인월)을 계산하는 보헴의 모델이에요. 시험은 “유형”과 “종류”를 섞어 내요. 유형은 프로젝트 성격, 종류는 계산을 얼마나 자세히 하나예요. <b>Putnam</b>은 시간에 따라 필요한 인력이 어떻게 분포하는지 곡선으로 보고, <b>기능 점수(FP)</b>는 줄 수 대신 기능의 개수와 복잡도로 규모를 재요.</p>
+<table>
+<tr><th>COCOMO</th><th>나뉘는 기준</th><th>이름</th></tr>
+<tr><td>유형</td><td>프로젝트 규모·성격</td><td>조직형(Organic) · 반분리형(Semi-detached) · 내장형(Embedded)</td></tr>
+<tr><td>종류</td><td>계산 세밀도</td><td>기본형(Basic) · 중간형(Intermediate) · 발전형(Detailed)</td></tr>
+</table>
+<p>회사 표준 방법론을 이 프로젝트에 맞게 줄이고 고치는 일이 <b>테일러링</b>이에요. 목표 환경·요구사항·규모·보유 기술 같은 내부 요인과, 법적 제약·품질 기준 같은 외부 요인을 봐요. 조직의 개발 능력 수준은 <b>CMMI</b> 5단계로 재요.</p>
+<table>
+<tr><th>CMMI 단계</th><th>모습</th></tr>
+<tr><td>1 초기</td><td>정해진 프로세스 없이 사람에 따라 다르다</td></tr>
+<tr><td>2 관리</td><td>프로젝트별로 일정·비용을 관리한다</td></tr>
+<tr><td>3 정의</td><td>조직 표준 프로세스를 정하고 프로젝트에 맞춰 적용한다</td></tr>
+<tr><td>4 정량적 관리</td><td>프로세스를 숫자로 측정·통제한다</td></tr>
+<tr><td>5 최적화</td><td>측정 결과로 프로세스를 계속 개선한다</td></tr>
+</table>
+<p>개발에 쓸 <b>프레임워크</b>(스프링 등)도 이때 정해요. 프레임워크의 특징은 내가 짠 코드를 프레임워크가 불러 주는 <b>제어의 역전(IoC)</b>이에요. 라이브러리는 내가 부르고, 프레임워크는 나를 불러요.</p>
+<p><b>→ 이 장면의 결과물:</b> 개발 계획과 비용 산정서, 맞춤 방법론. 그래서 다음 장면은 드디어 코드를 짜고 버전을 지켜요.</p>
+
+<h3>장면 6 — 만들고 지키기 (A6 통합 구현)</h3>
+<p>코드는 한 가지 일을 하는 <b>단위 모듈</b>로 나눠 짜요. 예약 처리와 알림 발송이 서로 다른 프로세스로 돌면, 둘이 데이터를 주고받을 방법이 필요한데 이게 <b>IPC(프로세스 간 통신)</b>예요. 공유 메모리, 파이프, 메시지 큐, 소켓 네 가지가 대표예요.</p>
+<p>모듈 하나를 먼저 시험하려면 아직 없는 짝을 가짜로 세워요. 위에서 나를 불러 줄 가짜가 <b>테스트 드라이버</b>, 내가 부를 아래쪽 가짜가 <b>테스트 스텁</b>이에요.</p>
+<div class="vs"><div><b>드라이버</b>상위 모듈 대역 · 시험 대상을 호출 · 상향식 통합에서 쓴다</div><div><b>스텁</b>하위 모듈 대역 · 정해진 값만 돌려줌 · 하향식 통합에서 쓴다</div></div>
+<div class="duo"><div><p>여러 명이 같은 코드를 고치니 변경을 관리하는 <b>형상관리</b>가 필요해요. 대상에 이름과 버전을 붙이는 <b>식별</b>, 변경 요청을 검토해 승인하는 <b>통제</b>, 승인대로 정확히 반영됐는지 확인하는 <b>감사</b>, 그 결과를 알리는 <b>기록(상태 보고)</b>의 네 활동이에요. 통제가 “바꿔도 됩니까”를 묻는 결재라면, 감사는 “정말 결재받은 대로 바꿨습니까”를 확인하는 사후 점검이에요. 기준이 되는 확정본을 <b>기준선(베이스라인)</b>이라고 해요.</p></div><figure class="mermaid"><img src="../assets/a933bd54955650a9.png" alt="도식" loading="lazy" style="width:330px"></figure></div>
+
+<table>
+<tr><th>버전관리 방식</th><th>모습</th></tr>
+<tr><td>공유 폴더</td><td>공용 폴더에 파일을 복사해 둔다. 담당자가 수동으로 관리</td></tr>
+<tr><td>클라이언트/서버</td><td>중앙 서버 하나에 바로 커밋한다(CVS · SVN)</td></tr>
+<tr><td>분산 저장소</td><td>내 로컬 저장소에 먼저 커밋하고 원격에 반영한다(Git)</td></tr>
+</table>
+<p>코드를 쓰고 빌드·디버깅하는 도구를 한 화면에 모은 게 <b>IDE</b>(IntelliJ · Eclipse · VS Code)예요.</p>
+<p><b>→ 이 장면의 결과물:</b> 버전이 관리되는 소스와 단위 모듈. 그래서 다음 장면은 이걸 사용자에게 건넬 꾸러미로 만들어요.</p>
+
+<h3>장면 7 — 포장해 내보내기 (A7 제품 소프트웨어 패키징)</h3>
+<div class="duo"><div><p><b>패키징</b>은 개발자가 아니라 사용자 중심으로, 모듈 단위로 묶고, 신규·변경 이력을 관리하며, 설치 환경을 고려해 배포 꾸러미를 만드는 일이에요. 책자리는 앱 마켓용 꾸러미와 도서관 키오스크용 설치본을 따로 만들어요.</p>
+<p>도서관이 앱 안에서 전자책도 빌려주기로 했어요. 그러면 파일이 퍼지지 않게 막는 <b>DRM(디지털 저작권 관리)</b>이 필요해요. 콘텐츠를 메타데이터와 함께 암호화해 배포 단위로 묶는 <b>패키저</b>, 키·라이선스 발급과 정산을 맡는 <b>클리어링 하우스</b>, 사용자 쪽에서 권한대로만 쓰게 막는 <b>DRM 컨트롤러</b>와 <b>보안 컨테이너</b>가 핵심이에요.</p></div><figure><svg viewBox="0 0 360 336" font-family="sans-serif" role="img" aria-label="DRM 흐름. 콘텐츠 제공자에서 패키저가 콘텐츠를 메타데이터와 함께 암호화해 묶고, 콘텐츠 분배자가 유통하며, 콘텐츠 소비자 쪽의 DRM 컨트롤러와 보안 컨테이너가 사용을 통제한다. 클리어링 하우스는 키와 라이선스를 발급하고 분배자와 정산한다">
+<rect width="360" height="336" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d30e" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2a5db0"/></marker></defs><defs><marker id="d30f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b5730d"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">DRM — 전자책 한 권이 독자에게 가는 길</text><rect x="12" y="44" width="196" height="50" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="24" y="65" font-size="14" font-weight="700" fill="#2a5db0">콘텐츠 제공자</text><text x="24" y="85" font-size="14" fill="#333">저작권자 · 출판사</text><path d="M104 96 L104 110" stroke="#2a5db0" stroke-width="2" fill="none" marker-end="url(#d30e)"/><rect x="12" y="112" width="196" height="50" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="24" y="133" font-size="14" font-weight="700" fill="#b5730d">패키저</text><text x="24" y="153" font-size="14" fill="#333">암호화 + 메타데이터로 묶음</text><path d="M104 164 L104 178" stroke="#2a5db0" stroke-width="2" fill="none" marker-end="url(#d30e)"/><rect x="12" y="180" width="196" height="50" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="24" y="201" font-size="14" font-weight="700" fill="#2a5db0">콘텐츠 분배자</text><text x="24" y="221" font-size="14" fill="#333">유통 · 판매</text><path d="M104 232 L104 246" stroke="#2a5db0" stroke-width="2" fill="none" marker-end="url(#d30e)"/><rect x="12" y="248" width="196" height="72" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="24" y="270" font-size="14" font-weight="700" fill="#2f7d4a">콘텐츠 소비자</text><text x="24" y="290" font-size="14" fill="#333">DRM 컨트롤러</text><text x="24" y="310" font-size="14" fill="#333">보안 컨테이너</text><path d="M208 205 L248 205" stroke="#6a3d9a" stroke-width="2" fill="none" stroke-dasharray="6 4"/><text x="212" y="197" font-size="14" font-weight="700" fill="#6a3d9a">정산</text><rect x="248" y="168" width="100" height="72" rx="8" fill="#f1eaf8" stroke="#6a3d9a" stroke-width="2"/><text x="298" y="198" font-size="14" font-weight="700" fill="#6a3d9a" text-anchor="middle">클리어링</text><text x="298" y="220" font-size="14" font-weight="700" fill="#6a3d9a" text-anchor="middle">하우스</text><path d="M298 240 L298 284 L210 284" stroke="#b5730d" stroke-width="2" fill="none" marker-end="url(#d30f)"/><text x="212" y="262" font-size="14" font-weight="700" fill="#b5730d">키·라이선스</text>
+</svg><figcaption>주황 칸(패키저)이 묶고 잠그는 곳, 보라 칸(클리어링 하우스)이 열쇠를 나눠 주는 곳이에요.</figcaption></figure></div>
+
+<p>DRM을 만드는 기술로는 암호화, 키 관리, 콘텐츠 식별, 저작권 표현, 정책 관리, 크랙 방지, 인증이 있어요. 함께 내보낼 문서는 <b>설치 매뉴얼</b>과 <b>사용자 매뉴얼</b>이에요.</p>
+<p>제품 품질은 국제 표준으로 재요. <b>ISO/IEC 9126</b>의 6특성(기능성 · 신뢰성 · 사용성 · 효율성 · 유지보수성 · 이식성)이 <b>ISO/IEC 25010</b>에서 8특성으로 늘었어요. 호환성과 보안성이 새로 독립했고, 효율성은 성능 효율성이 됐어요.</p>
+<p>꾸러미를 매번 손으로 만들 수 없으니 빌드를 자동화해요. 빌드 절차를 정의하는 <b>빌드 도구</b>가 Ant · Maven · Gradle이고, 저장소 변경을 감지해 그 빌드와 테스트를 알아서 돌려 주는 <b>CI 서버</b>가 Jenkins예요. Gradle이 레시피라면 Jenkins는 레시피대로 매번 요리를 시키는 주방장이에요.</p>
+<p><b>→ 이 장면의 결과물:</b> 배포 꾸러미와 매뉴얼. 그래서 다음 장면은 내보내기 전에 정말 잘 도는지 시험해요.</p>
+
+<h3>장면 8 — 시험해 보기 (A8 애플리케이션 테스트 관리)</h3>
+<p>테스트에는 어떤 팀에도 통하는 <b>7원리</b>가 있어요. 개발자가 “테스트 다 통과했어요”라고 할 때 이 표의 첫 줄을 떠올리면 돼요.</p>
+<table>
+<tr><th>원리</th><th>뜻</th></tr>
+<tr><td>결함 존재 증명</td><td>테스트는 결함이 있음을 보여 줄 뿐, 없음을 증명하지 못한다</td></tr>
+<tr><td>완벽한 테스팅 불가</td><td>모든 경우를 다 시험할 수는 없다</td></tr>
+<tr><td>초기 집중</td><td>일찍 시작할수록 고치는 비용이 싸다</td></tr>
+<tr><td>결함 집중</td><td>결함은 일부 모듈에 몰린다(파레토)</td></tr>
+<tr><td>살충제 패러독스</td><td>같은 테스트만 반복하면 새 결함을 못 찾는다</td></tr>
+<tr><td>정황 의존</td><td>소프트웨어 성격에 따라 테스트 방법이 달라진다</td></tr>
+<tr><td>오류-부재의 궤변</td><td>결함이 없어도 요구를 못 맞추면 쓸모없다</td></tr>
+</table>
+<p>결과가 맞는지 판정하는 기준이 <b>테스트 오라클</b>이에요.</p>
+<table>
+<tr><th>오라클</th><th>기대 결과를 주는 범위</th></tr>
+<tr><td>참 오라클</td><td>모든 입력값에 대해 기대 결과를 준다</td></tr>
+<tr><td>샘플링 오라클</td><td>특정한 몇몇 입력값에 대해서만 기대 결과를 준다</td></tr>
+<tr><td>휴리스틱 오라클</td><td>몇몇 입력은 기대 결과를 주고, 나머지는 추정으로 판정한다</td></tr>
+<tr><td>일관성 검사 오라클</td><td>변경 전후 결과가 같은지 비교한다</td></tr>
+</table>
+<div class="duo"><div><p>테스트는 단위 → 통합 → 시스템 → 인수 순으로 범위를 넓혀요. <b>V-모델</b>은 왼쪽 개발 단계마다 오른쪽에 그 단계를 확인하는 테스트를 짝지어요. 인수 테스트의 <b>알파</b>는 개발사 안에서 개발자가 지켜보는 가운데, <b>베타</b>는 개발자 없이 사용자 현장에서 여러 사용자가 해요. 출제자는 둘을 장소로 가르게 만들어요. “개발자가 옆에 있느냐” 한 질문이면 끝나요.</p></div><figure><svg viewBox="0 0 360 344" font-family="sans-serif" role="img" aria-label="V-모델. 왼쪽 위에서 아래로 요구 분석, 설계, 상세 설계, 구현이고, 오른쪽 아래에서 위로 단위, 통합, 시스템, 인수 테스트가 같은 높이의 왼쪽 단계를 확인한다. 인수 테스트 안에 알파와 베타가 있다">
+<rect width="360" height="344" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d30g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2a5db0"/></marker></defs><defs><marker id="d30h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2f7d4a"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">V-모델 — 왼쪽 만들기 ↔ 오른쪽 확인</text><path d="M122 64 L238 64" stroke="#888" stroke-width="2" fill="none" stroke-dasharray="5 4"/><rect x="12" y="44" width="110" height="40" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="67" y="70" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">요구 분석</text><rect x="238" y="44" width="110" height="40" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="293" y="70" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">인수 테스트</text><path d="M42 84 L42 98" stroke="#2a5db0" stroke-width="2" fill="none" marker-end="url(#d30g)"/><path d="M304 98 L318 86" stroke="#2f7d4a" stroke-width="2" fill="none" marker-end="url(#d30h)"/><path d="M136 120 L224 120" stroke="#888" stroke-width="2" fill="none" stroke-dasharray="5 4"/><rect x="26" y="100" width="110" height="40" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="81" y="126" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">설계</text><rect x="224" y="100" width="110" height="40" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="279" y="126" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">시스템 테스트</text><path d="M56 140 L56 154" stroke="#2a5db0" stroke-width="2" fill="none" marker-end="url(#d30g)"/><path d="M290 154 L304 142" stroke="#2f7d4a" stroke-width="2" fill="none" marker-end="url(#d30h)"/><path d="M150 176 L210 176" stroke="#888" stroke-width="2" fill="none" stroke-dasharray="5 4"/><rect x="40" y="156" width="110" height="40" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="95" y="182" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">상세 설계</text><rect x="210" y="156" width="110" height="40" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="265" y="182" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">통합 테스트</text><path d="M70 196 L70 210" stroke="#2a5db0" stroke-width="2" fill="none" marker-end="url(#d30g)"/><path d="M276 210 L290 198" stroke="#2f7d4a" stroke-width="2" fill="none" marker-end="url(#d30h)"/><path d="M164 232 L196 232" stroke="#888" stroke-width="2" fill="none" stroke-dasharray="5 4"/><rect x="54" y="212" width="110" height="40" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="109" y="238" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">구현</text><rect x="196" y="212" width="110" height="40" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="251" y="238" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">단위 테스트</text><rect x="12" y="272" width="336" height="56" rx="8" fill="#ffffff" stroke="#b5730d" stroke-width="1.5"/><text x="24" y="294" font-size="14" font-weight="700" fill="#b5730d">인수 테스트 안에서</text><text x="24" y="316" font-size="14" fill="#333">알파 = 개발자 앞 · 베타 = 사용자 현장</text>
+</svg><figcaption>같은 높이끼리 짝이에요. 요구 분석에서 정한 것은 맨 마지막 인수 테스트에서 확인해요.</figcaption></figure></div>
+
+<p>테스트 케이스를 만드는 기법은 내부를 보느냐로 나뉘어요.</p>
+<div class="vs"><div><b>블랙박스</b>명세만 보고 입력·출력을 시험 · 동등 분할 · 경계값 분석 · 원인-결과 그래프 · 오류 예측 · 비교 검사 · 결정 테이블 · 상태 전이</div><div><b>화이트박스</b>코드 내부 경로를 시험 · 기초 경로 · 조건·루프·데이터 흐름 검사 · 문장/분기/조건 커버리지</div></div>
+<div class="duo"><div><p>모듈을 합치며 시험하는 <b>통합 테스트</b>는 어디부터 붙이느냐로 나뉘어요. 위(메인)부터 붙이면 <b>하향식</b>이라 아래 빈자리를 스텁이 메우고, 아래부터 묶은 <b>클러스터</b>로 시작하면 <b>상향식</b>이라 위 빈자리를 드라이버가 메워요. 한꺼번에 붙이는 빅뱅, 둘을 섞는 샌드위치도 있어요.</p></div><figure><svg viewBox="0 0 360 280" font-family="sans-serif" role="img" aria-label="하향식 통합은 메인부터 위에서 아래로 붙이며 아직 없는 하위 모듈 자리에 스텁을 둔다. 상향식 통합은 아래 모듈부터 묶은 클러스터를 먼저 시험하고 아직 없는 상위 자리에 드라이버를 둔다">
+<rect width="360" height="280" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">통합 테스트 — 어디부터 붙이나</text><text x="90" y="54" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">하향식 — 위부터</text><path d="M90 94 L46 120" stroke="#888" stroke-width="2" fill="none"/><path d="M90 94 L134 120" stroke="#888" stroke-width="2" fill="none"/><path d="M46 150 L46 184" stroke="#888" stroke-width="2" fill="none"/><path d="M134 150 L134 184" stroke="#888" stroke-width="2" fill="none"/><rect x="60" y="64" width="60" height="30" rx="6" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="90.0" y="84" font-size="14" fill="#222" text-anchor="middle">메인</text><rect x="16" y="120" width="60" height="30" rx="6" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="46.0" y="140" font-size="14" fill="#222" text-anchor="middle">예약</text><rect x="104" y="120" width="60" height="30" rx="6" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="134.0" y="140" font-size="14" fill="#222" text-anchor="middle">알림</text><rect x="16" y="184" width="60" height="30" rx="6" fill="#ffffff" stroke="#b5730d" stroke-width="2" stroke-dasharray="5 4"/><text x="46.0" y="204" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">스텁</text><rect x="104" y="184" width="60" height="30" rx="6" fill="#ffffff" stroke="#b5730d" stroke-width="2" stroke-dasharray="5 4"/><text x="134.0" y="204" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">스텁</text><text x="90" y="240" font-size="14" fill="#b5730d" text-anchor="middle">아래 빈칸 = 스텁</text><text x="90" y="262" font-size="14" fill="#555" text-anchor="middle">(하위 대역)</text><path d="M180 46 L180 270" stroke="#ccc" stroke-width="2" fill="none"/><text x="270" y="54" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">상향식 — 아래부터</text><path d="M270 94 L226 120" stroke="#888" stroke-width="2" fill="none"/><path d="M270 94 L314 120" stroke="#888" stroke-width="2" fill="none"/><path d="M226 150 L226 184" stroke="#888" stroke-width="2" fill="none"/><path d="M314 150 L314 184" stroke="#888" stroke-width="2" fill="none"/><rect x="234" y="64" width="72" height="30" rx="6" fill="#ffffff" stroke="#b5730d" stroke-width="2" stroke-dasharray="5 4"/><text x="270.0" y="84" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">드라이버</text><rect x="196" y="120" width="60" height="30" rx="6" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="226.0" y="140" font-size="14" fill="#222" text-anchor="middle">예약</text><rect x="284" y="120" width="60" height="30" rx="6" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="314.0" y="140" font-size="14" fill="#222" text-anchor="middle">알림</text><rect x="196" y="184" width="60" height="30" rx="6" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="226.0" y="204" font-size="14" fill="#222" text-anchor="middle">좌석</text><rect x="284" y="184" width="60" height="30" rx="6" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="314.0" y="204" font-size="14" fill="#222" text-anchor="middle">문자</text><rect x="188" y="112" width="76" height="110" rx="10" fill="none" stroke="#2f7d4a" stroke-width="2" stroke-dasharray="6 4"/><text x="226" y="240" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">클러스터</text><text x="300" y="240" font-size="14" fill="#b5730d" text-anchor="middle">위 빈칸 =</text><text x="300" y="262" font-size="14" fill="#b5730d" text-anchor="middle">드라이버</text>
+</svg><figcaption>주황 점선 칸이 “아직 없어서 대신 세운 가짜”예요. 위가 비면 드라이버, 아래가 비면 스텁.</figcaption></figure></div>
+
+<p>잘 도는지만큼 빨리 도는지도 봐요. 성능 지표는 단위 시간당 처리 건수인 <b>처리량</b>, 요청부터 첫 응답까지의 <b>응답 시간</b>, 요청부터 처리 완료까지의 <b>경과 시간</b>, CPU·메모리를 얼마나 쓰는지의 <b>자원 사용률</b>이에요. 코드 품질은 실행하지 않고 보는 <b>정적 분석</b>(SonarQube · PMD · Checkstyle · cppcheck)과 실행하며 보는 <b>동적 분석</b>(Valgrind · Avalanche)으로 점검해요. 좌석 목록을 정렬하는 알고리즘의 복잡도도 이 장면에서 따져요.</p>
+<table>
+<tr><th>정렬</th><th>평균</th><th>최악</th></tr>
+<tr><td>버블 · 선택</td><td>O(n²)</td><td>O(n²)</td></tr>
+<tr><td>삽입</td><td>O(n²) (최선 O(n))</td><td>O(n²)</td></tr>
+<tr><td>퀵</td><td>O(n log n)</td><td>O(n²)</td></tr>
+<tr><td>병합 · 힙</td><td>O(n log n)</td><td>O(n log n)</td></tr>
+</table>
+<p><b>→ 이 장면의 결과물:</b> 테스트 결과와 결함 목록. 그래서 마지막 장면은 바깥 시스템과의 연결을 실제로 구현하고 확인해요.</p>
+
+<h3>장면 9 — 실제로 잇고 확인하기 (A9 인터페이스 구현)</h3>
+<div class="duo"><div><p>장면 4에서 설계한 연결을 이제 코드로 만들어요. 먼저 주고받을 항목의 이름·형식·길이를 맞춘 <b>인터페이스 데이터 표준</b>을 정해요. 데이터는 사람이 읽기 쉽고 가벼운 <b>JSON</b>이나 태그로 구조를 표현하는 <b>XML</b>로 실어요. 앱 화면에서 좌석 현황만 슬쩍 바꾸고 싶을 때는 페이지 전체를 새로 고치지 않고 필요한 부분만 비동기로 갱신하는 <b>AJAX</b>를 써요.</p>
+<p>연결 구간은 보안을 걸어야 해요. 같은 암호화라도 어느 층에서 감싸느냐가 달라요. D028에서는 통로 비유를 썼으니 오늘은 층수로 기억해요. 낮은 층(네트워크)일수록 더 많은 것을 한꺼번에 감싸요.</p></div><figure><svg viewBox="0 0 360 364" font-family="sans-serif" role="img" aria-label="인터페이스 보안을 적용하는 층. 애플리케이션은 시큐어 코딩, 응용 계층 HTTP 메시지는 S-HTTP, 전송 계층 위 세션은 SSL/TLS, 네트워크 계층 패킷은 IPSec, 데이터베이스는 접근 통제와 암호화">
+<rect width="360" height="364" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">인터페이스 보안 — 자물쇠를 다는 층</text><rect x="12" y="44" width="336" height="44" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="24" y="72" font-size="14" fill="#222">애플리케이션</text><text x="336" y="72" font-size="15" font-weight="700" fill="#2f7d4a" text-anchor="end">시큐어 코딩</text><rect x="12" y="96" width="336" height="44" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="24" y="124" font-size="14" fill="#222">응용 계층 메시지</text><text x="336" y="124" font-size="15" font-weight="700" fill="#2a5db0" text-anchor="end">S-HTTP</text><rect x="12" y="148" width="336" height="44" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="24" y="176" font-size="14" fill="#222">전송 계층 위 세션</text><text x="336" y="176" font-size="15" font-weight="700" fill="#2a5db0" text-anchor="end">SSL/TLS</text><rect x="12" y="200" width="336" height="44" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="24" y="228" font-size="14" fill="#222">네트워크 계층 패킷</text><text x="336" y="228" font-size="15" font-weight="700" fill="#2a5db0" text-anchor="end">IPSec</text><text x="24" y="270" font-size="14" fill="#555">↑ 위층일수록 좁게(메시지·코드 단위)</text><text x="24" y="292" font-size="14" fill="#555">↓ 아래층일수록 넓게(패킷 전부)</text><rect x="12" y="306" width="336" height="44" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="24" y="334" font-size="14" fill="#222">데이터베이스</text><text x="336" y="334" font-size="15" font-weight="700" fill="#b5730d" text-anchor="end">접근 통제 · 암호화</text>
+</svg><figcaption>파란 세 칸이 네트워크 보안이에요. 같은 “암호화”라도 어느 층에서 감싸느냐로 갈려요.</figcaption></figure></div>
+
+<p>네트워크 계층에서 IP 패킷 단위로 감싸는 <b>IPSec</b>, 전송 계층 위에서 두 응용 사이 세션 전체를 감싸는 <b>SSL/TLS</b>(HTTPS가 이 위에 HTTP를 얹은 것), 응용 계층에서 HTTP 메시지 단위로 감싸는 <b>S-HTTP</b>가 네트워크 쪽이에요. 코드에는 <b>시큐어 코딩</b>, 데이터베이스에는 접근 통제와 암호화를 적용해요.</p>
+<p>연결이 제대로 되는지는 도구로 검증해요. 단위 테스트 프레임워크 <b>xUnit</b>, 분산 환경 테스트 <b>STAF</b>, 웹 기반 테스트 케이스 표 <b>FitNesse</b>, 웹 브라우저 자동화 <b>Selenium</b>·<b>watir</b> 등이 있어요. 운영 중에는 <b>APM</b>(애플리케이션 성능 관리 도구)으로 응답 시간과 오류를 감시해요. 무엇을 어떤 형식으로 주고받는지는 <b>인터페이스 정의서·명세서</b>로 남겨요.</p>
+<p>한 장으로 꿰기 — 아홉 장면을 다시 한 줄씩이에요.</p>
+<table class="tight">
+<tr><th>장면</th><th>하는 일</th><th>시험 개념</th><th>결과물</th></tr>
+<tr><td>1</td><td>무엇을 만들지 묻기</td><td>도분명확 · 기능/비기능 · UML · 스크럼/XP</td><td>요구사항 명세서</td></tr>
+<tr><td>2</td><td>화면 그리기</td><td>UI 표준/지침 · 4원칙 · 모형 · 감성공학</td><td>화면 모형</td></tr>
+<tr><td>3</td><td>뼈대 세우기</td><td>패턴 · 결합/응집 · SOLID · GoF · 3R</td><td>설계서</td></tr>
+<tr><td>4</td><td>잇는 길 설계</td><td>통신/처리 유형 · EAI · 미들웨어</td><td>인터페이스 목록</td></tr>
+<tr><td>5</td><td>방법·비용 정하기</td><td>생명주기 · LOC · COCOMO · CMMI</td><td>개발 계획</td></tr>
+<tr><td>6</td><td>만들고 지키기</td><td>IPC · 드라이버/스텁 · 형상관리</td><td>관리되는 소스</td></tr>
+<tr><td>7</td><td>포장해 내보내기</td><td>패키징 · DRM · 25010 · 빌드 자동화</td><td>배포 꾸러미</td></tr>
+<tr><td>8</td><td>시험하기</td><td>7원리 · 오라클 · V-모델 · 통합 방식</td><td>테스트 결과</td></tr>
+<tr><td>9</td><td>잇고 확인하기</td><td>JSON/AJAX · 보안 층 · 검증 도구</td><td>운영 연결</td></tr>
+</table>
+<p><b>→ 이 장면의 결과물:</b> 운영 중인 책자리. 그래서 다음 장은 이 길에서 자주 헛디디는 짝을 모아요.</p>
+
+<h2>3. 헷갈리는 짝 — 가르는 질문</h2>
+<div class="point"><b>핵심 한 줄</b> 짝을 외우지 말고 <b>짝을 가르는 질문 하나</b>를 외워요.</div>
+<p>아홉 장면을 지나며 비슷한 이름이 여러 번 나왔어요. 시험은 정의를 통째로 묻기보다 짝 중 하나를 고르게 해요. 그래서 짝마다 “이 질문에 예면 이쪽”이 되는 질문을 하나씩 붙였어요. 쌍둥이를 얼굴로 구별하려면 끝이 없지만, “너 왼손잡이야?” 한 마디면 바로 갈리는 것과 같아요.</p>
+<table>
+<tr><th>짝</th><th>가르는 질문</th><th>답이 갈리는 곳</th></tr>
+<tr><td>결합도 vs 응집도</td><td>모듈 사이를 보나, 모듈 안을 보나?</td><td>사이 = 결합도(낮게) / 안 = 응집도(높게)</td></tr>
+<tr><td>논리적 vs 기능적 응집</td><td>플래그로 골라 실행하나?</td><td>예 = 논리적 / 한 기능만 = 기능적</td></tr>
+<tr><td>상태 vs 전략</td><td>행동이 스스로 바뀌나, 밖에서 골라 끼우나?</td><td>스스로 = 상태 / 골라 끼움 = 전략</td></tr>
+<tr><td>일반화 vs 실체화</td><td>선이 실선인가 점선인가?</td><td>실선 = 일반화 / 점선 = 실체화</td></tr>
+<tr><td>집합 vs 합성</td><td>전체가 사라지면 부분도 사라지나?</td><td>남음 = 집합(빈 마름모) / 사라짐 = 합성</td></tr>
+<tr><td>UI 표준 vs 지침</td><td>전체 공통 규약인가, 개별 화면 권고인가?</td><td>공통 = 표준 / 권고 = 지침</td></tr>
+<tr><td>유효성 vs 유연성</td><td>목적 달성인가, 다양한 조작·실수 방지인가?</td><td>달성 = 유효성 / 포용 = 유연성</td></tr>
+<tr><td>통신 vs 처리 유형</td><td>응답 방식인가, 건수·시점인가?</td><td>동기·비동기 = 통신 / 실시간·배치 = 처리</td></tr>
+<tr><td>COCOMO 유형 vs 종류</td><td>프로젝트 성격인가, 계산 세밀도인가?</td><td>조직·반분리·내장 / 기본·중간·발전</td></tr>
+<tr><td>CMMI 2 vs 3단계</td><td>프로젝트별인가, 조직 표준인가?</td><td>프로젝트별 = 관리 / 조직 표준 = 정의</td></tr>
+<tr><td>드라이버 vs 스텁</td><td>빈자리가 위인가 아래인가?</td><td>위 = 드라이버 / 아래 = 스텁</td></tr>
+<tr><td>형상 통제 vs 감사</td><td>바꾸기 전 승인인가, 바꾼 뒤 확인인가?</td><td>전 = 통제 / 뒤 = 감사</td></tr>
+<tr><td>알파 vs 베타</td><td>개발자가 옆에 있나?</td><td>있음 = 알파 / 없음·사용자 현장 = 베타</td></tr>
+<tr><td>IPSec vs SSL/TLS vs S-HTTP</td><td>무엇 단위로 감싸나?</td><td>패킷 / 세션 / HTTP 메시지</td></tr>
+<tr><td>퀵 vs 병합·힙</td><td>최악에도 n log n을 보장하나?</td><td>보장 = 병합·힙 / 평균만 = 퀵</td></tr>
+</table>
+
+<h2>4. 지금까지의 약점 지도</h2>
+<div class="point"><b>핵심 한 줄</b> 오답은 <b>UI 원칙 · UML · 상태/전략 · 품질 속성 · 정렬</b> 다섯 곳에 몰려 있어요.</div>
+<p>가르는 질문 표에서 몇 줄은 지난 확인 문제에서 실제로 틀린 자리예요. 오답 노트를 모아 보면 넓게 흩어져 있지 않고 몇 군데에 뭉쳐 있어요. 결함 집중 원리가 공부에도 그대로 통하는 셈이라, 이 다섯 곳만 단단히 하면 1과목 점수가 크게 움직여요. 다시 확인하는 날짜도 함께 적었어요.</p>
+<table>
+<tr><th>약점 묶음</th><th>헷갈린 지점</th><th>다음 재확인</th></tr>
+<tr><td>UI 원칙·표준</td><td>유연성·유효성·직관성, 표준 vs 지침</td><td>11/2 · 11/3 · 11/5</td></tr>
+<tr><td>UML</td><td>일반화 vs 실체화, 집합 vs 연관, 배치 다이어그램은 구조(정적)</td><td>11/2 · 11/3 · 11/4</td></tr>
+<tr><td>설계</td><td>상태 vs 전략, 논리적 응집, 아키텍처 측면 품질 속성</td><td>11/2 · 11/3 · 11/5</td></tr>
+<tr><td>방법·관리</td><td>스크럼 마스터 역할, CMMI 정의 단계, 분산 저장소</td><td>11/3 · 11/4</td></tr>
+<tr><td>정렬</td><td>버블 평균·최악, 삽입 최선, 병합 보장</td><td>오늘 S03R · 11/5 · 11/6</td></tr>
+</table>
+
+<h2>5. 1과목 진단 20문항</h2>
+<div class="point"><b>핵심 한 줄</b> 위로 스크롤하지 말고 <b>한 번에</b> 풀어요. 지금 실력을 재는 게 목적이에요.</div>
+<p>모두 처음 보는 문장이에요. 주요항목마다 두세 문항씩 고르게 넣었고, 채점할 때 항목별 정답 수를 세요. 20문항 중 14개 미만이거나 한 주요항목에서 두 문항 이상 틀리면, 11/8 주간 복습에서 1과목 비중을 늘려요. 정답 위치도 고르게 섞었어요. “요즘 ③이 많이 나왔으니” 같은 감은 출제자가 가장 좋아하는 오답 엔진이에요.</p>
+<ol class="quiz">
+<li>요구사항 개발 프로세스의 순서로 옳은 것은?<label class="opt"><input type="radio" name="D030-q1" value="1">① 분석 → 도출 → 확인 → 명세</label><label class="opt"><input type="radio" name="D030-q1" value="2">② 도출 → 명세 → 분석 → 확인</label><label class="opt"><input type="radio" name="D030-q1" value="3">③ 도출 → 분석 → 명세 → 확인</label><label class="opt"><input type="radio" name="D030-q1" value="4">④ 명세 → 도출 → 분석 → 확인</label></li>
+<li>XP(eXtreme Programming)의 핵심 가치에 <b>해당하지 않는 것</b>은?<label class="opt"><input type="radio" name="D030-q2" value="1">① 용기</label><label class="opt"><input type="radio" name="D030-q2" value="2">② 단순성</label><label class="opt"><input type="radio" name="D030-q2" value="3">③ 피드백</label><label class="opt"><input type="radio" name="D030-q2" value="4">④ 확약(Commitment)</label></li>
+<li>구조적 분석에서 DFD의 최하위 처리(프로세스) 하나가 입력을 어떤 절차로 출력으로 바꾸는지 서술하는 도구는?<label class="opt"><input type="radio" name="D030-q3" value="1">① 소단위 명세서(Mini-Spec)</label><label class="opt"><input type="radio" name="D030-q3" value="2">② 자료 사전(DD)</label><label class="opt"><input type="radio" name="D030-q3" value="3">③ 개체-관계도(ERD)</label><label class="opt"><input type="radio" name="D030-q3" value="4">④ 상태 전이도(STD)</label></li>
+<li>신차 실내 디자인에서 소비자에게 ‘고급스럽다·포근하다’ 같은 형용사로 느낌을 조사해 디자인 요소로 옮기는 접근이다. 감성공학 분류와 설명의 짝으로 옳은 것은?<label class="opt"><input type="radio" name="D030-q4" value="1">① 1류 — 감성 어휘(형용사)로 이미지를 파악해 디자인 요소와 연결</label><label class="opt"><input type="radio" name="D030-q4" value="2">② 1류 — 피부 전도도·심박 같은 생리 반응 측정</label><label class="opt"><input type="radio" name="D030-q4" value="3">③ 2류 — 형용사 감성 어휘 조사</label><label class="opt"><input type="radio" name="D030-q4" value="4">④ 3류 — 형용사 감성 어휘 조사</label></li>
+<li>처음에는 약간의 안내가 필요하더라도, 한 번 써 본 사용자가 쉽게 기억하고 금방 숙달하도록 설계해야 한다는 UI 설계 원칙은?<label class="opt"><input type="radio" name="D030-q5" value="1">① 직관성</label><label class="opt"><input type="radio" name="D030-q5" value="2">② 유효성</label><label class="opt"><input type="radio" name="D030-q5" value="3">③ 유연성</label><label class="opt"><input type="radio" name="D030-q5" value="4">④ 학습성</label></li>
+<li>데이터가 여러 처리 단계를 차례로 흐르며, 각 단계가 입력을 받아 가공한 뒤 다음 단계로 넘기는 아키텍처 패턴은? (예: <code>cat log | grep ERROR | sort</code>)<label class="opt"><input type="radio" name="D030-q6" value="1">① 브로커</label><label class="opt"><input type="radio" name="D030-q6" value="2">② 파이프-필터</label><label class="opt"><input type="radio" name="D030-q6" value="3">③ 마스터-슬레이브</label><label class="opt"><input type="radio" name="D030-q6" value="4">④ MVC</label></li>
+<li>설계 문서 없이 운영 중인 레거시 시스템의 소스 코드를 분석해 설계 정보와 명세를 거꾸로 뽑아내는 활동은?<label class="opt"><input type="radio" name="D030-q7" value="1">① 역공학</label><label class="opt"><input type="radio" name="D030-q7" value="2">② 재공학</label><label class="opt"><input type="radio" name="D030-q7" value="3">③ 재사용</label><label class="opt"><input type="radio" name="D030-q7" value="4">④ 리팩토링</label></li>
+<li>구조도에서 메인이 A·B·C를 호출하고, A는 D·E를, B는 E를, C는 E·F를 호출한다. 모듈 E의 fan-in은?<label class="opt"><input type="radio" name="D030-q8" value="1">① 1</label><label class="opt"><input type="radio" name="D030-q8" value="2">② 2</label><label class="opt"><input type="radio" name="D030-q8" value="3">③ 3</label><label class="opt"><input type="radio" name="D030-q8" value="4">④ 4</label></li>
+<li>애플리케이션 사이에 미들웨어 버스를 두어 연계를 처리하며, 확장성이 뛰어나고 대용량 처리에 적합한 EAI 구축 유형(ESB 방식)은?<label class="opt"><input type="radio" name="D030-q9" value="1">① Point-to-Point</label><label class="opt"><input type="radio" name="D030-q9" value="2">② Hub &amp; Spoke</label><label class="opt"><input type="radio" name="D030-q9" value="3">③ Hybrid</label><label class="opt"><input type="radio" name="D030-q9" value="4">④ Message Bus</label></li>
+<li>도서관 앱이 하루 동안 쌓인 좌석 이용 기록을 모아 매일 새벽 2시에 시청 통계 시스템으로 한꺼번에 보낸다. 이 인터페이스의 처리 유형은?<label class="opt"><input type="radio" name="D030-q10" value="1">① 실시간</label><label class="opt"><input type="radio" name="D030-q10" value="2">② 배치</label><label class="opt"><input type="radio" name="D030-q10" value="3">③ 동기</label><label class="opt"><input type="radio" name="D030-q10" value="4">④ 단방향</label></li>
+<li>LOC 기법으로 낙관치 2,000라인, 기대치 5,000라인, 비관치 14,000라인을 얻었다. 예측 LOC는?<label class="opt"><input type="radio" name="D030-q11" value="1">① 7,000</label><label class="opt"><input type="radio" name="D030-q11" value="2">② 6,000</label><label class="opt"><input type="radio" name="D030-q11" value="3">③ 5,000</label><label class="opt"><input type="radio" name="D030-q11" value="4">④ 36,000</label></li>
+<li>여러 전문가의 의견을 조정자가 익명으로 모아 다시 돌려주기를 반복해, 한 사람의 편견이나 목소리 큰 사람의 영향을 줄이는 비용 산정 기법은?<label class="opt"><input type="radio" name="D030-q12" value="1">① 델파이 기법</label><label class="opt"><input type="radio" name="D030-q12" value="2">② 전문가 감정 기법</label><label class="opt"><input type="radio" name="D030-q12" value="3">③ Putnam 모형</label><label class="opt"><input type="radio" name="D030-q12" value="4">④ 기능 점수(FP)</label></li>
+<li>형상관리 활동 중, 기준선의 무결성을 평가해 변경이 요청·승인된 대로 정확히 반영되었는지 확인하고 공식 승인하는 활동은?<label class="opt"><input type="radio" name="D030-q13" value="1">① 형상 식별</label><label class="opt"><input type="radio" name="D030-q13" value="2">② 형상 통제</label><label class="opt"><input type="radio" name="D030-q13" value="3">③ 형상 감사</label><label class="opt"><input type="radio" name="D030-q13" value="4">④ 형상 기록</label></li>
+<li>서로 다른 프로세스 사이에서 데이터를 주고받는 IPC 방법에 <b>해당하지 않는 것</b>은?<label class="opt"><input type="radio" name="D030-q14" value="1">① 공유 메모리</label><label class="opt"><input type="radio" name="D030-q14" value="2">② 메시지 큐</label><label class="opt"><input type="radio" name="D030-q14" value="3">③ 파이프</label><label class="opt"><input type="radio" name="D030-q14" value="4">④ 테스트 스텁</label></li>
+<li>DRM 구성 요소 중, 콘텐츠를 메타데이터와 함께 암호화해 배포 가능한 단위로 묶는 것은?<label class="opt"><input type="radio" name="D030-q15" value="1">① 콘텐츠 분배자</label><label class="opt"><input type="radio" name="D030-q15" value="2">② 패키저</label><label class="opt"><input type="radio" name="D030-q15" value="3">③ 클리어링 하우스</label><label class="opt"><input type="radio" name="D030-q15" value="4">④ DRM 컨트롤러</label></li>
+<li>빌드 스크립트를 정의하는 도구가 아니라, 저장소 변경을 감지해 빌드·테스트를 자동으로 돌려 주는 지속적 통합(CI) 서버는?<label class="opt"><input type="radio" name="D030-q16" value="1">① Jenkins</label><label class="opt"><input type="radio" name="D030-q16" value="2">② Ant</label><label class="opt"><input type="radio" name="D030-q16" value="3">③ Maven</label><label class="opt"><input type="radio" name="D030-q16" value="4">④ Gradle</label></li>
+<li>특정한 몇몇 입력값에 대해서만 기대 결과를 제공해, 그 값들로 결과를 판정하는 테스트 오라클은?<label class="opt"><input type="radio" name="D030-q17" value="1">① 참 오라클</label><label class="opt"><input type="radio" name="D030-q17" value="2">② 샘플링 오라클</label><label class="opt"><input type="radio" name="D030-q17" value="3">③ 휴리스틱 오라클</label><label class="opt"><input type="radio" name="D030-q17" value="4">④ 일관성 검사 오라클</label></li>
+<li>개발자 없이 사용자 현장의 실제 환경에서 다수의 사용자가 써 보며 발견한 문제를 기록해 개발사에 알려 주는 인수 테스트는?<label class="opt"><input type="radio" name="D030-q18" value="1">① 알파 테스트</label><label class="opt"><input type="radio" name="D030-q18" value="2">② 회귀 테스트</label><label class="opt"><input type="radio" name="D030-q18" value="3">③ 베타 테스트</label><label class="opt"><input type="radio" name="D030-q18" value="4">④ 단위 테스트</label></li>
+<li>페이지 전체를 새로 고치지 않고 자바스크립트로 서버와 비동기 통신해 화면의 필요한 부분만 갱신하는 기술은?<label class="opt"><input type="radio" name="D030-q19" value="1">① XML</label><label class="opt"><input type="radio" name="D030-q19" value="2">② JSON</label><label class="opt"><input type="radio" name="D030-q19" value="3">③ AJAX</label><label class="opt"><input type="radio" name="D030-q19" value="4">④ S-HTTP</label></li>
+<li>전송 계층 위에서 두 응용 사이의 세션 전체를 암호화하며, HTTPS가 그 위에 HTTP를 얹어 쓰는 보안 기술은?<label class="opt"><input type="radio" name="D030-q20" value="1">① IPSec</label><label class="opt"><input type="radio" name="D030-q20" value="2">② S-HTTP</label><label class="opt"><input type="radio" name="D030-q20" value="3">③ 시큐어 코딩</label><label class="opt"><input type="radio" name="D030-q20" value="4">④ SSL/TLS</label></li>
+</ol><div class="answer-bar" data-id="D030" data-n="20"><code></code><button type="button">답안 복사</button></div><p><small>고른 뒤 <b>답안 복사</b> → 디스코드 공부 채널에 붙여넣기 하면 돼요.</small></p>
+<p>답장: <code>정처기 D030: 1)번호 2)번호 3)번호 … 20)번호</code></p>
+
+<h2>6. S03 다시 풀기</h2>
+<div class="point"><b>핵심 한 줄</b> 정렬은 <b>“멈출 수 있나”</b>(삽입)와 <b>“언제나냐 평균만이냐”</b>(병합·힙 vs 퀵) 두 질문으로 갈라요.</div>
+<p>지난 금요일 보충 자료 <a href="./2026-10-30-S03.html">S03 알고리즘 복잡도</a>를 한 번 더 풀어 보기로 했죠. 아래 세 곳을 먼저 다시 읽고 오면 좋아요. 6문항 모두 S03 원문과 다른 표현이고, 3·4·5번이 S03에서 틀린 세 문항의 재확인이에요.</p>
+<div class="box"><b>다시 볼 곳</b>① 0-1장 — O(□) 표기 해부: 상수와 낮은 차수를 왜 버리나<br>② 4장 — 삽입 vs 선택 표: 정렬된 [1, 3, 5, 8]에서 비교 3번 vs 6번<br>③ 5장 — 병합·힙은 ‘언제나’ n log n, 퀵은 ‘평균만’</div>
+<div class="duo"><div><p>핵심은 아래 그림 한 장이에요. 삽입 정렬은 왼쪽 이웃이 나보다 작으면 거기서 멈출 수 있어서, 이미 정렬된 입력에서는 원소마다 한 번만 봐요. 선택 정렬은 “남은 것 중 최솟값”을 확인하려고 남은 칸을 끝까지 다 봐야 해서, 입력이 이미 정렬돼 있어도 절대 일찍 퇴근하지 못해요.</p></div><figure><svg viewBox="0 0 360 276" font-family="sans-serif" role="img" aria-label="이미 정렬된 1 3 5 8을 정렬할 때 삽입 정렬은 원소마다 1번씩 3번 비교하고 멈추지만, 선택 정렬은 3번 2번 1번 해서 6번 비교한다. 병합과 힙은 언제나 n log n, 퀵은 평균 n log n이고 최악 n제곱">
+<rect width="360" height="276" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">[1, 3, 5, 8] — 이미 정렬된 입력</text><text x="14" y="68" font-size="14" font-weight="700" fill="#2f7d4a">삽입</text><rect x="64" y="50" width="36" height="28" rx="2" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="1.5"/><text x="82" y="69" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">1</text><rect x="100" y="50" width="36" height="28" rx="2" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="1.5"/><text x="118" y="69" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">1</text><rect x="136" y="50" width="36" height="28" rx="2" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="1.5"/><text x="154" y="69" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">1</text><text x="180" y="69" font-size="14" font-weight="700" fill="#2f7d4a">= 3번 (멈춤)</text><text x="14" y="118" font-size="14" font-weight="700" fill="#b03a2e">선택</text><rect x="64" y="100" width="108" height="28" rx="2" fill="#fdecea" stroke="#b03a2e" stroke-width="1.5"/><text x="118" y="119" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">3</text><rect x="172" y="100" width="72" height="28" rx="2" fill="#fdecea" stroke="#b03a2e" stroke-width="1.5"/><text x="208" y="119" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">2</text><rect x="244" y="100" width="36" height="28" rx="2" fill="#fdecea" stroke="#b03a2e" stroke-width="1.5"/><text x="262" y="119" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">1</text><text x="286" y="119" font-size="14" font-weight="700" fill="#b03a2e">= 6번</text><text x="14" y="152" font-size="14" fill="#555">선택은 정렬돼 있어도 남은 칸을 끝까지 봐요</text><rect x="12" y="172" width="336" height="40" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="24" y="198" font-size="14" font-weight="700" fill="#2f7d4a">병합 · 힙: 언제나 n log n</text><rect x="12" y="220" width="336" height="40" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="24" y="246" font-size="14" font-weight="700" fill="#b5730d">퀵: 평균 n log n, 최악 n²</text>
+</svg><figcaption>칸 하나 = 비교 1번. 아래 두 띠가 S03 5장의 “언제나 vs 평균만”이에요.</figcaption></figure></div>
+
+<ol class="quiz">
+<li>어떤 알고리즘의 시간 복잡도가 O(log n)이다. 입력 데이터 수 n이 2배가 되면 연산 횟수는 대략 어떻게 되는가?<label class="opt"><input type="radio" name="S03R-q1" value="1">① 그대로다</label><label class="opt"><input type="radio" name="S03R-q1" value="2">② 1번 정도 늘어난다</label><label class="opt"><input type="radio" name="S03R-q1" value="3">③ 2배가 된다</label><label class="opt"><input type="radio" name="S03R-q1" value="4">④ 4배가 된다</label></li>
+<li>[2, 4, 6, 8, 7]을 삽입 정렬할 때, 앞의 네 칸은 이미 정렬되어 있다. 마지막 원소 7을 알맞은 자리에 끼우기 위해 왼쪽 원소와 비교하는 횟수는?<label class="opt"><input type="radio" name="S03R-q2" value="1">① 3번</label><label class="opt"><input type="radio" name="S03R-q2" value="2">② 1번</label><label class="opt"><input type="radio" name="S03R-q2" value="3">③ 2번</label><label class="opt"><input type="radio" name="S03R-q2" value="4">④ 4번</label></li>
+<li>(S03-4 재확인) 이미 오름차순으로 정렬된 [1, 2, 3, 4, 5]를 다시 정렬할 때, 비교가 n−1번(4번)만으로 끝나는 정렬은?<label class="opt"><input type="radio" name="S03R-q3" value="1">① 선택 정렬</label><label class="opt"><input type="radio" name="S03R-q3" value="2">② 힙 정렬</label><label class="opt"><input type="radio" name="S03R-q3" value="3">③ 퀵 정렬(맨 앞 원소를 피벗으로 사용)</label><label class="opt"><input type="radio" name="S03R-q3" value="4">④ 삽입 정렬</label></li>
+<li>(S03-5 재확인) 쇼핑몰 상품 데이터가 어떤 순서로 들어올지 알 수 없지만, 정렬 시간이 최악의 경우에도 O(n log n)을 넘으면 안 된다. 조건을 만족하는 정렬끼리 묶은 것은?<label class="opt"><input type="radio" name="S03R-q4" value="1">① 병합 정렬·힙 정렬</label><label class="opt"><input type="radio" name="S03R-q4" value="2">② 퀵 정렬·병합 정렬</label><label class="opt"><input type="radio" name="S03R-q4" value="3">③ 힙 정렬·삽입 정렬</label><label class="opt"><input type="radio" name="S03R-q4" value="4">④ 버블 정렬·퀵 정렬</label></li>
+<li>(S03-6 재확인) 선택 정렬로 이미 정렬된 [1, 3, 5, 8]을 정렬할 때 원소끼리 비교하는 횟수는?<label class="opt"><input type="radio" name="S03R-q5" value="1">① 3번</label><label class="opt"><input type="radio" name="S03R-q5" value="2">② 4번</label><label class="opt"><input type="radio" name="S03R-q5" value="3">③ 6번</label><label class="opt"><input type="radio" name="S03R-q5" value="4">④ 8번</label></li>
+<li>연산 횟수가 T(n) = 2n² + 100n + 7인 알고리즘을 빅오 표기법으로 나타낸 것은?<label class="opt"><input type="radio" name="S03R-q6" value="1">① O(2n²)</label><label class="opt"><input type="radio" name="S03R-q6" value="2">② O(n)</label><label class="opt"><input type="radio" name="S03R-q6" value="3">③ O(100n)</label><label class="opt"><input type="radio" name="S03R-q6" value="4">④ O(n²)</label></li>
+</ol><div class="answer-bar" data-id="S03R" data-n="6"><code></code><button type="button">답안 복사</button></div><p><small>고른 뒤 <b>답안 복사</b> → 디스코드 공부 채널에 붙여넣기 하면 돼요.</small></p>
+<p>답장(따로 보내도 돼요): <code>정처기 S03R: 1)번호 2)번호 3)번호 4)번호 5)번호 6)번호</code></p>
+<p>오늘은 26문항이라 길었어요. 진단은 틀려도 괜찮은 시험이에요. 어디가 비었는지 알려 주는 지도니까요. 10/30 D028, 10/31 D029 답장도 편할 때 함께 보내 주세요.</p>
+<p class="meta"><a href="2026-10-31-D029.html">← D029</a>  </p>
+<script>
+document.querySelectorAll('.answer-bar').forEach(bar=>{
+  const id=bar.dataset.id,n=+bar.dataset.n,out=bar.querySelector('code'),btn=bar.querySelector('button');
+  const text=()=>'정처기 '+id+': '+Array.from({length:n},(_,i)=>{const c=document.querySelector('input[name="'+id+'-q'+(i+1)+'"]:checked');return (i+1)+')'+(c?c.value:'?')}).join(' ');
+  document.querySelectorAll('input[name^="'+id+'-q"]').forEach(r=>r.addEventListener('change',()=>{out.textContent=text()}));
+  out.textContent=text();
+  btn.addEventListener('click',async()=>{const t=text();try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}btn.textContent='복사됨 ✓';setTimeout(()=>btn.textContent='답안 복사',1500)});
+});
+</script>
+
+<footer>2027년 정기 기사 1회 정보처리기사 필기 준비 · 공식 범위: Q-Net 2027~2029 출제기준</footer>
+</main></body></html>
