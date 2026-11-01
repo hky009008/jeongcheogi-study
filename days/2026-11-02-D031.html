@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>D031 트랜잭션: ACID·상태·COMMIT/ROLLBACK/SAVEPOINT·병행제어·회복</title>
+<link rel="icon" href="../assets/favicon/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../assets/favicon/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="apple-touch-icon" href="../assets/favicon/apple-touch-icon.png">
+<link rel="stylesheet" href="../style.css"></head>
+<body><main>
+<nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a></nav>
+<h1>D031 · 트랜잭션: ACID·상태·COMMIT/ROLLBACK/SAVEPOINT·병행제어·회복</h1><div class="meta">2026-11-02 · B2 데이터베이스 구축 &gt; SQL 활용</div><p><span class="tag">B2</span> 토요일 <a href="./2026-10-31-D029.html">D029</a>에서 테이블을 만들고(DDL) 지우는 법을 봤어요. 오늘은 그 테이블에 여러 SQL을 <b>한 묶음</b>으로 실행할 때의 약속, 트랜잭션이에요. 예시는 스터디 앱 ‘공부친구’에서 지민이 친구에게 <b>스터디 포인트 300점을 선물</b>하는 장면 하나를 끝까지 따라가요.</p>
+<ul>
+<li>트랜잭션 <b>ACID</b> 4성질과 각각을 지키는 기능(회복·무결성 제약·병행 제어)을 짝지을 수 있다</li>
+<li>트랜잭션 <b>상태 5가지</b>(활동·부분 완료·완료·실패·철회)의 흐름을 설명할 수 있다</li>
+<li><b>COMMIT·ROLLBACK·SAVEPOINT</b> 실행 뒤 테이블에 무엇이 남는지 추적할 수 있다</li>
+<li><b>병행 제어</b>(로킹·2PL·타임스탬프·낙관적 검증)와 <b>회복</b>(REDO·UNDO, 지연·즉시 갱신, 검사점, 그림자 페이징)을 구별할 수 있다</li>
+</ul>
+<div class="glance">
+<div><b>4</b>ACID<small>원자성 · 일관성 · 격리성 · 지속성</small></div>
+<div><b>5</b>상태<small>활동 · 부분 완료 · 완료 · 실패 · 철회</small></div>
+<div><b>3</b>TCL 명령<small>COMMIT · ROLLBACK · SAVEPOINT</small></div>
+<div><b>5</b>회복 기법<small>지연 · 즉시 · 검사점 · 그림자 · 미디어</small></div>
+</div>
+<div class="box"><b>오늘 이야기의 흐름</b>큰 그림(왜 묶나) → 장면 1 네 약속(ACID) → 장면 2 상태 흐름 → 장면 3 저장·되돌리기(TCL) → 장면 4 동시에 만질 때(병행 제어) → 장면 5 서버가 꺼졌을 때(회복) → 오답 복습 → 시험 포인트 → 확인 문제</div>
+
+<h2>1. 큰 그림 — 셋 중 하나만 되면 사고다</h2>
+<div class="point"><b>핵심 한 줄</b>트랜잭션은 여러 SQL을 <b>“전부 되거나, 전혀 안 되거나”</b>로 묶은 <b>논리적 작업 단위</b>예요.</div>
+<div class="duo"><div><p>지민이 친구에게 포인트 300점을 선물하면 DB에서는 SQL 세 줄이 돌아요. 지민의 포인트를 300 깎고, 친구의 포인트를 300 올리고, 선물 내역을 한 줄 남겨요. 문제는 이 셋이 서로 다른 순간에 실행된다는 점이에요. 첫 줄이 끝난 직후 서버가 꺼지면 지민의 포인트는 빠졌는데 친구는 받지 못해, 300점이 우주로 증발해요.</p>
+<p>그래서 DBMS는 “이 세 줄은 한 몸”이라고 선언할 수 있게 해 줘요. 이렇게 데이터베이스의 상태를 바꾸기 위해 한꺼번에 수행해야 하는 연산들의 묶음, 즉 <b>논리적 작업 단위</b>가 <b>트랜잭션(Transaction)</b>이에요. 트랜잭션은 그 증발을 막는 진공 포장이에요. 포장째 배달되거나, 포장째 반송되거나 둘 중 하나죠.</p></div><figure><svg viewBox="0 0 360 330" font-family="sans-serif" role="img" aria-label="포인트 선물의 세 SQL을 하나로 묶은 트랜잭션 상자. 중간에 장애가 나도 결과는 전부 반영 또는 전부 취소 둘 중 하나">
+<rect width="360" height="330" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d31a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><defs><marker id="d31a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b03a2e"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">포인트 선물 = 트랜잭션 하나</text><path d="M110 212 L96 234" stroke="#2f7d4a" stroke-width="2" fill="none" marker-end="url(#d31a)"/><path d="M250 212 L264 234" stroke="#b5730d" stroke-width="2" fill="none" marker-end="url(#d31a)"/><rect x="20" y="38" width="320" height="174" rx="10" fill="#ffffff" stroke="#2a5db0" stroke-width="2" stroke-dasharray="6 4"/><text x="332" y="56" font-size="14" fill="#2a5db0" text-anchor="end">BEGIN … 끝</text><rect x="36" y="66" width="252" height="36" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="162" y="90" font-size="14" fill="#222" text-anchor="middle">① 지민 포인트 −300 (UPDATE)</text><rect x="36" y="114" width="252" height="36" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="162" y="138" font-size="14" fill="#222" text-anchor="middle">② 친구 포인트 +300 (UPDATE)</text><rect x="36" y="162" width="252" height="36" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="162" y="186" font-size="14" fill="#222" text-anchor="middle">③ 선물 내역 기록 (INSERT)</text><polygon points="312,104 300,122 310,122 298,142 318,118 308,118 320,104" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><text x="310" y="160" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">장애</text><rect x="20" y="236" width="150" height="52" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="95" y="258" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">전부 반영</text><text x="95" y="278" font-size="14" fill="#333" text-anchor="middle">COMMIT</text><rect x="190" y="236" width="150" height="52" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="265" y="258" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">전부 취소</text><text x="265" y="278" font-size="14" fill="#333" text-anchor="middle">ROLLBACK</text><text x="180" y="314" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">‘①만 되고 ②③은 안 된’ 절반 상태는 없다</text>
+</svg><figcaption>점선 상자 안 세 줄이 한 몸이에요. 끝나는 길은 초록(전부 반영)과 주황(전부 취소) 두 갈래뿐이에요.</figcaption></figure></div>
+
+<p>트랜잭션이 필요한 이유는 크게 둘이에요. 하나는 <b>중간 장애</b>(정전, 프로세스 종료, 디스크 오류)이고, 다른 하나는 <b>동시 접속</b>이에요. 수많은 사용자가 같은 포인트 행을 동시에 건드리면, 각자는 올바른 SQL을 실행해도 합쳐진 결과가 틀릴 수 있어요. 오늘 페이지의 뒤쪽 두 장면(병행 제어·회복)이 이 두 위협에 대한 DBMS의 대답이에요.</p>
+<p>D029에서 SQL을 네 갈래로 나눴던 걸 떠올려 보세요. 테이블 모양을 다루는 DDL, 행을 다루는 DML, 권한을 다루는 DCL, 그리고 작업 묶음을 확정·취소하는 <b>TCL</b>(Transaction Control Language)이었죠. 오늘 나오는 COMMIT·ROLLBACK·SAVEPOINT가 바로 그 TCL이에요. 교재에 따라 이 명령들을 DCL에 함께 넣기도 하는데, 그 분류 차이는 내일 D032에서 정리해요.</p>
+<p>처음 보는 용어가 많으니 먼저 한 장으로 모아 둘게요. 표의 단어는 아래 장면에서 하나씩 다시 자세히 설명해요.</p>
+<table>
+<tr><th>용어</th><th>뜻</th><th>포인트 선물에서</th></tr>
+<tr><td>커밋(COMMIT)</td><td>트랜잭션의 결과를 DB에 영구 확정</td><td>세 줄이 다 끝나고 “선물 완료” 확정</td></tr>
+<tr><td>롤백(ROLLBACK)</td><td>트랜잭션이 한 일을 모두 취소하고 시작 전 상태로</td><td>친구 계정이 정지돼 선물 취소</td></tr>
+<tr><td>로그(Log)</td><td>DB를 바꾼 기록(무엇을, 바꾸기 전 값, 바꾼 뒤 값)</td><td>“지민 1000 → 700” 기록</td></tr>
+<tr><td>버퍼</td><td>디스크에 쓰기 전 데이터를 잠시 두는 메모리</td><td>깎인 700이 아직 메모리에만 있음</td></tr>
+<tr><td>락(Lock)</td><td>다른 트랜잭션이 같은 데이터에 접근하지 못하게 거는 자물쇠</td><td>지민 행을 잠그고 계산</td></tr>
+<tr><td>장애</td><td>트랜잭션이 정상적으로 끝나지 못하게 하는 사건</td><td>두 번째 줄 실행 중 정전</td></tr>
+</table>
+<div class="duo"><div><p>오늘 배울 덩어리들이 서로 어떻게 매달려 있는지 지도로 먼저 보고 시작해요. 트랜잭션에서 세 가지(약속·생애·명령)가 나오고, 약속 중 격리성은 병행 제어가, 원자성과 지속성은 회복이 책임져요.</p></div><figure class="mermaid"><img src="../assets/e8a5b58f75ca201e.png" alt="도식" loading="lazy" style="width:648px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure></div>
+
+<p><b>→ 이 장면의 결과물:</b> “포인트 선물 세 줄은 한 트랜잭션”이라는 묶음. 그래서 다음 장면은 이 묶음이 꼭 지켜야 할 네 가지 약속이에요.</p>
+
+<h2>2. 장면 1 — 트랜잭션이 지켜야 할 네 약속 (ACID)</h2>
+<div class="point"><b>핵심 한 줄</b><b>원자성·일관성·격리성·지속성</b>. 원자성·지속성은 <b>회복</b>이, 격리성은 <b>병행 제어</b>가, 일관성은 <b>무결성 제약</b>이 지켜요.</div>
+<p>앞에서 세 줄을 한 묶음으로 만들었어요. 그런데 “묶었다”는 말만으로는 부족해요. 장애가 나면? 동시에 두 명이 선물하면? 커밋 직후 서버가 꺼지면? 이런 질문마다 DBMS가 약속해 둔 답이 있고, 그 약속 네 개의 머리글자가 ACID예요.</p>
+<h3>원자성(Atomicity)</h3>
+<p>트랜잭션의 연산은 <b>모두 반영되거나 전혀 반영되지 않아야</b> 한다는 성질이에요(All or Nothing). 포인트 선물이 두 번째 줄에서 멈췄다면 첫 줄까지 되돌려 없던 일로 만들어야 해요. 원자성은 ‘반쯤 결혼’이 없는 것과 같아요. 식을 다 올리거나, 아예 없던 일이거나. 이 되돌리기는 장애 뒤 로그를 보고 처리하므로 <b>회복 기법</b>이 원자성을 지켜요.</p>
+<h3>일관성(Consistency)</h3>
+<p>트랜잭션이 끝난 뒤에도 DB가 <b>정해 둔 규칙(무결성 제약)을 만족하는 일관된 상태</b>여야 한다는 성질이에요. ‘공부친구’에 “포인트는 0 미만이 될 수 없다(CHECK)”는 규칙이 있다면, 잔액 200점인 지민이 300점을 선물하는 트랜잭션은 성공하면 안 돼요. 또 선물 전후로 두 사람 포인트의 합이 같아야 하죠. D029의 제약조건(PK·FK·CHECK 등)이 이 약속의 도구예요.</p>
+<h3>격리성(Isolation)</h3>
+<p>동시에 실행되는 트랜잭션들이 <b>서로의 중간 결과에 끼어들 수 없어야</b> 한다는 성질이에요. 고립성·독립성이라고도 불러요. 지민의 선물이 아직 커밋되기 전이라면, 다른 트랜잭션이 깎인 700을 보고 계산해서는 안 돼요. 이 칸막이를 세우는 게 장면 4의 <b>병행 제어</b>(로킹 등)예요.</p>
+<h3>지속성(Durability)</h3>
+<div class="duo"><div><p><b>커밋된 결과는 장애가 나도 영구히 남아야</b> 한다는 성질이에요. 영속성이라고도 불러요. “선물 완료” 화면이 뜬 직후 서버가 꺼져도, 다시 켜면 친구 포인트는 올라가 있어야 해요. 커밋된 내용이 아직 버퍼에만 있었다면 로그로 다시 써 넣어야 하니, 지속성도 <b>회복 기법</b>이 지켜요.</p></div><figure><svg viewBox="0 0 360 322" font-family="sans-serif" role="img" aria-label="ACID 네 기둥. 원자성 받침은 회복, 일관성 받침은 무결성 제약, 격리성 받침은 병행 제어, 지속성 받침은 회복">
+<rect width="360" height="322" rx="12" fill="#f7f7f4"/>
+<text x="180" y="24" font-size="15" font-weight="700" fill="#222" text-anchor="middle">ACID 네 기둥과 받쳐 주는 기능</text><polygon points="180,36 350,72 10,72" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="180" y="64" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">트랜잭션</text><rect x="14" y="80" width="76" height="140" rx="4" fill="#ffffff" stroke="#2a5db0" stroke-width="2"/><text x="52" y="116" font-size="26" font-weight="700" fill="#2a5db0" text-anchor="middle">A</text><text x="52" y="150" font-size="14" font-weight="700" fill="#222" text-anchor="middle">원자성</text><text x="52" y="176" font-size="14" fill="#444" text-anchor="middle">전부/전무</text><rect x="12" y="228" width="80" height="56" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="52" y="262" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">회복</text><rect x="98" y="80" width="76" height="140" rx="4" fill="#ffffff" stroke="#2f7d4a" stroke-width="2"/><text x="136" y="116" font-size="26" font-weight="700" fill="#2f7d4a" text-anchor="middle">C</text><text x="136" y="150" font-size="14" font-weight="700" fill="#222" text-anchor="middle">일관성</text><text x="136" y="176" font-size="14" fill="#444" text-anchor="middle">규칙 유지</text><rect x="96" y="228" width="80" height="56" rx="4" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="136" y="252" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">무결성</text><text x="136" y="272" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">제약</text><rect x="182" y="80" width="76" height="140" rx="4" fill="#ffffff" stroke="#b5730d" stroke-width="2"/><text x="220" y="116" font-size="26" font-weight="700" fill="#b5730d" text-anchor="middle">I</text><text x="220" y="150" font-size="14" font-weight="700" fill="#222" text-anchor="middle">격리성</text><text x="220" y="176" font-size="14" fill="#444" text-anchor="middle">안 섞임</text><rect x="180" y="228" width="80" height="56" rx="4" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="220" y="252" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">병행</text><text x="220" y="272" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">제어</text><rect x="266" y="80" width="76" height="140" rx="4" fill="#ffffff" stroke="#2a5db0" stroke-width="2"/><text x="304" y="116" font-size="26" font-weight="700" fill="#2a5db0" text-anchor="middle">D</text><text x="304" y="150" font-size="14" font-weight="700" fill="#222" text-anchor="middle">지속성</text><text x="304" y="176" font-size="14" fill="#444" text-anchor="middle">커밋 영구</text><rect x="264" y="228" width="80" height="56" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="304" y="262" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">회복</text><text x="180" y="308" font-size="14" fill="#555" text-anchor="middle">파랑 받침 둘(A·D)이 같은 ‘회복’이라는 점이 포인트</text>
+</svg><figcaption>기둥이 성질, 아래 받침이 그 성질을 지켜 주는 DBMS 기능이에요. 색이 같은 받침은 같은 기능이에요.</figcaption></figure></div>
+
+<p>시험에서는 성질 이름보다 <b>“누가 이 성질을 지키나”</b> 짝이 더 자주 흔들려요. 출제자는 ACID 이름 네 개 외운 사람과 짝까지 외운 사람을 가르고 싶어 하거든요. 원자성과 지속성은 둘 다 ‘장애 뒤 처리’라 같은 회복 쪽이고, 격리성만 ‘동시성’ 문제라 병행 제어 쪽이라는 구조로 기억하면 헷갈리지 않아요. 일관성은 교재에 따라 무결성 제약과 병행 제어를 함께 적기도 하는데, 시험에서 가장 자주 묻는 짝은 격리성–병행 제어예요.</p>
+<p>한 장 요약 — 위 네 문단을 표로 모으면 이렇게 돼요.</p>
+<table class="tight">
+<tr><th>성질</th><th>뜻</th><th>깨지면 생기는 일</th><th>지키는 기능</th></tr>
+<tr><td>원자성 (Atomicity)</td><td>전부 반영 또는 전부 취소</td><td>지민만 깎이고 친구는 못 받음</td><td>회복</td></tr>
+<tr><td>일관성 (Consistency)</td><td>끝난 뒤에도 규칙(제약) 만족</td><td>잔액이 음수, 포인트 합이 달라짐</td><td>무결성 제약</td></tr>
+<tr><td>격리성 (Isolation) · 고립성·독립성</td><td>동시 실행 중 서로의 중간 결과에 간섭 안 함</td><td>커밋 전 700을 다른 작업이 읽음</td><td>병행 제어</td></tr>
+<tr><td>지속성 (Durability) · 영속성</td><td>커밋된 결과는 영구 보존</td><td>완료 화면 뒤 재시작했더니 선물이 사라짐</td><td>회복</td></tr>
+</table>
+<div class="memo">원·지는 회복, 격은 병행 제어, 일은 무결성 — “원지(原紙)는 회복실에, 격한 건 병행실로”</div>
+<p><b>→ 이 장면의 결과물:</b> 묶음이 지킬 네 약속과 그 담당자. 그래서 다음 장면은 이 묶음이 시작부터 끝까지 어떤 상태를 지나는지예요.</p>
+
+<h2>3. 장면 2 — 끝까지 실행했다고 끝난 게 아니다 (트랜잭션 상태)</h2>
+<div class="point"><b>핵심 한 줄</b>정상 길은 <b>활동 → 부분 완료 → 완료</b>, 사고 길은 <b>활동(또는 부분 완료) → 실패 → 철회</b>예요.</div>
+<div class="duo"><div><p>장면 1의 약속을 지키려면 DBMS가 지금 트랜잭션이 어디까지 왔는지 알아야 해요. 그래야 장애가 났을 때 “이건 확정해야 하나, 되돌려야 하나”를 판단할 수 있죠. 그래서 트랜잭션은 다섯 상태 중 하나에 있어요.</p>
+<p><b>활동(Active)</b>은 트랜잭션이 시작돼 연산을 실행하고 있는 상태예요. 지민 포인트를 깎고 친구 포인트를 올리는 중이죠. <b>부분 완료(Partially Committed)</b>는 <b>마지막 연산까지 실행을 마쳤지만 아직 커밋이 확정되기 직전</b>인 상태예요. 세 번째 INSERT까지 끝났지만, 결과를 영구 저장했다는 확인은 아직이에요.</p>
+<p><b>완료(Committed)</b>는 커밋에 성공해 결과가 확정된 상태예요. 이제 지속성 약속이 적용돼요. <b>실패(Failed)</b>는 오류나 장애로 더 진행할 수 없다고 판단된 상태이고, <b>철회(Aborted)</b>는 롤백을 끝내 트랜잭션 시작 전 상태로 되돌린 상태예요. 철회된 트랜잭션은 다시 시작하거나 그대로 버려요.</p>
+<p>가장 많이 틀리는 곳이 부분 완료예요. 부분 완료는 답안지를 다 쓰고 손을 든 상태예요. 감독관이 걷어 가기(커밋) 전에 정전이 나면 그 답안은 없던 게 돼요. 그래서 부분 완료에서도 실패로 가는 화살표가 있어요.</p></div><figure class="mermaid"><img src="../assets/c90077a4cc2a0088.png" alt="도식" loading="lazy" style="width:306px"></figure></div>
+
+<div class="trap">“마지막 연산을 실행한 직후 상태 = 완료”는 오답 선지 단골이에요. 마지막 연산 직후는 <b>부분 완료</b>, 커밋이 확정돼야 <b>완료</b>예요. 그리고 ‘철회’는 실패 뒤 롤백까지 마친 상태라, 실패와 철회는 다른 칸이에요.</div>
+<div class="memo">활·부·완 / 실·철 — “활기차게 부지런히 완주, 실수하면 철수”</div>
+<p><b>→ 이 장면의 결과물:</b> 트랜잭션의 위치를 알려 주는 다섯 칸. 그래서 다음 장면은 이 칸을 개발자가 직접 움직이는 명령, COMMIT·ROLLBACK·SAVEPOINT예요.</p>
+
+<h2>4. 장면 3 — 저장 버튼과 되돌리기 (COMMIT · ROLLBACK · SAVEPOINT)</h2>
+<div class="point"><b>핵심 한 줄</b>COMMIT은 확정, ROLLBACK은 전부 취소, <b>ROLLBACK TO 저장점</b>은 그 저장점 뒤만 취소하고 <b>트랜잭션은 계속</b>이에요.</div>
+<p>장면 2에서 트랜잭션이 완료나 철회로 끝난다고 했죠. 그 끝을 개발자가 정하는 명령이 TCL이에요. 포인트 선물을 SQL로 쓰면 아래처럼 돼요(자동 커밋을 끈 상태 기준).</p>
+<pre><code>-- 공부친구: 지민(M01) → 친구(M02)에게 300점 선물
+UPDATE 회원 SET 포인트 = 포인트 - 300 WHERE 회원번호 = 'M01';
+UPDATE 회원 SET 포인트 = 포인트 + 300 WHERE 회원번호 = 'M02';
+INSERT INTO 선물내역 VALUES ('G101', 'M01', 'M02', 300);
+COMMIT;      -- 세 줄을 한꺼번에 확정
+
+-- 중간에 친구 계정이 정지된 걸 알았다면
+ROLLBACK;    -- 마지막 COMMIT 이후 한 일을 모두 취소</code></pre>
+<div class="duo"><div><p><b>COMMIT</b>은 트랜잭션이 한 일을 DB에 <b>영구히 확정</b>하고 트랜잭션을 끝내는 명령이에요. 커밋 뒤에는 ROLLBACK으로 되돌릴 수 없어요. 상태 그림에서 부분 완료를 완료로 넘기는 버튼이죠. <b>ROLLBACK</b>은 <b>마지막 커밋 이후의 변경을 모두 취소</b>해 트랜잭션 시작 전으로 돌리고 끝내는 명령이에요. 상태 그림의 실패 → 철회 화살표예요.</p>
+<p>아래 시퀀스는 두 명령이 DB 안에서 어떻게 다른지 보여 줘요. 변경은 먼저 버퍼와 로그에 쌓이고, 커밋은 그 결과를 확정 짓고, 롤백은 버퍼의 값을 바꾸기 전 값으로 되돌려요.</p></div><figure class="mermaid"><img src="../assets/a07e03637268c169.png" alt="도식" loading="lazy" style="width:399px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure></div>
+
+<p><b>SAVEPOINT</b>는 트랜잭션 중간에 이름 붙인 <b>저장점</b>을 만드는 명령이고, <b>ROLLBACK TO 저장점</b>은 그 저장점 <b>이후</b>의 작업만 취소해요. 중요한 건 ROLLBACK TO는 트랜잭션을 끝내지 않는다는 점이에요. 저장점 앞의 작업은 아직 커밋되지 않은 채 살아 있고, 뒤에 COMMIT을 해야 확정돼요.</p>
+<p>SAVEPOINT는 게임 중간 저장이에요. 보스전에서 지면 마을이 아니라 보스방 앞에서 다시 시작하죠. 다만 게임을 끄는(COMMIT이나 ROLLBACK) 순간 중간 저장은 사라져요. 아래 그림처럼 한 단계씩 추적하면 시험의 ‘남은 행 찾기’ 문제가 풀려요.</p>
+<pre><code>INSERT INTO T VALUES (1);   -- T: 1
+SAVEPOINT s1;
+INSERT INTO T VALUES (2);   -- T: 1, 2
+SAVEPOINT s2;
+DELETE FROM T WHERE id = 1; -- T: 2
+ROLLBACK TO s1;             -- s1 이후 취소 → T: 1
+COMMIT;                     -- 1 확정</code></pre>
+<figure><svg viewBox="0 0 360 350" font-family="sans-serif" role="img" aria-label="SAVEPOINT 타임라인. INSERT 1, SAVEPOINT s1, INSERT 2, SAVEPOINT s2, DELETE 1, ROLLBACK TO s1, COMMIT. 최종 T에는 1번 행만 남음">
+<rect width="360" height="350" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d31b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b03a2e"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">SAVEPOINT 추적 — 테이블 T 상태</text><path d="M44 278 C12 278 12 98 42 98" stroke="#b03a2e" stroke-width="2" fill="none" marker-end="url(#d31b)"/><rect x="48" y="40" width="166" height="32" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="131" y="62" font-size="14" fill="#222" text-anchor="middle">INSERT 1번 행</text><path d="M214 56 L228 56" stroke="#999" stroke-width="2" fill="none"/><rect x="230" y="40" width="116" height="32" rx="8" fill="#ffffff" stroke="#888" stroke-width="2"/><text x="288" y="62" font-size="14" fill="#222" text-anchor="middle">T: 1</text><rect x="48" y="80" width="166" height="32" rx="8" fill="#f1eaf8" stroke="#6a3d9a" stroke-width="2"/><text x="131" y="102" font-size="14" font-weight="700" fill="#6a3d9a" text-anchor="middle">SAVEPOINT s1</text><path d="M214 96 L228 96" stroke="#999" stroke-width="2" fill="none"/><rect x="230" y="80" width="116" height="32" rx="8" fill="#ffffff" stroke="#888" stroke-width="2"/><text x="288" y="102" font-size="14" fill="#222" text-anchor="middle">T: 1</text><rect x="48" y="120" width="166" height="32" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="131" y="142" font-size="14" fill="#222" text-anchor="middle">INSERT 2번 행</text><path d="M214 136 L228 136" stroke="#999" stroke-width="2" fill="none"/><rect x="230" y="120" width="116" height="32" rx="8" fill="#ffffff" stroke="#888" stroke-width="2"/><text x="288" y="142" font-size="14" fill="#222" text-anchor="middle">T: 1, 2</text><rect x="48" y="160" width="166" height="32" rx="8" fill="#f1eaf8" stroke="#6a3d9a" stroke-width="2"/><text x="131" y="182" font-size="14" font-weight="700" fill="#6a3d9a" text-anchor="middle">SAVEPOINT s2</text><path d="M214 176 L228 176" stroke="#999" stroke-width="2" fill="none"/><rect x="230" y="160" width="116" height="32" rx="8" fill="#ffffff" stroke="#888" stroke-width="2"/><text x="288" y="182" font-size="14" fill="#222" text-anchor="middle">T: 1, 2</text><rect x="48" y="200" width="166" height="32" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="131" y="222" font-size="14" fill="#222" text-anchor="middle">DELETE 1번 행</text><path d="M214 216 L228 216" stroke="#999" stroke-width="2" fill="none"/><rect x="230" y="200" width="116" height="32" rx="8" fill="#ffffff" stroke="#888" stroke-width="2"/><text x="288" y="222" font-size="14" fill="#222" text-anchor="middle">T: 2</text><rect x="48" y="240" width="166" height="32" rx="8" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><text x="131" y="262" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">ROLLBACK TO s1</text><path d="M214 256 L228 256" stroke="#999" stroke-width="2" fill="none"/><rect x="230" y="240" width="116" height="32" rx="8" fill="#ffffff" stroke="#888" stroke-width="2"/><text x="288" y="262" font-size="14" fill="#222" text-anchor="middle">T: 1</text><rect x="48" y="280" width="166" height="32" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="131" y="302" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">COMMIT</text><path d="M214 296 L228 296" stroke="#999" stroke-width="2" fill="none"/><rect x="230" y="280" width="116" height="32" rx="8" fill="#ffffff" stroke="#888" stroke-width="2"/><text x="288" y="302" font-size="14" fill="#222" text-anchor="middle">T: 1 확정</text><text x="180" y="336" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">s1 뒤의 일만 지우고, 트랜잭션은 계속</text>
+</svg><figcaption>왼쪽이 실행한 명령, 오른쪽이 그 직후 테이블 T의 행이에요. 빨간 되감기 화살표가 s1 자리로 돌아가요.</figcaption></figure>
+<p>한 장 요약 — 네 명령을 효과와 ‘뒤에 되돌릴 수 있나’로 모았어요.</p>
+<table>
+<tr><th>명령</th><th>효과</th><th>트랜잭션은?</th></tr>
+<tr><td>COMMIT</td><td>변경을 영구 확정(이후 ROLLBACK 불가)</td><td>끝남</td></tr>
+<tr><td>ROLLBACK</td><td>마지막 커밋 이후 변경을 모두 취소</td><td>끝남</td></tr>
+<tr><td>SAVEPOINT 이름</td><td>현재 위치에 저장점 표시(데이터 변화 없음)</td><td>계속</td></tr>
+<tr><td>ROLLBACK TO 이름</td><td>그 저장점 이후 변경만 취소</td><td>계속(나중에 COMMIT 필요)</td></tr>
+</table>
+<p>현업에서는 자동 커밋(auto-commit)이 켜진 채로 일하는 경우가 많아요. 그러면 SQL 한 줄마다 COMMIT이 붙어 ROLLBACK할 틈이 없어요. 스프링의 <code>@Transactional</code>이 하는 일이 바로 이 자동 커밋을 끄고 메서드 전체를 한 트랜잭션으로 감싸, 예외가 나면 ROLLBACK하는 거예요. 또 D029에서 본 것처럼 오라클은 CREATE·DROP 같은 DDL을 실행하면 그 자리에서 자동 커밋돼요.</p>
+<div class="trap">ROLLBACK TO s1 뒤에 테이블이 “빈 테이블”이라고 고르면 틀려요. 그건 전체 ROLLBACK의 결과예요. ROLLBACK TO는 저장점 <b>뒤</b>만 지우고, 앞의 작업은 남아요.</div>
+<p><b>→ 이 장면의 결과물:</b> 한 사람의 트랜잭션을 확정·취소하는 법. 그래서 다음 장면은 여러 사람의 트랜잭션이 같은 행을 동시에 만질 때예요.</p>
+
+<h2>5. 장면 4 — 같은 포인트를 둘이 동시에 만질 때 (병행 제어)</h2>
+<div class="point"><b>핵심 한 줄</b>동시 실행이 낳는 문제 4가지(갱신 분실·비완료 의존성·모순성·연쇄 복귀)를 막는 게 <b>병행 제어</b>, 대표 기법은 <b>로킹</b>과 <b>2단계 로킹(2PL)</b>이에요.</div>
+<p>장면 3까지는 트랜잭션이 하나뿐인 세상이었어요. 실제 앱에서는 수천 명이 동시에 요청을 보내요. 트랜잭션을 하나씩 줄 세워 실행하면(직렬 실행) 안전하지만 너무 느려요. 그래서 DBMS는 여러 트랜잭션을 섞어 실행(병행 수행)해 처리량을 높이고 응답 시간을 줄이되, 결과는 직렬로 실행한 것과 같게 만들어요. 그 조율이 <b>병행 제어(동시성 제어)</b>이고, 장면 1의 격리성을 지키는 담당자예요.</p>
+<h3>병행 수행에서 생기는 문제 4가지</h3>
+<div class="duo"><div><p><b>갱신 분실(Lost Update)</b>은 두 트랜잭션이 같은 값을 읽고 각자 고쳐 쓰는 바람에, 먼저 쓴 쪽의 결과가 덮여 사라지는 현상이에요. 1000점을 가진 지민이 두 친구에게 동시에 300점씩 선물하면 400점이 남아야 하는데, 둘 다 1000을 읽고 700을 쓰면 700이 남아요. 같은 칠판에 각자 계산한 답을 쓰면 나중에 쓴 사람 답만 남는 것과 같아요. 먼저 쓴 사람은 일을 했는데 흔적이 없죠.</p></div><figure><svg viewBox="0 0 360 314" font-family="sans-serif" role="img" aria-label="갱신 분실 시간표. T1과 T2가 둘 다 1000을 읽고 각자 700을 써서 최종 700. 맞는 값은 400">
+<rect width="360" height="314" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">갱신 분실 — 1000점에서 300점씩 두 번</text><text x="72" y="52" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">T1 (선물 A)</text><text x="180" y="52" font-size="14" font-weight="700" fill="#222" text-anchor="middle">지민 포인트</text><text x="288" y="52" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">T2 (선물 B)</text><text x="8" y="87" font-size="14" fill="#777">t1</text><rect x="26" y="64" width="92" height="36" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="72" y="87" font-size="14" fill="#222" text-anchor="middle">읽기: 1000</text><rect x="146" y="64" width="68" height="36" rx="8" fill="#ffffff" stroke="#888" stroke-width="2"/><text x="180" y="87" font-size="14" font-weight="700" fill="#222" text-anchor="middle">1000</text><text x="8" y="135" font-size="14" fill="#777">t2</text><rect x="242" y="112" width="92" height="36" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="288" y="135" font-size="14" fill="#222" text-anchor="middle">읽기: 1000</text><rect x="146" y="112" width="68" height="36" rx="8" fill="#ffffff" stroke="#888" stroke-width="2"/><text x="180" y="135" font-size="14" font-weight="700" fill="#222" text-anchor="middle">1000</text><text x="8" y="183" font-size="14" fill="#777">t3</text><rect x="26" y="160" width="92" height="36" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="72" y="183" font-size="14" fill="#222" text-anchor="middle">쓰기: 700</text><rect x="146" y="160" width="68" height="36" rx="8" fill="#ffffff" stroke="#888" stroke-width="2"/><text x="180" y="183" font-size="14" font-weight="700" fill="#222" text-anchor="middle">700</text><text x="8" y="231" font-size="14" fill="#777">t4</text><rect x="242" y="208" width="92" height="36" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="288" y="231" font-size="14" fill="#222" text-anchor="middle">쓰기: 700</text><rect x="146" y="208" width="68" height="36" rx="8" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><text x="180" y="231" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">700</text><text x="180" y="278" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">맞는 값 400, 실제 700</text><text x="180" y="300" font-size="14" fill="#333" text-anchor="middle">→ T1이 깎은 300점이 사라짐</text>
+</svg><figcaption>t1~t4는 시간 순서예요. T2가 T1의 결과를 모른 채 옛 값 1000으로 계산해 덮어써요.</figcaption></figure></div>
+
+<p><b>비완료 의존성(Uncommitted Dependency)</b>은 아직 커밋되지 않은 값을 다른 트랜잭션이 읽었는데, 그 트랜잭션이 롤백돼 버려 읽은 값이 존재하지 않던 값이 되는 현상이에요. 흔히 <b>더티 리드(Dirty Read)</b>라고 불러요. 깎인 700을 보고 “잔액 부족” 알림을 보냈는데 선물이 취소되면, 알림은 유령 숫자를 보고 보낸 셈이에요.</p>
+<p><b>모순성(Inconsistency)</b>은 한 트랜잭션이 여러 값을 읽는 도중 다른 트랜잭션이 그 값들을 바꿔, 읽은 결과끼리 앞뒤가 맞지 않는 현상이에요. 전체 포인트 합계를 내는 도중 선물이 오가면, 지민은 선물 전 값으로, 친구는 선물 후 값으로 더해져 합계가 300점 부풀어요. <b>연쇄 복귀(Cascading Rollback)</b>는 한 트랜잭션이 롤백될 때 그 트랜잭션의 커밋 전 값을 읽은 다른 트랜잭션들까지 줄줄이 롤백해야 하는 현상이에요.</p>
+<p>한 장 요약 — 네 문제를 ‘공부친구’ 장면으로 묶었어요.</p>
+<table>
+<tr><th>문제</th><th>한 줄 뜻</th><th>공부친구 장면</th></tr>
+<tr><td>갱신 분실</td><td>나중에 쓴 값이 먼저 쓴 값을 덮음</td><td>동시 선물 두 건 → 300점 하나가 사라짐</td></tr>
+<tr><td>비완료 의존성 (Dirty Read)</td><td>커밋 안 된 값을 읽었는데 롤백됨</td><td>취소될 700을 보고 알림 발송</td></tr>
+<tr><td>모순성</td><td>읽는 도중 값이 바뀌어 결과끼리 안 맞음</td><td>합계 계산 중 선물이 오가 합이 부풂</td></tr>
+<tr><td>연쇄 복귀</td><td>하나의 롤백이 다른 트랜잭션 롤백을 부름</td><td>700을 읽은 작업들까지 줄줄이 취소</td></tr>
+</table>
+<h3>로킹과 락의 두 종류</h3>
+<div class="duo"><div><p>가장 기본 대책은 <b>로킹(Locking)</b>이에요. 트랜잭션이 데이터를 쓰기 전에 자물쇠(lock)를 걸고, 다 쓰면 푸는(unlock) 방식이에요. 락이 걸린 데이터는 다른 트랜잭션이 기다려야 하니 갱신 분실이 사라져요. 락에는 두 종류가 있어요. <b>공유 락(Shared Lock, S)</b>은 읽기용이라 여러 트랜잭션이 함께 걸 수 있고, 걸린 동안 누구도 쓰지 못해요. <b>배타 락(Exclusive Lock, X)</b>은 쓰기용이라 건 트랜잭션만 읽고 쓸 수 있고, 다른 트랜잭션은 공유 락도 걸 수 없어요.</p></div><figure><svg viewBox="0 0 360 270" font-family="sans-serif" role="img" aria-label="락 호환표. 공유 락끼리만 동시에 허용되고 배타 락이 끼면 모두 대기">
+<rect width="360" height="270" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">락 호환표 — 이미 걸린 락 vs 새 요청</text><rect x="140" y="40" width="100" height="40" rx="8" fill="#f1eaf8" stroke="#6a3d9a" stroke-width="2"/><text x="190" y="65" font-size="14" font-weight="700" fill="#6a3d9a" text-anchor="middle">요청: 공유</text><rect x="248" y="40" width="100" height="40" rx="8" fill="#f1eaf8" stroke="#6a3d9a" stroke-width="2"/><text x="298" y="65" font-size="14" font-weight="700" fill="#6a3d9a" text-anchor="middle">요청: 배타</text><rect x="12" y="88" width="120" height="48" rx="8" fill="#eeeeea" stroke="#888" stroke-width="2"/><text x="72" y="118" font-size="14" font-weight="700" fill="#222" text-anchor="middle">보유: 공유(S)</text><rect x="140" y="88" width="100" height="48" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="190" y="118" font-size="15" font-weight="700" fill="#2f7d4a" text-anchor="middle">허용</text><rect x="248" y="88" width="100" height="48" rx="8" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><text x="298" y="118" font-size="15" font-weight="700" fill="#b03a2e" text-anchor="middle">대기</text><rect x="12" y="144" width="120" height="48" rx="8" fill="#eeeeea" stroke="#888" stroke-width="2"/><text x="72" y="174" font-size="14" font-weight="700" fill="#222" text-anchor="middle">보유: 배타(X)</text><rect x="140" y="144" width="100" height="48" rx="8" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><text x="190" y="174" font-size="15" font-weight="700" fill="#b03a2e" text-anchor="middle">대기</text><rect x="248" y="144" width="100" height="48" rx="8" fill="#fdecea" stroke="#b03a2e" stroke-width="2"/><text x="298" y="174" font-size="15" font-weight="700" fill="#b03a2e" text-anchor="middle">대기</text><text x="16" y="230" font-size="14" fill="#333">공유(S) = 읽기용. 여럿이 함께 걸 수 있음</text><text x="16" y="254" font-size="14" fill="#333">배타(X) = 쓰기용. 혼자만, 다른 락 전부 막음</text>
+</svg><figcaption>초록 칸은 하나뿐이에요. 읽기끼리만 같이 걸 수 있어요.</figcaption></figure></div>
+
+<h3>로킹 단위 — 자물쇠를 얼마나 크게 거나</h3>
+<div class="duo"><div><p><b>로킹 단위</b>는 락을 거는 데이터의 크기예요. DB 전체, 테이블(파일), 레코드(행), 필드(열) 순으로 작아져요. 단위가 크면 걸어야 할 락 수가 적어 관리 오버헤드가 줄지만, 한 번에 넓게 잠그니 다른 트랜잭션이 오래 기다려 병행성이 떨어져요. 단위가 작으면 그 반대예요. 지민 행 하나만 잠그면 다른 회원들의 선물은 그대로 진행되지만, DBMS가 관리할 락이 수만 개로 늘어요.</p></div><figure><svg viewBox="0 0 360 282" font-family="sans-serif" role="img" aria-label="로킹 단위 사다리. 데이터베이스, 테이블, 레코드, 필드 순으로 작아짐. 크게 잡으면 오버헤드가 줄고 작게 잡으면 병행성이 높아짐">
+<rect width="360" height="282" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d31d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><defs><marker id="d31d2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="24" font-size="15" font-weight="700" fill="#222" text-anchor="middle">로킹 단위 — 어디에 자물쇠를 거나</text><rect x="16" y="42" width="150" height="40" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="91" y="67" font-size="14" font-weight="700" fill="#222" text-anchor="middle">데이터베이스</text><rect x="28" y="94" width="126" height="40" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="91" y="119" font-size="14" font-weight="700" fill="#222" text-anchor="middle">테이블(파일)</text><rect x="40" y="146" width="102" height="40" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="91" y="171" font-size="14" font-weight="700" fill="#222" text-anchor="middle">레코드(행)</text><rect x="52" y="198" width="78" height="40" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="91" y="223" font-size="14" font-weight="700" fill="#222" text-anchor="middle">필드(열)</text><path d="M262 98 L262 186" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d31d)" marker-start="url(#d31d2)"/><text x="262" y="58" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">크게 잡으면</text><text x="262" y="78" font-size="14" fill="#333" text-anchor="middle">락 수·오버헤드 ↓</text><text x="262" y="206" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">작게 잡으면</text><text x="262" y="226" font-size="14" fill="#333" text-anchor="middle">병행성 ↑</text><text x="180" y="268" font-size="14" fill="#555" text-anchor="middle">큰 단위는 편하지만 줄이 길어진다</text>
+</svg><figcaption>위로 갈수록 자물쇠 하나가 넓은 범위를 잠가요. 관리는 쉬워지지만 동시에 일할 수 있는 사람이 줄어요.</figcaption></figure></div>
+
+<div class="vs"><div><b>로킹 단위 큼</b>락 수 적음 · 오버헤드 작음 · 제어 쉬움 · 병행성 낮음</div><div><b>로킹 단위 작음</b>락 수 많음 · 오버헤드 큼 · 제어 복잡 · 병행성 높음</div></div>
+<h3>2단계 로킹 규약(2PL)</h3>
+<div class="duo"><div><p>락을 쓰기만 해서는 충분하지 않아요. 락을 너무 일찍 풀었다가 다시 걸면 그 틈에 다른 트랜잭션이 끼어들어, 결과가 어떤 직렬 순서와도 같지 않게 될 수 있거든요. 그래서 나온 규칙이 <b>2단계 로킹 규약(Two-Phase Locking)</b>이에요. 트랜잭션은 <b>확장 단계</b>에서는 lock만 할 수 있고, 처음 unlock하는 순간 <b>축소 단계</b>로 넘어가 그 뒤로는 unlock만 할 수 있어요. 락이 가장 많은 꼭짓점을 <b>락 포인트</b>라고 해요.</p>
+<p>2PL은 등산이에요. 올라가는 동안엔 열쇠를 줍기만, 정상을 찍고 내려올 땐 내려놓기만 해요. 내려가다 다시 줍는 건 반칙이에요. 이 규칙을 모든 트랜잭션이 지키면 결과가 어떤 직렬 실행과 같아지는 <b>직렬 가능성(serializability)</b>이 보장돼요. 하지만 서로 상대가 가진 락을 기다리는 <b>교착상태(deadlock)</b>는 막지 못해요.</p></div><figure><svg viewBox="0 0 360 296" font-family="sans-serif" role="img" aria-label="2단계 로킹 그래프. 확장 단계에서 보유 락 수가 계단식으로 늘고 락 포인트 이후 축소 단계에서 줄어듦">
+<rect width="360" height="296" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d31c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="24" font-size="15" font-weight="700" fill="#222" text-anchor="middle">2단계 로킹(2PL) — 보유 락 수</text><path d="M36 236 L36 56" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d31c)"/><path d="M36 236 L346 236" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d31c)"/><text x="42" y="58" font-size="14" fill="#555">보유 락 수</text><text x="344" y="258" font-size="14" fill="#555" text-anchor="end">시간</text><path d="M196 64 L196 236" stroke="#6a3d9a" stroke-width="2" fill="none" stroke-dasharray="5 4"/><text x="196" y="58" font-size="14" font-weight="700" fill="#6a3d9a" text-anchor="middle">락 포인트</text><path d="M36 226 L76 226 L76 186 L116 186 L116 146 L156 146 L156 106 L236 106 L236 146 L276 146 L276 186 L316 186 L316 226 L340 226" stroke="#2a5db0" stroke-width="3" fill="none"/><text x="100" y="92" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">확장 단계</text><text x="100" y="110" font-size="14" fill="#2f7d4a" text-anchor="middle">lock만</text><text x="290" y="92" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">축소 단계</text><text x="290" y="110" font-size="14" fill="#b5730d" text-anchor="middle">unlock만</text><text x="180" y="280" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">내려오다 다시 lock하면 2PL 위반</text>
+</svg><figcaption>계단이 올라가는 동안은 줍기만, 꼭대기(락 포인트)를 지나면 내려놓기만 해요.</figcaption></figure></div>
+
+<div class="trap">“2PL은 직렬성을 보장하고 교착상태도 예방한다”는 반만 맞는 선지예요. 직렬성은 보장, <b>교착상태는 발생할 수 있어요</b>. 교착상태 자체(4조건·회피)는 3과목 운영체제에서 다시 나와요.</div>
+<h3>락 말고 다른 방법들</h3>
+<p><b>타임스탬프 순서(Timestamp Ordering)</b>는 트랜잭션이 시작될 때 시각표(타임스탬프)를 붙이고, 그 순서대로 실행된 것처럼 접근 순서를 정하는 방식이에요. 순서를 어기는 접근은 그 트랜잭션을 롤백시켜요. 락을 기다리지 않으니 교착상태가 생기지 않아요. <b>낙관적 검증(Optimistic Validation)</b>은 실행 중에는 아무 검사 없이 진행하고, <b>끝날 때 한 번</b> 다른 트랜잭션과 충돌했는지 검증하는 방식이에요. ‘설마 겹치겠어?’ 하고 일단 다 하고, 겹쳤으면 그때 다시 해요. JPA의 <code>@Version</code> 낙관적 락이 이 생각이에요.</p>
+<p><b>다중 버전 병행 제어(MVCC)</b>는 데이터를 고칠 때 이전 버전을 남겨 두고, 읽는 트랜잭션에게는 자기가 시작한 시점의 버전을 보여 주는 방식이에요. 읽기가 쓰기를 기다리지 않아 조회가 많은 서비스에 유리해요. 오라클·PostgreSQL·MySQL(InnoDB)이 이 방식을 써요.</p>
+<p>한 장 요약 — 병행 제어 기법 넷을 핵심과 장단점으로 모았어요.</p>
+<table class="tight">
+<tr><th>기법</th><th>핵심</th><th>장점</th><th>약점</th></tr>
+<tr><td>로킹 (2PL)</td><td>쓰기 전 락, 확장 → 축소</td><td>직렬성 보장, 이해 쉬움</td><td>교착상태 가능, 대기</td></tr>
+<tr><td>타임스탬프 순서</td><td>시작 시각 순서대로 처리</td><td>교착상태 없음</td><td>순서 어기면 롤백이 잦음</td></tr>
+<tr><td>낙관적 검증</td><td>끝에 한 번 충돌 검사</td><td>충돌 적을 때 빠름</td><td>충돌 많으면 재실행 반복</td></tr>
+<tr><td>다중 버전 (MVCC)</td><td>버전을 남겨 시점별로 읽음</td><td>읽기가 쓰기를 안 기다림</td><td>버전 저장 공간 필요</td></tr>
+</table>
+<div class="memo">로킹 단위는 “크면 편하고 느리다” · 2PL은 “오르막엔 줍기만, 내리막엔 놓기만, 직렬은 OK 교착은 몰라”</div>
+<p><b>→ 이 장면의 결과물:</b> 동시에 일해도 결과가 꼬이지 않는 규칙. 그래서 다음 장면은 남은 위협, 서버가 아예 꺼졌을 때예요.</p>
+
+<h2>6. 장면 5 — 서버가 꺼졌다 켜지면 (회복)</h2>
+<div class="point"><b>핵심 한 줄</b>회복은 커밋된 것은 <b>REDO</b>(다시 하기), 커밋 못 한 것은 <b>UNDO</b>(취소)해서 원자성·지속성을 지키는 일이에요.</div>
+<p>장면 4가 ‘동시성’이라는 위협을 다뤘다면, 이번엔 ‘장애’예요. 서버가 꺼지면 메모리(버퍼)의 내용은 사라지고 디스크와 로그만 남아요. 그때 DB에는 두 종류의 문제가 섞여 있어요. 커밋했지만 아직 디스크에 다 쓰지 못한 트랜잭션과, 커밋하지 못했는데 일부가 디스크에 써진 트랜잭션이에요. <b>회복(Recovery)</b>은 장애가 난 DB를 장애 전의 올바른 상태로 되돌리는 일이에요.</p>
+<p><b>REDO(재실행)</b>는 로그에 남은 <b>바꾼 뒤 값</b>으로 커밋된 트랜잭션의 변경을 다시 써 넣는 연산이에요. 지속성을 지켜요. <b>UNDO(취소)</b>는 로그의 <b>바꾸기 전 값</b>으로 커밋되지 않은 트랜잭션의 변경을 지우는 연산이에요. 원자성을 지켜요. 장면 1에서 “원자성·지속성은 회복이 담당”이라고 한 이유가 이 두 연산이에요.</p>
+<h3>검사점(Checkpoint)</h3>
+<div class="duo"><div><p>로그를 처음부터 끝까지 다시 읽으면 회복이 너무 오래 걸려요. 그래서 DBMS는 주기적으로 버퍼의 내용을 디스크에 모두 쓰고 “여기까지는 디스크에 반영됨”이라는 <b>검사점</b>을 로그에 찍어요. 장애가 나면 최근 검사점부터만 살펴보면 돼요. 검사점 전에 커밋된 트랜잭션은 이미 디스크에 있으니 무시하고, 검사점 뒤에 커밋된 것은 REDO, 장애 때까지 커밋 못 한 것은 UNDO해요.</p></div><figure><svg viewBox="0 0 360 290" font-family="sans-serif" role="img" aria-label="장애 시점 판정. 검사점 전 커밋한 T1은 무시, 검사점 뒤 장애 전 커밋한 T2와 T3는 REDO, 장애 때 커밋 못 한 T4는 UNDO">
+<rect width="360" height="290" rx="12" fill="#f7f7f4"/>
+<text x="180" y="24" font-size="15" font-weight="700" fill="#222" text-anchor="middle">장애 뒤 무엇을 REDO, 무엇을 UNDO?</text><path d="M120 40 L120 222" stroke="#6a3d9a" stroke-width="2" fill="none" stroke-dasharray="5 4"/><text x="120" y="238" font-size="14" font-weight="700" fill="#6a3d9a" text-anchor="middle">검사점</text><path d="M290 40 L290 222" stroke="#b03a2e" stroke-width="3" fill="none"/><text x="290" y="238" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">장애</text><rect x="30" y="56" width="70" height="24" rx="4" fill="#eeeeea" stroke="#888" stroke-width="2"/><text x="38" y="73" font-size="14" font-weight="700" fill="#222">T1</text><circle cx="100" cy="68" r="6" fill="#ffffff" stroke="#2f7d4a" stroke-width="2"/><text x="300" y="73" font-size="14" font-weight="700" fill="#888">무시</text><rect x="70" y="96" width="110" height="24" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="78" y="113" font-size="14" font-weight="700" fill="#222">T2</text><circle cx="180" cy="108" r="6" fill="#ffffff" stroke="#2f7d4a" stroke-width="2"/><text x="298" y="113" font-size="14" font-weight="700" fill="#2a5db0">REDO</text><rect x="140" y="136" width="110" height="24" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="148" y="153" font-size="14" font-weight="700" fill="#222">T3</text><circle cx="250" cy="148" r="6" fill="#ffffff" stroke="#2f7d4a" stroke-width="2"/><text x="298" y="153" font-size="14" font-weight="700" fill="#2a5db0">REDO</text><rect x="170" y="176" width="120" height="24" rx="4" fill="#fdecea" stroke="#b03a2e" stroke-width="2" stroke-dasharray="5 3"/><text x="178" y="193" font-size="14" font-weight="700" fill="#222">T4</text><text x="298" y="193" font-size="14" font-weight="700" fill="#b03a2e">UNDO</text><circle cx="26" cy="268" r="6" fill="#ffffff" stroke="#2f7d4a" stroke-width="2"/><text x="38" y="273" font-size="14" fill="#333">= 커밋 완료</text><text x="150" y="273" font-size="14" fill="#333">점선 막대 = 커밋 못 함</text>
+</svg><figcaption>세로선 두 개(검사점·장애)만 보면 판정이 끝나요. 막대 끝 동그라미가 커밋 시각이에요.</figcaption></figure></div>
+
+<h3>지연 갱신과 즉시 갱신</h3>
+<p><b>지연 갱신(연기 갱신, Deferred Update)</b>은 트랜잭션이 실행되는 동안에는 변경을 로그에만 적고, <b>커밋된 뒤에야 DB에 반영</b>하는 방식이에요. 커밋 전에 장애가 나도 DB는 건드린 적이 없으니 <b>UNDO가 필요 없고</b>, 커밋됐는데 반영 못 한 것만 <b>REDO</b>해요. 장바구니에 담아만 두고 결제 버튼 전에는 창고에서 꺼내지 않는 것과 같아요. 결제 전에 쓰러져도 창고는 멀쩡하니 되돌릴 게 없어요.</p>
+<p><b>즉시 갱신(Immediate Update)</b>은 트랜잭션 실행 중에 변경을 <b>곧바로 DB에 반영</b>하되, 반영하기 전에 전후 값을 로그에 먼저 적는 방식이에요. 커밋 전에 장애가 나면 이미 DB에 들어간 것을 지워야 하니 <b>UNDO</b>, 커밋된 것은 <b>REDO</b>, 둘 다 필요해요.</p>
+<div class="vs"><div><b>지연 갱신</b>커밋 후 DB 반영 · 로그 사용 · REDO만</div><div><b>즉시 갱신</b>실행 중 바로 반영 · 로그 사용 · REDO + UNDO</div></div>
+<h3>그림자 페이징과 미디어 회복</h3>
+<div class="duo"><div><p><b>그림자 페이징(Shadow Paging)</b>은 로그 대신 페이지 표를 두 벌 두는 방식이에요. 트랜잭션이 시작되면 현재 페이지 표를 복사해 <b>그림자 페이지 표</b>로 고정해 두고, 변경은 새 페이지에 써서 현재 페이지 표만 그쪽을 가리키게 해요. 커밋하면 현재 표가 새 원본이 되고, 장애가 나면 그림자 표로 돌아가면 끝이에요. 원본 문서는 그대로 두고 복사본에 고치다가, 망하면 복사본을 찢어 버리는 방식이라 <b>로그도, REDO·UNDO도 필요 없어요</b>.</p></div><figure class="mermaid"><img src="../assets/a245a36dbc703dfe.png" alt="도식" loading="lazy" style="width:410px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure></div>
+
+<div class="duo"><div><p><b>미디어 회복</b>은 디스크 자체가 망가진 경우의 회복이에요. 로그만으로는 부족하니 주기적으로 떠 둔 <b>덤프(백업 복사본)</b>를 새 디스크에 복원하고, 그 뒤의 커밋된 변경을 로그로 <b>REDO</b>해요. 어떤 기법인지 헷갈리면 아래 사다리에 질문을 차례로 던져 보세요.</p></div><figure><svg viewBox="0 0 360 320" font-family="sans-serif" role="img" aria-label="회복 기법 고르기 사다리. 디스크 손상이면 미디어 회복, 로그 없이 페이지 표 교체면 그림자 페이징, 커밋 전 DB에 바로 쓰면 즉시 갱신, 아니면 지연 갱신">
+<rect width="360" height="320" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d31e" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><defs><marker id="d31e2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2f7d4a"/></marker></defs><text x="180" y="24" font-size="15" font-weight="700" fill="#222" text-anchor="middle">어떤 회복 기법인지 고르는 사다리</text><path d="M106 88 L106 110" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d31e)"/><text x="114" y="104" font-size="14" fill="#777">아니오</text><path d="M210 64 L230 64" stroke="#2f7d4a" stroke-width="2" fill="none" marker-end="url(#d31e2)"/><rect x="12" y="40" width="198" height="48" rx="8" fill="#eeeeea" stroke="#888" stroke-width="2"/><text x="111" y="70" font-size="14" font-weight="700" fill="#222" text-anchor="middle">디스크 자체가 망가졌나?</text><rect x="232" y="40" width="116" height="48" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="290" y="60" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">미디어 회복</text><text x="290" y="79" font-size="14" fill="#333" text-anchor="middle">덤프 + REDO</text><path d="M106 160 L106 182" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d31e)"/><text x="114" y="176" font-size="14" fill="#777">아니오</text><path d="M210 136 L230 136" stroke="#2f7d4a" stroke-width="2" fill="none" marker-end="url(#d31e2)"/><rect x="12" y="112" width="198" height="48" rx="8" fill="#eeeeea" stroke="#888" stroke-width="2"/><text x="111" y="142" font-size="14" font-weight="700" fill="#222" text-anchor="middle">로그 없이 페이지 표 교체?</text><rect x="232" y="112" width="116" height="48" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="290" y="132" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">그림자 페이징</text><text x="290" y="151" font-size="14" fill="#333" text-anchor="middle">로그 불필요</text><path d="M210 208 L230 208" stroke="#2f7d4a" stroke-width="2" fill="none" marker-end="url(#d31e2)"/><rect x="12" y="184" width="198" height="48" rx="8" fill="#eeeeea" stroke="#888" stroke-width="2"/><text x="111" y="214" font-size="14" font-weight="700" fill="#222" text-anchor="middle">커밋 전에 DB에 바로 쓰나?</text><rect x="232" y="184" width="116" height="48" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="290" y="204" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">즉시 갱신</text><text x="290" y="223" font-size="14" fill="#333" text-anchor="middle">REDO + UNDO</text><path d="M106 232 L106 254" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d31e)"/><text x="114" y="248" font-size="14" fill="#777">아니오</text><rect x="12" y="256" width="198" height="48" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="111" y="276" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">지연 갱신</text><text x="111" y="295" font-size="14" fill="#333" text-anchor="middle">REDO만</text><text x="290" y="286" font-size="14" fill="#777" text-anchor="middle">오른쪽 = 예</text>
+</svg><figcaption>위에서부터 질문에 답해 내려가요. ‘예’면 오른쪽 초록 칸이 답이에요.</figcaption></figure></div>
+
+<p>한 장 요약 — 다섯 기법을 ‘언제 DB에 반영하나’와 ‘무엇이 필요하나’로 모았어요.</p>
+<table class="tight">
+<tr><th>기법</th><th>DB 반영 시점</th><th>로그</th><th>REDO</th><th>UNDO</th></tr>
+<tr><td>지연(연기) 갱신</td><td>커밋 후</td><td>사용</td><td>필요</td><td>불필요</td></tr>
+<tr><td>즉시 갱신</td><td>실행 중 바로</td><td>사용</td><td>필요</td><td>필요</td></tr>
+<tr><td>검사점</td><td>검사점마다 버퍼를 디스크로</td><td>사용</td><td>검사점 뒤 커밋분</td><td>미완료분</td></tr>
+<tr><td>그림자 페이징</td><td>새 페이지에 쓰고 커밋 때 표 교체</td><td>불필요</td><td>불필요</td><td>불필요</td></tr>
+<tr><td>미디어 회복</td><td>덤프 복원 후</td><td>사용</td><td>필요</td><td>—</td></tr>
+</table>
+<div class="trap">“그림자 페이징은 UNDO만 필요하다”, “지연 갱신은 UNDO가 필요하다”가 단골 함정이에요. 그림자 페이징은 <b>로그·REDO·UNDO 모두 불필요</b>, 지연 갱신은 <b>REDO만</b>이에요.</div>
+<div class="memo">지연 = REDO만 · 즉시 = 둘 다 · 그림자 = 아무것도 · 미디어 = 덤프 + REDO</div>
+<p><b>→ 이 장면의 결과물:</b> 꺼졌다 켜져도 커밋은 남고 미완료는 사라지는 DB. 오늘 트랜잭션 이야기는 여기까지고, 다음은 오늘 다시 볼 오답이에요.</p>
+
+<h2>7. 오답 복습 — UI 원칙 · UML 두 갈래 · 상태 패턴</h2>
+<div class="point"><b>핵심 한 줄</b>이름이 주는 느낌 말고 <b>“무엇을 그리나, 누가 바꾸나”</b>로 가르면 세 문제가 다 풀려요.</div>
+<p>오늘은 트랜잭션 상태 그림을 그렸으니, 그 그림과 닮은 함정 셋을 함께 다시 봐요. 하나는 3주 전 UI 설계 원칙, 둘은 지난주의 UML·디자인 패턴이에요.</p>
+<h3>UI 설계 원칙 네 가지 (<a href="./2026-10-09-D007.html">D007</a>)</h3>
+<p>UI 설계 원칙은 직관성·유효성·학습성·유연성 넷이에요. 넷 다 ‘좋은 UI’라는 말이라 선지에서 섞이기 쉬워요. 가르는 질문은 “사용자의 무엇을 돕나”예요. 처음 보는 순간의 이해를 돕는지, 목적 달성을 돕는지, 다시 쓸 때의 기억을 돕는지, 여러 방식과 실수를 받아 주는지를 보면 하나로 정해져요.</p>
+<table>
+<tr><th>원칙</th><th>가르는 질문</th><th>공부친구 예</th></tr>
+<tr><td>직관성</td><td>처음 봐도 바로 알아보나?</td><td>선물 버튼에 선물 상자 아이콘</td></tr>
+<tr><td>유효성</td><td>목적을 정확하고 완전하게 이루나?</td><td>선물 금액과 받는 사람이 정확히 처리</td></tr>
+<tr><td>학습성</td><td>한 번 쓰면 쉽게 배우고 기억하나?</td><td>두 번째 선물부터는 안내 없이 진행</td></tr>
+<tr><td>유연성</td><td>여러 조작 방식을 받아 주고 실수를 막고 되돌릴 수 있나?</td><td>터치·키보드·음성 모두 지원, 보내기 직전 취소</td></tr>
+</table>
+<h3>UML 다이어그램 두 갈래 (<a href="./2026-10-24-D022.html">D022</a>)</h3>
+<div class="duo"><div><p>UML 다이어그램은 <b>구조(정적)</b>와 <b>행위(동적)</b>로 나뉘어요. 가르는 질문은 “시간이 흐르면 바뀌는 걸 그리나?”예요. 시스템의 뼈대와 배치를 한 장의 사진처럼 그리면 구조, 시간에 따라 일어나는 일과 변화를 그리면 행위예요. 상태 다이어그램은 이름에 ‘상태’가 있어 정적인 척하지만, 실은 오늘 트랜잭션 상태 그림처럼 시간에 따라 바뀌는 걸 그리는 행위 쪽이에요. 출제자가 노리는 게 바로 그 이름값이에요.</p></div><figure class="mermaid"><img src="../assets/9eabb7671ab5efcf.png" alt="도식" loading="lazy" style="width:414px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption></figure></div>
+
+<h3>상태 패턴 vs 전략 패턴 (<a href="./2026-10-16-D014.html">D014</a> · <a href="./2026-10-26-S02.html">S02</a>)</h3>
+<p>두 패턴은 클래스 그림이 거의 똑같아서 구조로는 구별이 안 돼요. 가르는 질문은 “<b>누가 갈아 끼우나</b>”예요. 전략 패턴은 바깥의 클라이언트가 “이번엔 이 알고리즘”이라고 골라 넣어요. 상태 패턴은 객체 안의 상태 객체가 일을 처리한 뒤 <b>스스로 다음 상태로 넘겨</b>, 같은 요청에도 행동이 저절로 달라져요. 오늘 트랜잭션이 활동에서 부분 완료로 넘어가는 걸 클라이언트가 고르지 않는 것과 같아요.</p>
+<div class="vs"><div><b>전략 패턴</b>클라이언트가 알고리즘을 골라 교체 · 바꾸는 주체가 바깥 · 예: 결제 수단 선택</div><div><b>상태 패턴</b>상태 객체가 스스로 다음 상태로 전이 · 바꾸는 주체가 안쪽 · 예: 주문 단계별 처리</div></div>
+
+<h2>8. 시험 포인트 한 장 + 다음 예고</h2>
+<div class="point"><b>핵심 한 줄</b>오늘은 <b>짝</b>의 날이에요. 성질–담당, 상태–순서, 명령–효과, 기법–REDO/UNDO.</div>
+<p>오늘 다섯 장면을 포인트 선물 하나로 다시 꿰면 아래 표가 돼요. 각 장면의 시험 개념이 무엇이고, 그 장면이 끝나면 무엇이 생기는지를 한 줄씩 적었어요. 시험 전날 밤엔 이 표가 커닝 페이퍼 역할을 해요. 다만 종이 대신 머릿속에 접어 들어가는 합법 버전으로요.</p>
+<table class="tight">
+<tr><th>장면</th><th>하는 일</th><th>시험 개념</th><th>결과물</th></tr>
+<tr><td>큰 그림</td><td>세 SQL을 한 몸으로 묶음</td><td>트랜잭션 = 논리적 작업 단위, TCL</td><td>선물 트랜잭션</td></tr>
+<tr><td>장면 1</td><td>지킬 약속을 정함</td><td>ACID와 담당 기능</td><td>네 약속과 담당자</td></tr>
+<tr><td>장면 2</td><td>지금 위치를 추적</td><td>활동 · 부분 완료 · 완료 · 실패 · 철회</td><td>상태 전이도</td></tr>
+<tr><td>장면 3</td><td>확정하거나 되돌림</td><td>COMMIT · ROLLBACK · SAVEPOINT</td><td>남은 행 추적</td></tr>
+<tr><td>장면 4</td><td>동시 선물을 조율</td><td>문제 4 · 로킹 · 2PL · 타임스탬프 · 낙관적 · MVCC</td><td>꼬이지 않는 동시 실행</td></tr>
+<tr><td>장면 5</td><td>꺼진 뒤 되살림</td><td>REDO · UNDO · 지연 · 즉시 · 검사점 · 그림자 · 미디어</td><td>커밋은 남고 미완료는 사라짐</td></tr>
+</table>
+<p>내일 D032는 권한을 다루는 DCL(GRANT·REVOKE)과 DB가 스스로를 기록하는 데이터 사전이에요. 오늘 미뤄 둔 “COMMIT·ROLLBACK은 TCL인가 DCL인가” 분류 차이도 거기서 정리해요.</p>
+
+<h2>확인 문제</h2>
+<p><small>참고: 일관성을 지키는 기능은 교재에 따라 무결성 제약만 적거나 병행 제어를 함께 적어요. 오늘 문항은 자료가 일치하는 짝만 물어요. 4번은 지난 범위 누적, 5~7번은 오답 재확인이에요.</small></p>
+<ol class="quiz">
+<li>트랜잭션의 특성과 그 특성을 보장하는 DBMS 기능의 짝으로 가장 알맞은 것은?<label class="opt"><input type="radio" name="D031-q1" value="1">① 원자성 – 데이터 사전</label><label class="opt"><input type="radio" name="D031-q1" value="2">② 지속성 – 로킹 단위 조정</label><label class="opt"><input type="radio" name="D031-q1" value="3">③ 격리성 – 병행 제어</label><label class="opt"><input type="radio" name="D031-q1" value="4">④ 원자성 – 뷰(View)</label></li>
+<li>빈 테이블 T에서 자동 커밋을 끈 채 다음을 차례로 실행했다. <code>INSERT 1번 행; SAVEPOINT s1; INSERT 2번 행; SAVEPOINT s2; DELETE 1번 행; ROLLBACK TO s1; COMMIT;</code> 실행 후 T에 남은 행은?<label class="opt"><input type="radio" name="D031-q2" value="1">① 행 없음</label><label class="opt"><input type="radio" name="D031-q2" value="2">② 1번 행만</label><label class="opt"><input type="radio" name="D031-q2" value="3">③ 2번 행만</label><label class="opt"><input type="radio" name="D031-q2" value="4">④ 1번·2번 행</label></li>
+<li>트랜잭션이 커밋될 때까지 데이터베이스 반영을 미루고 갱신 내용을 로그에만 기록하는 회복 기법에서, 장애 후 필요한 연산은?<label class="opt"><input type="radio" name="D031-q3" value="1">① UNDO만</label><label class="opt"><input type="radio" name="D031-q3" value="2">② REDO와 UNDO 모두</label><label class="opt"><input type="radio" name="D031-q3" value="3">③ 둘 다 필요 없음</label><label class="opt"><input type="radio" name="D031-q3" value="4">④ REDO만</label></li>
+<li>색·이미지·글꼴까지 실제 화면과 거의 같게 꾸몄지만 버튼을 눌러도 동작하지 않는 정적 화면 모형은?<label class="opt"><input type="radio" name="D031-q4" value="1">① 목업</label><label class="opt"><input type="radio" name="D031-q4" value="2">② 와이어프레임</label><label class="opt"><input type="radio" name="D031-q4" value="3">③ 프로토타입</label><label class="opt"><input type="radio" name="D031-q4" value="4">④ 스토리보드</label></li>
+<li>터치·키보드·음성 등 여러 조작 방식을 모두 받아 주고, 잘못 눌러도 되돌릴 수 있게 해 사용자 실수를 막는 UI 설계 원칙은?<label class="opt"><input type="radio" name="D031-q5" value="1">① 직관성</label><label class="opt"><input type="radio" name="D031-q5" value="2">② 학습성</label><label class="opt"><input type="radio" name="D031-q5" value="3">③ 유연성</label><label class="opt"><input type="radio" name="D031-q5" value="4">④ 유효성</label></li>
+<li>UML 다이어그램 중 구조(정적) 다이어그램끼리만 묶은 것은?<label class="opt"><input type="radio" name="D031-q6" value="1">① 클래스 – 상태</label><label class="opt"><input type="radio" name="D031-q6" value="2">② 시퀀스 – 활동</label><label class="opt"><input type="radio" name="D031-q6" value="3">③ 유스케이스 – 통신</label><label class="opt"><input type="radio" name="D031-q6" value="4">④ 컴포넌트 – 배치</label></li>
+<li>주문 객체가 ‘결제 대기 → 배송 중 → 배송 완료’로 바뀔 때마다 각 단계 클래스가 취소 요청을 다르게 처리하고, 단계 클래스가 스스로 다음 단계로 넘겨 행동이 저절로 바뀌는 디자인 패턴은?<label class="opt"><input type="radio" name="D031-q7" value="1">① 전략</label><label class="opt"><input type="radio" name="D031-q7" value="2">② 상태</label><label class="opt"><input type="radio" name="D031-q7" value="3">③ 옵서버</label><label class="opt"><input type="radio" name="D031-q7" value="4">④ 템플릿 메서드</label></li>
+</ol><div class="answer-bar" data-id="D031" data-n="7"><code></code><button type="button">답안 복사</button></div><p><small>고른 뒤 <b>답안 복사</b> → 디스코드 공부 채널에 붙여넣기 하면 돼요.</small></p>
+<p>답장: <code>정처기 D031: 1)번호 2)번호 3)번호 4)번호 5)번호 6)번호 7)번호</code></p>
+<p>오늘은 짝이 많았어요. ACID 담당 짝과 “지연 갱신은 REDO만” 두 개만 확실히 잡아도 충분해요. D028·D029·D030 답장도 편할 때 함께 보내 주세요.</p>
+<p class="meta"><a href="2026-11-01-D030.html">← D030</a>  </p>
+<script>
+document.querySelectorAll('.answer-bar').forEach(bar=>{
+  const id=bar.dataset.id,n=+bar.dataset.n,out=bar.querySelector('code'),btn=bar.querySelector('button');
+  const text=()=>'정처기 '+id+': '+Array.from({length:n},(_,i)=>{const c=document.querySelector('input[name="'+id+'-q'+(i+1)+'"]:checked');return (i+1)+')'+(c?c.value:'?')}).join(' ');
+  document.querySelectorAll('input[name^="'+id+'-q"]').forEach(r=>r.addEventListener('change',()=>{out.textContent=text()}));
+  out.textContent=text();
+  btn.addEventListener('click',async()=>{const t=text();try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}btn.textContent='복사됨 ✓';setTimeout(()=>btn.textContent='답안 복사',1500)});
+});
+</script>
+
+<footer>2027년 정기 기사 1회 정보처리기사 필기 준비 · 공식 범위: Q-Net 2027~2029 출제기준</footer>
+</main></body></html>
