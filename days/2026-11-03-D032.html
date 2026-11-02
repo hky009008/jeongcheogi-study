@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>D032 DCL과 데이터 사전: GRANT·REVOKE·WITH GRANT OPTION·CASCADE·ROLE·시스템 카탈로그</title>
+<link rel="icon" href="../assets/favicon/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../assets/favicon/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="apple-touch-icon" href="../assets/favicon/apple-touch-icon.png">
+<link rel="stylesheet" href="../style.css"></head>
+<body><main>
+<nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a></nav>
+<h1>D032 · DCL과 데이터 사전: GRANT·REVOKE·WITH GRANT OPTION·CASCADE·ROLE·시스템 카탈로그</h1><div class="meta">2026-11-03 · B1·B2 데이터베이스 구축 &gt; SQL 응용·SQL 활용</div><p><span class="tag">B1</span> <span class="tag">B2</span> 어제 <a href="./2026-11-02-D031.html">D031</a>에서 여러 SQL을 한 묶음으로 확정하거나 되돌리는 법(TCL)을 봤어요. 오늘은 질문이 바뀌어요. “<b>누가</b> 이 테이블을 만질 수 있나, 그리고 그 사실은 <b>어디에</b> 적혀 있나.” 앞 질문의 답이 DCL, 뒤 질문의 답이 데이터 사전이에요. 예시는 어제의 ‘공부친구’ 앱 운영 DB에서 DBA가 분석 담당 하린, 인턴 도윤, 고객센터 팀에 권한을 나눠 주는 장면 하나로 끝까지 가요.</p>
+<ul>
+<li><b>GRANT·REVOKE</b> 문법과 <b>WITH GRANT OPTION·CASCADE</b>의 효과(권한 연쇄 회수)를 설명할 수 있다</li>
+<li><b>역할(ROLE)</b>로 권한을 묶어 주는 순서를 설명할 수 있다</li>
+<li><b>DCL과 TCL</b>의 분류 차이(COMMIT·ROLLBACK의 자리)를 구별할 수 있다</li>
+<li><b>데이터 사전(시스템 카탈로그)</b>의 내용·특징과 메타데이터를 설명할 수 있다</li>
+</ul>
+<div class="glance">
+<div><b>2</b>DCL 명령<small>GRANT · REVOKE</small></div>
+<div><b>3</b>회수 옵션<small>CASCADE · RESTRICT · GRANT OPTION FOR</small></div>
+<div><b>4</b>역할 단계<small>만들기 · 권한 담기 · 사람에게 · 회수</small></div>
+<div><b>1</b>장부<small>데이터 사전 = 시스템 카탈로그</small></div>
+</div>
+<div class="box"><b>오늘 이야기의 흐름</b>큰 그림(왜 권한을 나누나) → 장면 1 나눠 주기(GRANT) → 장면 2 거두기(WITH GRANT OPTION·REVOKE) → 장면 3 직무로 묶기(ROLE) → 장면 4 서랍 정리(DCL vs TCL) → 장면 5 장부 보기(데이터 사전) → 오답 복습 → 시험 포인트 → 확인 문제</div>
+
+<h2>1. 큰 그림 — 모두가 관리자면 아무도 책임지지 않는다</h2>
+<div class="point"><b>핵심 한 줄</b>DCL은 <b>누가 어떤 객체에 무엇을 할 수 있는지</b>를 정하는 SQL이고, 그 결과는 <b>데이터 사전</b>에 기록돼요.</div>
+<div class="duo"><div><p>공부친구 DB 하나를 앱 서버, 분석 담당, 인턴, 고객센터가 함께 써요. 가장 쉬운 방법은 모두에게 관리자 계정을 나눠 주는 거예요. 그런데 이건 금고 비밀번호를 사내 게시판에 붙여 두는 것과 같아요. 편하긴 한데, 누가 열었는지 아무도 몰라요. 인턴의 실수 한 번으로 성적 테이블이 통째로 지워져도 막을 장치가 없죠.</p>
+<p>그래서 SQL에는 권한을 다루는 갈래가 따로 있어요. <b>DCL(Data Control Language, 데이터 제어어)</b>은 데이터베이스 사용자에게 권한을 부여하거나 회수해 <b>보안</b>을 지키는 언어예요. 핵심 명령은 권한을 주는 <b>GRANT</b>와 거두는 <b>REVOKE</b> 두 개예요. <a href="./2026-10-31-D029.html">D029</a>에서 본 네 갈래(DDL·DML·DCL·TCL) 중 세 번째 칸을 오늘 채우는 셈이에요.</p>
+<p>권한을 나눠 주면 DBMS는 그 사실을 어딘가에 적어 둬야 해요. 그래야 다음 SQL이 들어왔을 때 “이 사람이 이 테이블을 읽어도 되나”를 확인할 수 있죠. 그 장부가 <b>데이터 사전(Data Dictionary)</b>이에요. 테이블을 만들면(DDL) 테이블 정의가, 권한을 주면(DCL) 권한 내역이 이 장부에 자동으로 적혀요. 오늘 두 주제가 만나는 지점이 바로 여기예요.</p></div><figure class="mermaid"><img src="../assets/69ad123cb40319a4.png" alt="도식" loading="lazy" style="width:784px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption><figcaption>오늘은 SQL 네 갈래 중 DCL과, DDL·DCL의 결과가 적히는 데이터 사전을 봐요. 점선은 “실행하면 장부에 적힌다”는 뜻이에요.</figcaption></figure></div>
+
+
+<p>오늘 나오는 용어를 먼저 한 표로 모아 둘게요. 각 용어는 아래 장면에서 다시 자세히 풀어요.</p>
+<table>
+<tr><th>용어</th><th>뜻</th><th>공부친구 예</th></tr>
+<tr><td>권한(Privilege)</td><td>특정 객체에 특정 작업을 할 수 있는 자격</td><td>하린이 성적 테이블을 SELECT할 자격</td></tr>
+<tr><td>객체(Object)</td><td>권한이 걸리는 대상: 테이블·뷰 등</td><td>성적, 포인트 테이블</td></tr>
+<tr><td>DBA</td><td>DB 전체를 관리하는 관리자, 처음 권한을 나눠 주는 사람</td><td>운영 DB 관리자</td></tr>
+<tr><td>역할(Role)</td><td>여러 권한을 묶어 이름 붙인 꾸러미</td><td>‘분석가’ 역할</td></tr>
+<tr><td>메타데이터</td><td>데이터에 대한 데이터(구조·정의·권한)</td><td>“점수 컬럼은 INT”라는 정보</td></tr>
+<tr><td>데이터 사전</td><td>메타데이터를 모아 둔 시스템 테이블 = 시스템 카탈로그</td><td>DB가 스스로 쓰는 장부</td></tr>
+</table>
+<div class="duo"><div><p>아래 그림은 오늘 장면의 무대예요. 사람 셋이 테이블 둘에 서로 다른 문으로 들어가고, 입구에는 장부가 놓여 있어요.</p></div><figure><svg viewBox="0 0 360 300" font-family="sans-serif" role="img" aria-label="사람 셋이 성적·포인트 테이블에 서로 다른 권한으로 접근하고, 그 정의와 권한 내역이 아래 데이터 사전에 기록되는 그림">
+<rect width="360" height="300" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d32a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">공부친구 운영 DB — 누가 어느 문을 여나</text><path d="M116 66 L230 76" stroke="#2a5db0" stroke-width="2" fill="none" marker-end="url(#d32a)"/><path d="M116 128 L230 92" stroke="#2a5db0" stroke-width="2" fill="none" stroke-dasharray="5 4" marker-end="url(#d32a)"/><path d="M116 190 L230 174" stroke="#2f7d4a" stroke-width="2" fill="none" marker-end="url(#d32a)"/><path d="M288 198 L288 232" stroke="#b5730d" stroke-width="2" fill="none" stroke-dasharray="4 4" marker-end="url(#d32a)"/><text x="173" y="60" font-size="14" fill="#2a5db0" text-anchor="middle">SELECT</text><text x="178" y="148" font-size="14" fill="#2a5db0" text-anchor="middle">하린이 다시 줌</text><text x="173" y="208" font-size="14" fill="#2f7d4a" text-anchor="middle">SELECT·UPDATE</text><rect x="16" y="50" width="100" height="40" rx="8" fill="#f1eaf8" stroke="#6a3d9a" stroke-width="2"/><text x="66" y="75" font-size="14" font-weight="700" fill="#222" text-anchor="middle">하린 (분석)</text><rect x="16" y="110" width="100" height="40" rx="8" fill="#f1eaf8" stroke="#6a3d9a" stroke-width="2"/><text x="66" y="135" font-size="14" font-weight="700" fill="#222" text-anchor="middle">도윤 (인턴)</text><rect x="16" y="170" width="100" height="40" rx="8" fill="#f1eaf8" stroke="#6a3d9a" stroke-width="2"/><text x="66" y="195" font-size="14" font-weight="700" fill="#222" text-anchor="middle">고객센터</text><rect x="232" y="56" width="112" height="48" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="288" y="86" font-size="14" font-weight="700" fill="#222" text-anchor="middle">성적 테이블</text><rect x="232" y="150" width="112" height="48" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="288" y="180" font-size="14" font-weight="700" fill="#222" text-anchor="middle">포인트 테이블</text><rect x="16" y="234" width="328" height="52" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="180" y="256" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">데이터 사전 = DB의 장부</text><text x="180" y="276" font-size="14" fill="#333" text-anchor="middle">테이블·컬럼 정의와 권한 부여 내역이 적힘</text>
+</svg><figcaption>화살표가 곧 권한이에요. 누가 어느 테이블에 무엇을 할 수 있는지는 아래 장부(데이터 사전)에 그대로 적혀요.</figcaption></figure></div>
+
+
+<p><b>→ 이 장면의 결과물:</b> “사람마다 다른 문을 열어 준다”는 목표. 그래서 다음 장면은 문을 열어 주는 문장, GRANT예요.</p>
+
+<h2>2. 장면 1 — 권한을 나눠 준다 (GRANT)</h2>
+<div class="point"><b>핵심 한 줄</b><code>GRANT 권한 ON 객체 TO 대상</code> — 주는 문장이라 대상 앞에 <b>TO</b>가 붙어요.</div>
+<p>DBA가 하린에게 성적을 읽을 권한을, 고객센터에 포인트를 읽고 고칠 권한을 주려 해요. 이때 쓰는 명령이 <b>GRANT</b>예요. GRANT는 <b>사용자(또는 역할)에게 객체에 대한 권한을 부여</b>하는 DCL 명령이에요. 문장은 “무슨 권한을, 어느 객체에, 누구에게” 순서로 읽으면 그대로 맞아요.</p>
+<pre>-- 하린: 성적 조회만
+GRANT SELECT ON 성적 TO 하린;
+
+-- 고객센터: 포인트 조회 + 수정
+GRANT SELECT, UPDATE ON 포인트 TO 고객센터;
+
+-- 모든 사용자에게 공지 테이블 조회 허용
+GRANT SELECT ON 공지 TO PUBLIC;</pre>
+<div class="duo"><div><p>권한 목록에는 <b>SELECT·INSERT·UPDATE·DELETE</b>를 쉼표로 여러 개 쓸 수 있고, 전부를 뜻하는 <b>ALL</b>도 있어요. 대상 자리에 <b>PUBLIC</b>을 쓰면 모든 사용자에게 한꺼번에 줘요. GRANT는 놀이공원 자유이용권이 아니라 기구별 탑승권이에요. SELECT 표로는 구경만, UPDATE 표가 있어야 손을 댈 수 있어요.</p></div><figure><svg viewBox="0 0 360 292" font-family="sans-serif" role="img" aria-label="GRANT, 권한 목록, ON 객체, TO 대상, WITH GRANT OPTION 다섯 조각과 각 조각의 뜻">
+<rect width="360" height="292" rx="12" fill="#f7f7f4"/>
+<text x="180" y="26" font-size="15" font-weight="700" fill="#222" text-anchor="middle">GRANT 문장 한 줄 해부</text><rect x="16" y="44" width="172" height="36" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="102" y="68" font-size="14" font-weight="700" fill="#222" text-anchor="middle">GRANT</text><text x="196" y="68" font-size="14" fill="#333">권한을 준다</text><rect x="16" y="92" width="172" height="36" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="102" y="116" font-size="14" font-weight="700" fill="#222" text-anchor="middle">SELECT, UPDATE</text><text x="196" y="116" font-size="14" fill="#333">무엇을: 권한 종류</text><rect x="16" y="140" width="172" height="36" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="102" y="164" font-size="14" font-weight="700" fill="#222" text-anchor="middle">ON 포인트</text><text x="196" y="164" font-size="14" fill="#333">어디에: 대상 객체</text><rect x="16" y="188" width="172" height="36" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="102" y="212" font-size="14" font-weight="700" fill="#222" text-anchor="middle">TO 고객센터</text><text x="196" y="212" font-size="14" fill="#333">누구에게: 사용자·역할</text><rect x="16" y="236" width="172" height="36" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2" stroke-dasharray="6 4"/><text x="102" y="260" font-size="14" fill="#222" text-anchor="middle">WITH GRANT OPTION</text><text x="196" y="260" font-size="14" fill="#333">덤: 다시 줄 수 있음</text>
+</svg><figcaption>위 네 조각은 필수, 점선 조각은 선택이에요. 주는 문장이라 대상 앞에 <b>TO</b>가 붙어요.</figcaption></figure></div>
+
+
+<h3>객체 권한과 시스템 권한</h3>
+<p>권한은 크게 두 종류예요. <b>객체 권한</b>은 특정 테이블·뷰 같은 객체 하나에 거는 권한으로, 위 예처럼 <code>ON 객체</code>가 붙어요. <b>시스템 권한</b>은 특정 객체가 아니라 DB 전체에서 어떤 종류의 일을 할 수 있는지에 대한 권한으로, 테이블을 새로 만들 권한(CREATE TABLE)이나 접속할 권한(CREATE SESSION)이 대표예요. 시스템 권한에는 <code>ON</code>이 없어요.</p>
+<p>객체를 만든 <b>소유자</b>는 그 객체에 대한 모든 권한을 이미 가지고 있어서 따로 GRANT할 필요가 없어요. 다른 사람이 만든 테이블을 쓸 때는 <code>소유자.테이블</code>처럼 소유자 이름을 붙여 부르기도 해요. 한 장 요약 — 두 권한의 차이는 아래 표와 같아요.</p>
+<table>
+<tr><th>구분</th><th>예</th><th>특징</th></tr>
+<tr><td>객체 권한</td><td>SELECT · INSERT · UPDATE · DELETE · ALL</td><td>특정 객체에 건다, <code>ON 객체</code> 필요</td></tr>
+<tr><td>시스템 권한</td><td>CREATE TABLE · CREATE SESSION</td><td>DB 전체 작업 종류에 건다, <code>ON</code> 없음</td></tr>
+</table>
+<p><b>→ 이 장면의 결과물:</b> 하린은 성적 조회, 고객센터는 포인트 조회·수정. 그런데 하린이 인턴 도윤에게도 보여 주고 싶다면? 다음 장면은 권한을 <b>다시 주고, 거두는</b> 이야기예요.</p>
+
+<h2>3. 장면 2 — 다시 주게 하고, 거둔다 (WITH GRANT OPTION · REVOKE)</h2>
+<div class="point"><b>핵심 한 줄</b><b>WITH GRANT OPTION</b>이 사슬을 만들고, <b>REVOKE … CASCADE</b>는 그 사슬 끝까지 거둬요.</div>
+<h3>WITH GRANT OPTION — 받은 권한을 다시 줄 수 있는 권한</h3>
+<div class="duo"><div><p>보통 GRANT로 받은 권한은 본인만 쓸 수 있어요. 그런데 DBA가 매번 인턴 권한까지 챙기기 번거로우니, 하린에게 “네 팀원에겐 네가 직접 줘”라고 맡기고 싶을 때가 있죠. 이때 GRANT 끝에 붙이는 <b>WITH GRANT OPTION</b>은 <b>받은 권한을 다른 사용자에게 다시 부여할 수 있는 권한</b>까지 함께 주는 옵션이에요.</p>
+<p>WITH GRANT OPTION은 ‘이 초대장, 친구한테도 돌려도 돼’라는 한 줄이에요. 편리한 대신, 그 한 줄 때문에 파티 손님 명단이 주인도 모르게 길어져요. 아래 그림처럼 옵션을 받은 하린 아래로만 가지가 뻗고, 일반 GRANT를 받은 고객센터는 받은 데서 끝나요.</p></div><figure><svg viewBox="0 0 360 266" font-family="sans-serif" role="img" aria-label="DBA가 하린에게는 WITH GRANT OPTION으로, 고객센터에는 일반 GRANT로 권한을 주어 하린 아래로만 도윤·민지 가지가 생기는 트리">
+<rect width="360" height="266" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d32b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><defs><marker id="d32b2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b03a2e"/></marker></defs><text x="180" y="24" font-size="15" font-weight="700" fill="#222" text-anchor="middle">권한 전파 — 옵션이 있어야 가지가 뻗는다</text><path d="M180 76 L91 120" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d32b)"/><path d="M180 76 L272 120" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d32b)"/><path d="M70 168 L50 208" stroke="#2a5db0" stroke-width="2" fill="none" marker-end="url(#d32b)"/><path d="M112 168 L132 208" stroke="#2a5db0" stroke-width="2" fill="none" marker-end="url(#d32b)"/><rect x="130" y="40" width="100" height="36" rx="8" fill="#eeeeea" stroke="#555" stroke-width="2"/><text x="180" y="64" font-size="14" font-weight="700" fill="#222" text-anchor="middle">DBA</text><rect x="16" y="120" width="150" height="48" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="91" y="140" font-size="14" font-weight="700" fill="#222" text-anchor="middle">하린</text><text x="91" y="159" font-size="14" fill="#b5730d" text-anchor="middle">WITH GRANT OPTION</text><rect x="200" y="120" width="144" height="48" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="272" y="140" font-size="14" font-weight="700" fill="#222" text-anchor="middle">고객센터</text><text x="272" y="159" font-size="14" fill="#2f7d4a" text-anchor="middle">일반 GRANT</text><rect x="16" y="210" width="68" height="36" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="50" y="233" font-size="14" font-weight="700" fill="#222" text-anchor="middle">도윤</text><rect x="98" y="210" width="68" height="36" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="132" y="233" font-size="14" font-weight="700" fill="#222" text-anchor="middle">민지</text><path d="M262 190 L282 210" stroke="#b03a2e" stroke-width="2" fill="none"/><path d="M282 190 L262 210" stroke="#b03a2e" stroke-width="2" fill="none"/><text x="272" y="234" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">다시 줄 수 없음</text>
+</svg><figcaption>하린 아래 가지(도윤·민지)는 옵션 한 줄 덕분에 생겼어요. 고객센터는 받은 권한을 쓰기만 하고 남에게 줄 수는 없어요.</figcaption></figure></div>
+
+
+<h3>REVOKE — 권한을 거둔다</h3>
+<p>하린이 다른 팀으로 옮기면 권한을 거둬야 해요. <b>REVOKE</b>는 <b>부여했던 권한을 회수</b>하는 DCL 명령이에요. 모양은 GRANT와 거울처럼 같은데, 권한을 빼앗아 오는 문장이라 대상 앞에 <b>FROM</b>이 붙어요. 출제자는 이 TO와 FROM을 바꿔 끼운 선지를 아주 좋아해요.</p>
+<pre>-- DBA: 하린에게 옵션까지 줌
+GRANT SELECT ON 성적 TO 하린 WITH GRANT OPTION;
+-- 하린: 받은 권한을 도윤에게 다시 줌
+GRANT SELECT ON 성적 TO 도윤;
+
+-- DBA: 하린의 권한을 거두면서, 하린이 나눠 준 것까지
+REVOKE SELECT ON 성적 FROM 하린 CASCADE;
+-- 결과: 하린 ✗, 도윤 ✗</pre>
+<h3>CASCADE · RESTRICT · GRANT OPTION FOR</h3>
+<div class="duo"><div><p>하린의 권한을 거둘 때 문제는 하린이 이미 나눠 준 도윤의 권한이에요. 출제자는 ‘하린 것만 뺏었는데 도윤은?’을 묻고 싶어서 사슬을 두 칸 이상 만들어요. <b>CASCADE</b>는 <b>회수 대상이 다른 사용자에게 다시 준 권한까지 연쇄적으로 회수</b>하는 옵션이에요. 사슬 끝까지 따라가는 거죠.</p></div><figure class="mermaid"><img src="../assets/8880c7a766ad08c7.png" alt="도식" loading="lazy" style="width:385px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption><figcaption>위 두 줄이 사슬을 만들고, 아래 두 줄이 CASCADE로 사슬을 끝까지 거둬요. DBA는 도윤에게 직접 준 적이 없는데도 도윤의 권한이 사라져요.</figcaption></figure></div>
+
+
+<div class="duo"><div><p><b>RESTRICT</b>는 반대로 조심스러운 쪽이에요. 회수하려는 권한에 기대고 있는 다른 권한(도윤의 것)이 남아 있으면 <b>REVOKE 자체를 거부</b>해요. “사슬이 남아 있으니 먼저 정리하고 오세요”라는 뜻이에요.</p>
+<p><b>GRANT OPTION FOR</b>는 REVOKE 바로 뒤에 붙여 <code>REVOKE GRANT OPTION FOR SELECT ON 성적 FROM 하린</code>처럼 써요. 하린의 SELECT 권한은 그대로 두고 <b>다시 줄 수 있는 능력(WITH GRANT OPTION)만 회수</b>해요. 운전면허는 두고 ‘운전 강사 자격’만 반납시키는 셈이에요. 본인은 계속 운전하지만 남을 가르칠 수는 없어요. 이미 나눠 준 권한을 어떻게 할지는 여기에 다시 CASCADE·RESTRICT를 붙여 정해요.</p></div><figure><svg viewBox="0 0 360 276" font-family="sans-serif" role="img" aria-label="REVOKE에 CASCADE, GRANT OPTION FOR, RESTRICT를 붙였을 때 하린과 도윤의 권한이 각각 어떻게 되는지 세 칸 비교">
+<rect width="360" height="276" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d32c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="24" font-size="15" font-weight="700" fill="#222" text-anchor="middle">REVOKE 세 갈래 — 하린→도윤 사슬에서</text><path d="M62 136 L62 164" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d32c)"/><rect x="8" y="38" width="108" height="46" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="62" y="66" font-size="14" font-weight="700" fill="#222" text-anchor="middle">CASCADE</text><rect x="12" y="100" width="100" height="36" rx="8" fill="#eeeeea" stroke="#b03a2e" stroke-width="2" stroke-dasharray="5 4"/><text x="62" y="124" font-size="14" fill="#222" text-anchor="middle">하린 회수</text><rect x="12" y="166" width="100" height="36" rx="8" fill="#eeeeea" stroke="#b03a2e" stroke-width="2" stroke-dasharray="5 4"/><text x="62" y="190" font-size="14" fill="#222" text-anchor="middle">도윤 회수</text><text x="62" y="236" font-size="14" fill="#333" text-anchor="middle">사슬 끝까지</text><text x="62" y="256" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">모두 회수</text><path d="M180 136 L180 164" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d32c)"/><rect x="126" y="38" width="108" height="46" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="180" y="57" font-size="14" fill="#222" text-anchor="middle">GRANT OPTION</text><text x="180" y="76" font-size="14" fill="#222" text-anchor="middle">FOR</text><rect x="130" y="100" width="100" height="36" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="180" y="124" font-size="14" fill="#222" text-anchor="middle">하린 유지</text><rect x="130" y="166" width="100" height="36" rx="8" fill="#eeeeea" stroke="#b03a2e" stroke-width="2" stroke-dasharray="5 4"/><text x="180" y="190" font-size="14" fill="#222" text-anchor="middle">재부여 불가</text><text x="180" y="236" font-size="14" fill="#333" text-anchor="middle">권한은 두고</text><text x="180" y="256" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">주는 능력만</text><path d="M298 136 L298 164" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d32c)"/><rect x="244" y="38" width="108" height="46" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="298" y="66" font-size="14" font-weight="700" fill="#222" text-anchor="middle">RESTRICT</text><rect x="248" y="100" width="100" height="36" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="298" y="124" font-size="14" fill="#222" text-anchor="middle">하린 유지</text><rect x="248" y="166" width="100" height="36" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="298" y="190" font-size="14" fill="#222" text-anchor="middle">도윤 유지</text><text x="298" y="236" font-size="14" fill="#333" text-anchor="middle">사슬 있으면</text><text x="298" y="256" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">명령 거부</text>
+</svg><figcaption>같은 사슬에 붙이는 말만 바꿨어요. 회색 점선 상자가 사라지는 것, 초록 상자가 남는 것이에요.</figcaption></figure></div>
+
+
+<p>한 장 요약 — 오늘 사슬(DBA → 하린 → 도윤)에 각 옵션을 붙였을 때의 결과예요.</p>
+<table>
+<tr><th>옵션</th><th>붙는 곳 · 효과</th><th>하린 / 도윤 결과</th></tr>
+<tr><td>WITH GRANT OPTION</td><td>GRANT 끝 · 받은 권한을 다시 줄 수 있게 함</td><td>하린이 도윤에게 줄 수 있음</td></tr>
+<tr><td>CASCADE</td><td>REVOKE 끝 · 다시 준 권한까지 연쇄 회수</td><td>하린 회수 / 도윤 회수</td></tr>
+<tr><td>RESTRICT</td><td>REVOKE 끝 · 연쇄 대상이 있으면 거부</td><td>둘 다 유지(명령 실패)</td></tr>
+<tr><td>GRANT OPTION FOR</td><td>REVOKE 바로 뒤 · 재부여 능력만 회수</td><td>하린 SELECT 유지, 더는 못 줌</td></tr>
+</table>
+<div class="trap"><b>함정 ① TO와 FROM</b><code>GRANT … TO 사용자</code>, <code>REVOKE … FROM 사용자</code>. <code>REVOKE … TO</code>나 <code>GRANT … FROM</code>은 틀린 문법이에요.</div>
+<div class="trap"><b>함정 ② CASCADE는 세 군데에 산다</b><a href="./2026-10-31-D029.html">D029</a>의 <code>DROP TABLE … CASCADE</code>는 참조하는 객체까지 함께 삭제, 외래키 <code>ON DELETE CASCADE</code>는 부모 행 삭제 시 자식 행도 삭제, 오늘의 <code>REVOKE … CASCADE</code>는 다시 준 권한까지 회수예요. 공통점은 “연결된 것까지 따라간다”, 차이는 따라가는 대상(객체·행·권한)이에요.</div>
+<div class="memo"><b>현업 메모</b>회수 기본 동작은 DBMS마다 달라요. Oracle은 WITH GRANT OPTION으로 퍼진 객체 권한을 키워드 없이도 연쇄 회수하고, PostgreSQL·SQL Server는 의존 권한이 있으면 CASCADE를 써야 회수돼요. 시험은 표준 키워드 짝(CASCADE = 연쇄, RESTRICT = 거부)으로만 물어요.</div>
+<p><b>→ 이 장면의 결과물:</b> 권한을 주고, 사슬째 거두는 방법. 그런데 사람이 서른 명이면 이걸 한 명씩 할까요? 다음 장면은 권한을 <b>직무로 묶는</b> 역할이에요.</p>
+
+<h2>4. 장면 3 — 사람 대신 직무에 권한을 준다 (ROLE)</h2>
+<div class="point"><b>핵심 한 줄</b>권한은 <b>역할</b>에 담고, 역할을 <b>사람</b>에게 준다. 사람이 바뀌면 역할만 바꾸면 돼요.</div>
+<div class="duo"><div><p>분석 담당이 하린 한 명일 때는 GRANT 두 줄이면 됐어요. 그런데 분석가가 열 명, 상담원이 스무 명으로 늘면 사람마다 권한을 하나씩 찍어 줘야 하고, 누구 하나 빠뜨리기 쉬워요. 아래 왼쪽 그림처럼 사람과 권한 사이에 선이 거미줄처럼 얽히죠.</p></div><figure><svg viewBox="0 0 360 268" font-family="sans-serif" role="img" aria-label="사람 4명과 권한 3개를 직접 이으면 선이 12개로 얽히고, 역할 하나를 거치면 선 7개로 정리되는 비교">
+<rect width="360" height="268" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d32d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="92" y="28" font-size="15" font-weight="700" fill="#b03a2e" text-anchor="middle">역할 없이</text><text x="272" y="28" font-size="15" font-weight="700" fill="#2f7d4a" text-anchor="middle">역할을 거치면</text><path d="M184 40 L184 232" stroke="#bbb" stroke-width="1" fill="none" stroke-dasharray="4 4"/><path d="M44 60 L108 85" stroke="#c98b84" stroke-width="1.5" fill="none"/><path d="M44 60 L108 140" stroke="#c98b84" stroke-width="1.5" fill="none"/><path d="M44 60 L108 195" stroke="#c98b84" stroke-width="1.5" fill="none"/><path d="M214 60 L232 140" stroke="#2f7d4a" stroke-width="1.5" fill="none"/><path d="M44 110 L108 85" stroke="#c98b84" stroke-width="1.5" fill="none"/><path d="M44 110 L108 140" stroke="#c98b84" stroke-width="1.5" fill="none"/><path d="M44 110 L108 195" stroke="#c98b84" stroke-width="1.5" fill="none"/><path d="M214 110 L232 140" stroke="#2f7d4a" stroke-width="1.5" fill="none"/><path d="M44 160 L108 85" stroke="#c98b84" stroke-width="1.5" fill="none"/><path d="M44 160 L108 140" stroke="#c98b84" stroke-width="1.5" fill="none"/><path d="M44 160 L108 195" stroke="#c98b84" stroke-width="1.5" fill="none"/><path d="M214 160 L232 140" stroke="#2f7d4a" stroke-width="1.5" fill="none"/><path d="M44 210 L108 85" stroke="#c98b84" stroke-width="1.5" fill="none"/><path d="M44 210 L108 140" stroke="#c98b84" stroke-width="1.5" fill="none"/><path d="M44 210 L108 195" stroke="#c98b84" stroke-width="1.5" fill="none"/><path d="M214 210 L232 140" stroke="#2f7d4a" stroke-width="1.5" fill="none"/><path d="M280 140 L292 85" stroke="#2f7d4a" stroke-width="1.5" fill="none"/><path d="M280 140 L292 140" stroke="#2f7d4a" stroke-width="1.5" fill="none"/><path d="M280 140 L292 195" stroke="#2f7d4a" stroke-width="1.5" fill="none"/><circle cx="30" cy="60" r="14" fill="#f1eaf8" stroke="#6a3d9a" stroke-width="2"/><text x="30" y="65" font-size="14" font-weight="700" fill="#222" text-anchor="middle">A</text><circle cx="200" cy="60" r="14" fill="#f1eaf8" stroke="#6a3d9a" stroke-width="2"/><text x="200" y="65" font-size="14" font-weight="700" fill="#222" text-anchor="middle">A</text><circle cx="30" cy="110" r="14" fill="#f1eaf8" stroke="#6a3d9a" stroke-width="2"/><text x="30" y="115" font-size="14" font-weight="700" fill="#222" text-anchor="middle">B</text><circle cx="200" cy="110" r="14" fill="#f1eaf8" stroke="#6a3d9a" stroke-width="2"/><text x="200" y="115" font-size="14" font-weight="700" fill="#222" text-anchor="middle">B</text><circle cx="30" cy="160" r="14" fill="#f1eaf8" stroke="#6a3d9a" stroke-width="2"/><text x="30" y="165" font-size="14" font-weight="700" fill="#222" text-anchor="middle">C</text><circle cx="200" cy="160" r="14" fill="#f1eaf8" stroke="#6a3d9a" stroke-width="2"/><text x="200" y="165" font-size="14" font-weight="700" fill="#222" text-anchor="middle">C</text><circle cx="30" cy="210" r="14" fill="#f1eaf8" stroke="#6a3d9a" stroke-width="2"/><text x="30" y="215" font-size="14" font-weight="700" fill="#222" text-anchor="middle">D</text><circle cx="200" cy="210" r="14" fill="#f1eaf8" stroke="#6a3d9a" stroke-width="2"/><text x="200" y="215" font-size="14" font-weight="700" fill="#222" text-anchor="middle">D</text><rect x="108" y="70" width="68" height="30" rx="6" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="142" y="90" font-size="14" fill="#222" text-anchor="middle">SELECT</text><rect x="292" y="70" width="62" height="30" rx="6" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="323" y="90" font-size="14" fill="#222" text-anchor="middle">SELECT</text><rect x="108" y="125" width="68" height="30" rx="6" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="142" y="145" font-size="14" fill="#222" text-anchor="middle">UPDATE</text><rect x="292" y="125" width="62" height="30" rx="6" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="323" y="145" font-size="14" fill="#222" text-anchor="middle">UPDATE</text><rect x="108" y="180" width="68" height="30" rx="6" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="142" y="200" font-size="14" fill="#222" text-anchor="middle">INSERT</text><rect x="292" y="180" width="62" height="30" rx="6" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="323" y="200" font-size="14" fill="#222" text-anchor="middle">INSERT</text><rect x="232" y="118" width="48" height="44" rx="8" fill="#e9f6ec" stroke="#2f7d4a" stroke-width="2"/><text x="256" y="145" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">역할</text><text x="92" y="254" font-size="14" font-weight="700" fill="#b03a2e" text-anchor="middle">선 12개</text><text x="272" y="254" font-size="14" font-weight="700" fill="#2f7d4a" text-anchor="middle">선 7개</text>
+</svg><figcaption>사람이 한 명 늘면 왼쪽은 선 3개, 오른쪽은 선 1개가 늘어요. 사람이 많을수록 차이가 커져요.</figcaption></figure></div>
+
+
+<p>그래서 나온 것이 <b>역할(ROLE)</b>이에요. 역할은 <b>여러 권한을 하나로 묶어 이름 붙인 권한 꾸러미</b>로, 사용자에게 역할을 주면 그 안의 권한을 한꺼번에 받아요. 역할은 사원증 색깔이에요. 새로 온 분석가에게 권한 열 개를 하나씩 찍어 주는 대신, 파란 사원증 하나를 건네면 끝나요. 이렇게 역할 단위로 권한을 관리하는 방식을 RBAC(역할 기반 접근 통제)라고 부르는데, 자세한 접근 통제 모델은 4과목 보안에서 다시 만나요.</p>
+<div class="box"><b>동작 순서</b>① <code>CREATE ROLE</code>로 역할을 만든다<br>② <code>GRANT 권한 ON 객체 TO 역할</code>로 역할에 권한을 담는다<br>③ <code>GRANT 역할 TO 사용자</code>로 사람에게 역할을 준다<br>④ <code>REVOKE 역할 FROM 사용자</code>로 역할째 회수한다</div>
+<pre>CREATE ROLE 분석가;
+GRANT SELECT ON 성적 TO 분석가;
+GRANT SELECT ON 포인트 TO 분석가;
+GRANT 분석가 TO 하린, 민지;
+
+-- 민지가 다른 팀으로 이동
+REVOKE 분석가 FROM 민지;</pre>
+<div class="duo"><div><p>역할에는 객체 권한과 시스템 권한을 모두 담을 수 있어요. 또 역할을 다른 역할에 부여해 더 큰 꾸러미를 만들 수도 있어요. 아래처럼 ‘운영팀장’ 역할에 분석가·상담 역할을 넣으면 팀장은 두 직무의 권한을 모두 받아요.</p></div><figure class="mermaid"><img src="../assets/c977dd2cdbb2c218.png" alt="도식" loading="lazy" style="width:744px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption><figcaption>권한은 역할에, 역할은 사람에게 줘요. 맨 아래처럼 역할을 다른 역할에 넣어 묶을 수도 있어요.</figcaption></figure></div>
+
+
+<p><b>→ 이 장면의 결과물:</b> 사람이 아니라 직무 단위의 권한 관리. 여기까지가 DCL의 본업이에요. 그런데 어제 본 COMMIT·ROLLBACK도 DCL이라고 적힌 책이 있어요. 다음 장면은 그 서랍 정리예요.</p>
+
+<h2>5. 장면 4 — 교재마다 서랍이 다르다 (DCL vs TCL)</h2>
+<div class="point"><b>핵심 한 줄</b>GRANT·REVOKE는 어디서나 DCL. COMMIT·ROLLBACK은 <b>3분류면 DCL, 4분류면 TCL</b>이에요.</div>
+<div class="duo"><div><p>SQL을 셋으로 나누는 전통적인 정처기 수험서는 DCL을 “데이터의 <b>보안·무결성·회복·병행 제어</b>를 정의하는 언어”로 넓게 정의해요. 이 정의라면 트랜잭션을 확정·취소해 회복과 병행 제어를 돕는 COMMIT·ROLLBACK도 ‘제어’에 들어가니 DCL 서랍에 함께 담겨요.</p>
+<p>반면 SQLD 계열과 최근 자료는 넷으로 나눠요. DCL은 <b>권한</b>만 다루고, 트랜잭션을 다루는 COMMIT·ROLLBACK·SAVEPOINT는 <b>TCL</b> 서랍으로 따로 빼요. 대상이 권한이 아니라 트랜잭션이라는 관점이에요. COMMIT·ROLLBACK은 이사 중인 짐이에요. 옛 집(DCL) 주소로 온 우편도, 새 집(TCL) 주소로 온 우편도 같은 사람 것이니, 선지가 어느 주소를 쓰는지만 보면 돼요.</p></div><figure><svg viewBox="0 0 360 306" font-family="sans-serif" role="img" aria-label="왼쪽 3분류는 COMMIT과 ROLLBACK을 DCL 서랍에 넣고, 오른쪽 4분류는 TCL 서랍을 따로 만들어 옮긴 비교">
+<rect width="360" height="306" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d32e" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b5730d"/></marker></defs><text x="92" y="28" font-size="14" font-weight="700" fill="#222" text-anchor="middle">3분류 (전통 수험서)</text><text x="268" y="28" font-size="14" font-weight="700" fill="#222" text-anchor="middle">4분류 (SQLD·최근)</text><path d="M172 222 L186 236" stroke="#b5730d" stroke-width="2" fill="none" marker-end="url(#d32e)"/><rect x="12" y="44" width="160" height="40" rx="8" fill="#eeeeea" stroke="#777" stroke-width="2"/><text x="92" y="69" font-size="14" font-weight="700" fill="#222" text-anchor="middle">DDL</text><rect x="12" y="92" width="160" height="40" rx="8" fill="#eeeeea" stroke="#777" stroke-width="2"/><text x="92" y="117" font-size="14" font-weight="700" fill="#222" text-anchor="middle">DML</text><rect x="188" y="44" width="160" height="40" rx="8" fill="#eeeeea" stroke="#777" stroke-width="2"/><text x="268" y="69" font-size="14" font-weight="700" fill="#222" text-anchor="middle">DDL</text><rect x="188" y="92" width="160" height="40" rx="8" fill="#eeeeea" stroke="#777" stroke-width="2"/><text x="268" y="117" font-size="14" font-weight="700" fill="#222" text-anchor="middle">DML</text><rect x="12" y="140" width="160" height="100" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="92" y="164" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">DCL</text><text x="92" y="188" font-size="14" fill="#222" text-anchor="middle">GRANT · REVOKE</text><text x="92" y="212" font-size="14" fill="#b5730d" text-anchor="middle">COMMIT · ROLLBACK</text><rect x="188" y="140" width="160" height="48" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="268" y="160" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">DCL</text><text x="268" y="180" font-size="14" fill="#222" text-anchor="middle">GRANT · REVOKE</text><rect x="188" y="196" width="160" height="72" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="268" y="218" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">TCL</text><text x="268" y="240" font-size="14" fill="#222" text-anchor="middle">COMMIT · ROLLBACK</text><text x="268" y="260" font-size="14" fill="#222" text-anchor="middle">SAVEPOINT</text><text x="180" y="292" font-size="14" font-weight="700" fill="#333" text-anchor="middle">같은 명령, 서랍만 다르다</text>
+</svg><figcaption>주황 글자(COMMIT·ROLLBACK)만 서랍을 옮겼어요. GRANT·REVOKE는 어느 쪽에서나 DCL이에요.</figcaption></figure></div>
+
+
+<table>
+<tr><th>분류</th><th>COMMIT · ROLLBACK 위치</th><th>시험장 판단</th></tr>
+<tr><td>3분류 (DDL · DML · DCL)</td><td>DCL 안</td><td>선지에 TCL이 없으면 DCL을 고른다</td></tr>
+<tr><td>4분류 (DDL · DML · DCL · TCL)</td><td>TCL로 분리</td><td>선지에 TCL이 있으면 TCL을 고른다</td></tr>
+</table>
+<div class="trap"><b>함정 ③ 서랍 경계</b>“COMMIT은 DCL이 아니다”를 단정하는 선지는 위험해요. 반대로 GRANT·REVOKE를 TCL이나 DML이라 하는 선지는 어느 분류로도 틀려요.</div>
+<p><b>→ 이 장면의 결과물:</b> SQL 네 서랍의 정리. 이제 GRANT를 실행한 순간 그 내역이 어디에 적히는지, 장부를 열어 볼 차례예요.</p>
+
+<h2>6. 장면 5 — DB가 스스로 쓰는 장부 (데이터 사전)</h2>
+<div class="point"><b>핵심 한 줄</b>데이터 사전 = 시스템 카탈로그 = <b>메타데이터 저장소</b>. <b>DBMS가 쓰고, 사용자는 읽기만</b> 해요.</div>
+<h3>메타데이터 — 데이터에 대한 데이터</h3>
+<div class="duo"><div><p>성적 테이블에 들어 있는 “2024001 학생의 DB 점수는 92”는 데이터예요. 그런데 DBMS가 이 값을 다루려면 “성적 테이블이 있고, 점수 컬럼은 정수형이며, 기본키는 학번+과목이고, 하린이 SELECT 권한을 가졌다”는 정보도 알아야 해요. 이렇게 <b>데이터의 구조·정의·제약·권한을 설명하는 데이터</b>를 <b>메타데이터(Metadata)</b>라고 해요.</p></div><figure><svg viewBox="0 0 360 326" font-family="sans-serif" role="img" aria-label="위에는 성적 테이블의 실제 값 두 행, 아래에는 그 테이블의 이름·컬럼·기본키·권한을 적은 카탈로그 설명">
+<rect width="360" height="326" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d32f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="16" y="28" font-size="14" font-weight="700" fill="#2a5db0">데이터 — 성적 테이블의 값</text><path d="M180 132 L180 164" stroke="#555" stroke-width="2" fill="none" marker-end="url(#d32f)"/><rect x="16" y="38" width="100" height="30" rx="0" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><text x="66.0" y="58" font-size="14" font-weight="700" fill="#222" text-anchor="middle">학번</text><rect x="116" y="38" width="128" height="30" rx="0" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><text x="180.0" y="58" font-size="14" font-weight="700" fill="#222" text-anchor="middle">과목</text><rect x="244" y="38" width="100" height="30" rx="0" fill="#e6efff" stroke="#2a5db0" stroke-width="1.5"/><text x="294.0" y="58" font-size="14" font-weight="700" fill="#222" text-anchor="middle">점수</text><rect x="16" y="68" width="100" height="30" rx="0" fill="#ffffff" stroke="#2a5db0" stroke-width="1.5"/><text x="66.0" y="88" font-size="14" fill="#333" text-anchor="middle">2024001</text><rect x="116" y="68" width="128" height="30" rx="0" fill="#ffffff" stroke="#2a5db0" stroke-width="1.5"/><text x="180.0" y="88" font-size="14" fill="#333" text-anchor="middle">DB</text><rect x="244" y="68" width="100" height="30" rx="0" fill="#ffffff" stroke="#2a5db0" stroke-width="1.5"/><text x="294.0" y="88" font-size="14" fill="#333" text-anchor="middle">92</text><rect x="16" y="98" width="100" height="30" rx="0" fill="#ffffff" stroke="#2a5db0" stroke-width="1.5"/><text x="66.0" y="118" font-size="14" fill="#333" text-anchor="middle">2024002</text><rect x="116" y="98" width="128" height="30" rx="0" fill="#ffffff" stroke="#2a5db0" stroke-width="1.5"/><text x="180.0" y="118" font-size="14" fill="#333" text-anchor="middle">SQL</text><rect x="244" y="98" width="100" height="30" rx="0" fill="#ffffff" stroke="#2a5db0" stroke-width="1.5"/><text x="294.0" y="118" font-size="14" fill="#333" text-anchor="middle">85</text><text x="198" y="154" font-size="14" fill="#555">값을 설명하는 데이터</text><text x="16" y="186" font-size="14" font-weight="700" fill="#b5730d">메타데이터 — 카탈로그에 적힌 설명</text><rect x="16" y="196" width="328" height="116" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="30" y="220" font-size="14" fill="#333">테이블: 성적 · 소유자: DBA</text><text x="30" y="246" font-size="14" fill="#333">컬럼: 학번 · 과목 · 점수(INT)</text><text x="30" y="272" font-size="14" fill="#333">기본키: (학번, 과목)</text><text x="30" y="298" font-size="14" fill="#333">권한: 하린 SELECT</text>
+</svg><figcaption>위는 값(92점), 아래는 “점수는 INT 컬럼이다” 같은 값에 대한 설명이에요. 아래쪽이 메타데이터예요.</figcaption></figure></div>
+
+
+<h3>데이터 사전(시스템 카탈로그)이란</h3>
+<div class="duo"><div><p><b>데이터 사전</b>은 <b>DB에 저장된 모든 객체(테이블·뷰·인덱스·제약조건·사용자·권한 등)의 정의와 명세, 즉 메타데이터를 모아 둔 시스템 테이블</b>이에요. 같은 것을 <b>시스템 카탈로그(System Catalog)</b>라고도 불러요. 데이터 사전은 도서관의 소장 목록이에요. 책(데이터)은 서가에 있고, 목록에는 제목·위치·대출 가능 여부(메타데이터)만 있죠.</p>
+<p>장부라고 해서 특별한 파일이 아니라 <b>실제로 존재하는 테이블</b>이에요. 그래서 일반 사용자도 SELECT로 조회할 수 있어요. 다만 그 안의 내용은 <b>DBMS가 스스로 생성하고 유지</b>해요. 사용자가 CREATE TABLE이나 GRANT를 실행하면 DBMS가 카탈로그를 <b>자동으로 갱신</b>하죠.</p></div><figure class="mermaid"><img src="../assets/bbe3f1f2e455ef18.png" alt="도식" loading="lazy" style="width:384px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption><figcaption>사용자가 GRANT·CREATE를 실행하면 DBMS가 카탈로그를 고쳐 적어요. 사용자는 카탈로그를 읽을 수는 있지만 직접 고치려 하면 거부돼요.</figcaption></figure></div>
+
+
+<p>그럼 사용자가 INSERT·UPDATE·DELETE로 카탈로그를 직접 고치면 안 될까요? 안 돼요. 이용자가 소장 목록에 볼펜으로 책을 추가하면 목록과 서가가 어긋나요. 그래서 사서(DBMS)만 고쳐요. 장부와 실물이 어긋나면 DB가 없는 테이블을 있다고 말하는 거짓말쟁이가 되니까요. 카탈로그의 구조는 DBMS 제품마다 달라요.</p>
+<p>한 장 요약 — 시험에 나오는 특징과, 출제자가 바꿔 끼우는 문장이에요.</p>
+<table>
+<tr><th>특징</th><th>내용</th><th>틀린 선지로 바뀌는 모양</th></tr>
+<tr><td>담는 것</td><td>메타데이터(객체 정의·명세·권한)</td><td>“업무 데이터의 실제 행을 담는다”</td></tr>
+<tr><td>정체</td><td>실제로 존재하는 시스템 테이블</td><td>“가상 테이블이다”</td></tr>
+<tr><td>누가 갱신</td><td>DBMS가 생성·자동 갱신</td><td>“사용자가 DML로 직접 갱신한다”</td></tr>
+<tr><td>누가 조회</td><td>일반 사용자도 SELECT로 조회 가능</td><td>“시스템만 접근할 수 있다”</td></tr>
+<tr><td>구조</td><td>DBMS마다 다름</td><td>“모든 DBMS가 같은 구조다”</td></tr>
+</table>
+<h3>데이터 사전 vs 데이터 디렉터리</h3>
+<div class="duo"><div><p>이름이 닮은 장부가 하나 더 있어요. <b>데이터 디렉터리(Data Directory)</b>는 데이터 사전에 있는 데이터에 <b>실제로 접근하는 데 필요한 위치·접근 정보</b>를 관리하는 곳으로, <b>시스템만</b> 접근해요. 데이터 사전은 사용자와 시스템이 모두 접근해요. 출제자는 ‘사용자도 조회할 수 있다’와 ‘시스템만 접근한다’를 바꿔 끼워요. 이름이 닮은 두 장부 중 사람 손이 닿는 쪽이 사전이에요.</p></div><figure><svg viewBox="0 0 360 262" font-family="sans-serif" role="img" aria-label="데이터 사전은 사용자와 시스템이 모두 접근하고, 데이터 디렉터리는 시스템만 접근하는 비교">
+<rect width="360" height="262" rx="12" fill="#f7f7f4"/>
+<defs><marker id="d32g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="180" y="24" font-size="15" font-weight="700" fill="#222" text-anchor="middle">이름이 닮은 두 장부</text><path d="M90 76 L94 148" stroke="#2a5db0" stroke-width="2" fill="none" marker-end="url(#d32g)"/><path d="M250 76 L140 148" stroke="#b5730d" stroke-width="2" fill="none" marker-end="url(#d32g)"/><path d="M300 76 L300 148" stroke="#b5730d" stroke-width="2" fill="none" marker-end="url(#d32g)"/><text x="60" y="118" font-size="14" fill="#2a5db0" text-anchor="middle">조회</text><text x="214" y="122" font-size="14" fill="#b5730d" text-anchor="middle">갱신</text><text x="310" y="118" font-size="14" fill="#b5730d">관리</text><rect x="40" y="40" width="100" height="36" rx="8" fill="#f1eaf8" stroke="#6a3d9a" stroke-width="2"/><text x="90" y="64" font-size="14" font-weight="700" fill="#222" text-anchor="middle">사용자</text><rect x="220" y="40" width="120" height="36" rx="8" fill="#eeeeea" stroke="#555" stroke-width="2"/><text x="280" y="64" font-size="14" font-weight="700" fill="#222" text-anchor="middle">시스템(DBMS)</text><rect x="16" y="150" width="156" height="96" rx="8" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="94" y="176" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">데이터 사전</text><text x="94" y="200" font-size="14" fill="#333" text-anchor="middle">메타데이터 저장</text><text x="94" y="224" font-size="14" font-weight="700" fill="#222" text-anchor="middle">사용자 + 시스템</text><rect x="188" y="150" width="156" height="96" rx="8" fill="#fff4e0" stroke="#b5730d" stroke-width="2"/><text x="266" y="176" font-size="14" font-weight="700" fill="#b5730d" text-anchor="middle">데이터 디렉터리</text><text x="266" y="200" font-size="14" fill="#333" text-anchor="middle">사전에 접근할 정보</text><text x="266" y="224" font-size="14" font-weight="700" fill="#222" text-anchor="middle">시스템만</text>
+</svg><figcaption>사람 손(보라 상자)에서 출발하는 화살표는 데이터 사전으로만 가요. 디렉터리는 DBMS 혼자 쓰는 내부 색인이에요.</figcaption></figure></div>
+
+
+<div class="vs"><div><b>데이터 사전 (시스템 카탈로그)</b>메타데이터 저장 · 사용자와 시스템 모두 접근 · 사용자는 조회만</div><div><b>데이터 디렉터리</b>사전 데이터에 접근하는 정보 관리 · 시스템만 접근</div></div>
+<h3>DBMS는 SQL마다 장부를 먼저 본다</h3>
+<div class="duo"><div><p>데이터 사전은 구경용이 아니라 DBMS가 매 순간 쓰는 장부예요. SQL이 들어오면 DBMS는 먼저 카탈로그를 보고 테이블이 있는지, 이 사용자에게 권한이 있는지 확인해요. 권한이 없으면 실행 전에 거부하고, 실행한 문장이 DDL·DCL이면 장부를 고쳐 적어요. 오늘 배운 GRANT가 의미를 갖는 것도 이 확인 단계 덕분이에요.</p></div><figure class="mermaid"><img src="../assets/9e36476bea6ade33.png" alt="도식" loading="lazy" style="width:369px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption><figcaption>SQL 한 줄도 실행 전에 카탈로그부터 봐요. 테이블이 있는지, 이 사람에게 권한이 있는지가 여기 적혀 있어요.</figcaption></figure></div>
+
+
+<p>현업에서는 이 장부를 매일 들여다봐요. MySQL·PostgreSQL은 표준 이름의 <code>information_schema</code>, Oracle은 <code>USER_TABLES</code>·<code>USER_TAB_PRIVS</code> 같은 뷰로 카탈로그를 보여 줘요.</p>
+<pre>-- 성적 테이블의 컬럼 정의 보기 (MySQL · PostgreSQL)
+SELECT column_name, data_type
+FROM information_schema.columns
+WHERE table_name = '성적';
+-- 결과 예
+-- 학번 | character
+-- 과목 | character varying
+-- 점수 | integer
+
+-- 카탈로그를 직접 고치려 하면
+UPDATE information_schema.columns SET data_type = 'text' ...;
+-- → 오류(문구는 DBMS마다 다름): 시스템이 관리하는 뷰라 직접 수정 불가</pre>
+<div class="memo"><b>암기</b>주는 건 TO, 뺏는 건 FROM · CASCADE는 사슬 끝까지, RESTRICT는 사슬 있으면 멈춤 · GRANT OPTION FOR는 권한은 두고 ‘주는 능력’만 · 데이터 사전은 <b>DBMS가 쓰고, 사람은 읽기만</b> · 디렉터리는 시스템 전용</div>
+<p>시스템 카탈로그는 <b>11/11 D040</b>(B3 시스템 카탈로그)에서 한 번 더, 이번엔 DBMS 내부 구조 쪽에서 다시 만나요. <b>→ 이 장면의 결과물:</b> 권한과 정의가 적힌 장부를 읽는 눈. 이제 지난 오답을 정리할 차례예요.</p>
+
+<h2>7. 오답 복습 — UI 표준 · CMMI · 버전관리 · 집합 · 응집도</h2>
+<div class="point"><b>핵심 한 줄</b>다섯 문제 모두 <b>범위를 묻는 한 질문</b>으로 갈려요. “전체냐 세부냐, 프로젝트냐 조직이냐, 로컬이냐 서버냐, 혼자 사나 함께 죽나, 왜 묶였나.”</div>
+<p>오늘의 DCL이 “누구에게 어디까지”를 가르는 일이었듯, 아래 다섯 오답도 범위를 정확히 가르면 풀려요. 각 항목은 원래 페이지 링크와 함께 가르는 질문 하나씩만 붙였어요.</p>
+<h3>UI 표준 vs UI 지침 (<a href="./2026-10-09-D007.html">D007</a>)</h3>
+<p><b>UI 표준</b>은 <b>전체 시스템에 공통으로 적용되는</b> 화면 구성·화면 이동 등의 규약이에요. <b>UI 지침</b>은 UI 요구사항·구현 제약처럼 <b>개발 과정에서 지켜야 할 세부 사항</b>이에요. 둘 다 ‘지키라는 것’이라 헷갈리는데, “모든 시스템이 똑같이 맞추는 틀인가, 만들면서 지킬 세부 조건인가”로 갈려요.</p>
+<h3>CMMI 성숙도 단계 (<a href="./2026-10-25-D023.html">D023</a>)</h3>
+<div class="duo"><div><p>CMMI는 조직의 소프트웨어 개발 능력을 다섯 계단으로 평가해요. 2단계 <b>관리</b>는 프로젝트마다 따로 관리가 되는 수준이고, 3단계 <b>정의</b>에서 비로소 조직 차원의 표준 프로세스가 생겨 각 프로젝트가 그것을 맞춤 조정해 써요. 4단계는 그 프로세스를 수치로 측정·통제하고, 5단계 <b>최적화</b>는 지속적으로 개선하는 단계예요. “최적화”라는 이름이 근사해서 손이 가기 쉽지만, 키워드가 ‘개선’이 아니라 ‘표준’이면 아래 계단이에요.</p></div><figure><svg viewBox="0 0 360 310" font-family="sans-serif" role="img" aria-label="CMMI 성숙도 다섯 계단 초기, 관리, 정의, 정량적 관리, 최적화와 단계별 키워드">
+<rect width="360" height="310" rx="12" fill="#f7f7f4"/>
+<text x="16" y="24" font-size="15" font-weight="700" fill="#222">CMMI 성숙도 5단계</text><rect x="12" y="144" width="64" height="32" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="44" y="138" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">1</text><text x="44" y="166" font-size="14" font-weight="700" fill="#222" text-anchor="middle">초기</text><rect x="80" y="118" width="64" height="58" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="112" y="112" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">2</text><text x="112" y="140" font-size="14" font-weight="700" fill="#222" text-anchor="middle">관리</text><rect x="148" y="92" width="64" height="84" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="180" y="86" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">3</text><text x="180" y="114" font-size="14" font-weight="700" fill="#222" text-anchor="middle">정의</text><rect x="216" y="66" width="64" height="110" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="248" y="60" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">4</text><text x="248" y="88" font-size="14" font-weight="700" fill="#222" text-anchor="middle">정량적</text><text x="248" y="106" font-size="14" font-weight="700" fill="#222" text-anchor="middle">관리</text><rect x="284" y="40" width="64" height="136" rx="4" fill="#e6efff" stroke="#2a5db0" stroke-width="2"/><text x="316" y="34" font-size="14" font-weight="700" fill="#2a5db0" text-anchor="middle">5</text><text x="316" y="62" font-size="14" font-weight="700" fill="#222" text-anchor="middle">최적화</text><text x="16" y="204" font-size="14" fill="#333">1 초기 — 개인 역량에 기댐</text><text x="16" y="226" font-size="14" fill="#333">2 관리 — 프로젝트 단위로 관리</text><text x="16" y="248" font-size="14" fill="#333">3 정의 — 조직 표준 프로세스</text><text x="16" y="270" font-size="14" fill="#333">4 정량적 관리 — 수치로 측정·통제</text><text x="16" y="292" font-size="14" fill="#333">5 최적화 — 지속적으로 개선</text>
+</svg><figcaption>계단은 아래부터 올라가요. 키워드에서 “프로젝트”와 “조직”, “수치”와 “개선”이 갈림길이에요.</figcaption></figure></div>
+
+
+<h3>버전관리 방식 (<a href="./2026-10-25-D023.html">D023</a>)</h3>
+<p>공유 폴더 방식은 파일을 복사해 나눠 쓰는 원시적인 방법이고, <b>클라이언트/서버 방식</b>(CVS·SVN)은 중앙 서버 하나에 저장소가 있어 커밋하려면 서버에 연결돼 있어야 해요. <b>분산 저장소 방식</b>(Git)은 각자 PC에 저장소 전체를 복제해 로컬에 먼저 커밋하고 나중에 원격 저장소로 올려요. 버전관리 문제는 ‘비행기 모드에서도 커밋되나?’ 한 질문이면 갈려요. 되면 분산, 안 되면 중앙 서버 쪽이에요.</p>
+<h3>집합 vs 합성 (<a href="./2026-10-25-D023.html">D023</a> · <a href="./2026-10-04-D002.html">D002</a>)</h3>
+<div class="duo"><div><p>둘 다 전체–부분 관계예요. <b>집합(집약, Aggregation)</b>은 전체가 사라져도 부분이 독립적으로 존재하는 느슨한 관계로, 전체 쪽 끝에 <b>빈 마름모</b>를 그려요. <b>합성(Composition)</b>은 부분이 전체와 생명주기를 함께해 전체가 사라지면 부분도 사라지는 관계로, <b>채운 마름모</b>를 써요. 마름모가 없는 실선은 단순한 연관이라, 전체–부분의 뜻이 없어요.</p></div><figure class="mermaid"><img src="../assets/30d630be43eb5c27.png" alt="도식" loading="lazy" style="width:208px"><figcaption>빈 마름모(위)는 부분이 혼자서도 살아남는 관계, 채운 마름모(아래)는 전체와 함께 사라지는 관계예요. 마름모는 늘 전체 쪽 끝에 붙어요.</figcaption></figure></div>
+
+
+<h3>논리적 응집도 (<a href="./2026-10-14-D012.html">D012</a>)</h3>
+<p><b>논리적 응집도</b>는 서로 관련이 적은 처리들이 <b>비슷한 성격이나 유형</b>이라는 이유로 한 모듈에 모이고, 플래그 같은 제어 매개변수로 그중 하나를 골라 실행하는 형태예요. <b>기능적 응집도</b>는 모듈 안 모든 요소가 <b>단 하나의 기능</b>을 위해 협력하는 가장 강한 응집도예요. 가르는 질문은 “왜 이 코드들이 한 함수에 있나”예요. 하나의 일을 위해서면 기능적, ‘비슷해 보여서’면 논리적이에요.</p>
+<table>
+<tr><th>헷갈린 짝</th><th>가르는 질문</th><th>오늘 페이지 연결</th></tr>
+<tr><td>UI 표준 / UI 지침</td><td>전체 공통 틀인가, 개발 중 세부 조건인가</td><td>PUBLIC(모두)과 개별 GRANT의 범위 차이</td></tr>
+<tr><td>CMMI 정의 / 최적화</td><td>키워드가 ‘조직 표준’인가 ‘지속 개선’인가</td><td>역할: 조직 표준 꾸러미를 사람마다 적용</td></tr>
+<tr><td>분산 / 클라이언트·서버</td><td>서버 없이 로컬 커밋이 되나</td><td>장부(카탈로그)가 어디 있고 누가 고치나</td></tr>
+<tr><td>집합 / 연관 / 합성</td><td>부분이 혼자 살아남나, 마름모가 있나</td><td>CASCADE: 전체를 지우면 딸린 것도 따라감</td></tr>
+<tr><td>논리적 / 기능적 응집도</td><td>하나의 일인가, 비슷한 성격일 뿐인가</td><td>GRANT 권한 목록: 종류별로 골라 줌</td></tr>
+</table>
+
+<h2>8. 시험 포인트 한 장 + 다음 예고</h2>
+<div class="point"><b>핵심 한 줄</b>오늘은 <b>방향과 범위</b>의 날이에요. TO/FROM, 사슬 끝까지/멈춤, 사람/역할, 사용자 조회/시스템 갱신.</div>
+<p>오늘 다섯 장면을 공부친구 DB 하나로 다시 꿰면 아래 표가 돼요. 건물 관리인의 열쇠 꾸러미처럼, 누가 어느 문 열쇠를 받았고 누가 복사해 줄 수 있는지만 정리되면 시험장 문도 다 열려요.</p>
+<table class="tight">
+<tr><th>장면</th><th>하는 일</th><th>시험 개념</th><th>결과물</th></tr>
+<tr><td>큰 그림</td><td>권한을 나눌 이유</td><td>DCL = 보안·권한 제어, 데이터 사전</td><td>사람마다 다른 문</td></tr>
+<tr><td>장면 1</td><td>권한 나눠 주기</td><td>GRANT … ON … TO, 객체/시스템 권한, PUBLIC</td><td>하린·고객센터 권한</td></tr>
+<tr><td>장면 2</td><td>다시 주기·거두기</td><td>WITH GRANT OPTION, REVOKE … FROM, CASCADE · RESTRICT · GRANT OPTION FOR</td><td>사슬째 회수</td></tr>
+<tr><td>장면 3</td><td>직무로 묶기</td><td>CREATE ROLE → 역할에 권한 → 사람에게 역할</td><td>분석가·상담 역할</td></tr>
+<tr><td>장면 4</td><td>서랍 정리</td><td>3분류 DCL ⊃ COMMIT·ROLLBACK / 4분류 TCL</td><td>분류 판단 기준</td></tr>
+<tr><td>장면 5</td><td>장부 읽기</td><td>메타데이터, 시스템 카탈로그 특징, 데이터 디렉터리</td><td>DB가 쓰는 장부</td></tr>
+</table>
+<p>내일 D033은 드디어 DML의 주인공 <b>SELECT</b> 기본이에요. 오늘 하린이 받은 바로 그 SELECT 권한으로 무엇을 읽어 올 수 있는지 문장을 하나씩 조립해 봐요.</p>
+
+<h2>확인 문제</h2>
+<p><small>참고: COMMIT·ROLLBACK의 분류(DCL/TCL)는 교재마다 달라 오늘 문항에서 묻지 않아요. 1~2번은 오늘 범위, 3~7번은 오답 재확인이에요.</small></p>
+<ol class="quiz">
+<li>DBA가 <code>GRANT SELECT ON 성적 TO 하린 WITH GRANT OPTION;</code>을 실행했고, 하린은 받은 권한으로 <code>GRANT SELECT ON 성적 TO 도윤;</code>을 실행했다. 이후 DBA가 <code>REVOKE SELECT ON 성적 FROM 하린 CASCADE;</code>를 실행하면?<label class="opt"><input type="radio" name="D032-q1" value="1">① 하린만 SELECT 권한을 잃고 도윤은 유지한다</label><label class="opt"><input type="radio" name="D032-q1" value="2">② 하린과 도윤 모두 SELECT 권한을 잃는다</label><label class="opt"><input type="radio" name="D032-q1" value="3">③ 하린은 SELECT 권한을 유지하고 다른 사람에게 줄 수 있는 권한만 잃는다</label><label class="opt"><input type="radio" name="D032-q1" value="4">④ 도윤에게 권한이 남아 있으므로 명령이 거부된다</label></li>
+<li>데이터 사전(시스템 카탈로그)에 대한 설명으로 옳은 것은?<label class="opt"><input type="radio" name="D032-q2" value="1">① DBMS가 스스로 생성·갱신하며, 일반 사용자도 SELECT로 내용을 조회할 수 있다</label><label class="opt"><input type="radio" name="D032-q2" value="2">② 사용자가 INSERT·UPDATE 문으로 직접 수정해 최신 상태를 유지한다</label><label class="opt"><input type="radio" name="D032-q2" value="3">③ 업무 데이터의 실제 행을 모아 둔 가상 테이블이다</label><label class="opt"><input type="radio" name="D032-q2" value="4">④ 시스템만 접근할 수 있고 일반 사용자는 조회할 수 없다</label></li>
+<li>사내 모든 업무 시스템에서 상단 메뉴 위치, 버튼 배치, 화면 사이 이동 방식을 똑같이 맞추도록 전체에 공통으로 적용하는 규약은?<label class="opt"><input type="radio" name="D032-q3" value="1">① UI 요구사항</label><label class="opt"><input type="radio" name="D032-q3" value="2">② UI 지침</label><label class="opt"><input type="radio" name="D032-q3" value="3">③ UI 표준</label><label class="opt"><input type="radio" name="D032-q3" value="4">④ UI 프로토타입</label></li>
+<li>CMMI에서 조직이 표준 프로세스를 정해 두고, 각 프로젝트가 그 표준을 상황에 맞게 맞춤 조정해 쓰는 성숙도 단계는?<label class="opt"><input type="radio" name="D032-q4" value="1">① 관리</label><label class="opt"><input type="radio" name="D032-q4" value="2">② 정량적 관리</label><label class="opt"><input type="radio" name="D032-q4" value="3">③ 최적화</label><label class="opt"><input type="radio" name="D032-q4" value="4">④ 정의</label></li>
+<li>출장 중 인터넷이 끊긴 비행기 안에서도 커밋과 이력 조회를 계속하다가, 착륙 후 원격 저장소에 변경을 올리는 버전관리 방식은?<label class="opt"><input type="radio" name="D032-q5" value="1">① 분산 저장소 방식</label><label class="opt"><input type="radio" name="D032-q5" value="2">② 클라이언트/서버 방식</label><label class="opt"><input type="radio" name="D032-q5" value="3">③ 공유 폴더 방식</label><label class="opt"><input type="radio" name="D032-q5" value="4">④ 중앙 잠금 방식</label></li>
+<li>플레이리스트를 삭제해도 그 안에 담겼던 노래는 음원 목록에 그대로 남는다. 이 관계의 UML 이름과 플레이리스트 쪽 끝 표기는?<label class="opt"><input type="radio" name="D032-q6" value="1">① 연관 – 마름모 없는 실선</label><label class="opt"><input type="radio" name="D032-q6" value="2">② 합성 – 채운 마름모</label><label class="opt"><input type="radio" name="D032-q6" value="3">③ 집합 – 빈 마름모</label><label class="opt"><input type="radio" name="D032-q6" value="4">④ 일반화 – 빈 삼각형</label></li>
+<li><code>export(kind)</code> 함수가 <code>kind</code>가 'pdf'면 PDF 저장, 'excel'이면 엑셀 저장, 'mail'이면 메일 발송을 골라 실행한다. 세 처리는 서로 관련이 적고 ‘내보내기’라는 비슷한 성격으로만 묶였다. 이 모듈의 응집도는?<label class="opt"><input type="radio" name="D032-q7" value="1">① 기능적 응집도</label><label class="opt"><input type="radio" name="D032-q7" value="2">② 시간적 응집도</label><label class="opt"><input type="radio" name="D032-q7" value="3">③ 절차적 응집도</label><label class="opt"><input type="radio" name="D032-q7" value="4">④ 논리적 응집도</label></li>
+</ol><div class="answer-bar" data-id="D032" data-n="7"><code></code><button type="button">답안 복사</button></div><p><small>고른 뒤 <b>답안 복사</b> → 디스코드 공부 채널에 붙여넣기 하면 돼요.</small></p>
+<p>답장: <code>정처기 D032: 1)번호 2)번호 3)번호 4)번호 5)번호 6)번호 7)번호</code></p>
+<p>오늘은 “TO와 FROM”, “CASCADE는 사슬 끝까지”, “사전은 DBMS가 쓰고 사람은 읽기만” 세 개만 확실히 잡아도 충분해요. D030·D031 답장도 편할 때 함께 보내 주세요.</p>
+<p class="meta"><a href="2026-11-02-D031.html">← D031</a>  </p>
+<script>
+document.querySelectorAll('.answer-bar').forEach(bar=>{
+  const id=bar.dataset.id,n=+bar.dataset.n,out=bar.querySelector('code'),btn=bar.querySelector('button');
+  const text=()=>'정처기 '+id+': '+Array.from({length:n},(_,i)=>{const c=document.querySelector('input[name="'+id+'-q'+(i+1)+'"]:checked');return (i+1)+')'+(c?c.value:'?')}).join(' ');
+  document.querySelectorAll('input[name^="'+id+'-q"]').forEach(r=>r.addEventListener('change',()=>{out.textContent=text()}));
+  out.textContent=text();
+  btn.addEventListener('click',async()=>{const t=text();try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}btn.textContent='복사됨 ✓';setTimeout(()=>btn.textContent='답안 복사',1500)});
+});
+</script>
+
+<footer>2027년 정기 기사 1회 정보처리기사 필기 준비 · 공식 범위: Q-Net 2027~2029 출제기준</footer>
+</main></body></html>
