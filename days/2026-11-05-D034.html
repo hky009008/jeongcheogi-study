@@ -433,8 +433,8 @@ document.addEventListener('keydown',e=>{const a=document.querySelector('.box.aud
   if(e.key==='ArrowLeft'&&e.shiftKey){a.currentTime-=10;e.preventDefault()}if(e.key==='ArrowRight'&&e.shiftKey){a.currentTime+=10;e.preventDefault()}});
 </script>
 <script type="module">
-// SQL 실습 상자: <script type="text/plain" class="sql-seed" data-db="이름">스키마·데이터</script>
-//              <div class="sql-run" data-db="이름" [data-note="예상 질문"]><textarea>쿼리</textarea></div>
+// SQL 실습 상자: text/plain sql-seed 스크립트(data-db=이름)에 스키마·데이터
+//              .sql-run(data-db=이름, data-note=예상 질문) 안의 textarea에 쿼리
 // 처음 실행할 때 PGlite(브라우저 안 PostgreSQL)를 불러와 seed를 넣는다. 실행할 때마다 seed 상태에서 다시 시작한다.
 const PG = 'https://cdn.jsdelivr.net/npm/@electric-sql/pglite@0.5.15/dist/index.js';
 let mod = null;
