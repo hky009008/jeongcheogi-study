@@ -161,7 +161,18 @@ WHERE NOT EXISTS (SELECT 1 FROM 상품 p WHERE p.분류번호 = c.분류번호);
 
 
 <div class="vs"><div><b>IN</b>안쪽 결과 <b>값 목록</b>과 비교 · 비상관이 흔함 · NOT IN은 NULL에 약함</div><div><b>EXISTS</b>안쪽 결과 <b>행 존재</b>만 판단 · 상관이 흔함 · NOT EXISTS는 NULL에 강함</div></div>
-<div class="memo">“<b>모든</b> 빵을 주문한 손님”처럼 ‘모두’를 묻는 질의는 NOT EXISTS를 두 번 겹쳐 써요. 관계대수의 디비전(÷)과 같은 일이고, <span class="tag">D041</span> 관계대수에서 다시 만나요.</div>
+<h3>‘모두’를 묻는 질의 — NOT EXISTS 두 번</h3>
+<p><b>정의:</b> “<b>모든</b> 빵을 주문한 손님”처럼 ‘전부 다’를 묻는 질의는 SQL에 ‘모두’라는 연산자가 없어서, “주문하지 <b>않은</b> 빵이 <b>하나도 없는</b> 손님”으로 뒤집어 NOT EXISTS를 두 번 겹쳐 써요. 바깥 NOT EXISTS는 “그런 빵이 없다”, 안쪽 NOT EXISTS는 “이 손님이 그 빵을 주문하지 않았다”를 맡아요.</p>
+<pre><code>SELECT DISTINCT o.손님 FROM 주문 o
+WHERE NOT EXISTS (                      -- ② 이런 빵이 하나도 없으면 통과
+  SELECT 1 FROM 상품 p WHERE p.분류번호 = 1    -- 빵: P1 소금빵, P2 크루아상
+    AND NOT EXISTS (                    -- ① 이 손님이 이 빵을 주문하지 않았다
+      SELECT 1 FROM 주문 x
+      WHERE x.손님 = o.손님 AND x.상품번호 = p.상품번호));
+-- 두리: P1·P2 다 주문 → 안 산 빵 없음 → 통과 / 하나: P2 안 삼 → 탈락 / 세찌: 둘 다 안 삼 → 탈락
+-- 결과: 두리 1행</code></pre>
+<p>손으로 풀 때는 손님마다 “빵 목록 중 이 사람이 안 산 게 있나?”를 세어 보면 돼요. 하나라도 있으면 탈락이에요. 관계대수의 디비전(÷)과 같은 일이고, <span class="tag">D044</span> 관계대수에서 다시 만나요.</p>
+<div class="box"><b>시험에는 이렇게 나와요</b>문제은행에는 “모든 필수 자격증을 가진 직원”, “모든 프로젝트에 참여한 사원”을 찾는 이중 NOT EXISTS가 나와요. 묻는 각도는 ① 결과 행 고르기 ② <b>안쪽 NOT EXISTS의 역할</b>(이 사람에게 빠진 항목이 있는지 검사)이에요. ‘하나라도 있으면 참’(EXISTS)과 헷갈리게 만든 선지가 함정이에요.</div>
 <div class="box"><b>시험에는 이렇게 나와요</b>EXISTS 안쪽 WHERE가 바깥 표의 열을 참조하는 SQL을 주고, 결과로 나오는 바깥 행을 고르게 해요. 바깥 행 하나씩 “조건에 맞는 안쪽 행이 하나라도 있나?”만 확인하면 돼요. 안쪽 행이 여러 개여도 바깥 행은 한 번만 나와요.</div>
 <p><b>→ 이 장면의 결과물:</b> 서브쿼리 세 갈래를 모두 봤어요. 이제 서브쿼리 말고, 결과 두 개를 통째로 합치는 방법으로 넘어가요. 다음 장면은 집합 연산자예요.</p>
 
@@ -237,7 +248,7 @@ SELECT 이름 FROM 10월손님 EXCEPT    SELECT 이름 FROM 11월손님;  -- 2�
 <table class="tight"><tr><th>동작</th><th>부모 삭제 시 자식</th><th>전제 · 사례 결과</th><th>지원</th></tr><tr><td>CASCADE</td><td>함께 삭제(수정이면 값 따라 변경)</td><td>상품 3행 남음</td><td>PG · MySQL · Oracle</td></tr><tr><td>RESTRICT</td><td>삭제 거부(즉시 검사)</td><td>아무것도 안 바뀜</td><td>PG · MySQL</td></tr><tr><td>NO ACTION</td><td>삭제 거부(검사 시점 늦출 수 있음)</td><td>아무것도 안 바뀜</td><td>PG · MySQL(=RESTRICT) · Oracle(기본 동작)</td></tr><tr><td>SET NULL</td><td>외래키를 NULL로</td><td>열이 NULL 허용 · P3 · P4 분류 NULL</td><td>PG · MySQL · Oracle</td></tr><tr><td>SET DEFAULT</td><td>외래키를 기본값으로</td><td>DEFAULT와 그 값의 부모 행 필요 · 분류 0</td><td>PG만(MySQL InnoDB 거부, Oracle 없음)</td></tr></table>
 
 <div class="trap"><b>함정 — 연쇄 실패</b> CASCADE는 끝까지 번져요. 주문.상품번호가 상품을 RESTRICT로 참조한다면, 분류 2 삭제가 P3를 지우려는 순간 주문 102가 P3를 가리키고 있어 <b>전체 삭제가 실패</b>해요. CASCADE를 걸었다고 항상 지워지는 건 아니에요.</div>
-<div class="vs"><div><b>DROP TABLE … CASCADE</b>(D029)<br>개체를 지울 때 그 개체에 <b>의존하는 개체</b>(뷰 · 제약 등)까지 함께 제거</div><div><b>ON DELETE CASCADE</b>(오늘)<br><b>행</b>을 지울 때 그 행을 참조하는 <b>자식 행</b>까지 함께 삭제</div></div>
+<div class="vs"><div><b>DROP TABLE … CASCADE</b>(D029)<br>개체를 지울 때 그 개체에 <b>의존하는 개체</b>(뷰 · 제약 등)까지 함께 제거. <code>ALTER TABLE 학생 DROP 학년 CASCADE</code>도 같은 뜻으로, 학생 테이블의 학년 열을 지우면서 그 열을 참조하는 제약 · 뷰까지 함께 지워요(RESTRICT면 참조하는 게 있을 때 거부).</div><div><b>ON DELETE CASCADE</b>(오늘)<br><b>행</b>을 지울 때 그 행을 참조하는 <b>자식 행</b>까지 함께 삭제</div></div>
 <div class="memo"><b>CASCADE 지움 · SET NULL 비움 · SET DEFAULT 옮김 · RESTRICT 거부</b></div>
 <div class="box"><b>시험에는 이렇게 나와요</b>“부모 테이블의 행을 삭제하면 참조하는 자식 행도 자동으로 삭제되게 하는 옵션”을 묻고, SET NULL · RESTRICT · 엉뚱한 단어를 오답 선지로 둬요. 반대로 “자식은 남기고 외래키만 비운다”면 SET NULL이에요. 같은 시험에 DROP … CASCADE(의존 개체 연쇄 삭제)도 나오니 행 단위와 개체 단위를 구별하세요.</div>
 <p><b>→ 이 장면의 결과물:</b> 외래키가 부모 변화를 따라가는 규칙. SET NULL과 SET DEFAULT는 결국 “이 칸에 어떤 값이 들어갈 수 있나”의 문제였죠. 그래서 마지막 보충은 칸의 모양, 데이터 타입이에요.</p>
@@ -268,7 +279,13 @@ SELECT 이름 FROM 10월손님 EXCEPT    SELECT 이름 FROM 11월손님;  -- 2�
 <div class="memo">Oracle의 DATE는 날짜와 함께 <b>시 · 분 · 초</b>까지 담아요. PostgreSQL의 DATE는 날짜만 담고 시각은 TIMESTAMP를 써요. 같은 이름이 DBMS마다 다른 대표 사례예요.</div>
 <h3>NULL — 값이 없다는 표시</h3>
 <p>NULL은 타입이 아니라 “값이 없음 · 모름”을 나타내는 표시예요. 숫자 열의 NULL은 0이 아니고, 문자 열의 NULL은 빈 문자열('')이 아니에요. NULL이 들어간 산술은 결과도 NULL이에요. 가격이 NULL인 상품에 1000을 더해도 NULL이에요.</p>
+<p>그래서 NULL인지 확인할 때는 <code>= NULL</code>이나 <code>!= NULL</code>을 쓰면 안 되고 <b><code>IS NULL</code> · <code>IS NOT NULL</code></b>을 써요. <code>전화번호 = NULL</code>은 어떤 행에서도 참이 되지 않아(UNKNOWN) 결과가 0행이에요(D033). “전화번호가 NULL이 아닌 학생”을 고르는 SQL은 기출에 5번 나왔고, 오답 선지는 <code>!= NOT NULL</code> · <code>DON'T NULL</code> 같은 엉터리 문법이에요.</p>
 <div class="trap"><b>함정</b> Oracle은 길이 0인 문자열 ''를 <b>NULL로 취급</b>해요. 표준 SQL과 PostgreSQL에서는 ''와 NULL이 서로 달라요. 같은 <code>WHERE 메모 = ''</code>가 DBMS에 따라 다른 결과를 내요.</div>
+<h3>타입을 정하는 곳, 바꾸는 곳 — CREATE TABLE과 ALTER TABLE</h3>
+<p><b>정의:</b> 열의 데이터 타입은 테이블을 만들 때 <code>CREATE TABLE</code> 안에서 열마다 정해요. CREATE TABLE에는 열 이름 · 데이터 타입 · NOT NULL · DEFAULT · 기본키 · 외래키 · CHECK 제약을 함께 적어요. 이미 만든 테이블의 타입이나 길이를 <b>바꾸는</b> 일은 CREATE TABLE이 아니라 <code>ALTER TABLE</code>이 맡아요.</p>
+<pre><code>ALTER TABLE 상품 ALTER COLUMN 이름 TYPE VARCHAR(60);   -- PostgreSQL: 길이 30 → 60
+ALTER TABLE 상품 MODIFY 이름 VARCHAR2(60);             -- Oracle 표기</code></pre>
+<div class="box"><b>시험에는 이렇게 나와요</b>“CREATE TABLE문에 포함되지 않는 기능은?”에 NOT NULL 지정 · 기본키 지정 · CHECK 정의와 함께 <b>‘속성 타입 변경’</b>을 섞어 내요(3회). 타입 <b>변경</b>은 ALTER TABLE이에요. “VARCHAR(10)을 20으로 늘리는 명령은?”도 ALTER TABLE이고, MODIFY TABLE · ADD TABLE 같은 없는 명령이 오답이에요. 또 “CHECK 절은 인덱스 정보를 저장한다”는 틀린 설명이에요. CHECK는 값의 조건(예: 가격 &gt;= 0)을 정해요.</div>
 <h3>타입을 고르는 기준과 암시적 변환 함정</h3>
 <p>숫자처럼 생겼다고 숫자 타입이 아니에요. 전화번호 010-1234-5678이나 우편번호 01234는 계산할 일이 없고, 앞자리 0과 하이픈을 지켜야 하니 <b>문자형</b>이에요. 반대로 가격 · 수량은 합계와 비교를 하니 숫자형이에요. “이 값으로 계산 · 정렬을 하나?”가 고르는 기준이에요.</p>
 <p>타입이 다른 값을 비교하면 DB가 한쪽을 몰래 바꾸는 <b>암시적 변환</b>이 일어나요. 문자 열 전화번호를 <code>WHERE 전화번호 = 01012345678</code>처럼 숫자와 비교하면, 숫자 쪽은 앞자리 0이 사라지고, 열 전체를 숫자로 바꾸느라 인덱스를 못 타고, 숫자로 바꿀 수 없는 값이 하나라도 있으면 오류가 나요. DB가 타입을 알아서 바꿔 주는 건 친절이 아니라 외상이에요. 인덱스를 못 타는 느린 쿼리로 나중에 갚게 됩니다.</p>
