@@ -293,6 +293,16 @@ FROM 판매;   -- 6행: 1번 강남 30 60 50.0, 2번 강남 20 60 33.3 …</code
 <div class="memo">한 줄씩: <b>COUNT(*)만 NULL을 센다</b> · <b>행은 WHERE, 그룹은 HAVING</b> · <b>ROLLUP n+1 계단, CUBE 2ⁿ 격자, SETS 주문서</b> · <b>RANK 건너뛰고, DENSE 안 건너뛰고, ROW 겹치지 않고</b> · <b>윈도우는 행을 줄이지 않는다</b></div>
 <p>내일 D035는 <b>조인</b>이에요. 오늘은 테이블 하나 안에서 모으고 순위를 매겼다면, 내일은 판매 표와 지점 정보 표처럼 두 테이블을 이어 붙이는 법을 봐요.</p>
 
+<h2>9. 시험에는 이렇게 나와요 — 기출로 보는 그룹·윈도우 함수</h2>
+<p>2020~2026 기출 20회차와 문제은행을 뒤져 보면, 오늘 범위는 두 갈래로 나와요. GROUP BY·HAVING·집계 함수는 예전부터 꾸준히 나온 <b>단골 정의 문제</b>이고, 윈도우 함수·ROLLUP·CUBE는 2027 출제기준에 새로 들어온 항목이라 구 기출이 거의 없어서 <b>결과를 직접 세게 하는 문제</b>로 대비해야 해요.</p>
+<div class="box"><b>시험에는 이렇게 나와요</b><ul>
+<li><b>“HAVING을 함께 쓰는 절은?”</b> — 답은 GROUP BY. 선지에 WHERE·ORDER BY·LIKE가 섞여요. HAVING은 묶은 뒤 그룹을 거르는 거라 짝이 GROUP BY예요(2회 출제).</li>
+<li><b>“SELECT 설명으로 옳지 않은 것은?”</b> — 함정은 “중복을 없애려면 <b>WHERE 절에</b> DISTINCT”. DISTINCT는 SELECT 바로 뒤에 써요(2회).</li>
+<li><b>“집계 함수가 아닌 것은?”</b> — AVG·COUNT·SUM 사이에 DDL인 CREATE를 끼워 넣어요(2020·2026).</li>
+<li><b>“학생별 평균을 구하는 SQL은?”</b> — <code>AVG(점수)</code> 괄호 위치와 GROUP BY/ORDER BY를 함께 비틀어요. 묶는 건 GROUP BY예요.</li>
+<li><b>새 항목(윈도우·그룹 함수)</b> — 동점 순위 모양으로 함수 고르기가 가장 흔해요: 1·1·3·4 = RANK, 1·1·2·3 = DENSE_RANK, 1·2·3·4 = ROW_NUMBER. ROLLUP(n+1 단계)·CUBE(2ⁿ) 결과 행 수 세기도 대비해요.</li>
+</ul></div>
+
 <h2>확인 문제</h2>
 <p><small>1~2번은 오늘 범위, 3~7번은 오답 재확인이에요. 1·2번은 아래 <code>판매</code> 테이블 기준이에요.</small></p>
 <table class="tight"><tr><th>번호</th><th>지점</th><th>메뉴</th><th>수량</th><th>별점</th></tr><tr><td>1</td><td>강남</td><td>떡볶이</td><td>30</td><td>5</td></tr><tr><td>2</td><td>강남</td><td>김밥</td><td>20</td><td>4</td></tr><tr><td>3</td><td>강남</td><td>떡볶이</td><td>10</td><td><i style="color:#888">NULL</i></td></tr><tr><td>4</td><td>홍대</td><td>떡볶이</td><td>20</td><td>4</td></tr><tr><td>5</td><td>홍대</td><td>김밥</td><td>20</td><td><i style="color:#888">NULL</i></td></tr><tr><td>6</td><td>홍대</td><td>순대</td><td>40</td><td>5</td></tr></table>
@@ -305,8 +315,11 @@ FROM 판매;   -- 6행: 1번 강남 30 60 50.0, 2번 강남 20 60 33.3 …</code
 <li>다음 정렬 중 <b>평균과 최악의 시간 복잡도가 모두 O(n²)</b>인 것은?<label class="opt"><input type="radio" name="D034-q5" value="1">① 퀵 정렬</label><label class="opt"><input type="radio" name="D034-q5" value="2">② 병합 정렬</label><label class="opt"><input type="radio" name="D034-q5" value="3">③ 힙 정렬</label><label class="opt"><input type="radio" name="D034-q5" value="4">④ 버블 정렬</label></li>
 <li>UML 클래스 다이어그램에서 자식 클래스 쪽에서 부모 클래스 쪽으로 <b>실선에 속이 빈 삼각형</b> 화살표를 그렸다. 이 관계는?<label class="opt"><input type="radio" name="D034-q6" value="1">① 실체화</label><label class="opt"><input type="radio" name="D034-q6" value="2">② 의존</label><label class="opt"><input type="radio" name="D034-q6" value="3">③ 일반화</label><label class="opt"><input type="radio" name="D034-q6" value="4">④ 집합</label></li>
 <li>스크럼 팀에서 팀이 스크럼 규칙과 이벤트를 잘 지키도록 코칭하고, 일을 막는 <b>장애 요소를 제거</b>해 주는 역할은?<label class="opt"><input type="radio" name="D034-q7" value="1">① 스크럼 마스터</label><label class="opt"><input type="radio" name="D034-q7" value="2">② 제품 책임자(PO)</label><label class="opt"><input type="radio" name="D034-q7" value="3">③ 개발자</label><label class="opt"><input type="radio" name="D034-q7" value="4">④ 이해관계자</label></li>
-</ol><div class="answer-bar" data-id="D034" data-n="7"><code></code><button type="button">답안 복사</button></div><p><small>고른 뒤 <b>답안 복사</b> → 디스코드 공부 채널에 붙여넣기 하면 돼요.</small></p>
-<p>답장: <code>정처기 D034: 1)번호 2)번호 3)번호 4)번호 5)번호 6)번호 7)번호</code></p>
+<li>지점별 수량 합계가 50 이상인 지점만 남기려고 <code>HAVING SUM(수량) &gt;= 50</code>을 쓴다. HAVING과 짝으로 반드시 함께 써야 하는 절은?<label class="opt"><input type="radio" name="D034-q8" value="1">① ORDER BY</label><label class="opt"><input type="radio" name="D034-q8" value="2">② GROUP BY</label><label class="opt"><input type="radio" name="D034-q8" value="3">③ WHERE</label><label class="opt"><input type="radio" name="D034-q8" value="4">④ LIKE</label></li>
+<li>SELECT 문 각 절의 역할로 <b>옳지 않은</b> 것은?<label class="opt"><input type="radio" name="D034-q9" value="1">① FROM에는 조회할 테이블을 적는다</label><label class="opt"><input type="radio" name="D034-q9" value="2">② HAVING은 GROUP BY로 묶은 그룹에 조건을 건다</label><label class="opt"><input type="radio" name="D034-q9" value="3">③ 결과에서 중복 행을 없애려면 WHERE 절에 DISTINCT를 쓴다</label><label class="opt"><input type="radio" name="D034-q9" value="4">④ ORDER BY는 결과를 정렬한다</label></li>
+<li>달리기 기록이 95, 95, 88, 70점인 네 사람에게 순위를 1, 1, 3, 4로 매기려 한다. 사용할 윈도우 함수는?<label class="opt"><input type="radio" name="D034-q10" value="1">① DENSE_RANK()</label><label class="opt"><input type="radio" name="D034-q10" value="2">② ROW_NUMBER()</label><label class="opt"><input type="radio" name="D034-q10" value="3">③ NTILE(4)</label><label class="opt"><input type="radio" name="D034-q10" value="4">④ RANK()</label></li>
+</ol><div class="answer-bar" data-id="D034" data-n="10"><code></code><button type="button">답안 복사</button></div><p><small>고른 뒤 <b>답안 복사</b> → 디스코드 공부 채널에 붙여넣기 하면 돼요.</small></p>
+<p>답장: <code>정처기 D034: 1)번호 2)번호 3)번호 4)번호 5)번호 6)번호 7)번호 8)번호 9)번호 10)번호</code></p>
 <p>1번은 괄호 안 첫 열이 무엇인지, 2번은 칸막이가 무엇인지부터 확인하고 표에 직접 적어 가며 풀어 보세요. D031~D033 답장도 편할 때 함께 보내 주세요.</p>
 <p class="meta"><a href="2026-11-04-D033.html">← D033</a> · <a href="2026-11-06-D035.html">D035 →</a></p>
 <script>

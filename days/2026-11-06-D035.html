@@ -236,6 +236,15 @@ FROM 회원 m LEFT JOIN 회원 t ON m.멘토번호 = t.회원번호;
 <div class="memo">한 줄씩: <b>CROSS = 행 곱 · 열 합</b> · <b>LEFT는 왼쪽을 지키고 오른쪽을 NULL로</b> · <b>USING · NATURAL은 같은 열을 한 번만</b> · <b>SELF는 별칭 두 개</b></div>
 <p>내일 D036은 <b>서브쿼리와 집합 연산자</b>예요. 오늘 표를 옆으로 붙였다면, 내일은 쿼리 안에 쿼리를 넣고(러시아 인형처럼 안쪽부터 열어요) 결과를 아래로 쌓아요(UNION · INTERSECT · EXCEPT).</p>
 
+<h2>9. 시험에는 이렇게 나와요 — 기출로 보는 조인</h2>
+<p>구 기출에서 조인은 SQL 문법보다 <b>관계대수 쪽 문제</b>와 함께 나왔어요. 외부 조인 결과 행 수처럼 SQL 조인을 직접 세는 문제는 2027 출제기준에서 강조된 새 각도라, 오늘 확인 문제 1번처럼 표를 놓고 세는 연습이 필요해요.</p>
+<div class="box"><b>시험에는 이렇게 나와요</b><ul>
+<li><b>카티션 곱의 차수·카디널리티</b> — “차수 4·카디널리티 5인 R과 차수 6·카디널리티 7인 S의 카티션 프로덕트는?” → 차수(열)는 <b>더하고</b> 카디널리티(행)는 <b>곱해서</b> 10, 35. 둘을 뒤바꾼 선지가 꼭 있어요(2회).</li>
+<li><b>기호 고르기</b> — 두 릴레이션을 공통 속성으로 합치는 연산은 ⋈(조인). σ 셀렉트, π 프로젝트, ÷ 디비전과 섞어 내요(2회). 관계대수는 11/20 D044에서 자세히 해요.</li>
+<li><b>순수 관계 연산자가 아닌 것</b> — 셀렉트·프로젝트·조인·디비전이 순수 관계 연산자, 카티션 프로덕트·차집합은 일반 집합 연산자예요. “조인은 순수 관계 연산자”를 기억하세요(각 3회).</li>
+<li><b>“SQL 설명으로 틀린 것은?”</b> — “REVOKE로 열 이름을 다시 부여한다”가 틀린 선지, “JOIN으로 여러 테이블 레코드를 조합한다”는 맞는 선지로 나와요.</li>
+</ul></div>
+
 <h2>확인 문제</h2>
 <p><small>1~3번은 오늘 범위, 4·5번은 오답 재확인, 6번은 지난 범위 누적이에요. 1번은 아래 두 테이블 기준이에요.</small></p>
 <p><code>고객</code></p>
@@ -251,8 +260,11 @@ FROM 회원 m LEFT JOIN 회원 t ON m.멘토번호 = t.회원번호;
 <li>문서 없이 운영되던 시스템을 <b>분석</b>해 이해하고, <b>역공학</b>으로 설계 정보를 복원한 뒤 구조를 <b>재구성</b>하고, 새 플랫폼으로 <b>이관</b>까지 하는 시스템 수준의 개조 활동은?<label class="opt"><input type="radio" name="D035-q4" value="1">① 리팩토링</label><label class="opt"><input type="radio" name="D035-q4" value="2">② 재사용</label><label class="opt"><input type="radio" name="D035-q4" value="3">③ 코드 인스펙션</label><label class="opt"><input type="radio" name="D035-q4" value="4">④ 재공학</label></li>
 <li>트랜잭션이 <b>커밋되기 전에는 데이터베이스에 변경 내용을 쓰지 않고 로그에만 기록</b>하는 회복 기법에서, 장애 후 필요한 연산은?<label class="opt"><input type="radio" name="D035-q5" value="1">① UNDO만</label><label class="opt"><input type="radio" name="D035-q5" value="2">② REDO와 UNDO 모두</label><label class="opt"><input type="radio" name="D035-q5" value="3">③ REDO만</label><label class="opt"><input type="radio" name="D035-q5" value="4">④ 아무 연산도 필요 없다</label></li>
 <li>쇼핑몰 프로그램에서 <code>주문</code> 객체가 <code>결제</code> 객체에게 “이 금액을 결제해 줘”라고 <b>연산 수행을 요청하는 것</b> 자체를 가리키는 객체지향 용어는?<label class="opt"><input type="radio" name="D035-q6" value="1">① 메서드</label><label class="opt"><input type="radio" name="D035-q6" value="2">② 메시지</label><label class="opt"><input type="radio" name="D035-q6" value="3">③ 인스턴스</label><label class="opt"><input type="radio" name="D035-q6" value="4">④ 속성</label></li>
-</ol><div class="answer-bar" data-id="D035" data-n="6"><code></code><button type="button">답안 복사</button></div><p><small>고른 뒤 <b>답안 복사</b> → 디스코드 공부 채널에 붙여넣기 하면 돼요.</small></p>
-<p>답장: <code>정처기 D035: 1)번호 2)번호 3)번호 4)번호 5)번호 6)번호</code></p>
+<li>릴레이션 R은 차수 3·카디널리티 6, 릴레이션 S는 차수 5·카디널리티 4이다. R과 S를 카티션 프로덕트한 결과의 차수와 카디널리티는?<label class="opt"><input type="radio" name="D035-q7" value="1">① 15, 10</label><label class="opt"><input type="radio" name="D035-q7" value="2">② 8, 24</label><label class="opt"><input type="radio" name="D035-q7" value="3">③ 15, 24</label><label class="opt"><input type="radio" name="D035-q7" value="4">④ 8, 10</label></li>
+<li>관계대수에서 두 릴레이션이 공통으로 가진 속성을 이용해 하나의 릴레이션으로 합치는 연산의 기호는?<label class="opt"><input type="radio" name="D035-q8" value="1">① σ</label><label class="opt"><input type="radio" name="D035-q8" value="2">② π</label><label class="opt"><input type="radio" name="D035-q8" value="3">③ ⋈</label><label class="opt"><input type="radio" name="D035-q8" value="4">④ ÷</label></li>
+<li>신입 개발자가 SQL 공부 메모를 정리했다. <b>잘못 적은</b> 메모는?<label class="opt"><input type="radio" name="D035-q9" value="1">① 권한을 회수하는 REVOKE로 컬럼 이름까지 바꿀 수 있다</label><label class="opt"><input type="radio" name="D035-q9" value="2">② SELECT DISTINCT는 같은 값의 행을 한 번만 보여 준다</label><label class="opt"><input type="radio" name="D035-q9" value="3">③ 주문과 고객을 JOIN하면 두 표의 행을 이어서 볼 수 있다</label><label class="opt"><input type="radio" name="D035-q9" value="4">④ CREATE·ALTER·DROP은 테이블·뷰·인덱스를 다루는 DDL이다</label></li>
+</ol><div class="answer-bar" data-id="D035" data-n="9"><code></code><button type="button">답안 복사</button></div><p><small>고른 뒤 <b>답안 복사</b> → 디스코드 공부 채널에 붙여넣기 하면 돼요.</small></p>
+<p>답장: <code>정처기 D035: 1)번호 2)번호 3)번호 4)번호 5)번호 6)번호 7)번호 8)번호 9)번호</code></p>
 <p>1번은 선부터 긋고 남길 쪽의 외톨이를 세어 보세요. D033·D034 답장도 편할 때 함께 보내 주세요.</p>
 <p class="meta"><a href="2026-11-05-D034.html">← D034</a> · <a href="2026-11-09-D036.html">D036 →</a></p>
 <script>
