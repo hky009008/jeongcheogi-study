@@ -46,6 +46,14 @@
 <tr><td>파티션</td><td>윈도우를 나누는 칸막이(PARTITION BY)</td><td>메뉴별 칸</td></tr>
 </table>
 <div class="memo">교재에 따라 “그룹 함수”가 집계 함수 전체를 가리키기도 하고, ROLLUP·CUBE·GROUPING SETS만 가리키기도 해요. 시험에서 “그룹 함수의 종류”를 물으면 보통 뒤쪽 세 개예요.</div>
+<script type="text/plain" class="sql-seed" data-db="d034">
+CREATE TABLE 판매 (번호 INT PRIMARY KEY, 지점 VARCHAR(10), 메뉴 VARCHAR(10), 수량 INT, 별점 INT);
+INSERT INTO 판매 VALUES
+ (1,'강남','떡볶이',30,5),(2,'강남','김밥',20,4),(3,'강남','떡볶이',10,NULL),
+ (4,'홍대','떡볶이',20,4),(5,'홍대','김밥',20,NULL),(6,'홍대','순대',40,5);
+</script>
+<div class="box"><b>직접 실행해 보기</b>이 페이지의 회색 상자는 실제 DB(브라우저 안 PostgreSQL)로 돌아가요. 위 판매 테이블 6행이 미리 들어 있어요. <b>▶ 실행</b>을 누르기 전에 결과를 먼저 예상해 보고, 쿼리를 마음대로 고쳐서 다시 실행해 보세요(Ctrl+Enter). 실행할 때마다 원래 6행으로 다시 시작해요. 처음 한 번은 DB 엔진을 내려받느라 몇 초 걸려요.</div>
+<div class="sql-run" data-db="d034"><textarea>SELECT * FROM 판매;</textarea></div>
 <p><b>→ 이 장면의 결과물:</b> 두 세계의 지도와 판매 표. 그래서 다음 장면은 두 세계가 공통으로 쓰는 재료, 집계 함수 다섯 개부터 봐요.</p>
 
 <h2>2. 장면 1 — 집계 함수 다섯 개와 NULL</h2>
@@ -77,6 +85,9 @@ FROM 판매;</code></pre>
 </table>
 <div class="trap">AVG는 NULL 행을 <b>분모에서도</b> 빼요. “NULL은 0으로 계산된다”는 선지는 틀려요. 0으로 치고 싶으면 <code>AVG(COALESCE(별점, 0))</code>처럼 직접 바꿔 줘야 해요.</div>
 <div class="memo">현업 메모: 조건에 맞는 행이 0건이면 COUNT는 0을, SUM·AVG·MAX·MIN은 NULL을 돌려줘요. 화면에 “합계 0원”을 띄우려면 <code>COALESCE(SUM(금액), 0)</code>이 필요한 이유예요.</div>
+<div class="sql-run" data-db="d034" data-note="별점평균은 4.5일까, 3일까?"><textarea>SELECT COUNT(*) AS 전체행, COUNT(별점) AS 별점있는행,
+       SUM(별점) AS 별점합, ROUND(AVG(별점), 2) AS 별점평균
+FROM 판매;</textarea></div>
 <p><b>→ 이 장면의 결과물:</b> 전체를 숫자 하나로 접는 법. 그래서 다음 장면은 “전체” 대신 “지점별로” 접는 GROUP BY예요.</p>
 
 <h2>3. 장면 2 — GROUP BY와 HAVING: 묶고, 묶음째 거른다</h2>
@@ -128,6 +139,19 @@ SELECT 지점, 메뉴, SUM(수량) FROM 판매 GROUP BY 지점;</code></pre>
 <tr><td>판매 예</td><td>수량 &gt;= 20 → 3번 행 제외</td><td>SUM(수량) &gt;= 70 → 강남 그룹 제외</td></tr>
 </table>
 <div class="trap"><code>WHERE SUM(수량) &gt;= 70</code>은 오류예요. “그룹 합계로 거르려면 HAVING”이 출제자가 가장 좋아하는 한 줄이에요. 반대로 그룹과 상관없는 행 조건은 HAVING보다 WHERE에 두는 게 맞아요(먼저 줄여 두면 묶을 행도 줄어요).</div>
+<div class="sql-run" data-db="d034"><textarea>SELECT 지점, SUM(수량) AS 합계, COUNT(*) AS 건수
+FROM 판매
+GROUP BY 지점;</textarea></div>
+<div class="sql-run" data-db="d034" data-note="몇 행이 남을까?"><textarea>-- 합계가 70 이상인 지점만 (그룹 조건은 HAVING)
+SELECT 지점, SUM(수량) AS 합계
+FROM 판매
+GROUP BY 지점
+HAVING SUM(수량) >= 70;</textarea></div>
+<div class="sql-run" data-db="d034"><textarea>-- WHERE에 집계 함수를 쓰면? (오류 메시지를 확인해 보세요)
+SELECT 지점, SUM(수량)
+FROM 판매
+WHERE SUM(수량) >= 70
+GROUP BY 지점;</textarea></div>
 <p><b>→ 이 장면의 결과물:</b> 지점별 합계 2행, 지점·메뉴별 합계 5행. 그래서 다음 장면은 이 둘과 총계를 쿼리 한 번에 같이 뽑는 법이에요.</p>
 
 <h2>4. 장면 3 — 그룹 함수: 소계와 총계를 한 번에 (ROLLUP · CUBE · GROUPING SETS)</h2>
@@ -189,6 +213,33 @@ SELECT 지점, 메뉴, SUM(수량) FROM 판매 GROUP BY GROUPING SETS((지점), 
 </table>
 <div class="trap">ROLLUP은 <b>열 순서가 바뀌면 결과가 바뀌어요</b>. CUBE·GROUPING SETS는 순서와 무관해요. “ROLLUP(A, B)와 ROLLUP(B, A)는 같다”는 틀린 선지예요.</div>
 <div class="memo">MySQL은 <code>GROUP BY 지점, 메뉴 WITH ROLLUP</code>처럼 다르게 써요. 시험은 표준 표기 <code>GROUP BY ROLLUP(…)</code> 기준이에요.<br>암기: <b>ROLLUP n+1 계단, CUBE 2ⁿ 격자, SETS 주문서</b></div>
+<div class="steps" data-title="ROLLUP이 결과를 만드는 과정 — 다음 ▶을 눌러 보세요"><div class="step"><table class="tight"><tr><th>번호</th><th>지점</th><th>메뉴</th><th>수량</th></tr><tr class=""><td>1</td><td>강남</td><td>떡볶이</td><td>30</td></tr><tr class=""><td>2</td><td>강남</td><td>김밥</td><td>20</td></tr><tr class=""><td>3</td><td>강남</td><td>떡볶이</td><td>10</td></tr><tr class=""><td>4</td><td>홍대</td><td>떡볶이</td><td>20</td></tr><tr class=""><td>5</td><td>홍대</td><td>김밥</td><td>20</td></tr><tr class=""><td>6</td><td>홍대</td><td>순대</td><td>40</td></tr></table><p class="cap">① 원본 판매 6행이에요. 아직 아무것도 묶지 않았어요.</p></div><div class="step"><table class="tight"><tr><th>번호</th><th>지점</th><th>메뉴</th><th>수량</th></tr><tr class="g2"><td>2</td><td>강남</td><td>김밥</td><td>20</td></tr><tr class="g1"><td>1</td><td>강남</td><td>떡볶이</td><td>30</td></tr><tr class="g1"><td>3</td><td>강남</td><td>떡볶이</td><td>10</td></tr><tr class="g4"><td>5</td><td>홍대</td><td>김밥</td><td>20</td></tr><tr class="g3"><td>4</td><td>홍대</td><td>떡볶이</td><td>20</td></tr><tr class="g5"><td>6</td><td>홍대</td><td>순대</td><td>40</td></tr></table><p class="cap">② GROUP BY 지점, 메뉴: 지점과 메뉴가 둘 다 같은 행끼리 같은 색으로 모아요. 강남·떡볶이(1번·3번)만 두 행이 한 묶음이에요.</p></div><div class="step"><table class="tight"><tr><th>지점</th><th>메뉴</th><th>SUM(수량)</th></tr><tr class="g2"><td>강남</td><td>김밥</td><td>20</td></tr><tr class="g1"><td>강남</td><td>떡볶이</td><td>40</td></tr><tr class="g4"><td>홍대</td><td>김밥</td><td>20</td></tr><tr class="g3"><td>홍대</td><td>떡볶이</td><td>20</td></tr><tr class="g5"><td>홍대</td><td>순대</td><td>40</td></tr></table><p class="cap">③ 묶음마다 SUM(수량)을 내면 5행. 여기까지가 보통 GROUP BY예요(묶음 (지점, 메뉴)).</p></div><div class="step"><table class="tight"><tr><th>지점</th><th>메뉴</th><th>SUM(수량)</th></tr><tr class="g2"><td>강남</td><td>김밥</td><td>20</td></tr><tr class="g1"><td>강남</td><td>떡볶이</td><td>40</td></tr><tr class="new"><td>강남</td><td class="nul">NULL</td><td>60</td></tr><tr class="g4"><td>홍대</td><td>김밥</td><td>20</td></tr><tr class="g3"><td>홍대</td><td>떡볶이</td><td>20</td></tr><tr class="g5"><td>홍대</td><td>순대</td><td>40</td></tr><tr class="new"><td>홍대</td><td class="nul">NULL</td><td>80</td></tr></table><p class="cap">④ ROLLUP 1단계: 오른쪽 열 메뉴를 접어(NULL = 전체) 지점별 소계 2행이 새로 붙어요 — 강남 60, 홍대 80. (묶음 (지점))</p></div><div class="step"><table class="tight"><tr><th>지점</th><th>메뉴</th><th>SUM(수량)</th></tr><tr class="g2"><td>강남</td><td>김밥</td><td>20</td></tr><tr class="g1"><td>강남</td><td>떡볶이</td><td>40</td></tr><tr class=""><td>강남</td><td class="nul">NULL</td><td>60</td></tr><tr class="g4"><td>홍대</td><td>김밥</td><td>20</td></tr><tr class="g3"><td>홍대</td><td>떡볶이</td><td>20</td></tr><tr class="g5"><td>홍대</td><td>순대</td><td>40</td></tr><tr class=""><td>홍대</td><td class="nul">NULL</td><td>80</td></tr><tr class="new"><td class="nul">NULL</td><td class="nul">NULL</td><td>140</td></tr></table><p class="cap">⑤ ROLLUP 2단계: 지점까지 접으면 총계 1행 — 140. 5 + 2 + 1 = 8행. 묶음은 (지점,메뉴)·(지점)·() 세 개 = n+1.</p></div><div class="step"><table class="tight"><tr><th>지점</th><th>메뉴</th><th>SUM(수량)</th></tr><tr class="g2"><td>강남</td><td>김밥</td><td>20</td></tr><tr class="g1"><td>강남</td><td>떡볶이</td><td>40</td></tr><tr class=""><td>강남</td><td class="nul">NULL</td><td>60</td></tr><tr class="g4"><td>홍대</td><td>김밥</td><td>20</td></tr><tr class="g3"><td>홍대</td><td>떡볶이</td><td>20</td></tr><tr class="g5"><td>홍대</td><td>순대</td><td>40</td></tr><tr class=""><td>홍대</td><td class="nul">NULL</td><td>80</td></tr><tr class=""><td class="nul">NULL</td><td class="nul">NULL</td><td>140</td></tr><tr class="new"><td class="nul">NULL</td><td>김밥</td><td>40</td></tr><tr class="new"><td class="nul">NULL</td><td>떡볶이</td><td>60</td></tr><tr class="new"><td class="nul">NULL</td><td>순대</td><td>40</td></tr></table><p class="cap">⑥ CUBE라면 여기에 “지점을 접고 메뉴만 남긴” 메뉴별 소계 3행까지 붙어 11행이에요. 모든 조합 = 2ⁿ = 4묶음.</p></div></div>
+<h3>직접 비교 — 같은 표, 네 가지 묶기</h3>
+<p>아래 네 상자를 위에서부터 차례로 실행해 보세요. 결과 행의 NULL 칸이 바로 “전체(소계·총계)” 표시예요. 마지막 열 <code>소계표시</code>는 GROUPING 함수로, 그 칸이 소계로 접힌 칸이면 1이에요.</p>
+<div class="sql-run" data-db="d034" data-note="몇 행?"><textarea>-- ① 보통 GROUP BY: (지점, 메뉴) 묶음만
+SELECT 지점, 메뉴, SUM(수량) AS 합계
+FROM 판매
+GROUP BY 지점, 메뉴
+ORDER BY 지점, 메뉴;</textarea></div>
+<div class="sql-run" data-db="d034" data-note="①보다 몇 행이 늘어날까? 어떤 행일까?"><textarea>-- ② ROLLUP: (지점, 메뉴) + (지점) 소계 + () 총계
+SELECT 지점, 메뉴, SUM(수량) AS 합계, GROUPING(메뉴) AS 소계표시
+FROM 판매
+GROUP BY ROLLUP(지점, 메뉴)
+ORDER BY 지점 NULLS LAST, 메뉴 NULLS LAST;</textarea></div>
+<div class="sql-run" data-db="d034" data-note="②와 행 수가 같을까?"><textarea>-- ③ ROLLUP 열 순서를 바꾸면? (중간 소계가 지점별 → 메뉴별)
+SELECT 메뉴, 지점, SUM(수량) AS 합계
+FROM 판매
+GROUP BY ROLLUP(메뉴, 지점)
+ORDER BY 메뉴 NULLS LAST, 지점 NULLS LAST;</textarea></div>
+<div class="sql-run" data-db="d034" data-note="②에 없던 행은 무엇일까?"><textarea>-- ④ CUBE: 모든 조합 (지점 소계 + 메뉴 소계 + 총계)
+SELECT 지점, 메뉴, SUM(수량) AS 합계
+FROM 판매
+GROUP BY CUBE(지점, 메뉴)
+ORDER BY 지점 NULLS LAST, 메뉴 NULLS LAST;</textarea></div>
+<div class="sql-run" data-db="d034" data-note="몇 행? 총계 행이 있을까?"><textarea>-- ⑤ GROUPING SETS: 고른 묶음만 (총계 없음)
+SELECT 지점, 메뉴, SUM(수량) AS 합계
+FROM 판매
+GROUP BY GROUPING SETS ((지점), (메뉴));</textarea></div>
 <p><b>→ 이 장면의 결과물:</b> 소계·총계가 붙은 보고서 한 장. 그런데 마케팅팀은 “각 판매 건이 몇 위인지”를 원해요. 이건 행을 접으면 안 되는 질문이라 다음 장면의 윈도우 함수가 필요해요.</p>
 
 <h2>5. 장면 4 — 윈도우 함수: 행은 그대로, 옆에 순위와 합계</h2>
@@ -245,6 +296,24 @@ FROM 판매;</code></pre>
 FROM 판매;   -- 6행: 1번 강남 30 60 50.0, 2번 강남 20 60 33.3 …</code></pre>
 <div class="trap">윈도우 함수는 처리 순서 ⑤ SELECT 단계에서 계산돼요. 그래서 <code>WHERE RANK() OVER (…) &lt;= 3</code>처럼 WHERE에서 바로 거를 수 없어요. “지점별 TOP 3”은 순위를 붙인 결과를 서브쿼리로 감싼 뒤 바깥에서 거르는데, 서브쿼리는 뒤에서 따로 봐요.</div>
 <div class="memo">윈도우 ‘프레임’(ROWS/RANGE BETWEEN …)은 창문 크기를 더 잘게 정하는 문법이에요. OVER 안에 ORDER BY가 있으면 기본 창문이 “처음 행부터 현재 행까지”가 되어 SUM이 누적합처럼 동작해요. 시험에서는 이 정도만 알아 두면 돼요.<br>암기: <b>RANK 건너뛰고, DENSE 안 건너뛰고, ROW 겹치지 않고</b></div>
+<div class="steps" data-title="순위 함수 세 개가 번호를 매기는 과정"><div class="step"><table class="tight"><tr><th>번호</th><th>수량</th><th>RANK</th><th>DENSE_RANK</th><th>ROW_NUMBER</th></tr><tr class=""><td>1</td><td>30</td><td></td><td></td><td></td></tr><tr class=""><td>2</td><td>20</td><td></td><td></td><td></td></tr><tr class=""><td>3</td><td>10</td><td></td><td></td><td></td></tr><tr class=""><td>4</td><td>20</td><td></td><td></td><td></td></tr><tr class=""><td>5</td><td>20</td><td></td><td></td><td></td></tr><tr class=""><td>6</td><td>40</td><td></td><td></td><td></td></tr></table><p class="cap">① 원래 6행. 수량이 큰 순서로 순위를 매길 거예요(ORDER BY 수량 DESC).</p></div><div class="step"><table class="tight"><tr><th>번호</th><th>수량</th><th>RANK</th><th>DENSE_RANK</th><th>ROW_NUMBER</th></tr><tr class=""><td>6</td><td>40</td><td></td><td></td><td></td></tr><tr class=""><td>1</td><td>30</td><td></td><td></td><td></td></tr><tr class=""><td>2</td><td>20</td><td></td><td></td><td></td></tr><tr class=""><td>4</td><td>20</td><td></td><td></td><td></td></tr><tr class=""><td>5</td><td>20</td><td></td><td></td><td></td></tr><tr class=""><td>3</td><td>10</td><td></td><td></td><td></td></tr></table><p class="cap">② 먼저 수량 내림차순으로 줄을 세워요. 20이 세 개나 동점이에요.</p></div><div class="step"><table class="tight"><tr><th>번호</th><th>수량</th><th>RANK</th><th>DENSE_RANK</th><th>ROW_NUMBER</th></tr><tr class=""><td>6</td><td>40</td><td>1</td><td>1</td><td>1</td></tr><tr class="hi"><td>1</td><td>30</td><td>2</td><td>2</td><td>2</td></tr><tr class=""><td>2</td><td>20</td><td></td><td></td><td></td></tr><tr class=""><td>4</td><td>20</td><td></td><td></td><td></td></tr><tr class=""><td>5</td><td>20</td><td></td><td></td><td></td></tr><tr class=""><td>3</td><td>10</td><td></td><td></td><td></td></tr></table><p class="cap">③ 40과 30은 동점이 없어 셋 다 1위, 2위로 같아요.</p></div><div class="step"><table class="tight"><tr><th>번호</th><th>수량</th><th>RANK</th><th>DENSE_RANK</th><th>ROW_NUMBER</th></tr><tr class=""><td>6</td><td>40</td><td>1</td><td>1</td><td>1</td></tr><tr class=""><td>1</td><td>30</td><td>2</td><td>2</td><td>2</td></tr><tr class=""><td>2</td><td>20</td><td>3</td><td>3</td><td>3</td></tr><tr class=""><td>4</td><td>20</td><td>3</td><td>3</td><td>4</td></tr><tr class="hi"><td>5</td><td>20</td><td>3</td><td>3</td><td>5</td></tr><tr class=""><td>3</td><td>10</td><td></td><td></td><td></td></tr></table><p class="cap">④ 20 세 개: RANK·DENSE_RANK는 셋 다 3위로 같게, ROW_NUMBER는 3·4·5로 서로 다르게 줘요(누가 3번일지는 보장 없음).</p></div><div class="step"><table class="tight"><tr><th>번호</th><th>수량</th><th>RANK</th><th>DENSE_RANK</th><th>ROW_NUMBER</th></tr><tr class=""><td>6</td><td>40</td><td>1</td><td>1</td><td>1</td></tr><tr class=""><td>1</td><td>30</td><td>2</td><td>2</td><td>2</td></tr><tr class=""><td>2</td><td>20</td><td>3</td><td>3</td><td>3</td></tr><tr class=""><td>4</td><td>20</td><td>3</td><td>3</td><td>4</td></tr><tr class=""><td>5</td><td>20</td><td>3</td><td>3</td><td>5</td></tr><tr class="hi"><td>3</td><td>10</td><td>6</td><td>4</td><td>6</td></tr></table><p class="cap">⑤ 마지막 10: RANK는 앞선 행이 5개라 6위(4·5위를 건너뜀), DENSE_RANK는 건너뛰지 않아 4위, ROW_NUMBER는 6. 동점 뒤에서 갈려요!</p></div></div>
+<div class="sql-run" data-db="d034" data-note="수량 10인 행의 랭크는 4? 6?"><textarea>SELECT 번호, 지점, 수량,
+       RANK()       OVER (ORDER BY 수량 DESC) AS 랭크,
+       DENSE_RANK() OVER (ORDER BY 수량 DESC) AS 덴스,
+       ROW_NUMBER() OVER (ORDER BY 수량 DESC) AS 행번호
+FROM 판매
+ORDER BY 수량 DESC;</textarea></div>
+<div class="sql-run" data-db="d034"><textarea>-- 지점마다 순위를 다시 1부터 (PARTITION BY)
+SELECT 번호, 지점, 수량,
+       RANK() OVER (PARTITION BY 지점 ORDER BY 수량 DESC) AS 지점내순위
+FROM 판매
+ORDER BY 지점, 지점내순위;</textarea></div>
+<div class="sql-run" data-db="d034" data-note="결과는 몇 행? GROUP BY 지점과 비교해 보세요."><textarea>-- 행은 그대로, 옆에 지점 합계와 비중
+SELECT 번호, 지점, 수량,
+       SUM(수량) OVER (PARTITION BY 지점) AS 지점합계,
+       ROUND(수량 * 100.0 / SUM(수량) OVER (PARTITION BY 지점), 1) AS 비중
+FROM 판매
+ORDER BY 번호;</textarea></div>
 <p><b>→ 이 장면의 결과물:</b> 행마다 순위와 합계가 붙은 표. 그래서 다음 장면은 순위·집계 말고 어떤 윈도우 함수가 더 있는지 이름 지도를 그려요.</p>
 
 <h2>6. 장면 5 — 윈도우 함수 이름 지도</h2>
@@ -262,6 +331,12 @@ FROM 판매;   -- 6행: 1번 강남 30 60 50.0, 2번 강남 20 60 33.3 …</code
 <tr><td>행 순서</td><td>FIRST_VALUE · LAST_VALUE · LAG · LEAD</td><td>첫·마지막·앞·뒤 행의 값</td></tr>
 <tr><td>비율</td><td>PERCENT_RANK · CUME_DIST · NTILE · RATIO_TO_REPORT</td><td>백분율 순위·누적 비율·n등분·합계 대비 비율</td></tr>
 </table>
+<div class="sql-run" data-db="d034" data-note="1번 행의 앞행수량은?"><textarea>SELECT 번호, 수량,
+       LAG(수량)  OVER (ORDER BY 번호) AS 앞행수량,
+       LEAD(수량) OVER (ORDER BY 번호) AS 뒤행수량,
+       NTILE(3)   OVER (ORDER BY 수량 DESC) AS 세그룹
+FROM 판매
+ORDER BY 번호;</textarea></div>
 <p><b>→ 이 장면의 결과물:</b> 오늘 범위 전체 지도. 이제 잠깐 1과목으로 돌아가 오늘 다시 볼 오답 다섯 개를 정리해요.</p>
 
 <h2>7. 오답 복습 — UI 원칙 · 품질 측면 · 정렬 · UML · 스크럼</h2>
@@ -356,6 +431,68 @@ document.querySelectorAll('.box.audio audio').forEach(a=>{
 });
 document.addEventListener('keydown',e=>{const a=document.querySelector('.box.audio audio');if(!a||/INPUT|TEXTAREA/.test(e.target.tagName))return;
   if(e.key==='ArrowLeft'&&e.shiftKey){a.currentTime-=10;e.preventDefault()}if(e.key==='ArrowRight'&&e.shiftKey){a.currentTime+=10;e.preventDefault()}});
+</script>
+<script type="module">
+// SQL 실습 상자: <script type="text/plain" class="sql-seed" data-db="이름">스키마·데이터</script>
+//              <div class="sql-run" data-db="이름" [data-note="예상 질문"]><textarea>쿼리</textarea></div>
+// 처음 실행할 때 PGlite(브라우저 안 PostgreSQL)를 불러와 seed를 넣는다. 실행할 때마다 seed 상태에서 다시 시작한다.
+const PG = 'https://cdn.jsdelivr.net/npm/@electric-sql/pglite@0.5.15/dist/index.js';
+let mod = null;
+async function freshDb(name){
+  mod = mod || await import(PG);
+  const db = new mod.PGlite();
+  const seed = document.querySelector('script.sql-seed[data-db="'+name+'"]');
+  if (seed) await db.exec(seed.textContent);
+  return db;
+}
+const esc = v => v===null ? '<i class="null">NULL</i>' : String(v).replace(/[&<>]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+function table(r){
+  if (!r.fields || !r.fields.length) return '<p class="sql-msg">'+(r.affectedRows!=null ? r.affectedRows+'행이 바뀌었어요.' : '실행 완료')+'</p>';
+  const h = r.fields.map(f=>'<th>'+esc(f.name)+'</th>').join('');
+  const b = r.rows.map(row=>'<tr>'+r.fields.map(f=>'<td>'+esc(row[f.name])+'</td>').join('')+'</tr>').join('');
+  return '<table class="tight sql-out"><tr>'+h+'</tr>'+b+'</table><p class="sql-msg">'+r.rows.length+'행</p>';
+}
+document.querySelectorAll('.sql-run').forEach(box=>{
+  const ta = box.querySelector('textarea'), orig = ta.value;
+  ta.rows = Math.max(3, orig.split('\n').length + 1); ta.spellcheck = false;
+  const bar = document.createElement('div'); bar.className='sql-bar';
+  const run = document.createElement('button'); run.type='button'; run.textContent='▶ 실행';
+  const reset = document.createElement('button'); reset.type='button'; reset.textContent='원래 쿼리';
+  const out = document.createElement('div'); out.className='sql-result';
+  if (box.dataset.note) { const n=document.createElement('p'); n.className='sql-note'; n.textContent='먼저 예상해 보세요: '+box.dataset.note; box.prepend(n); }
+  bar.append(run, reset); box.append(bar, out);
+  reset.onclick = ()=>{ ta.value = orig; out.innerHTML=''; };
+  run.onclick = async ()=>{
+    run.disabled = true; out.innerHTML = '<p class="sql-msg">'+(mod?'실행 중…':'처음 한 번은 DB 엔진을 불러와요(몇 초)…')+'</p>';
+    try {
+      const db = await freshDb(box.dataset.db);
+      const rs = await db.exec(ta.value);
+      out.innerHTML = rs.filter(r=>r.fields && r.fields.length).map(table).join('') || table(rs[rs.length-1]||{});
+      db.close();
+    } catch(e) { out.innerHTML = '<p class="sql-err">오류: '+esc(e.message)+'</p>'; }
+    run.disabled = false;
+  };
+  ta.addEventListener('keydown', e=>{ if ((e.ctrlKey||e.metaKey) && e.key==='Enter') run.click(); });
+});
+</script>
+<script>
+// 단계 애니메이션: <div class="steps" data-title="제목"><div class="step">…<p class="cap">설명</p></div>…</div>
+document.querySelectorAll('.steps').forEach(box=>{
+  const st=[...box.querySelectorAll(':scope > .step')]; let i=0, timer=null;
+  const head=document.createElement('div'); head.className='steps-head';
+  head.innerHTML='<b>'+(box.dataset.title||'단계별로 보기')+'</b><span class="steps-dots"></span>';
+  const dots=head.querySelector('.steps-dots');
+  st.forEach((_,k)=>{const d=document.createElement('button');d.type='button';d.className='dot';d.onclick=()=>{stop();show(k)};dots.append(d)});
+  const bar=document.createElement('div'); bar.className='steps-bar';
+  const mk=(t,f)=>{const b=document.createElement('button');b.type='button';b.textContent=t;b.onclick=f;bar.append(b);return b};
+  const prev=mk('◀ 이전',()=>{stop();show(i-1)}), next=mk('다음 ▶',()=>{stop();show(i+1)});
+  const play=mk('▶▶ 자동',()=>{ if(timer){stop();return} play.textContent='■ 멈춤'; if(i===st.length-1) show(0); timer=setInterval(()=>{ if(i>=st.length-1){stop();return} show(i+1) },2600)});
+  function stop(){ if(timer){clearInterval(timer);timer=null} play.textContent='▶▶ 자동' }
+  function show(k){ i=Math.max(0,Math.min(st.length-1,k)); st.forEach((s,n)=>s.classList.toggle('on',n===i));
+    [...dots.children].forEach((d,n)=>d.classList.toggle('on',n===i)); prev.disabled=i===0; next.disabled=i===st.length-1;
+    }
+  box.prepend(head); box.append(bar); show(0);
+});
 </script>
 <footer>2027년 정기 기사 1회 정보처리기사 필기 준비 · 공식 범위: Q-Net 2027~2029 출제기준</footer>
 </main></body></html>
