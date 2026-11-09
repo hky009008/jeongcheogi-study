@@ -63,8 +63,8 @@ INSERT INTO 회원 VALUES (1,'민트',10,NULL,92),(2,'보리',10,1,75),(3,'콩�
 INSERT INTO 등급 VALUES ('A',90,100),('B',70,89),('C',0,69);
 </script>
 <div class="box"><b>직접 실행해 보기</b>이 페이지의 회색 상자는 실제 DB(브라우저 안 PostgreSQL)로 돌아가요. 위 세 표(회원 4행 · 팀 3행 · 등급 3행)가 미리 들어 있어요. <b>▶ 실행</b> 전에 결과 행 수를 먼저 예상해 보고, 조건을 바꿔 가며 다시 실행해 보세요(Ctrl+Enter). 처음 한 번은 DB 엔진을 내려받느라 몇 초 걸려요.</div>
-<div class="sql-run" data-db="d035"><textarea>SELECT * FROM 회원;</textarea></div>
-<div class="sql-run" data-db="d035"><textarea>SELECT * FROM 팀;</textarea></div>
+<div class="sql-run" data-db="d035"><div class="sql-head">💻 직접 실행해 보기 — 결과를 예상한 뒤 <b>▶ 실행</b>, 쿼리를 고쳐서 다시 실행해도 돼요</div><textarea rows="2" spellcheck="false">SELECT * FROM 회원;</textarea></div>
+<div class="sql-run" data-db="d035"><div class="sql-head">💻 직접 실행해 보기 — 결과를 예상한 뒤 <b>▶ 실행</b>, 쿼리를 고쳐서 다시 실행해도 돼요</div><textarea rows="2" spellcheck="false">SELECT * FROM 팀;</textarea></div>
 <p><b>→ 이 장면의 결과물:</b> 세 표와 세 가닥 연결선. 그래서 다음 장면은 “선을 하나도 고려하지 않으면 무엇이 나오나”, 모든 조인의 출발점인 카티션 곱이에요.</p>
 
 <h2>2. 장면 1 — 모든 조합부터 만들어 보기 (CROSS JOIN)</h2>
@@ -89,10 +89,10 @@ SELECT * FROM 회원, 팀;</code></pre>
 
 <p>CROSS JOIN이 늘 실수인 것은 아니에요. 사이즈 3개 × 색상 4개로 상품 옵션 12개를 만들거나, 날짜 표와 지점 표를 곱해 “모든 날 × 모든 지점” 뼈대를 만들 때 일부러 써요.</p>
 <div class="trap">조인 조건을 빠뜨린 쉼표 조인 = 카티션 곱이에요. 행은 <b>곱</b>, 열은 <b>합</b>이에요. 행을 더하거나 열을 곱한 선지가 단골이에요.</div>
-<div class="sql-run" data-db="d035" data-note="몇 행 · 몇 열?"><textarea>-- 조건 없는 조인 = 카티션 곱
+<div class="sql-run" data-db="d035" data-note="몇 행 · 몇 열?"><div class="sql-head">💻 직접 실행해 보기 — 결과를 예상한 뒤 <b>▶ 실행</b>, 쿼리를 고쳐서 다시 실행해도 돼요</div><textarea rows="4" spellcheck="false">-- 조건 없는 조인 = 카티션 곱
 SELECT *
 FROM 회원 CROSS JOIN 팀;</textarea></div>
-<div class="sql-run" data-db="d035"><textarea>-- 쉼표로 써도 같은 결과
+<div class="sql-run" data-db="d035"><div class="sql-head">💻 직접 실행해 보기 — 결과를 예상한 뒤 <b>▶ 실행</b>, 쿼리를 고쳐서 다시 실행해도 돼요</div><textarea rows="4" spellcheck="false">-- 쉼표로 써도 같은 결과
 SELECT COUNT(*) AS 행수
 FROM 회원, 팀;</textarea></div>
 <p><b>→ 이 장면의 결과물:</b> 12행짜리 모든 조합. 그래서 다음 장면은 이 중 짝이 맞는 칸만 고르는 내부 조인이에요.</p>
@@ -151,16 +151,16 @@ FROM 회원 JOIN 등급
   ON 회원.점수 BETWEEN 등급.하한 AND 등급.상한;   -- 4행</code></pre>
 <p>이름 하나 더. 관계대수에서는 비교 연산자 전부(=, ≠, &lt;, &gt;, ≤, ≥)를 쓰는 조인을 <b>세타 조인</b>이라 불러요. 동등 조인은 세타 조인 중 <code>=</code>만 쓴 특별한 경우예요. 시험에서 “세타 조인 = 임의 비교 연산자”, “동등 조인 = <code>=</code>만”으로 구별해 두면 돼요.</p>
 <div class="memo">내부 조인 셋: <b>동등은 =</b>, <b>비동등은 구간·부등호</b>, <b>자연은 같은 이름 열 전부를 자동으로, 한 번만</b></div>
-<div class="sql-run" data-db="d035" data-note="달래와 데이터팀은 결과에 나올까?"><textarea>-- 동등 조인(INNER JOIN … ON)
+<div class="sql-run" data-db="d035" data-note="달래와 데이터팀은 결과에 나올까?"><div class="sql-head">💻 직접 실행해 보기 — 결과를 예상한 뒤 <b>▶ 실행</b>, 쿼리를 고쳐서 다시 실행해도 돼요</div><textarea rows="4" spellcheck="false">-- 동등 조인(INNER JOIN … ON)
 SELECT m.이름, t.팀명
 FROM 회원 m JOIN 팀 t ON m.팀번호 = t.팀번호;</textarea></div>
-<div class="sql-run" data-db="d035"><textarea>-- USING: 같은 이름 열을 한 번만
+<div class="sql-run" data-db="d035"><div class="sql-head">💻 직접 실행해 보기 — 결과를 예상한 뒤 <b>▶ 실행</b>, 쿼리를 고쳐서 다시 실행해도 돼요</div><textarea rows="4" spellcheck="false">-- USING: 같은 이름 열을 한 번만
 SELECT *
 FROM 회원 JOIN 팀 USING (팀번호);</textarea></div>
-<div class="sql-run" data-db="d035"><textarea>-- NATURAL JOIN: 이름이 같은 모든 열로 자동 결합
+<div class="sql-run" data-db="d035"><div class="sql-head">💻 직접 실행해 보기 — 결과를 예상한 뒤 <b>▶ 실행</b>, 쿼리를 고쳐서 다시 실행해도 돼요</div><textarea rows="4" spellcheck="false">-- NATURAL JOIN: 이름이 같은 모든 열로 자동 결합
 SELECT *
 FROM 회원 NATURAL JOIN 팀;</textarea></div>
-<div class="sql-run" data-db="d035"><textarea>-- 비동등 조인: 점수가 구간 안에 들어가면 짝
+<div class="sql-run" data-db="d035"><div class="sql-head">💻 직접 실행해 보기 — 결과를 예상한 뒤 <b>▶ 실행</b>, 쿼리를 고쳐서 다시 실행해도 돼요</div><textarea rows="4" spellcheck="false">-- 비동등 조인: 점수가 구간 안에 들어가면 짝
 SELECT m.이름, m.점수, g.등급
 FROM 회원 m JOIN 등급 g ON m.점수 BETWEEN g.하한 AND g.상한;</textarea></div>
 <p><b>→ 이 장면의 결과물:</b> 팀 이름이 붙은 3행 명단. 그런데 운영진이 묻네요. “달래는 어디 갔어요?” 그래서 다음 장면은 짝 없는 행도 남기는 외부 조인이에요.</p>
@@ -205,13 +205,13 @@ SELECT 회원.이름, 팀.팀명 FROM 회원 LEFT JOIN 팀
 <div class="trap">LEFT JOIN 뒤에 <b>오른쪽 표 열</b>로 WHERE 조건을 걸면 NULL 행이 사라져 사실상 내부 조인이 돼요. 결과 행 수를 묻는 문제에서 WHERE의 위치를 꼭 보세요.</div>
 <div class="memo"><b>DBMS 표기 차이</b> Oracle의 옛 표기 <code>WHERE A.x = B.x(+)</code>는 <b>(+)가 붙은 쪽이 NULL로 채워지는 쪽</b>이라 A 기준 LEFT 조인이에요. MySQL은 FULL OUTER JOIN을 지원하지 않아 LEFT 결과와 RIGHT 결과를 UNION으로 합쳐 대신해요(UNION은 내일). 시험은 표준 SQL 기준이에요.</div>
 <div class="steps" data-title="LEFT JOIN이 행을 만드는 과정 — 회원 한 명씩 짝 찾기"><div class="step"><table class="tight"><tr><th>회원</th><th>팀번호</th></tr><tr class=""><td>민트</td><td>10</td></tr><tr class=""><td>보리</td><td>10</td></tr><tr class=""><td>콩이</td><td>20</td></tr><tr class=""><td>달래</td><td class="nul">NULL</td></tr></table><table class="tight"><tr><th>팀번호</th><th>팀명</th></tr><tr class=""><td>10</td><td>백엔드</td></tr><tr class=""><td>20</td><td>프론트</td></tr><tr class=""><td>30</td><td>데이터</td></tr></table><p class="cap">① 왼쪽 회원 4명, 오른쪽 팀 3개. 회원 한 명씩 팀번호가 같은 팀을 찾아요(ON m.팀번호 = t.팀번호).</p></div><div class="step"><table class="tight"><tr><th>회원</th><th>팀번호</th><th>→ 팀명</th></tr><tr class="hi"><td>민트</td><td>10</td><td>백엔드</td></tr><tr class=""><td>보리</td><td>10</td><td></td></tr><tr class=""><td>콩이</td><td>20</td><td></td></tr><tr class=""><td>달래</td><td class="nul">NULL</td><td></td></tr></table><p class="cap">② 민트(10) → 백엔드. 짝을 찾았어요.</p></div><div class="step"><table class="tight"><tr><th>회원</th><th>팀번호</th><th>→ 팀명</th></tr><tr class=""><td>민트</td><td>10</td><td>백엔드</td></tr><tr class=""><td>보리</td><td>10</td><td>백엔드</td></tr><tr class="hi"><td>콩이</td><td>20</td><td>프론트</td></tr><tr class=""><td>달래</td><td class="nul">NULL</td><td></td></tr></table><p class="cap">③ 보리(10) → 백엔드, 콩이(20) → 프론트. 백엔드는 두 번 쓰여도 괜찮아요.</p></div><div class="step"><table class="tight"><tr><th>회원</th><th>팀번호</th><th>→ 팀명</th></tr><tr class=""><td>민트</td><td>10</td><td>백엔드</td></tr><tr class=""><td>보리</td><td>10</td><td>백엔드</td></tr><tr class=""><td>콩이</td><td>20</td><td>프론트</td></tr><tr class="hi"><td>달래</td><td class="nul">NULL</td><td class="nul">NULL</td></tr></table><p class="cap">④ 달래는 팀번호가 NULL이라 짝이 없어요. INNER JOIN이면 여기서 버려지지만, LEFT JOIN은 왼쪽 행을 지키고 팀명 칸을 NULL로 채워 남겨요.</p></div><div class="step"><table class="tight"><tr><th>회원</th><th>팀번호</th><th>→ 팀명</th></tr><tr class=""><td>민트</td><td>10</td><td>백엔드</td></tr><tr class=""><td>보리</td><td>10</td><td>백엔드</td></tr><tr class=""><td>콩이</td><td>20</td><td>프론트</td></tr><tr class=""><td>달래</td><td class="nul">NULL</td><td class="nul">NULL</td></tr></table><p>데이터팀(30)은 짝이 된 회원이 없어 결과에 안 나와요(오른쪽이라). RIGHT JOIN이면 데이터팀이 이름 NULL로 나오고, FULL JOIN이면 둘 다 나와 5행이에요.</p><p class="cap">⑤ 결과 4행 = 짝 맞은 3행 + 왼쪽 외톨이 1행. 아래 상자에서 LEFT·RIGHT·FULL을 직접 바꿔 실행해 보세요.</p></div></div>
-<div class="sql-run" data-db="d035" data-note="몇 행? 달래의 팀명 칸은?"><textarea>SELECT m.이름, t.팀명
+<div class="sql-run" data-db="d035" data-note="몇 행? 달래의 팀명 칸은?"><div class="sql-head">💻 직접 실행해 보기 — 결과를 예상한 뒤 <b>▶ 실행</b>, 쿼리를 고쳐서 다시 실행해도 돼요</div><textarea rows="3" spellcheck="false">SELECT m.이름, t.팀명
 FROM 회원 m LEFT JOIN 팀 t ON m.팀번호 = t.팀번호;</textarea></div>
-<div class="sql-run" data-db="d035" data-note="이번엔 누가 NULL을 달고 나올까?"><textarea>SELECT m.이름, t.팀명
+<div class="sql-run" data-db="d035" data-note="이번엔 누가 NULL을 달고 나올까?"><div class="sql-head">💻 직접 실행해 보기 — 결과를 예상한 뒤 <b>▶ 실행</b>, 쿼리를 고쳐서 다시 실행해도 돼요</div><textarea rows="3" spellcheck="false">SELECT m.이름, t.팀명
 FROM 회원 m RIGHT JOIN 팀 t ON m.팀번호 = t.팀번호;</textarea></div>
-<div class="sql-run" data-db="d035"><textarea>SELECT m.이름, t.팀명
+<div class="sql-run" data-db="d035"><div class="sql-head">💻 직접 실행해 보기 — 결과를 예상한 뒤 <b>▶ 실행</b>, 쿼리를 고쳐서 다시 실행해도 돼요</div><textarea rows="3" spellcheck="false">SELECT m.이름, t.팀명
 FROM 회원 m FULL JOIN 팀 t ON m.팀번호 = t.팀번호;</textarea></div>
-<div class="sql-run" data-db="d035" data-note="달래는 남을까? 조건을 ON 쪽으로 옮겨서도 실행해 보세요."><textarea>-- 함정: LEFT JOIN 후 WHERE로 오른쪽 열을 거르면?
+<div class="sql-run" data-db="d035" data-note="달래는 남을까? 조건을 ON 쪽으로 옮겨서도 실행해 보세요."><div class="sql-head">💻 직접 실행해 보기 — 결과를 예상한 뒤 <b>▶ 실행</b>, 쿼리를 고쳐서 다시 실행해도 돼요</div><textarea rows="5" spellcheck="false">-- 함정: LEFT JOIN 후 WHERE로 오른쪽 열을 거르면?
 SELECT m.이름, t.팀명
 FROM 회원 m LEFT JOIN 팀 t ON m.팀번호 = t.팀번호
 WHERE t.팀명 = '백엔드';</textarea></div>
@@ -237,10 +237,10 @@ FROM 회원 m LEFT JOIN 회원 t ON m.멘토번호 = t.회원번호;
 
 
 <div class="trap">SELF 조인은 “같은 테이블을 두 번” 쓰는 것이지 “조건 없이 자기 자신과 곱하는 것”이 아니에요. 조건을 빠뜨리면 4 × 4 = 16행 카티션 곱이 돼요.</div>
-<div class="sql-run" data-db="d035" data-note="민트는 나올까?"><textarea>-- SELF 조인: 같은 회원 표를 별칭 둘로
+<div class="sql-run" data-db="d035" data-note="민트는 나올까?"><div class="sql-head">💻 직접 실행해 보기 — 결과를 예상한 뒤 <b>▶ 실행</b>, 쿼리를 고쳐서 다시 실행해도 돼요</div><textarea rows="4" spellcheck="false">-- SELF 조인: 같은 회원 표를 별칭 둘로
 SELECT 후배.이름 AS 회원, 선배.이름 AS 멘토
 FROM 회원 후배 JOIN 회원 선배 ON 후배.멘토번호 = 선배.회원번호;</textarea></div>
-<div class="sql-run" data-db="d035"><textarea>-- 멘토 없는 회원까지 남기려면 LEFT
+<div class="sql-run" data-db="d035"><div class="sql-head">💻 직접 실행해 보기 — 결과를 예상한 뒤 <b>▶ 실행</b>, 쿼리를 고쳐서 다시 실행해도 돼요</div><textarea rows="4" spellcheck="false">-- 멘토 없는 회원까지 남기려면 LEFT
 SELECT 후배.이름 AS 회원, 선배.이름 AS 멘토
 FROM 회원 후배 LEFT JOIN 회원 선배 ON 후배.멘토번호 = 선배.회원번호;</textarea></div>
 <p><b>→ 이 장면의 결과물:</b> 멘토 이름이 붙은 명단. 세 가닥 선을 모두 따라갔으니, 다음 장면은 지금까지의 행 수를 한 장으로 모아 봐요.</p>
@@ -350,7 +350,7 @@ document.querySelectorAll('.sql-run').forEach(box=>{
   const run = document.createElement('button'); run.type='button'; run.textContent='▶ 실행';
   const reset = document.createElement('button'); reset.type='button'; reset.textContent='원래 쿼리';
   const out = document.createElement('div'); out.className='sql-result';
-  if (box.dataset.note) { const n=document.createElement('p'); n.className='sql-note'; n.textContent='먼저 예상해 보세요: '+box.dataset.note; box.prepend(n); }
+  if (box.dataset.note) { const n=document.createElement('p'); n.className='sql-note'; n.textContent='먼저 예상해 보세요: '+box.dataset.note; box.insertBefore(n, ta); }
   bar.append(run, reset); box.append(bar, out);
   reset.onclick = ()=>{ ta.value = orig; out.innerHTML=''; };
   run.onclick = async ()=>{
