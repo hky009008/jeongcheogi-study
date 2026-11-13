@@ -17,6 +17,7 @@
 <li>GoF 23개를 생성 · 구조 · 행위로 나누고, 미들웨어 5종 · EAI 4유형 · UI 유형 4가지를 짝지을 수 있다</li>
 </ul>
 <div class="glance"><div><b>4</b>애자일 가치</div><div><b>14</b>UML 다이어그램</div><div><b>23</b>GoF 패턴</div><div><b>n(n−1)/2</b>직접 연결 선 수</div></div>
+<div class="box audio"><b>🎧 듣는 강의 (약 48분)</b>오늘 내용을 이어서 설명해요. 먼저 듣고 페이지를 보면 더 빨라요.<p style="margin:10px 0 0"><b>1부</b> (약 23분)</p><audio controls preload="none" src="../assets/audio/D040-1.mp3?v=1358" style="width:100%;margin-top:8px"></audio><p style="margin:10px 0 0"><b>2부</b> (약 25분)</p><audio controls preload="none" src="../assets/audio/D040-2.mp3?v=1497" style="width:100%;margin-top:8px"></audio></div>
 <div class="box"><b>오늘 이야기의 흐름</b>용어 사전 → 큰 그림 → 장면 1 팀이 일하는 방식(XP · 스크럼 · 칸반 · CASE) → 장면 2 무엇을 만들까(요구사항 · UML · DFD · 자료 사전) → 장면 3 어떻게 보일까(UI) → 장면 4 어떻게 쪼갤까(모듈 · 결합도 · 응집도 · 객체지향) → 장면 5 패턴 이름표(GoF) → 장면 6 지점 연결(미들웨어 · EAI) → 오답 복습 → 시험 포인트 → 확인 문제</div>
 <h2>0. 기본 전제와 용어 사전</h2>
 <div class="point"><b>핵심 한 줄</b>오늘은 새 개념보다 “이미 배운 개념을 시험 선지로 가르는 법”이 중심이라, 장면마다 정의 → 사례 → 가르는 질문 → 시험 각도 순서로 읽어요.</div>
@@ -322,7 +323,22 @@ document.querySelectorAll('.answer-bar').forEach(bar=>{
   btn.addEventListener('click',async()=>{const t=text();try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}btn.textContent='복사됨 ✓';setTimeout(()=>btn.textContent='답안 복사',1500)});
 });
 </script>
-
+<script>
+document.querySelectorAll('.box.audio audio').forEach(a=>{
+  const key='pos:'+a.getAttribute('src').split('?')[0],ctl=document.createElement('div'),rates=[1,1.25,1.5,1.75,2];
+  ctl.className='audio-ctl';
+  const b=(t,f)=>{const x=document.createElement('button');x.type='button';x.textContent=t;x.onclick=()=>f(x);ctl.appendChild(x);return x};
+  const seek=d=>{a.currentTime=Math.max(0,Math.min((a.duration||1e9),a.currentTime+d))};
+  b('⏪ 30초',()=>seek(-30));b('⏪ 10초',()=>seek(-10));b('10초 ⏩',()=>seek(10));b('30초 ⏩',()=>seek(30));
+  const r=b('속도 '+(+localStorage.rate||1)+'×',x=>{const i=(rates.indexOf(a.playbackRate)+1)%rates.length;a.playbackRate=rates[i];localStorage.rate=rates[i];x.textContent='속도 '+rates[i]+'×'});
+  a.addEventListener('play',()=>{a.playbackRate=+localStorage.rate||1},{once:true});
+  a.addEventListener('loadedmetadata',()=>{const p=+localStorage[key];if(p>5&&p<a.duration-5)a.currentTime=p});
+  a.addEventListener('timeupdate',()=>{localStorage[key]=a.currentTime|0});
+  a.after(ctl);
+});
+document.addEventListener('keydown',e=>{const a=document.querySelector('.box.audio audio');if(!a||/INPUT|TEXTAREA/.test(e.target.tagName))return;
+  if(e.key==='ArrowLeft'&&e.shiftKey){a.currentTime-=10;e.preventDefault()}if(e.key==='ArrowRight'&&e.shiftKey){a.currentTime+=10;e.preventDefault()}});
+</script>
 
 <script>
 // 단계 애니메이션: <div class="steps" data-title="제목"><div class="step">…<p class="cap">설명</p></div>…</div>
