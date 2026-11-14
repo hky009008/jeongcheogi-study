@@ -6,9 +6,9 @@
 <link rel="icon" href="../assets/favicon/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="../assets/favicon/favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="apple-touch-icon" href="../assets/favicon/apple-touch-icon.png">
-<link rel="stylesheet" href="../style.css?v=b4f77722"></head>
+<link rel="stylesheet" href="../style.css?v=b061ba49"></head>
 <body><main>
-<nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a></nav>
+<nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a> · <a href="../listen.html">🎧 강의 듣기</a></nav>
 <h1>D034 · 그룹 함수·윈도우 함수: 집계, GROUP BY와 HAVING, ROLLUP · CUBE · GROUPING SETS, RANK 계열</h1><div class="meta">2026-11-05 · B1 데이터베이스 구축 &gt; SQL 응용</div><p><span class="tag">B1</span> 어제 <a href="./2026-11-04-D033.html">D033</a>에서는 SELECT로 행을 고르고 거르는 법을 봤어요. 그런데 본사가 궁금한 건 영수증 한 장 한 장이 아니라 “지점별로 몇 그릇 팔렸나”, “어느 메뉴가 1등인가” 같은 <b>숫자 몇 개</b>예요. 오늘은 여러 행을 모아 값을 만드는 두 가지 방법, 행을 접는 <b>그룹 함수</b>와 행을 그대로 두는 <b>윈도우 함수</b>를 봐요. 예시는 분식 체인 ‘떡상분식’ 본사의 하루 판매 기록 하나로 끝까지 가요.</p>
 <ul>
 <li>집계 함수와 <b>GROUP BY·HAVING</b>으로 결과를 구하고, WHERE와 HAVING이 거르는 대상을 구별할 수 있다</li>

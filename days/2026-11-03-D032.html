@@ -6,9 +6,9 @@
 <link rel="icon" href="../assets/favicon/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="../assets/favicon/favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="apple-touch-icon" href="../assets/favicon/apple-touch-icon.png">
-<link rel="stylesheet" href="../style.css?v=b4f77722"></head>
+<link rel="stylesheet" href="../style.css?v=b061ba49"></head>
 <body><main>
-<nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a></nav>
+<nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a> · <a href="../listen.html">🎧 강의 듣기</a></nav>
 <h1>D032 · DCL과 데이터 사전: GRANT·REVOKE·WITH GRANT OPTION·CASCADE·ROLE·시스템 카탈로그</h1><div class="meta">2026-11-03 · B1·B2 데이터베이스 구축 &gt; SQL 응용·SQL 활용</div><p><span class="tag">B1</span> <span class="tag">B2</span> 어제 <a href="./2026-11-02-D031.html">D031</a>에서 여러 SQL을 한 묶음으로 확정하거나 되돌리는 법(TCL)을 봤어요. 오늘은 질문이 바뀌어요. “<b>누가</b> 이 테이블을 만질 수 있나, 그리고 그 사실은 <b>어디에</b> 적혀 있나.” 앞 질문의 답이 DCL, 뒤 질문의 답이 데이터 사전이에요. 예시는 어제의 ‘공부친구’ 앱 운영 DB에서 DBA가 분석 담당 하린, 인턴 도윤, 고객센터 팀에 권한을 나눠 주는 장면 하나로 끝까지 가요.</p>
 <ul>
 <li><b>GRANT·REVOKE</b> 문법과 <b>WITH GRANT OPTION·CASCADE</b>의 효과(권한 연쇄 회수)를 설명할 수 있다</li>

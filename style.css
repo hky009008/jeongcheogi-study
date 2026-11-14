@@ -145,3 +145,11 @@ figure{margin:1.2em 0;text-align:center}figcaption{font-size:13px;color:var(--mu
 .sql-bar button{background:#3d63c9;border-color:#3d63c9}.sql-bar button+button{background:transparent;color:#9bbcff;border-color:#9bbcff}
 .sql-out td,.sql-out th{color:var(--fg)}
 }
+
+.pl{background:var(--card);border:1px solid var(--accent);border-radius:12px;padding:14px;margin:12px 0}
+.pl #pl-now{font-weight:700;margin-bottom:6px}.pl input[type=range]{width:100%}
+.pl .row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;align-items:center}
+.pl button{font:inherit;font-size:15px;padding:8px 12px;border:1px solid var(--accent);border-radius:8px;background:var(--card);color:inherit;cursor:pointer}
+.pl #pl-play{font-weight:700;min-width:110px}
+#pl-list{list-style:none;padding:0}#pl-list li{padding:10px 12px;border-bottom:1px solid #ddd;cursor:pointer}
+#pl-list li.on{background:rgba(80,120,255,.12);border-radius:8px}#pl-list .d{float:right;font-size:13px}

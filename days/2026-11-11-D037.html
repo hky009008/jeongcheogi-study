@@ -6,9 +6,9 @@
 <link rel="icon" href="../assets/favicon/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="../assets/favicon/favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="apple-touch-icon" href="../assets/favicon/apple-touch-icon.png">
-<link rel="stylesheet" href="../style.css?v=b4f77722"></head>
+<link rel="stylesheet" href="../style.css?v=b061ba49"></head>
 <body><main>
-<nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a></nav>
+<nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a> · <a href="../listen.html">🎧 강의 듣기</a></nav>
 <h1>D037 · 뷰(View)와 인덱스 — 가상 테이블, B-트리, 클러스터드·넌클러스터드</h1><div class="meta">2026-11-11 · B2 데이터베이스 구축 &gt; SQL 활용</div><p><span class="tag">B2</span> 지난 <a href="./2026-11-09-D036.html">D036</a>에서 서브쿼리를 FROM 절에 넣으면 이름 없는 일회용 표(인라인 뷰)가 된다고 했어요. 오늘은 그 질의에 <b>이름을 붙여 두고 표처럼 쓰는 뷰</b>, 그리고 큰 표에서 원하는 행을 빨리 찾게 해 주는 <b>인덱스</b>를 봐요. 둘 다 표 본체는 건드리지 않고 그 옆에 만드는 객체예요. 예시는 가상의 스타트업 ‘모닥불’의 사원 표 하나로 끝까지 가요.</p>
 <ul>
 <li>뷰가 <b>물리 저장이 없는 가상 테이블</b>이라는 뜻을 설명하고, “물리적으로 존재한다” · “자체 인덱스를 가진다”가 왜 틀린지 구별할 수 있다</li>

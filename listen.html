@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>듣는 강의</title>
+<link rel="icon" href="assets/favicon/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="apple-touch-icon" href="assets/favicon/apple-touch-icon.png">
+<link rel="stylesheet" href="style.css?v=b061ba49"></head>
+<body><main>
+<nav class="top"><a href="index.html">목차</a> · <a href="wrong.html">오답 노트</a> · <a href="schedule.html">학습 일정</a> · <a href="listen.html">🎧 강의 듣기</a></nav>
+<h1>🎧 듣는 강의</h1><div class='meta'>이어 듣기 위치를 기억하고, 한 편이 끝나면 다음 편으로 넘어가요. 휴대폰 잠금 화면·이어폰 버튼으로도 조작돼요.</div><div class='pl'><div id='pl-now'></div><input type='range' id='pl-bar' min='0' value='0' step='1'><div class='meta' id='pl-time'>0:00 / 0:00</div><div class='row'><button id='pl-prev'>⏮</button><button id='pl-b30'>-30</button><button id='pl-b10'>-10</button><button id='pl-play'>▶ 재생</button><button id='pl-f10'>+10</button><button id='pl-f30'>+30</button><button id='pl-next'>⏭</button></div><div class='row'><button id='pl-rate'>속도 1×</button><label><input type='checkbox' id='pl-auto'> 다음 편 자동 재생</label> · <a id='pl-page' href='#'>이 강의 페이지 열기</a></div></div><h2>재생목록</h2><ul id='pl-list'></ul><script type='application/json' id='pl-data'>[{"f": "D001.mp3", "id": "D001", "part": "", "t": "요구분석기법", "slug": "2026-10-03-D001"}, {"f": "D002.mp3", "id": "D002", "part": "", "t": "UML", "slug": "2026-10-04-D002"}, {"f": "D026.mp3", "id": "D026", "part": "", "t": "통합 테스트 방식·테스트 하네스·자동화 도구·결함 관리", "slug": "2026-10-28-D026"}, {"f": "D027.mp3", "id": "D027", "part": "", "t": "성능 개선: 알고리즘 복잡도·소스코드 품질 분석·클린 코드", "slug": "2026-10-29-D027"}, {"f": "D028.mp3", "id": "D028", "part": "", "t": "인터페이스 구현: 데이터 표준·JSON/AJAX·인터페이스 보안·구현 검증", "slug": "2026-10-30-D028"}, {"f": "D029.mp3", "id": "D029", "part": "", "t": "2과목 시작: 릴레이션 구조와 DDL(CREATE·ALTER·DROP·TRUNCATE)", "slug": "2026-10-31-D029"}, {"f": "D030-1.mp3", "id": "D030", "part": "1", "t": "1과목 종합 진단 — 도서관 좌석 예약 앱 한 바퀴와 20문항 (+ S03 다시 풀기)", "slug": "2026-11-01-D030"}, {"f": "D030-2.mp3", "id": "D030", "part": "2", "t": "1과목 종합 진단 — 도서관 좌석 예약 앱 한 바퀴와 20문항 (+ S03 다시 풀기)", "slug": "2026-11-01-D030"}, {"f": "D031-1.mp3", "id": "D031", "part": "1", "t": "트랜잭션: ACID·상태·COMMIT/ROLLBACK/SAVEPOINT·병행제어·회복", "slug": "2026-11-02-D031"}, {"f": "D031-2.mp3", "id": "D031", "part": "2", "t": "트랜잭션: ACID·상태·COMMIT/ROLLBACK/SAVEPOINT·병행제어·회복", "slug": "2026-11-02-D031"}, {"f": "D032.mp3", "id": "D032", "part": "", "t": "DCL과 데이터 사전: GRANT·REVOKE·WITH GRANT OPTION·CASCADE·ROLE·시스템 카탈로그", "slug": "2026-11-03-D032"}, {"f": "D033.mp3", "id": "D033", "part": "", "t": "DML: SELECT 기본 구조·WHERE 연산자·실행 순서·INSERT/UPDATE/DELETE", "slug": "2026-11-04-D033"}, {"f": "D036-1.mp3", "id": "D036", "part": "1", "t": "서브쿼리(단일·다중 행·EXISTS·상관)와 집합 연산자 + 참조 동작·데이터 타입 보충", "slug": "2026-11-09-D036"}, {"f": "D036-2.mp3", "id": "D036", "part": "2", "t": "서브쿼리(단일·다중 행·EXISTS·상관)와 집합 연산자 + 참조 동작·데이터 타입 보충", "slug": "2026-11-09-D036"}, {"f": "D037-1.mp3", "id": "D037", "part": "1", "t": "뷰(View)와 인덱스 — 가상 테이블, B-트리, 클러스터드·넌클러스터드", "slug": "2026-11-11-D037"}, {"f": "D037-2.mp3", "id": "D037", "part": "2", "t": "뷰(View)와 인덱스 — 가상 테이블, B-트리, 클러스터드·넌클러스터드", "slug": "2026-11-11-D037"}, {"f": "D038-1.mp3", "id": "D038", "part": "1", "t": "절차형 SQL — 프로시저·함수·트리거, 블록·제어문·커서·예외 처리", "slug": "2026-11-12-D038"}, {"f": "D038-2.mp3", "id": "D038", "part": "2", "t": "절차형 SQL — 프로시저·함수·트리거, 블록·제어문·커서·예외 처리", "slug": "2026-11-12-D038"}, {"f": "D039-1.mp3", "id": "D039", "part": "1", "t": "1과목 빠진 개념 보충 — UML 관계·방법론·HIPO·응집도·McCabe·커버리지·패키징·REST", "slug": "2026-11-13-D039"}, {"f": "D039-2.mp3", "id": "D039", "part": "2", "t": "1과목 빠진 개념 보충 — UML 관계·방법론·HIPO·응집도·McCabe·커버리지·패키징·REST", "slug": "2026-11-13-D039"}, {"f": "D040-1.mp3", "id": "D040", "part": "1", "t": "1과목 총정리① — 요구사항·UML·애자일·UI·모듈·패턴·미들웨어를 기출 함정으로 한 번 더 꿰기", "slug": "2026-11-14-D040"}, {"f": "D040-2.mp3", "id": "D040", "part": "2", "t": "1과목 총정리① — 요구사항·UML·애자일·UI·모듈·패턴·미들웨어를 기출 함정으로 한 번 더 꿰기", "slug": "2026-11-14-D040"}]</script>
+
+
+
+
+<footer>2027년 정기 기사 1회 정보처리기사 필기 준비 · 공식 범위: Q-Net 2027~2029 출제기준</footer>
+<script>
+const L=JSON.parse(document.getElementById('pl-data').textContent),A=new Audio(),$=id=>document.getElementById(id),rates=[1,1.25,1.5,1.75,2];
+A.preload='metadata';let cur=-1;
+const fmt=t=>isFinite(t)?Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0'):'0:00';
+const key=i=>'pos:../assets/audio/'+L[i].f;
+function list(){$('pl-list').innerHTML=L.map((x,i)=>{const p=+localStorage[key(i)]||0,done=localStorage['done:'+x.f];
+  return `<li class="${i==cur?'on':''}" data-i="${i}"><b>${x.id}${x.part?' '+x.part+'부':''}</b> ${x.t}<span class="d">${done?'✔ 다 들음':p>5?'이어 듣기 '+fmt(p):''}</span></li>`}).join('');
+  $('pl-list').querySelectorAll('li').forEach(li=>li.onclick=()=>load(+li.dataset.i,true))}
+function load(i,play){if(i<0||i>=L.length)return;cur=i;const x=L[i];A.src='assets/audio/'+x.f;A.playbackRate=+localStorage.rate||1;
+  $('pl-now').textContent=x.id+(x.part?' '+x.part+'부':'')+' · '+x.t;$('pl-page').href='days/'+x.slug+'.html';localStorage.plLast=x.f;
+  A.addEventListener('loadedmetadata',()=>{const p=+localStorage[key(i)];if(p>5&&p<A.duration-5)A.currentTime=p;A.playbackRate=+localStorage.rate||1},{once:true});
+  if('mediaSession'in navigator){navigator.mediaSession.metadata=new MediaMetadata({title:$('pl-now').textContent,artist:'정처기 듣는 강의',artwork:[{src:'assets/favicon/apple-touch-icon.png',sizes:'180x180',type:'image/png'}]})}
+  if(play)A.play();list()}
+A.ontimeupdate=()=>{if(cur<0)return;localStorage[key(cur)]=A.currentTime|0;$('pl-bar').max=A.duration||1;$('pl-bar').value=A.currentTime;$('pl-time').textContent=fmt(A.currentTime)+' / '+fmt(A.duration)};
+A.onended=()=>{localStorage['done:'+L[cur].f]=1;localStorage[key(cur)]=0;if($('pl-auto').checked&&cur+1<L.length)load(cur+1,true);else list()};
+A.onplay=A.onpause=()=>{$('pl-play').textContent=A.paused?'▶ 재생':'⏸ 일시정지'};
+$('pl-bar').oninput=e=>A.currentTime=+e.target.value;
+$('pl-play').onclick=()=>{if(cur<0)load(0,true);else A.paused?A.play():A.pause()};
+$('pl-prev').onclick=()=>load(cur-1,true);$('pl-next').onclick=()=>load(cur+1,true);
+$('pl-b30').onclick=()=>A.currentTime-=30;$('pl-b10').onclick=()=>A.currentTime-=10;$('pl-f10').onclick=()=>A.currentTime+=10;$('pl-f30').onclick=()=>A.currentTime+=30;
+const rb=$('pl-rate');rb.textContent='속도 '+(+localStorage.rate||1)+'×';rb.onclick=()=>{const r=rates[(rates.indexOf(A.playbackRate)+1)%rates.length];A.playbackRate=r;localStorage.rate=r;rb.textContent='속도 '+r+'×'};
+$('pl-auto').checked=localStorage.plAuto!=='0';$('pl-auto').onchange=e=>localStorage.plAuto=e.target.checked?1:0;
+if('mediaSession'in navigator){const m=navigator.mediaSession;m.setActionHandler('play',()=>A.play());m.setActionHandler('pause',()=>A.pause());
+  m.setActionHandler('previoustrack',()=>load(cur-1,true));m.setActionHandler('nexttrack',()=>load(cur+1,true));
+  m.setActionHandler('seekbackward',()=>A.currentTime-=10);m.setActionHandler('seekforward',()=>A.currentTime+=10)}
+document.addEventListener('keydown',e=>{if(e.key===' '&&e.target===document.body){e.preventDefault();$('pl-play').click()}});
+const last=L.findIndex(x=>x.f===localStorage.plLast);load(last>=0?last:L.length-1,false);
+</script></main></body></html>

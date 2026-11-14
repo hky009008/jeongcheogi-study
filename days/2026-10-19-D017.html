@@ -6,9 +6,9 @@
 <link rel="icon" href="../assets/favicon/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="../assets/favicon/favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="apple-touch-icon" href="../assets/favicon/apple-touch-icon.png">
-<link rel="stylesheet" href="../style.css?v=b4f77722"></head>
+<link rel="stylesheet" href="../style.css?v=b061ba49"></head>
 <body><main>
-<nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a></nav>
+<nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a> · <a href="../listen.html">🎧 강의 듣기</a></nav>
 <h1>D017 · 인터페이스 상세 설계 — 송수신 방식 · 데이터 명세화 · 오류 처리방안 · 미들웨어</h1><div class="meta">2026-10-19 · A4 소프트웨어 설계 &gt; 인터페이스 설계</div><p><span class="tag">A4</span> 지난 D015에서 우리는 인터페이스의 <b>대화 상대</b>를 정했어요. 내부냐 외부냐를 나누고, 요구사항 7항목을 적고, 아키텍처 그림에서 송신·수신·중계 시스템을 찾아 <b>인터페이스 목록</b>을 만들었죠. 그런데 목록만 있는 상태는 소개팅 자리만 잡아 놓고 무슨 언어로 말할지, 대화가 끊기면 어떻게 할지는 아무도 정하지 않은 상태와 같아요. 오늘 A4의 마지막 세부항목인 <b>인터페이스 상세 설계</b>가 그 빈칸을 채워요. ① 어떤 기술과 리듬으로 주고받을지(송수신 방식), ② 주고받는 데이터를 글자 하나까지 어떻게 맞출지(데이터 명세화), ③ 실패했을 때 누가 어떻게 알아채고 남길지(오류 처리방안), ④ 이 모든 약속을 실제로 실어 나르는 바닥 소프트웨어(미들웨어)를 차례로 봐요.</p>
 <ul>
 <li>송수신 방식을 <b>연계 기술 · 통신 유형(단방향/동기/비동기) · 처리 유형(실시간/지연/배치) · 발생 주기</b>로 나눠 명세하고, 상황을 보고 동기와 비동기를 구별할 수 있다</li>
