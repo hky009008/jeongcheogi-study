@@ -6,7 +6,7 @@
 <link rel="icon" href="../assets/favicon/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="../assets/favicon/favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="apple-touch-icon" href="../assets/favicon/apple-touch-icon.png">
-<link rel="stylesheet" href="../style.css?v=b061ba49"></head>
+<link rel="stylesheet" href="../style.css?v=4788e468"></head>
 <body><main>
 <nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a> · <a href="../listen.html">🎧 강의 듣기</a></nav>
 <h1>D002 · UML</h1><div class="meta">2026-10-04 · A1 소프트웨어 개발 &gt; 요구사항 확인</div><p><span class="tag">A1</span> 어제(D001)는 오늘한끼 쇼핑몰의 요구를 찾고, 정리하고, 명세서로 쓰고, 검토했어요. 그런데 명세서가 글로만 수십 쪽이면 읽는 사람마다 머릿속 그림이 달라져요. 오늘은 그 요구를 <b>그림으로 적는 공용 언어, UML</b>을 봐요. 쓰는 법보다 시험이 묻는 <b>분류와 기호</b>가 중심이에요.</p>
@@ -340,20 +340,38 @@ document.querySelectorAll('.answer-bar').forEach(bar=>{
 });
 </script>
 <script>
-document.querySelectorAll('.box.audio audio').forEach(a=>{
-  const key='pos:'+a.getAttribute('src').split('?')[0],ctl=document.createElement('div'),rates=[1,1.25,1.5,1.75,2];
-  ctl.className='audio-ctl';
-  const b=(t,f)=>{const x=document.createElement('button');x.type='button';x.textContent=t;x.onclick=()=>f(x);ctl.appendChild(x);return x};
-  const seek=d=>{a.currentTime=Math.max(0,Math.min((a.duration||1e9),a.currentTime+d))};
-  b('⏪ 30초',()=>seek(-30));b('⏪ 10초',()=>seek(-10));b('10초 ⏩',()=>seek(10));b('30초 ⏩',()=>seek(30));
-  const r=b('속도 '+(+localStorage.rate||1)+'×',x=>{const i=(rates.indexOf(a.playbackRate)+1)%rates.length;a.playbackRate=rates[i];localStorage.rate=rates[i];x.textContent='속도 '+rates[i]+'×'});
-  a.addEventListener('play',()=>{a.playbackRate=+localStorage.rate||1},{once:true});
-  a.addEventListener('loadedmetadata',()=>{const p=+localStorage[key];if(p>5&&p<a.duration-5)a.currentTime=p});
-  a.addEventListener('timeupdate',()=>{localStorage[key]=a.currentTime|0});
-  a.after(ctl);
-});
-document.addEventListener('keydown',e=>{const a=document.querySelector('.box.audio audio');if(!a||/INPUT|TEXTAREA/.test(e.target.tagName))return;
-  if(e.key==='ArrowLeft'&&e.shiftKey){a.currentTime-=10;e.preventDefault()}if(e.key==='ArrowRight'&&e.shiftKey){a.currentTime+=10;e.preventDefault()}});
+// 2026-11-14: 진수 님 요청 — 페이지 하단에 늘 붙어 있는 음악 앱식 플레이어. 본문 <audio>는 숨기고 하단 막대 하나로 1부·2부를 이어 튼다.
+(()=>{const box=document.querySelector('.box.audio');if(!box)return;
+const tr=[...box.querySelectorAll('audio')].map((a,i,all)=>({src:a.getAttribute('src'),key:'pos:'+a.getAttribute('src').split('?')[0],name:all.length>1?(i+1)+'부':'강의'}));
+box.querySelectorAll('audio').forEach(a=>a.remove());box.querySelectorAll('p').forEach(p=>{if(/^\s*\d부/.test(p.textContent))p.remove()});
+const A=new Audio(),rates=[1,1.25,1.5,1.75,2],fmt=t=>isFinite(t)?Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0'):'0:00';
+A.preload='metadata';let cur=0;
+const pick=document.createElement('div');pick.className='audio-ctl';box.appendChild(pick);
+tr.forEach((t,i)=>{const b=document.createElement('button');b.type='button';b.textContent='▶ '+(tr.length>1?t.name+' 듣기':'듣기');b.onclick=()=>{load(i);A.play()};pick.appendChild(b)});
+const bar=document.createElement('div');bar.className='mbar';
+bar.innerHTML='<button class="mb-play" aria-label="재생">▶</button><button data-d="-10">⏪10</button><button data-d="10">10⏩</button>'+
+ '<div class="mb-mid"><div class="mb-title"></div><input type="range" min="0" value="0" step="1" aria-label="재생 위치"><div class="mb-time">0:00 / 0:00</div></div>'+
+ (tr.length>1?'<button class="mb-part">1부</button>':'')+'<button class="mb-rate">1×</button>';
+document.body.appendChild(bar);document.body.classList.add('has-mbar');
+const q=c=>bar.querySelector(c),pl=q('.mb-play'),rg=q('input'),tm=q('.mb-time'),rb=q('.mb-rate'),pt=q('.mb-part');
+const title=(document.querySelector('h1')||{}).textContent||'';
+function load(i){cur=i;A.src=tr[i].src;A.playbackRate=+localStorage.rate||1;q('.mb-title').textContent=tr[i].name+' · '+title;if(pt)pt.textContent=tr[i].name;
+  A.addEventListener('loadedmetadata',()=>{const p=+localStorage[tr[i].key];if(p>5&&p<A.duration-5)A.currentTime=p;A.playbackRate=+localStorage.rate||1;sync()},{once:true});
+  if('mediaSession'in navigator)navigator.mediaSession.metadata=new MediaMetadata({title:tr[i].name+' · '+title,artist:'정처기 듣는 강의'})}
+function sync(){rg.max=A.duration||1;rg.value=A.currentTime;tm.textContent=fmt(A.currentTime)+' / '+fmt(A.duration)}
+A.ontimeupdate=()=>{localStorage[tr[cur].key]=A.currentTime|0;sync()};
+A.onplay=A.onpause=()=>{pl.textContent=A.paused?'▶':'⏸';pl.setAttribute('aria-label',A.paused?'재생':'일시정지')};
+A.onended=()=>{localStorage[tr[cur].key]=0;if(cur+1<tr.length){load(cur+1);A.play()}};
+pl.onclick=()=>A.paused?A.play():A.pause();rg.oninput=()=>A.currentTime=+rg.value;
+bar.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>A.currentTime=Math.max(0,A.currentTime+ +b.dataset.d));
+rb.textContent=(+localStorage.rate||1)+'×';rb.onclick=()=>{const r=rates[(rates.indexOf(A.playbackRate)+1)%rates.length];A.playbackRate=r;localStorage.rate=r;rb.textContent=r+'×'};
+if(pt)pt.onclick=()=>{const p=!A.paused;load((cur+1)%tr.length);if(p)A.play()};
+if('mediaSession'in navigator){const m=navigator.mediaSession;m.setActionHandler('play',()=>A.play());m.setActionHandler('pause',()=>A.pause());
+  m.setActionHandler('seekbackward',()=>A.currentTime-=10);m.setActionHandler('seekforward',()=>A.currentTime+=10);
+  if(tr.length>1){m.setActionHandler('previoustrack',()=>{load(Math.max(0,cur-1));A.play()});m.setActionHandler('nexttrack',()=>{if(cur+1<tr.length){load(cur+1);A.play()}})}}
+document.addEventListener('keydown',e=>{if(/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;
+  if(e.key==='ArrowLeft'&&e.shiftKey){A.currentTime-=10;e.preventDefault()}if(e.key==='ArrowRight'&&e.shiftKey){A.currentTime+=10;e.preventDefault()}});
+const last=tr.findIndex(t=>+localStorage[t.key]>5);load(last>=0?last:0);})();
 </script>
 
 
