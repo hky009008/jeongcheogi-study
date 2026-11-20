@@ -18,6 +18,7 @@
 </ul>
 <div class="glance"><div><b>3</b>기본 요소(개체 · 관계 · 속성)</div><div><b>4</b>기본 기호 + 확장 5</div><div><b>3</b>대응 수(1:1 · 1:N · M:N)</div><div><b>7</b>실행 상자 · <b>3</b>애니메이션</div></div>
 <div class="box"><b>따라잡기 안내</b>D043을 읽었다면 오늘 페이지 전후로 <a href="2026-11-18-D044.html">D044 관계대수</a>를 이어서 읽고 <code>정처기 D044:</code>로 답장해 주세요. D045(관계해석)는 11/22 일요 종합 때 안내할게요. 오늘 내용은 D046의 ‘개념적 설계’만 알면 따라올 수 있어요.</div>
+<div class="box audio"><b>🎧 듣는 강의 (약 37분)</b>오늘 내용을 이어서 설명해요. 먼저 듣고 페이지를 보면 더 빨라요.<p style="margin:10px 0 0"><b>1부</b> (약 18분)</p><audio controls preload="none" src="../assets/audio/D047-1.mp3?v=1067" style="width:100%;margin-top:8px"></audio><p style="margin:10px 0 0"><b>2부</b> (약 19분)</p><audio controls preload="none" src="../assets/audio/D047-2.mp3?v=1137" style="width:100%;margin-top:8px"></audio></div>
 <div class="box"><b>오늘 이야기의 흐름</b>세 부서가 부르는 같은 것 → 장면 1 E-R 모델이란 → 장면 2 개체 · 관계 · 속성 → 장면 3 표기 기호 → 장면 4 속성의 종류 → 장면 5 카디널리티와 참여 제약 → 장면 6 E-R이 표로 내려가는 길 → 가르는 질문 표 → 오답 복습 → 확인 문제</div>
 <h2>0. 같은 것을 세 이름으로 부르는 회의실</h2>
 <div class="point"><b>핵심 한 줄</b>E-R 다이어그램은 “우리 업무에 무엇이 있고 서로 어떻게 얽혀 있나”를 사람들이 한 장 그림으로 합의하는 도구예요.</div>
@@ -230,7 +231,40 @@ document.querySelectorAll('.answer-bar').forEach(bar=>{
   btn.addEventListener('click',async()=>{const t=text();try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}btn.textContent='복사됨 ✓';setTimeout(()=>btn.textContent='답안 복사',1500)});
 });
 </script>
-
+<script>
+// 2026-11-14: 진수 님 요청 — 페이지 하단에 늘 붙어 있는 음악 앱식 플레이어. 본문 <audio>는 숨기고 하단 막대 하나로 1부·2부를 이어 튼다.
+(()=>{const box=document.querySelector('.box.audio');if(!box)return;
+const tr=[...box.querySelectorAll('audio')].map((a,i,all)=>({src:a.getAttribute('src'),key:'pos:'+a.getAttribute('src').split('?')[0],name:all.length>1?(i+1)+'부':'강의'}));
+box.querySelectorAll('audio').forEach(a=>a.remove());box.querySelectorAll('p').forEach(p=>{if(/^\s*\d부/.test(p.textContent))p.remove()});
+const A=new Audio(),rates=[1,1.25,1.5,1.75,2],fmt=t=>isFinite(t)?Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0'):'0:00';
+A.preload='metadata';let cur=0;
+const pick=document.createElement('div');pick.className='audio-ctl';box.appendChild(pick);
+tr.forEach((t,i)=>{const b=document.createElement('button');b.type='button';b.textContent='▶ '+(tr.length>1?t.name+' 듣기':'듣기');b.onclick=()=>{load(i);A.play()};pick.appendChild(b)});
+const bar=document.createElement('div');bar.className='mbar';
+bar.innerHTML='<button class="mb-play" aria-label="재생">▶</button><button data-d="-10">⏪10</button><button data-d="10">10⏩</button>'+
+ '<div class="mb-mid"><div class="mb-title"></div><input type="range" min="0" value="0" step="1" aria-label="재생 위치"><div class="mb-time">0:00 / 0:00</div></div>'+
+ (tr.length>1?'<button class="mb-part">1부</button>':'')+'<button class="mb-rate">1×</button>';
+document.body.appendChild(bar);document.body.classList.add('has-mbar');
+const q=c=>bar.querySelector(c),pl=q('.mb-play'),rg=q('input'),tm=q('.mb-time'),rb=q('.mb-rate'),pt=q('.mb-part');
+const title=(document.querySelector('h1')||{}).textContent||'';
+function load(i){cur=i;A.src=tr[i].src;A.playbackRate=+localStorage.rate||1;q('.mb-title').textContent=tr[i].name+' · '+title;if(pt)pt.textContent=tr[i].name;
+  A.addEventListener('loadedmetadata',()=>{const p=+localStorage[tr[i].key];if(p>5&&p<A.duration-5)A.currentTime=p;A.playbackRate=+localStorage.rate||1;sync()},{once:true});
+  if('mediaSession'in navigator)navigator.mediaSession.metadata=new MediaMetadata({title:tr[i].name+' · '+title,artist:'정처기 듣는 강의'})}
+function sync(){rg.max=A.duration||1;rg.value=A.currentTime;tm.textContent=fmt(A.currentTime)+' / '+fmt(A.duration)}
+A.ontimeupdate=()=>{localStorage[tr[cur].key]=A.currentTime|0;sync()};
+A.onplay=A.onpause=()=>{pl.textContent=A.paused?'▶':'⏸';pl.setAttribute('aria-label',A.paused?'재생':'일시정지')};
+A.onended=()=>{localStorage[tr[cur].key]=0;if(cur+1<tr.length){load(cur+1);A.play()}};
+pl.onclick=()=>A.paused?A.play():A.pause();rg.oninput=()=>A.currentTime=+rg.value;
+bar.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>A.currentTime=Math.max(0,A.currentTime+ +b.dataset.d));
+rb.textContent=(+localStorage.rate||1)+'×';rb.onclick=()=>{const r=rates[(rates.indexOf(A.playbackRate)+1)%rates.length];A.playbackRate=r;localStorage.rate=r;rb.textContent=r+'×'};
+if(pt)pt.onclick=()=>{const p=!A.paused;load((cur+1)%tr.length);if(p)A.play()};
+if('mediaSession'in navigator){const m=navigator.mediaSession;m.setActionHandler('play',()=>A.play());m.setActionHandler('pause',()=>A.pause());
+  m.setActionHandler('seekbackward',()=>A.currentTime-=10);m.setActionHandler('seekforward',()=>A.currentTime+=10);
+  if(tr.length>1){m.setActionHandler('previoustrack',()=>{load(Math.max(0,cur-1));A.play()});m.setActionHandler('nexttrack',()=>{if(cur+1<tr.length){load(cur+1);A.play()}})}}
+document.addEventListener('keydown',e=>{if(/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;
+  if(e.key==='ArrowLeft'&&e.shiftKey){A.currentTime-=10;e.preventDefault()}if(e.key==='ArrowRight'&&e.shiftKey){A.currentTime+=10;e.preventDefault()}});
+const last=tr.findIndex(t=>+localStorage[t.key]>5);load(last>=0?last:0);})();
+</script>
 <script type="module">
 // SQL 실습 상자: text/plain sql-seed 스크립트(data-db=이름)에 스키마·데이터
 //              .sql-run(data-db=이름, data-note=예상 질문) 안의 textarea에 쿼리
