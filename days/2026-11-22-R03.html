@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>R03 UML ② — 사진에서 동영상으로: 행위 다이어그램</title>
+<link rel="icon" href="../assets/favicon/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../assets/favicon/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="apple-touch-icon" href="../assets/favicon/apple-touch-icon.png">
+<link rel="stylesheet" href="../style.css?v=4788e468"></head>
+<body><main>
+<nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a> · <a href="../listen.html">🎧 강의 듣기</a></nav>
+<h1>R03 · UML ② — 사진에서 동영상으로: 행위 다이어그램</h1><div class="meta">2026-11-22 · A1 1과목 리뉴얼</div><p><span class="tag">1과목 리뉴얼</span><span class="tag">A1</span> 리뉴얼 셋째 장은 책 1.1.2 UML의 나머지 절반, <b>행위 다이어그램</b>이에요. 어제(R02)는 씽씽 앱의 뼈대를 클래스·객체·배치 같은 <b>구조 다이어그램</b>으로 찍었죠. 그건 앱이 멈춰 있을 때의 사진이었어요. 오늘은 같은 앱이 <b>움직일 때</b>를 찍어요. 회원이 킥보드 앞에서 QR을 찍고, 앱이 서버에 묻고, 결제가 승인되고, 잠금이 풀리고, 킥보드의 상태가 ‘대기’에서 ‘대여 중’으로 바뀌는 그 몇 초를 일곱 가지 다이어그램이 각자 다른 각도로 기록해요. 그중 시험에 자주 나오는 <b>유스케이스·시퀀스·상태</b>는 구성요소 하나하나까지, <b>커뮤니케이션·활동</b>은 정의·구성·사례로, <b>상호작용 개요·타이밍</b>은 정의와 쓰임새로 다뤄요.</p>
+<ul>
+<li>행위(동적) 다이어그램 7종을 ‘무엇을 보여 주나’로 구별하고, 시퀀스·커뮤니케이션·상호작용 개요·타이밍이 <b>상호작용 다이어그램</b> 묶음임을 말할 수 있다</li>
+<li>유스케이스 다이어그램의 구성요소 3가지(유스케이스·액터·시스템)와 액터 2종(사용자 액터·시스템 액터)을 구별하고, 관계 4가지(연관·포함·확장·일반화)를 판정할 수 있다</li>
+<li>시퀀스 다이어그램의 구성요소(객체·생명선·실행·메시지·회귀 메시지, 프레임)를 읽고, “시퀀스는 정적에 가깝다” 같은 틀린 선지를 가려낼 수 있다</li>
+<li>상태 다이어그램의 구성요소 6가지(상태·시작 상태·종료 상태·전이·이벤트·전이 조건)와 표기를 구별하고, ‘전이를 일으키는 요인 = 이벤트’를 고를 수 있다</li>
+<li>다이어그램 설명 짝 바꾸기(상태 ↔ 시퀀스, 클래스 ↔ 커뮤니케이션)를 잡아내고, 기능 모델 = 유스케이스, 정적 모델 = 클래스, 동적 모델 = 시퀀스·상태·활동 대응을 말할 수 있다</li>
+</ul>
+<div class="glance"><div><b>7</b>행위 다이어그램</div><div><b>4</b>상호작용 묶음</div><div><b>3 · 4</b>유스케이스 구성 · 관계</div><div><b>5</b>시퀀스 구성</div><div><b>6</b>상태 구성</div></div>
+<div class="box"><b>이 페이지의 흐름</b>⓪ 큰 그림 — 사진에서 동영상으로 → ① 행위 다이어그램 7종 지도 → ② 유스케이스 다이어그램 → ③ 유스케이스 관계 4가지 → ④ 시퀀스 다이어그램 → ⑤ 상태 다이어그램 → ⑥ 커뮤니케이션 다이어그램 → ⑦ 활동 · 상호작용 개요 · 타이밍 → ⑧ 한 장 정리 → 확인 문제</div>
+
+<h2>⓪ 큰 그림 — 사진에서 동영상으로</h2>
+<div class="duo"><div><p><b>행위 다이어그램</b>(Behavioral Diagram)은 시스템이 <b>시간 속에서 어떻게 동작하는가</b>를 그리는 UML 다이어그램이에요. 구조 다이어그램이 “어떤 클래스가 있고 서로 어떻게 엮여 있나”라는 정적인 질문에 답했다면, 행위 다이어그램은 “누가 무엇을 원하고, 누가 누구에게 언제 말을 걸고, 그 결과 무엇이 어떻게 바뀌나”라는 동적인 질문에 답해요. 그래서 시험에서는 <b>동적 다이어그램</b>이라고도 불러요. 구조 다이어그램이 증명사진이라면 행위 다이어그램은 <b>자동차 블랙박스 영상</b>이에요. 사진으로는 차가 어떻게 생겼는지만 알 수 있지만, 블랙박스를 돌려 보면 누가 먼저 끼어들었는지, 몇 초 만에 멈췄는지까지 남거든요.</p>
+<p>오늘의 장면은 하나로 고정해요. 씽씽 회원 지수가 강남역 앞 킥보드 K-17을 빌리는 <b>대여 한 번</b>이에요. 같은 몇 초를 일곱 다이어그램이 각자 다른 질문으로 찍는다는 걸 기억하면, 다이어그램 이름과 설명을 짝짓는 문제가 훨씬 쉬워져요. 아래 그림 1이 오늘의 지도예요.</p></div><figure><svg viewBox="0 0 360 316" font-family="sans-serif" role="img" aria-label="행위 다이어그램 질문 지도. 위쪽 씽씽 킥보드 한 번 빌리기에서 아래로 유스케이스 누가 무엇을 원하나, 활동 일이 어떤 순서로 흐르나, 상태 한 물건이 어떻게 변하나 상자가 있고, 아래 점선 묶음 상호작용 다이어그램 안에 시퀀스, 커뮤니케이션, 상호작용 개요, 타이밍이 각자 질문과 함께 있음">
+<rect width="360" height="316" rx="12" fill="#f7f7f4"/>
+<path d="M180 44 L180 162" fill="none" stroke="#777" stroke-width="1.6"/>
+<rect x="100" y="8" width="160" height="36" rx="8" fill="#e6f0fa" stroke="#1f5f99" stroke-width="2.5"/>
+<text x="180" y="31" font-size="13" font-weight="700" fill="#1f5f99" text-anchor="middle">씽씽 · 킥보드 한 번 빌리기</text>
+<rect x="8" y="58" width="164" height="42" rx="8" fill="#fff" stroke="#555" stroke-width="1.4"/>
+<text x="90" y="76" font-size="13" font-weight="700" fill="#222" text-anchor="middle">유스케이스</text><text x="90" y="92" font-size="11" fill="#333" text-anchor="middle">누가 무엇을 원하나?</text>
+<rect x="188" y="58" width="164" height="42" rx="8" fill="#fff" stroke="#555" stroke-width="1.4"/>
+<text x="270" y="76" font-size="13" font-weight="700" fill="#222" text-anchor="middle">활동</text><text x="270" y="92" font-size="11" fill="#333" text-anchor="middle">일이 어떤 순서로 흐르나?</text>
+<rect x="8" y="110" width="164" height="42" rx="8" fill="#fff" stroke="#555" stroke-width="1.4"/>
+<text x="90" y="128" font-size="13" font-weight="700" fill="#222" text-anchor="middle">상태</text><text x="90" y="144" font-size="11" fill="#333" text-anchor="middle">한 물건이 어떻게 변하나?</text>
+<rect x="188" y="110" width="164" height="42" rx="8" fill="#fff" stroke="#555" stroke-width="1.4"/>
+<text x="270" y="128" font-size="12" font-weight="700" fill="#222" text-anchor="middle">기능 = 유스케이스</text><text x="270" y="144" font-size="11" fill="#333" text-anchor="middle">동적 = 시퀀스·상태·활동</text>
+<rect x="4" y="164" width="352" height="124" rx="10" fill="#fdf6ea" stroke="#a35a00" stroke-width="1.6" stroke-dasharray="6 4"/>
+<text x="16" y="182" font-size="12" font-weight="700" fill="#7a4300">상호작용(교류) 다이어그램 묶음 — 4종</text>
+<rect x="14" y="190" width="160" height="42" rx="8" fill="#fff" stroke="#555" stroke-width="1.4"/>
+<text x="94" y="208" font-size="13" font-weight="700" fill="#222" text-anchor="middle">시퀀스</text><text x="94" y="224" font-size="11" fill="#333" text-anchor="middle">누가 누구에게 언제 말하나?</text>
+<rect x="186" y="190" width="160" height="42" rx="8" fill="#fff" stroke="#555" stroke-width="1.4"/>
+<text x="266" y="208" font-size="13" font-weight="700" fill="#222" text-anchor="middle">커뮤니케이션</text><text x="266" y="224" font-size="11" fill="#333" text-anchor="middle">누가 누구와 이어져 말하나?</text>
+<rect x="14" y="238" width="160" height="42" rx="8" fill="#fff" stroke="#555" stroke-width="1.4"/>
+<text x="94" y="256" font-size="13" font-weight="700" fill="#222" text-anchor="middle">상호작용 개요</text><text x="94" y="272" font-size="11" fill="#333" text-anchor="middle">상호작용 조각을 어떤 순서로?</text>
+<rect x="186" y="238" width="160" height="42" rx="8" fill="#fff" stroke="#555" stroke-width="1.4"/>
+<text x="266" y="256" font-size="13" font-weight="700" fill="#222" text-anchor="middle">타이밍</text><text x="266" y="272" font-size="11" fill="#333" text-anchor="middle">몇 초 안에 상태가 바뀌나?</text>
+<text x="180" y="306" font-size="11" fill="#444" text-anchor="middle">구조(사진) 6종 — 클래스·객체·컴포넌트·배치·복합체·패키지는 R02</text>
+</svg><figcaption>그림 1. 행위 다이어그램 7종이 같은 대여 장면에 던지는 질문. 점선 상자 넷은 ‘객체끼리 주고받는 메시지’를 다루는 상호작용 다이어그램 묶음이에요.</figcaption></figure></div>
+
+
+<h2>① 행위 다이어그램 7종 지도</h2>
+<p>UML 2.x는 행위 다이어그램을 일곱 개로 나눠요. 이름만 외우면 금방 섞이니, 각자 <b>무엇을 주인공으로 찍는지</b>로 기억하는 게 좋아요. 유스케이스는 시스템 밖 사용자가 주인공이고, 시퀀스와 커뮤니케이션은 객체들 사이의 대화가 주인공이에요. 상태는 객체 하나의 일생이, 활동은 일의 흐름이 주인공이고, 상호작용 개요와 타이밍은 상호작용을 더 크게(흐름) 또는 더 정밀하게(시간) 보는 확대경이에요.</p>
+<table class="tight"><tr><th>다이어그램</th><th>무엇을 보여 주나</th><th>씽씽 대여 장면에서</th></tr>
+<tr><td>유스케이스(Use Case)</td><td>사용자 관점에서 본 시스템의 기능과 그 기능을 쓰는 외부 요소. 기능 요구를 정의할 때</td><td>회원이 ‘킥보드를 빌린다’, 결제 대행사가 ‘결제를 승인한다’</td></tr>
+<tr><td>시퀀스(Sequence)</td><td>객체 사이의 상호작용을 메시지가 오가는 <b>시간 순서</b>로</td><td>앱 → 대여서비스 → 결제대행사 → 킥보드로 이어지는 호출 순서</td></tr>
+<tr><td>커뮤니케이션(Communication)</td><td>시퀀스처럼 메시지를 보여 주되, 객체 사이의 <b>연관(연결)</b>까지 함께</td><td>대여서비스가 앱·결제대행사·킥보드와 각각 이어져 있는 모습 + 번호 붙은 메시지</td></tr>
+<tr><td>상태(State)</td><td>한 객체가 이벤트에 따라 상태를 어떻게 바꾸는지, 진입·탈출 조건과 전이</td><td>킥보드 K-17이 대기 → 대여 중 → 일시 정지 → 대기</td></tr>
+<tr><td>활동(Activity)</td><td>처리 로직과 조건에 따른 처리 흐름을 순서대로</td><td>반납 처리: 사진 → 주차 구역 확인 → 결제·잠금 동시 진행</td></tr>
+<tr><td>상호작용 개요(Interaction Overview)</td><td>여러 상호작용 다이어그램 사이의 제어 흐름</td><td>‘대여’ 조각 → ‘주행’ 조각 → ‘반납’ 조각</td></tr>
+<tr><td>타이밍(Timing)</td><td>객체 상태 변화와 <b>시간 제약</b>을 시간축 위에 명시</td><td>“QR 스캔 후 5초 안에 잠금이 풀려야 한다”</td></tr></table>
+<p>이 중 시퀀스·커뮤니케이션·상호작용 개요·타이밍 넷은 모두 객체 사이의 메시지 교환, 즉 <b>상호작용</b>(Interaction)을 다루기 때문에 <b>상호작용 다이어그램</b>(교류 다이어그램)이라는 하위 묶음으로 따로 불러요. “시퀀스 다이어그램은 교류 다이어그램의 한 종류다”라는 선지가 나오면 맞는 설명이에요. 반대로 구조 쪽 이름(배치·컴포넌트·패키지)을 행위 목록에 슬쩍 끼워 넣거나, 아예 UML에 없는 이름(절차 다이어그램·단계(Phase) 다이어그램)을 섞는 것이 출제자의 단골 수법이에요.</p>
+<div class="box"><b>시험에는 이렇게 나와요</b>“UML 행위 다이어그램이 <b>아닌</b> 것”을 고르는 문제에서 유스케이스·시퀀스·활동 사이에 <b>배치(Deployment) 다이어그램</b>이 끼어 있으면 그게 답이에요(3회). 배치는 서버·기기 같은 물리 노드에 무엇이 올라가는지 찍은 사진, 즉 구조 쪽이에요. 비슷하게 “정적 다이어그램이 아닌 것 = 순차(시퀀스)”, “요구사항 모델링에 쓰이지 않는 것 = 단계 다이어그램”, “UML이 아닌 것 = 절차 다이어그램”도 같은 계열이에요.</div>
+
+<h2>② 유스케이스 다이어그램 <span class="tag">기출 10회</span></h2>
+<p>R01에서 요구분석의 출발점은 “사용자가 시스템에 무엇을 원하나”를 빠짐없이 모으는 일이라고 했죠. 그런데 요구 목록이 수십 줄이 되면 고객도 개발자도 전체가 한눈에 안 들어와요. 그래서 기능 요구를 <b>그림 한 장</b>으로 펼쳐 놓고 고객과 “이게 다 맞나요?”를 합의하는 도구가 필요했고, 그게 유스케이스 다이어그램이에요.</p>
+<p><b>유스케이스 다이어그램</b>(Use Case Diagram)은 시스템이 제공하는 기능과, 그 기능을 쓰는 외부 요소를 <b>사용자의 관점</b>에서 표현한 다이어그램이에요. 여기서 ‘사용자 관점’이 핵심이에요. 개발자가 내부 구현을 정리하는 그림이 아니라, 시스템 밖에 선 사람이 “이 시스템으로 무엇을 할 수 있나”를 보는 그림이에요. 그래서 “요금 테이블을 갱신한다”처럼 회원 눈에 안 보이는 내부 처리는 유스케이스가 되지 않고, “킥보드를 빌린다”처럼 회원이 목표로 삼는 일만 유스케이스가 돼요. 기능을 모델링하므로 시험에서는 <b>기능 모델 = 유스케이스 다이어그램</b>으로 짝지어요.</p>
+<h3>구성요소 3가지 — 유스케이스 · 액터 · 시스템</h3>
+<p><b>유스케이스</b>(Use Case)는 시스템이 제공해야 하는 서비스, 다시 말해 액터가 시스템을 통해 수행하는 <b>일련의 일</b>이에요. 타원 안에 “~한다” 꼴의 동사구로 이름을 적어요. ‘킥보드를 빌린다’는 QR 인식, 본인 확인, 잠금 해제까지 여러 단계를 묶은 하나의 목표라서 유스케이스 하나가 돼요.</p>
+<p><b>액터</b>(Actor)는 시스템과 상호작용하는 <b>역할</b>이에요. 사람 모양(막대 인형)으로 그리고, 이름은 실제 사람·조직이 아니라 역할로 붙여요. “김지수”가 아니라 “회원”, “박 매니저”가 아니라 “관리자”예요. 한 사람이 회원이면서 관리자일 수도 있는데, 그러면 액터 두 개를 맡는 거예요. 액터는 꼭 필요한 역할만 남기도록 추상화·최소화하고, 한 액터가 여러 유스케이스와 이어질 수 있어요. 액터는 두 종류로 나눠요. 시스템을 직접 쓰는 사람(역할)인 <b>사용자 액터</b>(User Actor)와, 이미 다른 곳에서 개발돼 우리 시스템과 데이터를 주고받는 외부 시스템인 <b>시스템 액터</b>(System Actor)예요. 씽씽에서 결제 승인을 해 주는 <b>결제 대행사</b>나 위치를 알려 주는 지도 API가 시스템 액터예요.</p>
+<p><b>시스템</b>(System)은 만들려는 시스템 전체의 영역이에요. 큰 사각형 경계로 그리고, 유스케이스는 경계 안에, 액터는 경계 밖에 둬요. 경계선 하나가 “우리가 만들 것”과 “우리가 쓰는 바깥”을 갈라 주기 때문에, 액터가 경계 안으로 들어가 있으면 잘못 그린 그림이에요.</p>
+<table class="tight"><tr><th>구성요소</th><th>뜻</th><th>표기</th><th>씽씽 예</th></tr>
+<tr><td>유스케이스</td><td>시스템이 제공하는 서비스, 액터가 시스템으로 하는 일련의 일</td><td>타원</td><td>킥보드를 빌린다, 요금을 결제한다</td></tr>
+<tr><td>액터 — 사용자 액터</td><td>시스템을 쓰는 사람의 역할</td><td>막대 인형</td><td>회원, 정기권 회원, 관리자</td></tr>
+<tr><td>액터 — 시스템 액터</td><td>데이터를 주고받는 이미 개발된 외부 시스템</td><td>막대 인형 또는 «actor» 상자</td><td>결제 대행사, 지도 API</td></tr>
+<tr><td>시스템</td><td>만들 시스템 전체의 범위</td><td>사각형 경계</td><td>‘씽씽 시스템’ 사각형</td></tr></table>
+<figure><svg viewBox="0 0 360 300" font-family="sans-serif" role="img" aria-label="씽씽 유스케이스 다이어그램. 씽씽 시스템 경계 안에 킥보드를 빌린다, 본인 인증, 쿠폰 적용, 요금을 결제한다, 카드 결제, 포인트 결제 유스케이스. 킥보드를 빌린다에서 본인 인증으로 include 점선 화살표, 쿠폰 적용에서 킥보드를 빌린다로 extend 점선 화살표. 카드 결제와 포인트 결제에서 요금을 결제한다로 빈 삼각형 일반화. 경계 밖 왼쪽 회원 액터가 킥보드를 빌린다와 요금을 결제한다에 실선 연관, 정기권 회원에서 회원으로 일반화. 오른쪽 결제대행사 시스템 액터가 요금을 결제한다와 실선 연관">
+<defs><marker id="r03o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10" fill="none" stroke="#333" stroke-width="1.5"/></marker>
+<marker id="r03t" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="11" markerHeight="11" orient="auto"><path d="M0 0 L12 6 L0 12 z" fill="#fff" stroke="#333" stroke-width="1.3"/></marker></defs>
+<rect width="360" height="300" rx="12" fill="#f7f7f4"/>
+<rect x="72" y="8" width="222" height="282" rx="4" fill="#fff" stroke="#555" stroke-width="1.6"/>
+<path d="M48 64 L122 58" fill="none" stroke="#333" stroke-width="1.4"/>
+<path d="M48 72 L136 176" fill="none" stroke="#333" stroke-width="1.4"/>
+<path d="M226 182 L298 182" fill="none" stroke="#333" stroke-width="1.4"/>
+<path d="M206 72 L226 101" fill="none" stroke="#333" stroke-width="1.4" stroke-dasharray="5 3" marker-end="url(#r03o)"/>
+<path d="M136 102 L158 73" fill="none" stroke="#333" stroke-width="1.4" stroke-dasharray="5 3" marker-end="url(#r03o)"/>
+<path d="M148 230 L168 199" fill="none" stroke="#333" stroke-width="1.4" marker-end="url(#r03t)"/>
+<path d="M214 230 L194 199" fill="none" stroke="#333" stroke-width="1.4" marker-end="url(#r03t)"/>
+<path d="M34 166 L34 108" fill="none" stroke="#333" stroke-width="1.4" marker-end="url(#r03t)"/>
+<text x="82" y="24" font-size="12" font-weight="700" fill="#222">씽씽 시스템</text>
+<ellipse cx="182" cy="56" rx="60" ry="17" fill="#e6f0fa" stroke="#1f5f99" stroke-width="1.6"/><text x="182" y="60" font-size="12" fill="#222" text-anchor="middle">킥보드를 빌린다</text>
+<ellipse cx="240" cy="118" rx="44" ry="15" fill="#e6f0fa" stroke="#1f5f99" stroke-width="1.6"/><text x="240" y="122" font-size="12" fill="#222" text-anchor="middle">본인 인증</text>
+<ellipse cx="124" cy="118" rx="44" ry="15" fill="#e6f0fa" stroke="#1f5f99" stroke-width="1.6"/><text x="124" y="122" font-size="12" fill="#222" text-anchor="middle">쿠폰 적용</text>
+<text x="252" y="88" font-size="10" fill="#333">«include»</text>
+<text x="146" y="90" font-size="10" fill="#333" text-anchor="end">«extend»</text>
+<ellipse cx="180" cy="182" rx="46" ry="16" fill="#e6f0fa" stroke="#1f5f99" stroke-width="1.6"/><text x="180" y="186" font-size="12" fill="#222" text-anchor="middle">요금을 결제한다</text>
+<ellipse cx="134" cy="246" rx="40" ry="15" fill="#e6f0fa" stroke="#1f5f99" stroke-width="1.6"/><text x="134" y="250" font-size="12" fill="#222" text-anchor="middle">카드 결제</text>
+<ellipse cx="230" cy="246" rx="42" ry="15" fill="#e6f0fa" stroke="#1f5f99" stroke-width="1.6"/><text x="230" y="250" font-size="12" fill="#222" text-anchor="middle">포인트 결제</text>
+<g stroke="#333" stroke-width="1.5" fill="none"><circle cx="34" cy="46" r="7" fill="#fff"/><path d="M34 53 L34 72 M24 60 L44 60 M34 72 L26 86 M34 72 L42 86"/></g>
+<text x="34" y="100" font-size="11" font-weight="700" fill="#222" text-anchor="middle">회원</text>
+<g stroke="#333" stroke-width="1.5" fill="none"><circle cx="34" cy="176" r="7" fill="#fff"/><path d="M34 183 L34 202 M24 190 L44 190 M34 202 L26 216 M34 202 L42 216"/></g>
+<text x="34" y="230" font-size="11" font-weight="700" fill="#222" text-anchor="middle">정기권</text><text x="34" y="244" font-size="11" font-weight="700" fill="#222" text-anchor="middle">회원</text>
+<rect x="298" y="162" width="58" height="40" rx="4" fill="#fdf6ea" stroke="#a35a00" stroke-width="1.5"/>
+<text x="327" y="178" font-size="10" fill="#7a4300" text-anchor="middle">«actor»</text><text x="327" y="194" font-size="10" font-weight="700" fill="#222" text-anchor="middle">결제대행사</text>
+<text x="327" y="218" font-size="10" fill="#7a4300" text-anchor="middle">시스템 액터</text>
+</svg><figcaption>그림 2. 씽씽 유스케이스 다이어그램. 액터는 경계 밖, 유스케이스는 경계 안. 포함은 기본 → 본인 인증, 확장은 쿠폰 적용 → 기본 쪽으로 점선 화살표가 향해요.</figcaption></figure>
+<p>그림 2에서 결제대행사를 보면 사람이 아닌데도 액터예요. 액터의 정의가 “시스템과 상호작용하는 사람 <b>또는 다른 시스템</b>의 역할”이기 때문이에요. 그런데 시험에는 “외부 시스템은 액터로 볼 수 없다”라는 선지가 꾸준히 나와요. 우리 결제를 묵묵히 승인해 주는 결제 대행사를 출제자가 일부러 서운하게 만드는 선지라고 기억하면, 다음에 보자마자 ‘틀림’에 동그라미를 칠 수 있어요.</p>
+<div class="box"><b>시험에는 이렇게 나와요</b>액터 설명 판정이 나와요(2회). ‘대상 시스템과 상호작용하는 사람이나 다른 시스템의 역할’은 맞고, ‘외부 시스템은 액터가 아니다’, ‘사용자 액터는 연동되는 외부 시스템이다’(시스템 액터와 뒤바꿈), ‘개발자가 요구를 뽑기 위한 그림’(사용자 관점이 아님)은 틀려요. 유스케이스 다이어그램의 구성요소가 <b>아닌</b> 것으로 <b>Operation</b>이 나오기도 해요 — 오퍼레이션은 클래스 다이어그램의 연산 칸(R02)이에요. UI 설계 쪽에서는 “사용자가 목표를 이루려고 수행할 내용을 기술한 것 = 유스케이스”가 정답이고, 프로토타입·스토리보드가 함정이에요.</div>
+
+<h2>③ 유스케이스 관계 4가지</h2>
+<p>유스케이스 다이어그램의 선은 아무렇게나 긋지 않아요. 액터와 유스케이스, 유스케이스와 유스케이스, 액터와 액터를 잇는 방식이 네 가지로 정해져 있어요. <b>연관</b>은 액터와 유스케이스가 상호작용한다는 뜻의 실선이고, <b>포함</b>과 <b>확장</b>은 유스케이스끼리 기능을 나눠 붙이는 점선 화살표, <b>일반화</b>는 비슷한 것들을 상위 개념으로 묶는 빈 삼각형 실선이에요.</p>
+<h3>연관(Association) 관계</h3>
+<p><b>연관 관계</b>는 유스케이스와 액터 사이에 상호작용이 있음을 나타내요. 실선 하나로 잇고, 보통 화살표는 없어요. 그림 2에서 회원과 ‘킥보드를 빌린다’를 잇는 선, 결제대행사와 ‘요금을 결제한다’를 잇는 선이 연관이에요. “이 액터가 이 기능을 쓴다(또는 이 기능에 관여한다)” 정도의 뜻이라 가장 기본적인 선이에요.</p>
+<h3>포함(Include) 관계</h3>
+<p><b>포함 관계</b>는 한 유스케이스가 실행될 때 다른 유스케이스의 실행을 <b>반드시 전제</b>로 하는 관계예요. 여러 유스케이스가 공통으로 쓰는 단계를 따로 떼어 내 재사용할 때 생겨요. 씽씽에서는 킥보드를 빌릴 때마다 본인 인증을 거치고, 정기권을 살 때도 본인 인증을 거쳐요. 그래서 ‘본인 인증’을 따로 유스케이스로 빼고, <b>기본 유스케이스에서 포함 유스케이스 쪽으로</b> 점선 화살표를 그은 뒤 «include»라고 적어요. 본인 인증을 빼 버리면 ‘킥보드를 빌린다’ 자체가 완성되지 않아요.</p>
+<h3>확장(Extend) 관계</h3>
+<p><b>확장 관계</b>는 기본 유스케이스를 수행하다가 <b>특정 조건을 만족할 때만</b> 확장 유스케이스가 추가로 수행되는 관계예요. 씽씽에서 ‘쿠폰 적용’은 회원에게 쿠폰이 있을 때만 끼어들어요. 쿠폰이 없어도 대여는 아무 문제 없이 끝나죠. 이때는 <b>확장 유스케이스에서 기본 유스케이스 쪽으로</b> 점선 화살표를 긋고 «extend»라고 적어요. 화살표 방향이 포함과 반대라는 게 포인트예요. 포함은 기본이 ‘너 없인 안 돼’ 하고 끌어당기는 쪽이고, 확장은 옵션이 ‘필요하면 나도 붙여 줘’ 하고 기본에 기대는 쪽이에요.</p>
+<p>패스트푸드로 비유하면 포함은 <b>세트 메뉴의 감자튀김</b>이에요. 세트를 시키면 묻지도 않고 무조건 따라 나와요. 확장은 계산대에서 듣는 <b>“치즈 추가하시겠어요?”</b>예요. 원할 때만 붙고, 안 붙여도 버거는 버거예요.</p>
+<h3>일반화(Generalization) 관계</h3>
+<p><b>일반화 관계</b>는 비슷한 유스케이스나 액터를 모아 추상화한 상위 유스케이스·액터와 연결해 이해를 돕는 관계예요. R02의 클래스 일반화와 같은 is-a 관계라서 표기도 같아요 — 구체적인 쪽에서 일반적인 쪽으로 <b>속이 빈 삼각형 실선 화살표</b>를 그어요. 그림 2에서 ‘카드 결제’와 ‘포인트 결제’는 둘 다 ‘요금을 결제한다’의 한 종류이고, 액터 ‘정기권 회원’은 ‘회원’의 한 종류예요. 정기권 회원은 회원이 할 수 있는 일을 모두 할 수 있으면서, 자기만의 유스케이스(예: 정기권 연장)를 더 가질 수 있어요.</p>
+<table class="tight"><tr><th>관계</th><th>뜻</th><th>표기</th><th>씽씽 예</th></tr>
+<tr><td>연관</td><td>액터와 유스케이스의 상호작용</td><td>실선</td><td>회원 — 킥보드를 빌린다</td></tr>
+<tr><td>포함</td><td>기본 실행에 항상 필요한 공통 기능</td><td>점선 화살표 «include», 기본 → 포함</td><td>킥보드를 빌린다 ┄> 본인 인증</td></tr>
+<tr><td>확장</td><td>특정 조건일 때만 덧붙는 기능</td><td>점선 화살표 «extend», 확장 → 기본</td><td>쿠폰 적용 ┄> 킥보드를 빌린다</td></tr>
+<tr><td>일반화</td><td>비슷한 유스케이스·액터의 상위 묶음</td><td>빈 삼각형 실선, 구체 → 일반</td><td>카드 결제 ─▷ 요금을 결제한다</td></tr></table>
+<figure><svg viewBox="0 0 360 176" font-family="sans-serif" role="img" aria-label="포함과 확장 비교 카드. 왼쪽 포함 카드: 위 킥보드를 빌린다에서 아래 본인 인증으로 점선 화살표 include, 기본에서 포함으로, 매번 반드시. 오른쪽 확장 카드: 아래 쿠폰 적용에서 위 킥보드를 빌린다로 점선 화살표 extend, 확장에서 기본으로, 조건일 때만. 아래 질문 빼면 기본이 못 돌아가나">
+<defs><marker id="r03o2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10" fill="none" stroke="#1f5f99" stroke-width="1.5"/></marker>
+<marker id="r03o3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10" fill="none" stroke="#a35a00" stroke-width="1.5"/></marker></defs>
+<rect width="360" height="176" rx="12" fill="#f7f7f4"/>
+<path d="M90 58 L90 92" fill="none" stroke="#1f5f99" stroke-width="1.6" stroke-dasharray="5 3" marker-end="url(#r03o2)"/>
+<path d="M270 94 L270 60" fill="none" stroke="#a35a00" stroke-width="1.6" stroke-dasharray="5 3" marker-end="url(#r03o3)"/>
+<rect x="8" y="8" width="164" height="140" rx="10" fill="#fff" stroke="#1f5f99" stroke-width="1.6"/>
+<rect x="188" y="8" width="164" height="140" rx="10" fill="#fff" stroke="#a35a00" stroke-width="1.6"/>
+<text x="90" y="26" font-size="13" font-weight="700" fill="#1f5f99" text-anchor="middle">포함 «include»</text>
+<text x="270" y="26" font-size="13" font-weight="700" fill="#7a4300" text-anchor="middle">확장 «extend»</text>
+<ellipse cx="90" cy="44" rx="54" ry="13" fill="#e6f0fa" stroke="#1f5f99" stroke-width="1.4"/><text x="90" y="48" font-size="11" fill="#222" text-anchor="middle">킥보드를 빌린다</text>
+<ellipse cx="90" cy="106" rx="44" ry="13" fill="#e6f0fa" stroke="#1f5f99" stroke-width="1.4"/><text x="90" y="110" font-size="11" fill="#222" text-anchor="middle">본인 인증</text>
+<ellipse cx="270" cy="46" rx="54" ry="13" fill="#fdf6ea" stroke="#a35a00" stroke-width="1.4"/><text x="270" y="50" font-size="11" fill="#222" text-anchor="middle">킥보드를 빌린다</text>
+<ellipse cx="270" cy="108" rx="44" ry="13" fill="#fdf6ea" stroke="#a35a00" stroke-width="1.4"/><text x="270" y="112" font-size="11" fill="#222" text-anchor="middle">쿠폰 적용</text>
+<text x="98" y="80" font-size="10" fill="#1f5f99">기본 → 포함</text>
+<text x="278" y="82" font-size="10" fill="#7a4300">확장 → 기본</text>
+<text x="90" y="138" font-size="11" font-weight="700" fill="#222" text-anchor="middle">매번 반드시</text>
+<text x="270" y="138" font-size="11" font-weight="700" fill="#222" text-anchor="middle">조건일 때만</text>
+<text x="180" y="168" font-size="12" font-weight="700" fill="#222" text-anchor="middle">빼면 기본이 못 돌아가나? 예 = 포함 · 아니요 = 확장</text>
+</svg><figcaption>그림 3. 포함과 확장은 둘 다 점선 화살표지만 방향과 조건이 반대예요.</figcaption></figure>
+<p><b>직접 판정해 보기.</b> 아래 세 장면에 그림 3의 질문을 던져 보세요. 오른쪽 칸을 손으로 가리고 먼저 답해 본 뒤 확인하면 돼요.</p>
+<table class="tight"><tr><th>장면</th><th>빼면 기본이 못 돌아가나?</th><th>관계</th></tr>
+<tr><td>‘킥보드를 반납한다’는 매번 ‘주차 사진 확인’을 거친다</td><td>예 — 사진 없이는 반납 확정 불가</td><td>포함</td></tr>
+<tr><td>‘킥보드를 빌린다’ 중 야간(22시 이후)에만 ‘안전 수칙 동의’가 뜬다</td><td>아니요 — 낮에는 안 뜬다</td><td>확장</td></tr>
+<tr><td>‘요금을 결제한다’를 수행하다 잔액이 모자랄 때만 ‘포인트 충전’이 실행된다</td><td>아니요 — 잔액이 충분하면 생략</td><td>확장</td></tr></table>
+<div class="trap">“기본 유스케이스를 수행하다가 <b>특별한 조건</b>일 때 수행하는 관계는?”에 <b>확장</b>이 답이에요(2회). 함정 선지 ‘연관·선택·특화’ 중 선택·특화는 유스케이스 관계 이름이 아니에요. “유스케이스 관계에 포함되지 <b>않는</b> 것”에는 <b>구체화</b>가 나와요. 관계는 연관·포함·확장·일반화 네 개뿐이라고 손가락으로 세어 두면 가짜 이름이 바로 튀어나와요.</div>
+
+<h2>④ 시퀀스 다이어그램 <span class="tag">기출 9회</span></h2>
+<p>유스케이스 다이어그램의 타원 ‘킥보드를 빌린다’는 한 줄이지만, 그 뒤에서는 앱·서버·결제 대행사·킥보드가 몇 번이나 말을 주고받아요. 이 대화를 순서대로 적어 두지 않으면 “결제가 먼저냐 잠금 해제가 먼저냐” 같은 문제를 코드를 다 짠 뒤에야 발견해요. 그래서 객체 사이의 대화를 시간 순서대로 펼쳐 보는 그림이 필요했어요.</p>
+<p><b>시퀀스 다이어그램</b>(Sequence Diagram)은 객체 사이의 상호작용을 <b>메시지 흐름</b>으로 표현한 다이어그램이에요. 우리말로 <b>순차 다이어그램</b>이라고도 해요. 그림을 읽는 규칙은 간단해요. <b>가로축</b>에는 대화에 참여하는 객체가 늘어서고, <b>세로축</b>은 위에서 아래로 흐르는 <b>시간</b>이에요. 위에 있는 메시지가 먼저 일어난 일이에요. 시간이 축으로 들어가 있으니 시퀀스 다이어그램은 당연히 <b>동적</b> 다이어그램이고, 상호작용 다이어그램 묶음의 대표 선수예요.</p>
+<h3>구성요소 — 객체 · 생명선 · 실행 · 메시지 · 회귀 메시지</h3>
+<p><b>객체</b>(Object)는 대화에 참여하는 인스턴스로, 그림 맨 위에 사각형으로 놓고 그 안에 <b>밑줄 친 이름</b>을 적어요. R02의 객체 다이어그램처럼 <code>K-17:킥보드</code>(객체 이름:클래스 이름) 꼴이고, 특정 객체가 아니면 <code>:대여서비스</code>처럼 클래스 이름만 써요.</p>
+<p><b>생명선</b>(Lifeline)은 객체에서 아래로 뻗은 <b>점선</b>이에요. 그 객체가 살아 있는 동안의 시간 흐름을 나타내고, 그 위에서 객체가 겪는 이벤트(메시지를 받고 보내는 일)가 차례로 표시돼요.</p>
+<p><b>실행</b>(Activation, 활성 박스)은 생명선 위에 얹은 <b>좁은 직사각형</b>이에요. 객체가 오퍼레이션(함수)을 실행하고 있는 구간을 뜻하고, 직사각형이 <b>길수록 오퍼레이션 수행 시간이 길다</b>는 뜻이에요. 대여서비스가 요청을 받아 결제를 기다리는 동안 내내 활성 박스가 길게 이어지는 식이에요.</p>
+<p><b>메시지</b>(Message)는 한 객체가 다른 객체에게 보내는 요청이에요. 보내는 생명선에서 받는 생명선으로 <b>화살표</b>를 긋고 위에 메시지 이름을 적어요. 메시지를 받은 객체는 그 이름의 오퍼레이션을 수행해요. 요청은 실선 화살표, 결과를 돌려주는 <b>응답</b>(Reply)은 점선 화살표로 구별해서 그리는 게 보통이에요.</p>
+<p><b>회귀 메시지</b>(Self-Message)는 객체가 <b>자기 자신의 메서드</b>를 호출하는 메시지예요. 자기 생명선에서 나가서 다시 자기 생명선으로 돌아오는 꺾인 화살표로 그려요. 대여서비스가 대여 요청을 받고 결제 대행사에 묻기 전에 자기 안의 <code>요금계산()</code>을 부르는 장면이 회귀 메시지예요. 다른 객체에게 묻지 않고 “요금이 얼마더라…” 하고 혼잣말하는 화살표라고 생각하면 모양이 바로 떠올라요.</p>
+<p>여기에 하나를 더 알아 두면 좋아요. 메시지 몇 개를 큰 사각형으로 둘러싸고 왼쪽 위에 연산자를 적은 <b>프레임</b>(결합 조각, Combined Fragment)이에요. <code>alt</code>는 조건에 따라 갈라지는 if-else(결제 승인 / 거절), <code>opt</code>는 조건이 맞을 때만 하는 if(쿠폰이 있으면), <code>loop</code>는 반복(주행 중 10초마다 위치 전송)이에요. 기출 선지에 ‘제어 블록’이라는 이름으로 시퀀스 구성 항목에 등장한 적이 있어요.</p>
+<table class="tight"><tr><th>구성요소</th><th>뜻</th><th>표기</th></tr>
+<tr><td>객체</td><td>대화에 참여하는 인스턴스</td><td>위쪽 사각형, 밑줄 친 이름</td></tr>
+<tr><td>생명선</td><td>객체가 존재하는 시간 흐름, 그 위에 이벤트 표시</td><td>객체 아래로 뻗은 점선</td></tr>
+<tr><td>실행(활성 박스)</td><td>오퍼레이션을 실행 중인 구간, 길수록 오래</td><td>생명선 위 좁은 직사각형</td></tr>
+<tr><td>메시지</td><td>객체 사이의 요청 → 받는 쪽이 오퍼레이션 수행</td><td>화살표(요청 실선, 응답 점선)</td></tr>
+<tr><td>회귀 메시지</td><td>자기 자신의 메서드 호출</td><td>자기 생명선으로 돌아오는 화살표</td></tr>
+<tr><td>프레임(결합 조각)</td><td>조건·반복 구간 묶기</td><td>사각형 + alt·opt·loop 표시</td></tr></table>
+<figure><svg viewBox="0 0 360 292" font-family="sans-serif" role="img" aria-label="시퀀스 다이어그램 해부도. 왼쪽 콜론 대여서비스 객체와 오른쪽 K-17 콜론 킥보드 객체가 위에 있고 아래로 점선 생명선. 대여서비스 생명선에 긴 활성 박스, 자기에게 돌아오는 요금계산 회귀 메시지. alt 결제 승인 프레임 안에서 잠금해제 실선 메시지가 킥보드로, 해제됨 점선 응답이 돌아옴. 번호 1부터 7까지 객체, 생명선, 실행, 회귀 메시지, 메시지, 응답, 프레임 범례">
+<defs><marker id="r03f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#333"/></marker>
+<marker id="r03o4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10" fill="none" stroke="#333" stroke-width="1.5"/></marker></defs>
+<rect width="360" height="292" rx="12" fill="#f7f7f4"/>
+<path d="M85 42 L85 222" fill="none" stroke="#666" stroke-width="1.3" stroke-dasharray="5 4"/>
+<path d="M245 42 L245 222" fill="none" stroke="#666" stroke-width="1.3" stroke-dasharray="5 4"/>
+<path d="M91 74 L116 74 L116 96 L93 96" fill="none" stroke="#333" stroke-width="1.4" marker-end="url(#r03f)"/>
+<path d="M91 146 L237 146" fill="none" stroke="#333" stroke-width="1.4" marker-end="url(#r03f)"/>
+<path d="M239 172 L93 172" fill="none" stroke="#333" stroke-width="1.4" stroke-dasharray="5 3" marker-end="url(#r03o4)"/>
+<rect x="30" y="14" width="110" height="28" rx="2" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<text x="85" y="33" font-size="12" fill="#222" text-anchor="middle" text-decoration="underline">:대여서비스</text>
+<rect x="190" y="14" width="110" height="28" rx="2" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<text x="245" y="33" font-size="12" fill="#222" text-anchor="middle" text-decoration="underline">K-17:킥보드</text>
+<rect x="79" y="60" width="12" height="150" fill="#e6f0fa" stroke="#1f5f99" stroke-width="1.4"/>
+<rect x="239" y="140" width="12" height="36" fill="#e6f0fa" stroke="#1f5f99" stroke-width="1.4"/>
+<text x="122" y="89" font-size="11" fill="#222">요금계산()</text>
+<rect x="56" y="114" width="262" height="86" fill="none" stroke="#888" stroke-width="1.3"/>
+<path d="M56 114 L88 114 L88 124 L82 130 L56 130 z" fill="#fff" stroke="#888" stroke-width="1.3"/>
+<text x="64" y="126" font-size="10" font-weight="700" fill="#333">alt</text>
+<text x="96" y="127" font-size="10" fill="#333">[결제 승인]</text>
+<text x="165" y="141" font-size="11" fill="#222" text-anchor="middle">잠금해제()</text>
+<text x="165" y="167" font-size="11" fill="#222" text-anchor="middle">해제됨</text>
+<g font-size="10" font-weight="700" fill="#fff" text-anchor="middle">
+<circle cx="18" cy="28" r="8" fill="#1f5f99"/><text x="18" y="32">1</text>
+<circle cx="258" cy="206" r="8" fill="#1f5f99"/><text x="258" y="210">2</text>
+<circle cx="66" cy="72" r="8" fill="#1f5f99"/><text x="66" y="76">3</text>
+<circle cx="190" cy="85" r="8" fill="#1f5f99"/><text x="190" y="89">4</text>
+<circle cx="208" cy="137" r="8" fill="#1f5f99"/><text x="208" y="141">5</text>
+<circle cx="196" cy="163" r="8" fill="#1f5f99"/><text x="196" y="167">6</text>
+<circle cx="332" cy="122" r="8" fill="#1f5f99"/><text x="332" y="126">7</text></g>
+<text x="14" y="252" font-size="11" fill="#222">1 객체(밑줄 이름)  2 생명선(점선)  3 실행(활성 박스)</text>
+<text x="14" y="270" font-size="11" fill="#222">4 회귀 메시지  5 메시지(실선)  6 응답(점선)  7 프레임</text>
+</svg><figcaption>그림 4. 시퀀스 다이어그램 해부도. 세로로 내려갈수록 나중 일이에요. 4번 회귀 메시지는 자기 생명선으로 돌아와요.</figcaption></figure>
+<p>이제 구성요소를 다 알았으니 대여 한 번을 통째로 그려 봐요. 그림 5는 회원이 QR을 찍은 순간부터 화면에 ‘대여 시작’이 뜰 때까지예요. 위에서 아래로 읽으면서 화살표 하나하나가 어느 객체의 어떤 오퍼레이션을 깨우는지 따라가 보세요.</p>
+<div class="figwide"><figure class="mermaid"><img src="../assets/acf3ba99a83f46bc.png" alt="도식" loading="lazy" style="width:784px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption><figcaption>그림 5. 씽씽 대여 장면의 시퀀스 다이어그램. 대여서비스의 활성 박스가 가장 길어요 — 요청을 받은 뒤 결제와 잠금 해제가 끝날 때까지 일하고 있으니까요.</figcaption></figure></div>
+<div class="steps" data-title="대여 시퀀스가 한 메시지씩 쌓이는 과정"><div class="step"><table class="tight"><tr><th>순서</th><th>메시지</th><th>구성요소</th></tr><tr class="hi"><td>①</td><td>회원 → 대여앱: QR 스캔</td><td>메시지, 대여앱 활성 박스 시작</td></tr></table><p class="cap">맨 위 첫 화살표. 이제 대여앱이 일하기 시작했으니 생명선 위에 활성 박스가 생겨요.</p></div><div class="step"><table class="tight"><tr><th>순서</th><th>메시지</th><th>구성요소</th></tr><tr><td>①</td><td>QR 스캔</td><td>메시지</td></tr><tr class="hi"><td>②</td><td>대여앱 → 대여서비스: 대여요청(K-17)</td><td>메시지, 대여서비스 활성 박스 시작</td></tr></table><p class="cap">한 칸 아래 = 조금 뒤. 대여서비스가 요청을 받아 오퍼레이션을 실행해요.</p></div><div class="step"><table class="tight"><tr><th>순서</th><th>메시지</th><th>구성요소</th></tr><tr><td>①~②</td><td>QR 스캔 · 대여요청</td><td>메시지</td></tr><tr class="hi"><td>③</td><td>대여서비스 → 대여서비스: 요금계산()</td><td><b>회귀 메시지</b></td></tr></table><p class="cap">남에게 묻지 않고 자기 메서드를 불러요. 화살표가 자기 생명선으로 돌아와요.</p></div><div class="step"><table class="tight"><tr><th>순서</th><th>메시지</th><th>구성요소</th></tr><tr><td>①~③</td><td>QR · 대여요청 · 요금계산</td><td>메시지 · 회귀</td></tr><tr class="hi"><td>④</td><td>대여서비스 → 결제대행사: 결제승인요청</td><td>메시지(시스템 액터 쪽 객체로)</td></tr></table><p class="cap">유스케이스 다이어그램의 시스템 액터가 시퀀스에서는 생명선 하나가 돼요.</p></div><div class="step"><table class="tight"><tr><th>순서</th><th>메시지</th><th>구성요소</th></tr><tr><td>①~④</td><td>요청 · 계산 · 결제 요청</td><td>메시지 · 회귀</td></tr><tr class="hi"><td>⑤</td><td>[승인] 승인 응답 → 잠금해제() / [거절] 실패 안내</td><td><b>alt 프레임</b>, 응답(점선)</td></tr></table><p class="cap">결과가 둘로 갈리니 사각형 프레임으로 묶고 칸막이로 나눠요. if-else를 그림으로 쓴 셈이에요.</p></div><div class="step"><table class="tight"><tr><th>순서</th><th>메시지</th><th>구성요소</th></tr><tr><td>①~⑤</td><td>요청 · 계산 · 결제 · 분기</td><td>메시지 · 회귀 · 프레임</td></tr><tr class="hi"><td>⑥</td><td>대여서비스 → 대여앱: 대여 시작 → 회원에게 결과 화면</td><td>응답, 활성 박스들이 차례로 끝남</td></tr></table><p class="cap">아래에서 위로 일이 끝나며 활성 박스가 닫혀요. 그림 5가 완성됐어요.</p></div></div>
+<p>같은 내용을 객체 배치 중심으로 다시 그리면 ⑥절의 커뮤니케이션 다이어그램이 돼요. 그러니 시퀀스와 커뮤니케이션은 같은 이야기를 다른 카메라 앵글로 찍은 것이라고 기억해 두세요.</p>
+<div class="box"><b>시험에는 이렇게 나와요</b>가장 많이 나오는 각도는 “시퀀스 다이어그램의 구성 항목이 <b>아닌</b> 것”이에요(4회). 생명선·실행·메시지 사이에 <b>확장(Extend)</b>이 끼어 있으면 그게 답이에요 — 확장은 ③절의 유스케이스 관계 이름이죠. 회귀 메시지·제어 블록(프레임)은 구성 항목이 맞아요. 다음은 시퀀스의 성격 판정(6회)이에요. “정적 다이어그램에 가깝다”, “주로 시스템의 정적 측면을 모델링한다”는 <b>틀린</b> 선지이고, “세로축이 시간”, “교류(상호작용) 다이어그램의 한 종류”, “객체 간 동적 상호작용을 시간 개념으로”는 맞는 선지예요. 거꾸로 “정적 다이어그램이 아닌 것”을 물으면 <b>순차(시퀀스)</b>가 답이에요.</div>
+
+<h2>⑤ 상태 다이어그램 <span class="tag">기출 2회</span></h2>
+<p>대여 시퀀스를 그려 놓고 보면 새 걱정이 생겨요. 이미 누가 타고 있는 킥보드에 또 대여 요청이 들어오면? 점검 중인 킥보드의 QR을 찍으면? 이런 질문은 메시지 순서가 아니라 <b>킥보드 한 대의 처지</b>에 관한 질문이에요. 킥보드가 지금 어떤 상태이고, 무슨 일이 생기면 어느 상태로 넘어갈 수 있는지를 따로 그려 둬야 잘못된 전이를 막을 수 있어요.</p>
+<p><b>상태 다이어그램</b>(State Diagram)은 하나의 객체가 자기가 속한 클래스의 상태를 어떻게 바꾸는지, 또는 다른 객체와의 상호작용에 따라 상태가 어떻게 변하는지를 표현한 다이어그램이에요. 상태를 바꾸는 계기는 <b>이벤트</b>예요. 시퀀스가 여러 객체 사이의 대화를 찍는다면, 상태 다이어그램은 <b>객체 하나</b>의 일생을 찍어요. 킥보드의 하루 일기라고 보면 돼요. “오후 3시, QR이 찍혀서 대여 중이 됐다. 3시 20분, 반납돼서 다시 대기로 돌아왔다. 저녁 7시, 배터리가 20% 밑으로 떨어져 충전 필요가 됐다.”</p>
+<h3>구성요소 6가지</h3>
+<p><b>상태</b>(State)는 객체가 존재할 수 있는 조건, 즉 객체가 머물러 있는 처지예요. <b>둥근 모서리 사각형</b> 안에 상태 이름을 적어요. 킥보드의 ‘대기’, ‘대여 중’, ‘일시 정지’, ‘충전 필요’, ‘점검’이 상태예요.</p>
+<p><b>시작 상태</b>(Initial State)는 객체의 일생이 시작되는 지점으로 <b>속이 채워진 원</b>으로 그려요. <b>종료 상태</b>(Final State)는 객체의 일생이 끝나는 지점으로 <b>원 안에 속이 채워진 원</b>(이중 원)으로 그려요. 킥보드는 등록되는 순간 시작 상태에서 ‘대기’로 들어가고, 폐기되면 종료 상태에 도착해요.</p>
+<p>한 상태에서 다른 상태로 옮겨 가는 일 자체를 <b>전이</b>(Transition)라고 해요. 그림에서는 출발 상태에서 도착 상태로 향하는 <b>화살표</b>예요. <b>이벤트</b>(Event)는 상태 변화를 <b>일으키는 현상</b>이에요. 전이 화살표 위에 이벤트 이름을 적어요. 이벤트는 회원의 QR 스캔 같은 외부 신호일 수도, ‘배터리 20% 미만’ 같은 조건의 충족일 수도, ‘30분 경과’ 같은 시간의 흐름일 수도 있어요. <b>전이 조건</b>(Transition Condition, 가드)은 이벤트가 일어났을 때 전이가 실제로 일어나려면 만족해야 하는 조건으로, 참·거짓을 내는 불린 식을 대괄호 <code>[ ]</code> 안에 적어요. ‘QR 스캔 [결제 승인됨]’이라고 쓰면, QR이 찍혀도 결제가 승인된 경우에만 대여 중으로 넘어가요.</p>
+<p>이벤트와 전이는 원인과 결과의 짝이에요. QR 스캔이라는 <b>이벤트</b>가 원인이고, 대기에서 대여 중으로 넘어가는 <b>전이</b>가 결과예요. 시험이 “상태 전이를 일으키는 요인은?”이라고 물으면 결과(전이)가 아니라 원인(이벤트)을 골라야 해요.</p>
+<table class="tight"><tr><th>구성요소</th><th>뜻</th><th>표기</th><th>킥보드 예</th></tr>
+<tr><td>상태</td><td>객체가 존재할 수 있는 조건</td><td>둥근 사각형</td><td>대기, 대여 중, 충전 필요</td></tr>
+<tr><td>시작 상태</td><td>일생의 시작</td><td>속이 채워진 원</td><td>킥보드 등록</td></tr>
+<tr><td>종료 상태</td><td>일생의 끝</td><td>원 안에 채워진 원</td><td>폐기</td></tr>
+<tr><td>전이</td><td>상태가 다른 상태로 바뀌는 현상</td><td>화살표</td><td>대기 → 대여 중</td></tr>
+<tr><td>이벤트</td><td>상태 변화를 일으키는 현상(신호·조건·시간)</td><td>전이 위에 이름</td><td>QR 스캔, 반납, 배터리 20% 미만</td></tr>
+<tr><td>전이 조건</td><td>전이가 일어나기 위한 불린 식</td><td><code>[조건]</code></td><td>[결제 승인됨], [주차 구역 안]</td></tr></table>
+<div class="figwide"><figure class="mermaid"><img src="../assets/6033c45078e830bb.png" alt="도식" loading="lazy" style="width:735px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption><figcaption>그림 6. 킥보드 K-17의 상태 다이어그램. 화살표 위 글씨가 이벤트, 대괄호가 전이 조건이에요. ‘대여중’에서 나가는 화살표에 ‘QR 스캔’이 없으니, 타고 있는 킥보드를 또 빌리는 전이는 처음부터 존재하지 않아요.</figcaption></figure></div>
+<div class="steps" data-title="킥보드 K-17의 상태 따라가기"><div class="step"><table class="tight"><tr><th>지금 상태</th><th>이벤트 [전이 조건]</th><th>전이 후</th></tr><tr class="hi"><td>대기</td><td>QR 스캔 [결제 승인됨]</td><td>대여 중</td></tr></table><p class="cap">이벤트(QR 스캔)가 일어나고 전이 조건(결제 승인)이 참이라서 전이가 일어났어요.</p></div><div class="step"><table class="tight"><tr><th>지금 상태</th><th>이벤트 [전이 조건]</th><th>전이 후</th></tr><tr><td>대기</td><td>QR 스캔 [결제 승인됨]</td><td>대여 중</td></tr><tr class="hi"><td>대여 중</td><td>일시 정지 버튼</td><td>일시 정지</td></tr></table><p class="cap">편의점에 잠깐 들른 지수. 조건 없이 이벤트만으로 넘어가는 전이예요.</p></div><div class="step"><table class="tight"><tr><th>지금 상태</th><th>이벤트 [전이 조건]</th><th>전이 후</th></tr><tr><td>대여 중</td><td>일시 정지 버튼</td><td>일시 정지</td></tr><tr class="hi"><td>일시 정지</td><td>다시 출발</td><td>대여 중</td></tr></table><p class="cap">같은 두 상태 사이를 오가는 전이는 화살표가 두 개(방향마다 하나)예요.</p></div><div class="step"><table class="tight"><tr><th>지금 상태</th><th>이벤트 [전이 조건]</th><th>전이 후</th></tr><tr><td>일시 정지</td><td>다시 출발</td><td>대여 중</td></tr><tr class="hi"><td>대여 중</td><td>반납 [주차 구역 안]</td><td>대기</td></tr></table><p class="cap">주차 구역 밖에서 반납을 누르면? 이벤트는 일어났지만 전이 조건이 거짓이라 대여 중에 그대로 머물러요.</p></div><div class="step"><table class="tight"><tr><th>지금 상태</th><th>이벤트 [전이 조건]</th><th>전이 후</th></tr><tr><td>대여 중</td><td>반납 [주차 구역 안]</td><td>대기</td></tr><tr class="hi"><td>대기</td><td>배터리 20% 미만</td><td>충전 필요</td></tr></table><p class="cap">사람이 아니라 조건 충족이 이벤트가 된 경우예요. 이렇게 이벤트에는 신호·조건·시간이 모두 올 수 있어요.</p></div></div>
+<div class="box"><b>시험에는 이렇게 나와요</b>“상태 다이어그램에서 객체 상태 전이를 일으키는 요인”으로 <b>이벤트(Event)</b>를 고르는 문제가 나와요. 함정 선지 State·Message·Transition 중 Transition(전이)은 결과로 일어나는 현상이고, Message는 시퀀스의 구성요소예요. 또 책이 강조하는 짝이 <b>상태 다이어그램 = 럼바우 객체 지향 분석의 동적 모델링</b>이에요(객체 다이어그램·DFD가 함정). 럼바우 방법론은 R10에서 자세히 다뤄요.</div>
+<div class="trap">설명을 서로 바꿔 놓는 짝 바꾸기 함정을 조심하세요(3회). “상태 다이어그램은 객체 사이의 메시지 교환을 보여 주고, 시퀀스 다이어그램은 한 객체의 상태 변화를 보여 준다”는 둘을 뒤바꾼 <b>틀린</b> 설명이에요. 여럿의 대화 = 시퀀스, 하나의 일생 = 상태.</div>
+
+<h2>⑥ 커뮤니케이션 다이어그램</h2>
+<div class="duo"><div><p>시퀀스 다이어그램은 시간 순서를 보기엔 좋지만, 객체가 많아지면 가로로 끝없이 늘어나서 “누가 누구와 직접 연결돼 있는지”가 잘 안 보여요. 대여서비스가 앱·결제대행사·킥보드 셋과 모두 이어진 허브라는 사실은 그림 5만 봐서는 바로 안 들어오죠. 이 연결 구조를 드러내려고 같은 상호작용을 다른 모양으로 그린 게 커뮤니케이션 다이어그램이에요.</p>
+<p><b>커뮤니케이션 다이어그램</b>(Communication Diagram)은 시퀀스 다이어그램처럼 객체 사이의 메시지를 표현하면서, 객체들 사이의 <b>연관(링크)</b>까지 함께 보여 주는 다이어그램이에요. 객체를 시간축에 줄 세우지 않고 평면에 자유롭게 배치한 뒤, 서로 연결된 객체끼리 실선(링크)으로 잇고, 그 링크 옆에 메시지와 방향 화살표를 적어요. 시간축이 없으니 순서는 <b>번호</b>로 표시해요. <code>1</code> 다음에 <code>1.1</code>, <code>1.2</code>처럼 소수점 번호를 쓰면 “1번 메시지를 처리하는 중에 일어난 하위 메시지”라는 중첩까지 나타낼 수 있어요. UML 1.x에서는 <b>협력(Collaboration) 다이어그램</b>이라고 불렀어요.</p></div><figure><svg viewBox="0 0 360 220" font-family="sans-serif" role="img" aria-label="씽씽 대여 커뮤니케이션 다이어그램. 왼쪽 콜론 대여앱, 가운데 콜론 대여서비스, 오른쪽 위 K-17 콜론 킥보드, 오른쪽 아래 콜론 결제대행사 객체. 대여앱과 대여서비스, 대여서비스와 킥보드, 대여서비스와 결제대행사가 실선 링크로 연결. 메시지 1 대여요청 K-17, 1.1 요금계산 자기 자신 링크, 1.2 결제승인요청, 1.3 잠금해제가 번호와 화살표로 표시">
+<rect width="360" height="220" rx="12" fill="#f7f7f4"/>
+<path d="M94 110 L136 110" fill="none" stroke="#333" stroke-width="1.5"/>
+<path d="M232 102 L262 46" fill="none" stroke="#333" stroke-width="1.5"/>
+<path d="M232 118 L262 176" fill="none" stroke="#333" stroke-width="1.5"/>
+<path d="M170 125 L170 148 L198 148 L198 125" fill="none" stroke="#333" stroke-width="1.5"/>
+<rect x="8" y="95" width="86" height="30" rx="2" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<text x="51" y="115" font-size="12" fill="#222" text-anchor="middle" text-decoration="underline">:대여앱</text>
+<rect x="136" y="95" width="96" height="30" rx="2" fill="#e6f0fa" stroke="#1f5f99" stroke-width="1.8"/>
+<text x="184" y="115" font-size="12" fill="#222" text-anchor="middle" text-decoration="underline">:대여서비스</text>
+<rect x="262" y="22" width="92" height="30" rx="2" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<text x="308" y="42" font-size="12" fill="#222" text-anchor="middle" text-decoration="underline">K-17:킥보드</text>
+<rect x="262" y="170" width="92" height="30" rx="2" fill="#fdf6ea" stroke="#a35a00" stroke-width="1.5"/>
+<text x="308" y="190" font-size="12" fill="#222" text-anchor="middle" text-decoration="underline">:결제대행사</text>
+<text x="70" y="84" font-size="11" fill="#1f5f99" font-weight="700">1: 대여요청(K-17) →</text>
+<text x="184" y="166" font-size="11" fill="#1f5f99" font-weight="700" text-anchor="middle">1.1: 요금계산() ↺</text>
+<text x="240" y="208" font-size="11" fill="#1f5f99" font-weight="700" text-anchor="end">1.2: 결제승인요청() ↘</text>
+<text x="244" y="64" font-size="11" fill="#1f5f99" font-weight="700" text-anchor="end">1.3: 잠금해제() ↗</text>
+</svg><figcaption>그림 7. 그림 5와 같은 대여 장면을 커뮤니케이션 다이어그램으로. 시간축 대신 번호(1 → 1.1 → 1.2 → 1.3)가 순서를 말해 주고, 실선 링크가 ‘누가 누구와 연결돼 있나’를 보여 줘요.</figcaption></figure></div>
+
+<p>그림 5와 그림 7을 나란히 두면 차이가 분명해요. 정보는 거의 같지만, 시퀀스는 <b>언제</b>(시간 순서)가 잘 보이고 커뮤니케이션은 <b>누구와 누가 연결돼 있나</b>(구조)가 잘 보여요. 그래서 둘 중 무엇을 그릴지는 “지금 알고 싶은 게 순서냐 연결이냐”로 정해요.</p>
+<div class="trap">“메시지뿐 아니라 객체 사이의 연관까지 표현한다”는 설명은 <b>커뮤니케이션</b> 다이어그램의 것이에요. 기출에서는 이 문장을 <b>클래스</b> 다이어그램 앞에 붙여 틀린 선지로 만들었어요. 같은 문항에서 “활동 = 처리 로직·조건에 따른 흐름”, “배치 = 물리 요소의 위치”, “유스케이스 = 사용자 관점의 기능 모델링”은 맞는 짝이었어요.</div>
+
+<h2>⑦ 활동 · 상호작용 개요 · 타이밍</h2>
+<p>남은 셋은 책에서 행위 다이어그램 표 한 줄씩만 다루는 다이어그램이에요. 그래서 시험도 주로 “이 설명은 어느 다이어그램인가”를 묻는 수준이에요. 정의를 정확히 잡고, 씽씽 장면 하나씩으로 모양을 익혀 두면 충분해요.</p>
+<h3>활동 다이어그램(Activity Diagram)</h3>
+<div class="duo"><div><p><b>활동 다이어그램</b>은 시스템이 어떤 기능을 수행할 때의 <b>처리 로직</b>과 <b>조건에 따른 처리 흐름</b>을 순서대로 표현한 다이어그램이에요. 객체 사이의 메시지가 아니라 ‘무엇을 한 다음 무엇을 하나’라는 일의 흐름이 주인공이라서, 순서도(flowchart)와 많이 닮았어요. 구성은 시작 노드(채운 원)에서 출발해, 할 일을 적은 <b>액션</b>(둥근 사각형), 조건에 따라 갈라지는 <b>결정 노드</b>(마름모), 갈라진 흐름이 다시 만나는 병합 노드를 거쳐 종료 노드(이중 원)에 도착해요. 순서도와 다른 점은 둘이에요. 굵은 막대 하나로 흐름을 여러 갈래로 동시에 나누는 <b>포크</b>(Fork)와 다시 합치는 <b>조인</b>(Join)으로 <b>병렬 처리</b>를 그릴 수 있고, 세로 칸(<b>스윔레인</b>, Swimlane)으로 “누가 그 일을 하는지”를 나눌 수 있어요. 아래는 씽씽 반납 처리예요.</p></div><figure><svg viewBox="0 0 360 362" font-family="sans-serif" role="img" aria-label="씽씽 반납 처리 활동 다이어그램. 회원, 앱, 서버 세 스윔레인. 회원 칸 시작 노드에서 주차하고 사진 찍기, 앱 칸 사진 판독, 결정 마름모 주차 구역 안. 아니요면 회원 칸 다른 곳으로 이동 후 다시 사진 찍기. 예면 포크 막대에서 앱 칸 요금 결제 요청과 서버 칸 킥보드 잠금 명령이 병렬로 진행, 조인 막대에서 합쳐져 서버 칸 대여 종료 기록, 종료 노드">
+<defs><marker id="r03f2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#333"/></marker></defs>
+<rect width="360" height="362" rx="12" fill="#f7f7f4"/>
+<rect x="4" y="4" width="116" height="354" fill="#fff" stroke="#999" stroke-width="1"/>
+<rect x="120" y="4" width="118" height="354" fill="#fbfcfe" stroke="#999" stroke-width="1"/>
+<rect x="238" y="4" width="118" height="354" fill="#fff" stroke="#999" stroke-width="1"/>
+<text x="62" y="20" font-size="12" font-weight="700" fill="#222" text-anchor="middle">회원</text>
+<text x="179" y="20" font-size="12" font-weight="700" fill="#222" text-anchor="middle">앱</text>
+<text x="297" y="20" font-size="12" font-weight="700" fill="#222" text-anchor="middle">서버</text>
+<path d="M62 54 L62 66" fill="none" stroke="#333" stroke-width="1.4" marker-end="url(#r03f2)"/>
+<path d="M110 83 L132 83" fill="none" stroke="#333" stroke-width="1.4" marker-end="url(#r03f2)"/>
+<path d="M179 98 L179 118" fill="none" stroke="#333" stroke-width="1.4" marker-end="url(#r03f2)"/>
+<path d="M157 136 L112 136" fill="none" stroke="#333" stroke-width="1.4" marker-end="url(#r03f2)"/>
+<path d="M62 121 L62 100" fill="none" stroke="#333" stroke-width="1.4" marker-end="url(#r03f2)"/>
+<path d="M179 152 L179 176" fill="none" stroke="#333" stroke-width="1.4" marker-end="url(#r03f2)"/>
+<path d="M179 184 L179 202" fill="none" stroke="#333" stroke-width="1.4" marker-end="url(#r03f2)"/>
+<path d="M297 184 L297 202" fill="none" stroke="#333" stroke-width="1.4" marker-end="url(#r03f2)"/>
+<path d="M179 234 L179 256" fill="none" stroke="#333" stroke-width="1.4" marker-end="url(#r03f2)"/>
+<path d="M297 234 L297 256" fill="none" stroke="#333" stroke-width="1.4" marker-end="url(#r03f2)"/>
+<path d="M297 264 L297 278" fill="none" stroke="#333" stroke-width="1.4" marker-end="url(#r03f2)"/>
+<path d="M297 310 L297 326" fill="none" stroke="#333" stroke-width="1.4" marker-end="url(#r03f2)"/>
+<circle cx="62" cy="45" r="8" fill="#222"/>
+<text x="76" y="49" font-size="10" fill="#444">시작</text>
+<rect x="14" y="68" width="96" height="30" rx="12" fill="#e6f0fa" stroke="#1f5f99" stroke-width="1.4"/><text x="62" y="87" font-size="11" fill="#222" text-anchor="middle">주차하고 사진</text>
+<rect x="134" y="68" width="90" height="30" rx="12" fill="#e6f0fa" stroke="#1f5f99" stroke-width="1.4"/><text x="179" y="87" font-size="11" fill="#222" text-anchor="middle">사진 판독</text>
+<path d="M179 120 L201 136 L179 152 L157 136 z" fill="#fff" stroke="#a35a00" stroke-width="1.6"/>
+<text x="206" y="134" font-size="10" fill="#7a4300">주차</text><text x="206" y="146" font-size="10" fill="#7a4300">구역 안?</text>
+<text x="134" y="130" font-size="10" fill="#333" text-anchor="middle">[아니요]</text>
+<rect x="14" y="121" width="96" height="30" rx="12" fill="#e6f0fa" stroke="#1f5f99" stroke-width="1.4"/><text x="62" y="140" font-size="11" fill="#222" text-anchor="middle">다른 곳으로 이동</text>
+<text x="186" y="168" font-size="10" fill="#333">[예]</text>
+<rect x="150" y="177" width="180" height="6" fill="#222"/>
+<text x="334" y="184" font-size="10" fill="#444">포크</text>
+<rect x="134" y="204" width="90" height="30" rx="12" fill="#e6f0fa" stroke="#1f5f99" stroke-width="1.4"/><text x="179" y="223" font-size="11" fill="#222" text-anchor="middle">요금 결제 요청</text>
+<rect x="250" y="204" width="94" height="30" rx="12" fill="#e6f0fa" stroke="#1f5f99" stroke-width="1.4"/><text x="297" y="223" font-size="11" fill="#222" text-anchor="middle">킥보드 잠금</text>
+<rect x="150" y="257" width="180" height="6" fill="#222"/>
+<text x="334" y="264" font-size="10" fill="#444">조인</text>
+<rect x="250" y="280" width="94" height="30" rx="12" fill="#e6f0fa" stroke="#1f5f99" stroke-width="1.4"/><text x="297" y="299" font-size="11" fill="#222" text-anchor="middle">대여 종료 기록</text>
+<circle cx="297" cy="337" r="10" fill="#fff" stroke="#222" stroke-width="1.6"/><circle cx="297" cy="337" r="5.5" fill="#222"/>
+<text x="283" y="341" font-size="10" fill="#444" text-anchor="end">종료</text>
+</svg><figcaption>그림 8. 반납 처리 활동 다이어그램. 마름모가 조건 분기, 굵은 막대 두 개가 병렬의 시작(포크)과 끝(조인), 세로 칸이 스윔레인이에요.</figcaption></figure></div>
+
+<p>활동 다이어그램과 상태 다이어그램은 둘 다 둥근 사각형과 화살표를 써서 겉모습이 비슷해요. 가르는 기준은 둥근 사각형 안에 들어간 말이에요. ‘사진 판독’, ‘요금 결제 요청’처럼 <b>하는 일</b>(동사)이 들어가면 활동, ‘대기’, ‘대여 중’처럼 <b>머무는 처지</b>(상태)가 들어가면 상태 다이어그램이에요. 유스케이스와도 구별해 두세요. 유스케이스는 ‘반납한다’라는 기능이 <b>있다</b>는 것만 보여 주고, 활동은 그 기능 안에서 일이 <b>어떤 순서로</b> 흐르는지를 보여 줘요.</p>
+<h3>상호작용 개요 다이어그램(Interaction Overview Diagram)</h3>
+<div class="duo"><div><p><b>상호작용 개요 다이어그램</b>은 여러 상호작용 다이어그램 사이의 <b>제어 흐름</b>을 표현한 다이어그램이에요. 모양은 활동 다이어그램과 같지만, 노드 하나하나가 액션이 아니라 작은 시퀀스 다이어그램(상호작용 조각)이에요. 씽씽의 이용 전체를 ‘대여’ 시퀀스 → ‘주행’ 시퀀스 → ‘반납’ 시퀀스로 잇는 지도를 생각하면 돼요. 시퀀스 다이어그램 여러 장을 한 장으로 묶어 보는 목차 같은 그림이에요.</p></div><figure><svg viewBox="0 0 360 160" font-family="sans-serif" role="img" aria-label="상호작용 개요 다이어그램. 시작 노드에서 sd 대여, sd 주행, sd 반납 세 프레임이 화살표로 이어지고 종료 노드로 끝남. 각 프레임 안에는 두 생명선과 요청, 응답 메시지가 있는 작은 시퀀스 조각">
+<defs><marker id="r03f3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#333"/></marker></defs>
+<rect width="360" height="160" rx="12" fill="#f7f7f4"/>
+<path d="M21 70 L32 70" fill="none" stroke="#333" stroke-width="1.4" marker-end="url(#r03f3)"/>
+<path d="M124 70 L138 70" fill="none" stroke="#333" stroke-width="1.4" marker-end="url(#r03f3)"/>
+<path d="M230 70 L244 70" fill="none" stroke="#333" stroke-width="1.4" marker-end="url(#r03f3)"/>
+<path d="M336 70 L341 70" fill="none" stroke="#333" stroke-width="1.4" marker-end="url(#r03f3)"/>
+<circle cx="14" cy="70" r="7" fill="#222"/>
+<circle cx="349" cy="70" r="7" fill="#fff" stroke="#222" stroke-width="1.4"/><circle cx="349" cy="70" r="3.5" fill="#222"/>
+<g font-size="9" fill="#333">
+<rect x="34" y="20" width="90" height="100" fill="#fff" stroke="#555" stroke-width="1.3"/><path d="M34 20 L70 20 L70 28 L64 34 L34 34 z" fill="#e6f0fa" stroke="#555"/><text x="38" y="31" font-weight="700">sd 대여</text>
+<text x="56" y="48" text-anchor="middle">앱</text><text x="102" y="48" text-anchor="middle">서비스</text>
+<path d="M56 52 L56 112 M102 52 L102 112" stroke="#777" stroke-dasharray="3 3" fill="none"/>
+<path d="M56 68 L99 68" stroke="#333" fill="none" marker-end="url(#r03f3)"/><path d="M102 92 L59 92" stroke="#333" stroke-dasharray="3 2" fill="none" marker-end="url(#r03f3)"/>
+<rect x="140" y="20" width="90" height="100" fill="#fff" stroke="#555" stroke-width="1.3"/><path d="M140 20 L176 20 L176 28 L170 34 L140 34 z" fill="#e6f0fa" stroke="#555"/><text x="144" y="31" font-weight="700">sd 주행</text>
+<text x="162" y="48" text-anchor="middle">킥보드</text><text x="208" y="48" text-anchor="middle">서비스</text>
+<path d="M162 52 L162 112 M208 52 L208 112" stroke="#777" stroke-dasharray="3 3" fill="none"/>
+<path d="M162 66 L205 66" stroke="#333" fill="none" marker-end="url(#r03f3)"/><path d="M162 82 L205 82" stroke="#333" fill="none" marker-end="url(#r03f3)"/><path d="M162 98 L205 98" stroke="#333" fill="none" marker-end="url(#r03f3)"/>
+<text x="185" y="62" text-anchor="middle">위치</text>
+<rect x="246" y="20" width="90" height="100" fill="#fff" stroke="#555" stroke-width="1.3"/><path d="M246 20 L282 20 L282 28 L276 34 L246 34 z" fill="#e6f0fa" stroke="#555"/><text x="250" y="31" font-weight="700">sd 반납</text>
+<text x="268" y="48" text-anchor="middle">앱</text><text x="314" y="48" text-anchor="middle">서비스</text>
+<path d="M268 52 L268 112 M314 52 L314 112" stroke="#777" stroke-dasharray="3 3" fill="none"/>
+<path d="M268 68 L311 68" stroke="#333" fill="none" marker-end="url(#r03f3)"/><path d="M314 92 L271 92" stroke="#333" stroke-dasharray="3 2" fill="none" marker-end="url(#r03f3)"/>
+</g>
+<text x="180" y="146" font-size="11" fill="#222" text-anchor="middle">활동처럼 흐르되, 노드 하나하나가 시퀀스 조각</text>
+</svg><figcaption>그림 9. 상호작용 개요 다이어그램. ‘sd’ 프레임 하나가 시퀀스 다이어그램 한 장이고, 화살표가 그 사이의 흐름이에요.</figcaption></figure></div>
+
+<h3>타이밍 다이어그램(Timing Diagram)</h3>
+<div class="duo"><div><p><b>타이밍 다이어그램</b>은 객체의 상태 변화와 <b>시간 제약</b>을 명시적으로 표현한 다이어그램이에요. 가로축이 시간이고, 객체마다 가로 띠를 하나씩 주어 그 띠 안에서 상태가 계단처럼 바뀌는 모습을 그려요. 상태 다이어그램이 “어떤 상태에서 어떤 상태로 갈 수 있나”를 보여 준다면, 타이밍 다이어그램은 “몇 초에 바뀌었고, 몇 초 안에 바뀌어야 하나”를 보여 줘요. 그래서 임베디드·실시간 시스템처럼 시간이 품질인 곳에서 써요. 씽씽에서는 “QR 스캔 후 5초 안에 잠금이 풀려야 한다”는 약속을 그림으로 못 박을 때 쓰는데, 5초 안에 안 열리면 회원이 별점 1점을 줄 테니 사실상 계약서예요.</p></div><figure><svg viewBox="0 0 360 172" font-family="sans-serif" role="img" aria-label="타이밍 다이어그램. 가로축 시간 0초부터 6초. 위 띠 킥보드는 잠김 상태로 있다가 3초쯤 풀림으로 올라감. 아래 띠 앱은 대기에서 1초쯤 요청 중으로, 3초쯤 대여 중으로 계단처럼 바뀜. 1초 QR 스캔 지점과 3초 잠금 해제 지점 사이에 5초 이하 시간 제약 표시">
+<rect width="360" height="172" rx="12" fill="#f7f7f4"/>
+<path d="M130 22 L130 140 M210 22 L210 140" fill="none" stroke="#a35a00" stroke-width="1" stroke-dasharray="3 3"/>
+<path d="M130 16 L210 16" fill="none" stroke="#a35a00" stroke-width="1.4"/>
+<path d="M130 11 L130 21 M210 11 L210 21" fill="none" stroke="#a35a00" stroke-width="1.4"/>
+<text x="216" y="20" font-size="11" font-weight="700" fill="#7a4300">{t ≤ 5초}</text>
+<rect x="90" y="26" width="262" height="46" fill="#fff" stroke="#999"/>
+<rect x="90" y="78" width="262" height="52" fill="#fff" stroke="#999"/>
+<text x="10" y="54" font-size="12" font-weight="700" fill="#222">킥보드</text>
+<text x="10" y="108" font-size="12" font-weight="700" fill="#222">앱</text>
+<g font-size="10" fill="#333" text-anchor="end"><text x="86" y="40">풀림</text><text x="86" y="64">잠김</text><text x="86" y="92">대여 중</text><text x="86" y="107">요청 중</text><text x="86" y="122">대기</text></g>
+<path d="M90 60 L210 60 L210 36 L352 36" fill="none" stroke="#1f5f99" stroke-width="2.4"/>
+<path d="M90 118 L130 118 L130 103 L210 103 L210 88 L352 88" fill="none" stroke="#1f5f99" stroke-width="2.4"/>
+<path d="M90 140 L352 140" fill="none" stroke="#333" stroke-width="1.3"/>
+<g font-size="10" fill="#333" text-anchor="middle"><text x="90" y="154">0초</text><text x="130" y="154">1</text><text x="170" y="154">2</text><text x="210" y="154">3</text><text x="250" y="154">4</text><text x="290" y="154">5</text><text x="330" y="154">6</text></g>
+<text x="130" y="168" font-size="10" fill="#7a4300" text-anchor="middle">QR 스캔</text>
+<text x="210" y="168" font-size="10" fill="#7a4300" text-anchor="middle">잠금 해제</text>
+</svg><figcaption>그림 10. 타이밍 다이어그램. 가로축이 시간, 띠마다 상태가 계단처럼 바뀌고, 위쪽 괄호가 ‘5초 이내’라는 시간 제약이에요.</figcaption></figure></div>
+
+<div class="memo">행위 7을 외울 땐 씽씽 대여 한 번을 떠올려요. 무엇을 원하나(<b>유스케이스</b>) → 누가 누구에게 언제(<b>시퀀스</b>) · 누가 누구와 이어져(<b>커뮤니케이션</b>) → 킥보드는 어떻게 변하나(<b>상태</b>) → 반납 절차는 어떤 순서로(<b>활동</b>) → 대여·주행·반납 큰 흐름(<b>상호작용 개요</b>) → 5초 안에(<b>타이밍</b>).</div>
+
+<h2>⑧ 한 장 정리 — 모델 대응과 가르는 질문</h2>
+<p>마지막으로 오늘 배운 행위 다이어그램을 어제의 구조 다이어그램과 한 줄로 꿰어 봐요. 시스템을 모델링하는 관점은 크게 셋이에요. 시스템이 <b>무슨 기능</b>을 하나를 보는 <b>기능 모델</b>은 유스케이스 다이어그램이 맡고, 시스템이 <b>어떻게 생겼나</b>를 보는 <b>정적 모델</b>은 R02의 클래스 다이어그램이 맡고, 시스템이 <b>어떻게 움직이나</b>를 보는 <b>동적 모델</b>은 시퀀스·상태·활동 다이어그램이 맡아요. 시험의 ‘다이어그램 설명 옳은 것’ 문제는 대부분 이 대응을 하나 뒤바꾸는 식으로 만들어져요. 특히 럼바우 방법론의 동적 모델링은 상태 다이어그램이라는 짝은 R10에서 다시 만나요.</p>
+<table class="tight"><tr><th>모델 관점</th><th>질문</th><th>맡는 다이어그램</th></tr>
+<tr><td>기능 모델</td><td>무슨 기능을 하나?</td><td>유스케이스</td></tr>
+<tr><td>정적 모델</td><td>어떻게 생겼나?</td><td>클래스(R02)</td></tr>
+<tr><td>동적 모델</td><td>어떻게 움직이나?</td><td>시퀀스 · 상태 · 활동</td></tr></table>
+<table class="tight"><tr><th>헷갈리는 짝</th><th>가르는 질문</th><th>답</th></tr>
+<tr><td>포함 vs 확장</td><td>빼면 기본이 못 돌아가나?</td><td>예 = 포함(기본 → 포함) / 아니요 = 확장(확장 → 기본)</td></tr>
+<tr><td>사용자 액터 vs 시스템 액터</td><td>사람의 역할인가, 연동되는 외부 시스템인가?</td><td>회원 / 결제 대행사</td></tr>
+<tr><td>시퀀스 vs 커뮤니케이션</td><td>순서(언제)가 중요한가, 연결(누구와)이 중요한가?</td><td>세로축 시간 / 링크 + 번호</td></tr>
+<tr><td>시퀀스 vs 상태</td><td>여럿의 대화인가, 하나의 일생인가?</td><td>메시지 흐름 / 상태 변화</td></tr>
+<tr><td>상태 vs 활동</td><td>둥근 사각형에 처지가 있나, 할 일이 있나?</td><td>대기·대여 중 / 사진 판독·결제 요청</td></tr>
+<tr><td>이벤트 vs 전이</td><td>원인인가, 결과로 바뀌는 현상인가?</td><td>QR 스캔 / 대기 → 대여 중</td></tr>
+<tr><td>메시지 vs 회귀 메시지</td><td>남에게 보내나, 나에게 보내나?</td><td>다른 생명선 / 자기 생명선으로 복귀</td></tr>
+<tr><td>행위 vs 구조</td><td>동영상인가, 사진인가?</td><td>배치·컴포넌트·패키지는 구조</td></tr></table>
+<p><b>다음 장 예고:</b> R04에서는 이렇게 그림으로 요구를 정리하는 방식과 정반대 분위기의 개발 문화, <b>애자일</b>로 넘어가요. XP·스크럼·칸반·린이 “문서보다 동작하는 소프트웨어”를 외치면서도 왜 유스케이스 대신 사용자 스토리를 쓰는지 같이 볼게요.</p>
+
+<h2>확인 문제</h2>
+<ol class="quiz">
+<li>씽씽 팀이 ‘킥보드 빌리기’ 시퀀스 다이어그램을 그리면서 쓴 요소 이름이다. 시퀀스 다이어그램의 구성요소가 <b>아닌</b> 것은?<label class="opt"><input type="radio" name="R03-q1" value="1">① 생명선(Lifeline)</label><label class="opt"><input type="radio" name="R03-q1" value="2">② 실행(Activation, 활성 박스)</label><label class="opt"><input type="radio" name="R03-q1" value="3">③ 회귀 메시지(Self-Message)</label><label class="opt"><input type="radio" name="R03-q1" value="4">④ 확장(Extend)</label></li>
+<li>‘킥보드를 빌린다’를 수행하는 도중 회원이 쿠폰을 가지고 있을 때만 ‘쿠폰을 적용한다’가 실행된다. 반면 ‘본인 인증’은 대여할 때마다 반드시 거친다. ‘쿠폰을 적용한다’와 ‘본인 인증’이 ‘킥보드를 빌린다’와 맺는 관계를 차례대로 바르게 짝지은 것은?<label class="opt"><input type="radio" name="R03-q2" value="1">① 포함 – 확장</label><label class="opt"><input type="radio" name="R03-q2" value="2">② 확장 – 포함</label><label class="opt"><input type="radio" name="R03-q2" value="3">③ 일반화 – 연관</label><label class="opt"><input type="radio" name="R03-q2" value="4">④ 연관 – 일반화</label></li>
+<li>씽씽 설계 문서를 검토하다 나온 설명이다. 옳은 것은?<label class="opt"><input type="radio" name="R03-q3" value="1">① 시퀀스 다이어그램은 시스템의 정적인 짜임새를 보여 주므로 구조 다이어그램에 가깝다</label><label class="opt"><input type="radio" name="R03-q3" value="2">② 상태 다이어그램은 여러 객체가 주고받는 메시지를 시간 순서대로 보여 준다</label><label class="opt"><input type="radio" name="R03-q3" value="3">③ 커뮤니케이션 다이어그램은 메시지뿐 아니라 객체 사이의 연관까지 함께 보여 준다</label><label class="opt"><input type="radio" name="R03-q3" value="4">④ 배치 다이어그램은 사용자 관점에서 시스템 기능을 보여 주는 행위 다이어그램이다</label></li>
+<li>킥보드 상태 다이어그램에서 ‘대기’ 상태의 킥보드가 회원의 QR 스캔으로 ‘대여 중’ 상태로 바뀐다. 이때 상태를 바꾸게 만든 요인인 ‘QR 스캔’에 해당하는 구성요소는?<label class="opt"><input type="radio" name="R03-q4" value="1">① 이벤트(Event)</label><label class="opt"><input type="radio" name="R03-q4" value="2">② 상태(State)</label><label class="opt"><input type="radio" name="R03-q4" value="3">③ 전이(Transition)</label><label class="opt"><input type="radio" name="R03-q4" value="4">④ 메시지(Message)</label></li>
+</ol><div class="answer-bar" data-id="R03" data-n="4"><code></code><button type="button">답안 복사</button></div><p><small>고른 뒤 <b>답안 복사</b> → 디스코드 공부 채널에 붙여넣기 하면 돼요.</small></p>
+<p>답장: <code>정처기 R03: 1)번호 2)번호 3)번호 4)번호</code></p>
+<p class="meta"><a href="2026-11-22-D048.html">← D048</a>  </p>
+<script>
+document.querySelectorAll('.answer-bar').forEach(bar=>{
+  const id=bar.dataset.id,n=+bar.dataset.n,out=bar.querySelector('code'),btn=bar.querySelector('button');
+  const text=()=>'정처기 '+id+': '+Array.from({length:n},(_,i)=>{const c=document.querySelector('input[name="'+id+'-q'+(i+1)+'"]:checked');return (i+1)+')'+(c?c.value:'?')}).join(' ');
+  document.querySelectorAll('input[name^="'+id+'-q"]').forEach(r=>r.addEventListener('change',()=>{out.textContent=text()}));
+  out.textContent=text();
+  btn.addEventListener('click',async()=>{const t=text();try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}btn.textContent='복사됨 ✓';setTimeout(()=>btn.textContent='답안 복사',1500)});
+});
+</script>
+
+
+<script>
+// 단계 애니메이션: <div class="steps" data-title="제목"><div class="step">…<p class="cap">설명</p></div>…</div>
+document.querySelectorAll('.steps').forEach(box=>{
+  const st=[...box.querySelectorAll(':scope > .step')]; let i=0, timer=null;
+  const head=document.createElement('div'); head.className='steps-head';
+  head.innerHTML='<b>'+(box.dataset.title||'단계별로 보기')+'</b><span class="steps-dots"></span>';
+  const dots=head.querySelector('.steps-dots');
+  st.forEach((_,k)=>{const d=document.createElement('button');d.type='button';d.className='dot';d.onclick=()=>{stop();show(k)};dots.append(d)});
+  const bar=document.createElement('div'); bar.className='steps-bar';
+  const mk=(t,f)=>{const b=document.createElement('button');b.type='button';b.textContent=t;b.onclick=f;bar.append(b);return b};
+  const prev=mk('◀ 이전',()=>{stop();show(i-1)}), next=mk('다음 ▶',()=>{stop();show(i+1)});
+  const play=mk('▶▶ 자동',()=>{ if(timer){stop();return} play.textContent='■ 멈춤'; if(i===st.length-1) show(0); timer=setInterval(()=>{ if(i>=st.length-1){stop();return} show(i+1) },2600)});
+  function stop(){ if(timer){clearInterval(timer);timer=null} play.textContent='▶▶ 자동' }
+  function show(k){ i=Math.max(0,Math.min(st.length-1,k)); st.forEach((s,n)=>s.classList.toggle('on',n===i));
+    [...dots.children].forEach((d,n)=>d.classList.toggle('on',n===i)); prev.disabled=i===0; next.disabled=i===st.length-1;
+    }
+  box.prepend(head); box.append(bar); show(0);
+});
+</script>
+<footer>2027년 정기 기사 1회 정보처리기사 필기 준비 · 공식 범위: Q-Net 2027~2029 출제기준</footer>
+</main></body></html>
