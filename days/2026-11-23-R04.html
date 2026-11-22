@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>R04 애자일 — 계획표 대신 2주마다 보여 주기: XP·스크럼·칸반·린</title>
+<link rel="icon" href="../assets/favicon/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../assets/favicon/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="apple-touch-icon" href="../assets/favicon/apple-touch-icon.png">
+<link rel="stylesheet" href="../style.css?v=4788e468"></head>
+<body><main>
+<nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a> · <a href="../listen.html">🎧 강의 듣기</a></nav>
+<h1>R04 · 애자일 — 계획표 대신 2주마다 보여 주기: XP·스크럼·칸반·린</h1><div class="meta">2026-11-23 · A1 1과목 리뉴얼</div><p><span class="tag">1과목 리뉴얼</span><span class="tag">A1</span> 리뉴얼 넷째 장은 책 1.1.3 <b>애자일</b>이에요. R01~R03에서는 요구사항을 미리 모으고, 그것을 UML 그림으로 굳혀서 모두가 같은 설계도를 보게 만드는 쪽을 봤어요. 오늘은 출발점이 정반대예요. “요구는 어차피 바뀐다. 그러니 다 정해 놓고 만들지 말고, 조금 만들어 보여 주고, 반응을 보고, 다시 고치자.” 이 생각을 원칙으로 정리한 것이 <b>애자일 선언</b>이고, 그 원칙을 실제로 굴리는 방법이 <b>XP·스크럼·린·칸반·크리스탈·ASD·FDD</b>예요. 시험에서는 20회 시험 중 20회 모두 이 묶음에서 한 문제 이상 나왔어요. 1과목에서 가장 꾸준히 나오는 주제 중 하나예요.</p>
+<ul>
+<li>애자일의 정의(짧은 반복 + 즉시 피드백으로 변화에 대응)와 등장 배경을 말하고, 애자일 선언 4가치의 ‘A보다 B’ 방향을 뒤집은 선지를 가려낼 수 있다</li>
+<li>XP의 정의와 5가치(용기·단순성·의사소통·피드백·존중)를 구별하고, 5가치가 아닌 것과 XP에 대한 틀린 설명(구조적 방법론, 테스트 생략, 한 사람이 모든 책임)을 고를 수 있다</li>
+<li>XP 12 기본원리를 이름과 뜻으로 짝짓고, 원리가 아닌 것(선형 순차 방식)을 가려낼 수 있다</li>
+<li>스크럼 주요 용어 8개(제품 책임자·제품 백로그·스프린트·스크럼 미팅·스크럼 마스터·스프린트 회고·번다운 차트·속도)와 칸반 보드를 구별하고, “스프린트는 3달 이상” 같은 틀린 설명을 잡아낼 수 있다</li>
+<li>애자일 계열(XP·스크럼·린·칸반·크리스탈·ASD·FDD)을 한 줄 특징으로 구별하고, 애자일이 아닌 것(모듈 중심 개발·하둡·폭포수 등)을 고를 수 있다</li>
+</ul>
+<div class="glance"><div><b>4</b>선언 가치</div><div><b>5 · 12</b>XP 가치 · 원리</div><div><b>8</b>스크럼 용어</div><div><b>2~4주</b>스프린트</div><div><b>7</b>애자일 계열</div></div>
+<div class="box"><b>이 페이지의 흐름</b>⓪ 큰 그림 — 6개월 계획표가 2주 만에 휴지가 된 날 → ① 애자일이란, 왜 생겼나 → ② 애자일 선언 4가치 → ③ XP 정의와 5가치 → ④ XP 12 기본원리 → ⑤ 스크럼 → ⑥ 그 밖의 애자일: 린 · 칸반 · 크리스탈 · ASD · FDD → ⑦ 한 장 정리 → 확인 문제</div>
+
+<h2>⓪ 큰 그림 — 6개월 계획표가 2주 만에 휴지가 된 날</h2>
+<p>R02·R03에서 함께 설계한 공유 킥보드 앱 ‘씽씽’에 다음 버전 이야기가 나왔어요. <b>씽씽 2.0</b>에는 출퇴근용 <b>정기권</b>과 회사·동아리용 <b>단체 대여</b>를 넣기로 했죠. 기획팀은 요구사항 정의 두 달, 설계 한 달, 구현 두 달, 테스트 한 달로 6개월짜리 간트 차트를 그렸어요. 그런데 착수 2주 뒤, 경쟁사가 먼저 월 구독 상품을 내놨어요. 회원들은 “씽씽은 언제 나와요?”라고 묻는데, 계획대로라면 첫 화면이 나오는 건 넉 달 뒤예요. 시장 입장에서 6개월짜리 간트 차트는 <b>내년 달력에 적어 둔 다짐</b> 같은 거예요. 쓸 때는 비장했지만 그때가 되면 세상이 이미 다른 곳에 가 있죠.</p>
+<p>팀은 방식을 바꾸기로 해요. 6개월 뒤 한 번에 내놓는 대신 <b>2주마다 실제로 동작하는 조각</b>을 만들어 회원 일부에게 보여 주고, 반응을 보고 다음 2주에 무엇을 만들지 다시 정하기로요. 이 장 전체가 씽씽 2.0 팀의 첫 6주 이야기예요. 팀이 고른 원칙(애자일 선언), 개발자들의 일하는 습관(XP), 팀 운영 틀(스크럼), 일의 흐름을 보이게 하는 보드(칸반)를 차례로 붙여 가면서, 책에 나오는 나머지 방법론(린·크리스탈·ASD·FDD)도 한 자리씩 찾아 줄게요.</p>
+
+<h2>① 애자일이란, 왜 생겼나</h2>
+<div class="duo"><div><p><b>애자일</b>(Agile)은 개발과 함께 <b>즉시 피드백</b>을 받아 요구 변화에 <b>유동적으로</b> 대응하는 소프트웨어 개발 방식이에요. 전체를 한 번에 계획하고 끝까지 밀고 가는 대신, 일을 몇 주 단위의 짧은 반복(이터레이션)으로 쪼개요. 반복 하나 안에서 무엇을 만들지 살펴보고(탐색), 설계하고, 개발하고, 테스트까지 한 바퀴를 다 돌고, 반복이 끝날 때마다 <b>동작하는 소프트웨어 조각</b>(증분)을 고객에게 보여 줘요. 고객의 반응이 다음 반복의 계획이 돼요. 영어 agile은 ‘민첩한’이라는 뜻인데, 빨리 만드는 것보다 <b>방향을 빨리 바꿀 수 있는 것</b>이 핵심이에요.</p></div><figure><svg viewBox="0 0 360 230" font-family="sans-serif" role="img" aria-label="애자일 반복 개념도. 반복 1, 반복 2, 반복 3 세 개의 고리가 왼쪽에서 오른쪽으로 놓여 있고, 각 고리는 탐색, 설계, 개발, 테스트 네 칸을 돈다. 각 반복 아래에는 동작하는 증분 막대가 하나씩 쌓여 반복 3에서는 세 칸이 된다. 반복 사이에는 고객 피드백 화살표가 있다">
+<defs><marker id="r4m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#1f5f99"/></marker><marker id="r4m1g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#2e7d32"/></marker></defs>
+<rect width="360" height="230" rx="12" fill="#f7f7f4"/>
+<path d="M104 66 Q120 40 136 66" fill="none" stroke="#2e7d32" stroke-width="1.8" marker-end="url(#r4m1g)"/>
+<path d="M224 66 Q240 40 256 66" fill="none" stroke="#2e7d32" stroke-width="1.8" marker-end="url(#r4m1g)"/>
+<text x="120" y="36" font-size="10" fill="#2e7d32" text-anchor="middle">피드백</text><text x="240" y="36" font-size="10" fill="#2e7d32" text-anchor="middle">피드백</text>
+<g>
+<circle cx="60" cy="96" r="40" fill="#fff" stroke="#1f5f99" stroke-width="2"/>
+<text x="60" y="70" font-size="10" fill="#222" text-anchor="middle">탐색</text><text x="91" y="100" font-size="9" fill="#222" text-anchor="middle">설계</text><text x="60" y="128" font-size="10" fill="#222" text-anchor="middle">개발</text><text x="30" y="100" font-size="9" fill="#222" text-anchor="middle">테스트</text>
+<text x="60" y="100" font-size="10" font-weight="700" fill="#1f5f99" text-anchor="middle">반복 1</text>
+</g>
+<g>
+<circle cx="180" cy="96" r="40" fill="#fff" stroke="#1f5f99" stroke-width="2"/>
+<text x="180" y="70" font-size="10" fill="#222" text-anchor="middle">탐색</text><text x="211" y="100" font-size="9" fill="#222" text-anchor="middle">설계</text><text x="180" y="128" font-size="10" fill="#222" text-anchor="middle">개발</text><text x="150" y="100" font-size="9" fill="#222" text-anchor="middle">테스트</text>
+<text x="180" y="100" font-size="10" font-weight="700" fill="#1f5f99" text-anchor="middle">반복 2</text>
+</g>
+<g>
+<circle cx="300" cy="96" r="40" fill="#fff" stroke="#1f5f99" stroke-width="2"/>
+<text x="300" y="70" font-size="10" fill="#222" text-anchor="middle">탐색</text><text x="331" y="100" font-size="9" fill="#222" text-anchor="middle">설계</text><text x="300" y="128" font-size="10" fill="#222" text-anchor="middle">개발</text><text x="270" y="100" font-size="9" fill="#222" text-anchor="middle">테스트</text>
+<text x="300" y="100" font-size="10" font-weight="700" fill="#1f5f99" text-anchor="middle">반복 3</text>
+</g>
+<rect x="20" y="186" width="80" height="18" rx="4" fill="#e8f5e9" stroke="#2e7d32"/><text x="60" y="199" font-size="10" fill="#1b5e20" text-anchor="middle">정기권 결제</text>
+<rect x="140" y="186" width="80" height="18" rx="4" fill="#e8f5e9" stroke="#2e7d32"/><text x="180" y="199" font-size="10" fill="#1b5e20" text-anchor="middle">정기권 결제</text>
+<rect x="140" y="166" width="80" height="18" rx="4" fill="#e8f5e9" stroke="#2e7d32"/><text x="180" y="179" font-size="10" fill="#1b5e20" text-anchor="middle">단체 QR</text>
+<rect x="260" y="186" width="80" height="18" rx="4" fill="#e8f5e9" stroke="#2e7d32"/><text x="300" y="199" font-size="10" fill="#1b5e20" text-anchor="middle">정기권 결제</text>
+<rect x="260" y="166" width="80" height="18" rx="4" fill="#e8f5e9" stroke="#2e7d32"/><text x="300" y="179" font-size="10" fill="#1b5e20" text-anchor="middle">단체 QR</text>
+<rect x="260" y="146" width="80" height="18" rx="4" fill="#e8f5e9" stroke="#2e7d32"/><text x="300" y="159" font-size="10" fill="#1b5e20" text-anchor="middle">쿠폰 개편</text>
+<text x="180" y="222" font-size="11" fill="#333" text-anchor="middle">반복마다 ‘동작하는 증분’이 하나씩 쌓인다</text>
+</svg><figcaption>그림 1. 애자일의 반복. 반복 하나 안에서 탐색·설계·개발·테스트가 한 바퀴 돌고, 끝날 때마다 동작하는 조각을 보여 주고 피드백을 받아 다음 반복으로 넘어가요.</figcaption></figure></div>
+
+<h3>등장 배경</h3>
+<p>애자일이 등장한 이유는 두 방향에서 설명할 수 있어요. 하나는 <b>바깥 환경의 변화</b>예요. 인터넷 서비스와 앱이 늘면서 소프트웨어가 시장에 나오는 속도 자체가 경쟁력이 됐어요. 이걸 <b>시장 적시성</b>(Time to Market)이라고 해요. 좋은 제품도 경쟁사보다 반년 늦으면 의미가 줄어들죠. 다른 하나는 <b>기존 방법론의 한계</b>예요. 폭포수 모형처럼 단계를 순서대로 밟는 전통적인 방법론은 각 단계 끝에 문서를 완성하고 승인받는 것을 중시해요. 대규모 공공 시스템처럼 요구가 거의 안 바뀌는 곳에서는 장점이지만, 요구가 자주 바뀌는 곳에서는 문서와 절차를 다시 고치는 비용이 개발 자체보다 커져요. 씽씽 2.0의 6개월 계획이 바로 그 경우였어요.</p>
+<table class="tight"><tr><th>구분</th><th>무엇이 바뀌었나</th><th>씽씽 2.0에서</th></tr>
+<tr><td>개발 환경 변화</td><td>서비스 출시 주기가 짧아지고, 고객 요구가 수시로 바뀜</td><td>경쟁사 월 구독 출시, 회원 문의 폭주</td></tr>
+<tr><td>시장 적시성</td><td>먼저 내놓는 것 자체가 경쟁력</td><td>넉 달 뒤 첫 화면은 너무 늦음</td></tr>
+<tr><td>전통 방법론의 한계</td><td>문서·절차 위주라 변경 비용이 큼</td><td>요구 정의서 120쪽을 다시 고쳐 승인받아야 함</td></tr></table>
+<h3>애자일의 특징과 폭포수와의 차이</h3>
+<div class="duo"><div><p>애자일 방식에는 세 가지 공통 특징이 있어요. 첫째, <b>짧은 작업 단위로 계획</b>해요. 6개월 전체 계획 대신 이번 2주에 할 일만 자세히 정하고, 그다음은 대략의 순서만 둬요. 둘째, <b>실제로 동작하는 소프트웨어에 가치</b>를 둬요. 진척도를 문서 완성률이 아니라 “지금 눌러 볼 수 있는 기능이 몇 개인가”로 재요. 셋째, <b>고객과 계속 소통하며 피드백</b>을 받아요. 고객은 마지막 인수 테스트 때 한 번 등장하는 손님이 아니라 2주마다 데모를 보는 동료예요.</p>
+<p>폭포수 모형과 비교하면 차이가 선명해져요. 폭포수는 앞 단계의 결과물을 <b>완전히 확인한 뒤에야 다음 단계</b>로 넘어가요. 그래서 요구가 중간에 바뀌면 이미 끝낸 단계로 거슬러 올라가야 하고, 고객이 실제 화면을 보는 건 맨 마지막이에요. 애자일은 모든 단계를 짧게 여러 번 돌기 때문에 바뀐 요구를 다음 반복에 바로 넣을 수 있어요. 대신 전체 일정·비용을 처음부터 확정하기 어렵고, 고객이 계속 참여해 줘야 한다는 부담이 있어요.</p></div><figure><svg viewBox="0 0 360 200" font-family="sans-serif" role="img" aria-label="폭포수와 애자일 비교. 위 줄 폭포수는 요구, 설계, 구현, 테스트 네 막대가 6개월에 걸쳐 이어지고 6개월 끝에 한 번 인도. 2개월 지점에 경쟁사 출시 요구 변경 표시가 있고 반영하려면 앞 단계로 되돌아가야 함. 아래 줄 애자일은 2주짜리 작은 칸 12개가 이어지고 칸마다 인도 삼각형과 피드백이 있음">
+<defs><marker id="r4m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#b23b3b"/></marker></defs>
+<rect width="360" height="200" rx="12" fill="#f7f7f4"/>
+<text x="12" y="24" font-size="12" font-weight="700" fill="#222">폭포수</text>
+<path d="M150 40 Q110 18 72 40" fill="none" stroke="#b23b3b" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#r4m2)"/>
+<rect x="30" y="44" width="80" height="22" fill="#e6f0fa" stroke="#1f5f99"/><text x="70" y="59" font-size="10" fill="#222" text-anchor="middle">요구 정의</text>
+<rect x="110" y="44" width="50" height="22" fill="#e6f0fa" stroke="#1f5f99"/><text x="135" y="59" font-size="10" fill="#222" text-anchor="middle">설계</text>
+<rect x="160" y="44" width="100" height="22" fill="#e6f0fa" stroke="#1f5f99"/><text x="210" y="59" font-size="10" fill="#222" text-anchor="middle">구현</text>
+<rect x="260" y="44" width="50" height="22" fill="#e6f0fa" stroke="#1f5f99"/><text x="285" y="59" font-size="10" fill="#222" text-anchor="middle">테스트</text>
+<path d="M318 44 L330 55 L318 66 z" fill="#1f5f99"/><text x="334" y="84" font-size="10" fill="#1f5f99" text-anchor="end">6개월 뒤 인도</text>
+<text x="152" y="18" font-size="10" fill="#b23b3b">✕ 2개월: 경쟁사 출시 → 되돌아가기</text>
+<path d="M30 102 L330 102" fill="none" stroke="#555" stroke-width="1"/>
+<text x="12" y="124" font-size="12" font-weight="700" fill="#222">애자일</text>
+<g fill="#e8f5e9" stroke="#2e7d32">
+<rect x="30" y="134" width="23" height="22"/><rect x="55" y="134" width="23" height="22"/><rect x="80" y="134" width="23" height="22"/><rect x="105" y="134" width="23" height="22"/><rect x="130" y="134" width="23" height="22"/><rect x="155" y="134" width="23" height="22"/><rect x="180" y="134" width="23" height="22"/><rect x="205" y="134" width="23" height="22"/><rect x="230" y="134" width="23" height="22"/><rect x="255" y="134" width="23" height="22"/><rect x="280" y="134" width="23" height="22"/><rect x="305" y="134" width="23" height="22"/>
+</g>
+<g fill="#2e7d32"><path d="M41 160 L46 168 L36 168 z"/><path d="M66 160 L71 168 L61 168 z"/><path d="M91 160 L96 168 L86 168 z"/><path d="M116 160 L121 168 L111 168 z"/><path d="M141 160 L146 168 L136 168 z"/><path d="M166 160 L171 168 L161 168 z"/><path d="M191 160 L196 168 L186 168 z"/><path d="M216 160 L221 168 L211 168 z"/><path d="M241 160 L246 168 L236 168 z"/><path d="M266 160 L271 168 L261 168 z"/><path d="M291 160 L296 168 L286 168 z"/><path d="M316 160 L321 168 L311 168 z"/></g>
+<text x="180" y="188" font-size="10" fill="#1b5e20" text-anchor="middle">칸 = 2주 반복 · ▲ = 동작하는 조각 인도·피드백</text>
+</svg><figcaption>그림 2. 같은 6개월. 폭포수는 끝에 한 번 인도하고, 중간에 요구가 바뀌면 앞 단계로 되돌아가야 해요. 애자일은 2주마다 인도하니 바뀐 요구를 다음 칸에 넣으면 돼요.</figcaption></figure></div>
+
+<div class="box"><b>시험에는 이렇게 나와요</b>애자일에 대한 설명으로 틀린 것을 고르는 문제에 “각 단계의 결과가 완전히 확인된 후 다음 단계로 진행한다”, “계획에 중점을 두어 변경 대응이 어렵다”가 섞여 나와요. 둘 다 <b>폭포수</b>의 특징이에요. 애자일 쪽 맞는 설명은 “짧은 반복”, “고객과의 소통·피드백”, “변화에 유연한 대응”이에요.</div>
+
+<h2>② 애자일 선언 4가치 <span class="tag">기출 11회</span></h2>
+<p><b>애자일 소프트웨어 개발 선언</b>(Manifesto for Agile Software Development)은 2001년, 가벼운 개발 방법론을 각자 써 오던 개발자 17명이 모여 공통의 가치를 한 장으로 정리한 문서예요. XP·스크럼·크리스탈·ASD·FDD를 만든 사람들이 이 자리에 있었어요. 그래서 애자일 선언은 특정 방법론의 규칙이 아니라 <b>여러 애자일 방법론이 공유하는 가치관</b>이에요. 선언은 4가지 가치와 이를 풀어 쓴 12가지 원칙(고객 만족을 위한 조기·지속 인도, 늦은 요구 변경도 환영, 몇 주 단위의 잦은 인도, 매일 함께 일하기, 동작하는 소프트웨어가 진척의 척도, 지속 가능한 속도, 단순성, 자기 조직 팀, 정기적 회고 등)으로 이루어져요. 시험은 거의 4가치에서 나와요.</p>
+<p>4가치는 모두 “<b>왼쪽보다 오른쪽</b>” 구조예요. 정확히 말하면 선언문 원문은 “우리는 <b>왼쪽에 있는 것도 가치 있다고 인정하지만, 오른쪽에 있는 것을 더 높이 평가한다</b>”라고 끝나요. 문서·계획·계약·도구를 버리자는 게 아니라, 둘이 부딪칠 때 무엇을 먼저 챙기느냐의 우선순위예요.</p>
+<table class="tight"><tr><th>덜 중시(그래도 가치 있음)</th><th>더 중시</th><th>씽씽 2.0 장면</th></tr>
+<tr><td>공정과 도구</td><td><b>개인과 상호작용</b></td><td>지라(Jira) 티켓 규칙 다툼보다, 막히면 옆자리에 바로 묻는다</td></tr>
+<tr><td>포괄적인 문서</td><td><b>동작하는 소프트웨어</b></td><td>정기권 기획서 100쪽 대신 2주 뒤 눌러 볼 수 있는 결제 화면</td></tr>
+<tr><td>계약 협상</td><td><b>고객과의 협력</b></td><td>계약서 조항 대신 매주 운영팀과 데모 보며 우선순위 조정</td></tr>
+<tr><td>계획을 따르기</td><td><b>변화에 대응하기</b></td><td>경쟁사 출시 소식에 다음 스프린트 순서를 바로 바꿈</td></tr></table>
+<figure><svg viewBox="0 0 360 214" font-family="sans-serif" role="img" aria-label="애자일 선언 4가치를 저울처럼 표현한 그림. 네 줄 각각 왼쪽 회색 상자에 공정과 도구, 포괄적 문서, 계약 협상, 계획 따르기가 있고, 오른쪽 파란 굵은 상자에 개인과 상호작용, 동작하는 소프트웨어, 고객과의 협력, 변화에 대응이 있으며 가운데 화살표가 오른쪽을 가리키고 오른쪽이 더 무겁다는 표시">
+<rect width="360" height="214" rx="12" fill="#f7f7f4"/>
+<text x="90" y="22" font-size="11" fill="#444" text-anchor="middle">왼쪽 (가치 있음)</text><text x="270" y="22" font-size="11" font-weight="700" fill="#1f5f99" text-anchor="middle">오른쪽 (더 중시)</text>
+<g font-size="12" text-anchor="middle">
+<rect x="16" y="32" width="148" height="34" rx="6" fill="#efefec" stroke="#777"/><text x="90" y="54" fill="#333">공정과 도구</text>
+<rect x="196" y="30" width="148" height="38" rx="6" fill="#e6f0fa" stroke="#1f5f99" stroke-width="2.4"/><text x="270" y="54" fill="#1f5f99" font-weight="700">개인과 상호작용</text>
+<rect x="16" y="78" width="148" height="34" rx="6" fill="#efefec" stroke="#777"/><text x="90" y="100" fill="#333">포괄적인 문서</text>
+<rect x="196" y="76" width="148" height="38" rx="6" fill="#e6f0fa" stroke="#1f5f99" stroke-width="2.4"/><text x="270" y="100" fill="#1f5f99" font-weight="700">동작하는 소프트웨어</text>
+<rect x="16" y="124" width="148" height="34" rx="6" fill="#efefec" stroke="#777"/><text x="90" y="146" fill="#333">계약 협상</text>
+<rect x="196" y="122" width="148" height="38" rx="6" fill="#e6f0fa" stroke="#1f5f99" stroke-width="2.4"/><text x="270" y="146" fill="#1f5f99" font-weight="700">고객과의 협력</text>
+<rect x="16" y="170" width="148" height="34" rx="6" fill="#efefec" stroke="#777"/><text x="90" y="192" fill="#333">계획을 따르기</text>
+<rect x="196" y="168" width="148" height="38" rx="6" fill="#e6f0fa" stroke="#1f5f99" stroke-width="2.4"/><text x="270" y="192" fill="#1f5f99" font-weight="700">변화에 대응하기</text>
+</g>
+<g font-size="15" font-weight="700" fill="#1f5f99" text-anchor="middle"><text x="180" y="55">&lt;</text><text x="180" y="101">&lt;</text><text x="180" y="147">&lt;</text><text x="180" y="193">&lt;</text></g>
+</svg><figcaption>그림 3. 4가치의 방향. 왼쪽도 가치 있지만 오른쪽이 더 무거워요. 시험 선지는 이 부등호를 뒤집어 만들어요.</figcaption></figure>
+<p>출제자는 4가치의 좌우를 뒤집는 데 진심이에요. 선지 문장이 길어 보여도 “<b>~보다</b>” 앞뒤에 무엇이 놓였는지만 보면 돼요. 오른쪽 열(사람·동작하는 소프트웨어·고객 협력·변화 대응)이 “보다” 뒤, 즉 더 중요한 자리에 있어야 맞는 문장이에요. 아래 문장으로 연습해 보세요. 판정 칸을 손으로 가리고 먼저 답해 보면 좋아요.</p>
+<table class="tight"><tr><th>문장</th><th>판정</th></tr>
+<tr><td>1. 이해하기 좋은 문서보다 실제로 작동하는 소프트웨어를 더 중시한다</td><td>맞음</td></tr>
+<tr><td>2. 실제로 작동하는 소프트웨어보다 꼼꼼한 문서를 더 중시한다</td><td><b>뒤집힘</b></td></tr>
+<tr><td>3. 계약 조건 협상보다 고객과 함께 일하는 것을 더 중시한다</td><td>맞음</td></tr>
+<tr><td>4. 팀원 사이의 소통보다 정해진 프로세스와 도구를 더 중시한다</td><td><b>뒤집힘</b></td></tr>
+<tr><td>5. 문서는 필요 없으므로 작성하지 않는다</td><td><b>틀림</b>(왼쪽도 가치 있음)</td></tr>
+<tr><td>6. 동작하는 소프트웨어를 진척의 주요 척도로 삼는다</td><td>맞음(12원칙)</td></tr></table>
+<div class="box"><b>시험에는 이렇게 나와요</b>애자일 선언 가치와 다른 것을 고르는 문제가 가장 많아요(합쳐서 11회). 문서 쪽 뒤집기(“작동하는 소프트웨어보다 이해하기 좋은 문서”, “동작하는 소프트웨어보다 포괄적 문서”)가 5회로 제일 흔하고, 계획 쪽 뒤집기(“변화 대응보다 계획을 따르는 것”, “계획에 중점, 변경 대응 어려움”)가 4회, 폭포수 문장(“각 단계를 완전히 확인한 뒤 다음 단계”)이 2회예요. 책도 애자일 선언 문제는 ‘애자일 개발 방법론에 대한 설명’ 문제와 사실상 같은 내용이라고 짚어요.</div>
+
+<h2>③ XP — 정의와 5가치 <span class="tag">기출 12회</span></h2>
+<p>애자일 선언은 가치관일 뿐이라, 내일 아침 개발자가 무엇을 해야 하는지는 말해 주지 않아요. 그 빈칸을 <b>개발자의 일하는 습관</b> 수준에서 채운 방법론이 XP예요. <b>XP</b>(eXtreme Programming, 익스트림 프로그래밍)는 켄트 벡(Kent Beck)이 정리한 애자일 방법론으로, <b>의사소통을 개선하고 즉각적인 피드백</b>으로 소프트웨어 품질을 높이는 데 초점을 둬요. 1~3주 정도의 짧은 반복으로 작은 릴리스를 자주 내고, 이론보다 <b>실용성</b>을 강조해요. 이름의 ‘익스트림’은 좋다고 알려진 습관(코드 리뷰·테스트·통합)을 극단까지 밀어붙인다는 뜻이에요. 코드 리뷰가 좋다면 아예 둘이 같이 짜고(짝 프로그래밍), 테스트가 좋다면 코드보다 테스트를 먼저 쓰고(TDD), 통합이 좋다면 하루에도 여러 번 통합하는(지속적 통합) 식이죠.</p>
+<p>XP는 <b>소규모 팀</b>, <b>요구사항이 자주 바뀌는</b> 프로젝트에 잘 맞아요. 문서보다 <b>소스 코드</b>를 중심에 두고, 요구사항은 두꺼운 명세서 대신 고객이 짧게 쓴 <b>사용자 스토리</b>(User Story)로 받아요. 테스트는 생략하는 게 아니라 오히려 <b>자동화해서 항상</b> 돌려요. 그리고 코드는 팀 전체의 것이라 책임도 팀이 함께 져요. 이 다섯 문장을 뒤집은 것이 XP 오답 선지의 거의 전부예요.</p>
+<h3>XP의 5가지 가치</h3>
+<p>XP는 실천 방법(12 기본원리)을 떠받치는 가치 다섯 개를 둬요. 실천이 애매할 때 판단 기준이 되는 것들이에요.</p>
+<table class="tight"><tr><th>가치</th><th>뜻</th><th>씽씽 2.0 팀에서</th></tr>
+<tr><td><b>용기</b>(Courage)</td><td>필요하면 설계를 바꾸고, 문제를 숨기지 않고 말하는 태도</td><td>엉켜 있는 쿠폰 모듈을 리팩토링하자고 먼저 제안함</td></tr>
+<tr><td><b>단순성</b>(Simplicity)</td><td>지금 필요한 것만, 가장 단순하게 만든다</td><td>“언젠가 쓸” 기업용 정산 기능은 이번 스프린트에서 뺌</td></tr>
+<tr><td><b>의사소통</b>(Communication)</td><td>개발자·관리자·고객 사이의 원활한 소통</td><td>운영팀 담당자가 같은 메신저 채널에서 바로 답함</td></tr>
+<tr><td><b>피드백</b>(Feedback)</td><td>테스트·고객·동료로부터 빠르게 결과를 듣는다</td><td>커밋 10분 뒤 자동 테스트 결과, 2주마다 회원 반응</td></tr>
+<tr><td><b>존중</b>(Respect)</td><td>팀원 서로의 기여와 판단을 존중</td><td>신입의 의견도 회고에서 같은 무게로 다룸</td></tr></table>
+<p>다섯 개를 외울 때는 씽씽 2.0 팀 사무실의 회의실 다섯 개를 떠올려 보세요. 입구부터 <b>용기실 → 단순실 → 소통실 → 피드백실 → 존중실</b>. 이 중 가장 자주 빼먹는 게 마지막 존중이에요. 존중은 코드 리뷰에서 “이거 누가 짰어요?” 대신 “이 부분 같이 볼까요?”라고 말하게 만드는 가치예요. 존중이 빠지면 피드백이 공격이 되고, 공격이 무서우면 용기도 사라지죠. 다섯 가치가 서로 기대고 있다는 게 이 순서의 속뜻이에요.</p>
+<div class="box"><b>시험에는 이렇게 나와요</b>“XP의 5가지 가치가 <b>아닌</b> 것”이 단골이에요(7회). 용기·의사소통·피드백·단순성 사이에 <b>정형 분석</b>(5회)이나 <b>고객 배제</b>(2회)가 끼어 있으면 그게 답이에요. 정형 분석은 수학적 명세로 검증하는 무거운 기법이라 XP의 실용성과 반대고, 고객 배제는 의사소통 가치와 정면으로 부딪쳐요. XP 설명이 틀린 것을 고르는 문제(7회)에서는 “대표적인 <b>구조적 방법론</b>이다”(3회), “빠른 개발을 위해 <b>테스트를 하지 않는다</b>”(2회), “개발 책임자가 모든 책임을 지고 팀원은 책임이 없다”(2회)가 틀린 선지예요.</div>
+
+<h2>④ XP 12 기본원리</h2>
+<div class="duo"><div><p><b>XP 기본원리</b>(실천 사항)는 5가치를 매일의 행동으로 옮긴 규칙 12개예요. 하나씩 따로 외우면 많아 보이니, 무엇을 위한 원리인지에 따라 세 묶음으로 나눠 볼게요. 그림 4가 그 지도예요.</p></div><figure><svg viewBox="0 0 360 300" font-family="sans-serif" role="img" aria-label="XP 5가치와 12 기본원리 지도. 가운데 원에 5가치 용기 단순성 의사소통 피드백 존중. 위쪽 계획과 릴리스 묶음에 계획 세우기, 작은 릴리스, 고객 상주, 메타포어. 왼쪽 아래 설계와 코드 묶음에 간단한 디자인, 리팩토링, 코드 표준, 공동 코드 소유. 오른쪽 아래 개발 리듬 묶음에 짝 프로그래밍, 테스트 기반 개발, 지속적 통합, 40시간 작업">
+<rect width="360" height="300" rx="12" fill="#f7f7f4"/>
+<path d="M180 128 L180 92" fill="none" stroke="#777" stroke-width="1.4"/>
+<path d="M146 176 L112 200" fill="none" stroke="#777" stroke-width="1.4"/>
+<path d="M214 176 L248 200" fill="none" stroke="#777" stroke-width="1.4"/>
+<rect x="70" y="10" width="220" height="82" rx="10" fill="#e6f0fa" stroke="#1f5f99" stroke-width="1.6"/>
+<text x="180" y="28" font-size="12" font-weight="700" fill="#1f5f99" text-anchor="middle">계획 · 릴리스</text>
+<text x="180" y="46" font-size="11" fill="#222" text-anchor="middle">계획 세우기 · 작은 릴리스</text>
+<text x="180" y="62" font-size="11" fill="#222" text-anchor="middle">고객 상주 · 메타포어</text>
+<text x="180" y="80" font-size="10" fill="#444" text-anchor="middle">무엇을 언제 내놓나</text>
+<circle cx="180" cy="154" r="46" fill="#fff" stroke="#2e7d32" stroke-width="2.4"/>
+<text x="180" y="138" font-size="12" font-weight="700" fill="#1b5e20" text-anchor="middle">5가치</text>
+<text x="180" y="154" font-size="10" fill="#222" text-anchor="middle">용기 · 단순성</text>
+<text x="180" y="168" font-size="10" fill="#222" text-anchor="middle">의사소통 · 피드백</text>
+<text x="180" y="182" font-size="10" fill="#222" text-anchor="middle">존중</text>
+<rect x="8" y="200" width="168" height="90" rx="10" fill="#fdf0e2" stroke="#a3560f" stroke-width="1.6"/>
+<text x="92" y="218" font-size="12" font-weight="700" fill="#8a4609" text-anchor="middle">설계 · 코드</text>
+<text x="92" y="236" font-size="11" fill="#222" text-anchor="middle">간단한 디자인 · 리팩토링</text>
+<text x="92" y="252" font-size="11" fill="#222" text-anchor="middle">코드 표준 · 공동 코드 소유</text>
+<text x="92" y="276" font-size="10" fill="#444" text-anchor="middle">코드를 어떻게 건강하게</text>
+<rect x="184" y="200" width="168" height="90" rx="10" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1.6"/>
+<text x="268" y="218" font-size="12" font-weight="700" fill="#1b5e20" text-anchor="middle">개발 리듬</text>
+<text x="268" y="236" font-size="11" fill="#222" text-anchor="middle">짝 프로그래밍 · TDD</text>
+<text x="268" y="252" font-size="11" fill="#222" text-anchor="middle">지속적 통합 · 40시간 작업</text>
+<text x="268" y="276" font-size="10" fill="#444" text-anchor="middle">매일 어떻게 일하나</text>
+</svg><figcaption>그림 4. XP의 5가치(가운데)와 12 기본원리(바깥 세 묶음). 원리가 헷갈리면 “이건 계획 얘기인가, 코드 얘기인가, 하루 리듬 얘기인가”부터 물어보세요.</figcaption></figure></div>
+
+<h3>계획 · 릴리스 묶음 — 무엇을 언제 내놓나</h3>
+<p><b>계획 세우기</b>(Planning Process, Planning Game)는 고객이 원하는 비즈니스 가치를 정하고, 개발자가 그걸 만드는 데 무엇이 필요한지, 어디서 늦어질 수 있는지를 알려 주며 함께 다음 릴리스 범위를 정하는 원리예요. 씽씽 팀은 운영팀이 스토리 카드에 우선순위를 매기고, 개발자가 카드마다 크기를 추정해서 이번 반복에 들어갈 카드를 같이 골라요. <b>작은 릴리스</b>(Small Release)는 작은 시스템을 먼저 만들어 내놓고 짧은 단위로 계속 업데이트하는 원리예요. 정기권 1차 버전은 ‘월 정기권 하나, 카드 결제만’으로 시작했어요. <b>고객 상주</b>(On-Site Customer)는 개발자의 질문에 바로 답할 수 있는 고객 대표를 프로젝트에 풀타임으로 두는 원리예요. 운영팀 매니저가 일주일에 사흘은 개발팀 자리에서 일해요. <b>메타포어</b>(Metaphor, 은유)는 시스템 구조를 모두가 쉽게 이해하는 공통의 이름·비유로 설명해서 고객과 개발자의 소통을 돕는 원리예요. 씽씽 팀은 정기권을 ‘교통카드 충전’에 빗대서, 충전·차감·잔액이라는 말을 기획서와 코드에서 똑같이 써요.</p>
+<h3>설계 · 코드 묶음 — 코드를 어떻게 건강하게</h3>
+<p><b>간단한 디자인</b>(Simple Design, 단순 설계)은 지금의 요구사항을 만족하는 가장 단순한 구조로 설계하는 원리예요. 단체 대여가 언젠가 다국어가 될지도 모른다고 지금 국제화 프레임워크부터 깔지 않아요. <b>리팩토링</b>(Refactoring)은 프로그램의 <b>겉으로 보이는 기능은 바꾸지 않으면서</b> 중복을 없애고 구조를 단순하게 다듬어 내부 구조를 개선하는 원리예요. 간단한 디자인으로 시작해도 기능이 붙으면 코드가 엉키는데, 그때마다 정리해 주는 게 리팩토링이라 둘은 짝이에요. <b>코드 표준</b>(Coding Standard)은 누가 짜도 같은 모양이 되도록 팀 전체의 코딩 규칙을 정해 지키는 원리예요. <b>공동 코드 소유</b>(Collective Ownership)는 시스템의 어떤 코드든 팀원 누구나 언제든 고칠 수 있다는 원리예요. “결제 모듈은 민수 씨 거라 민수 씨 휴가 끝날 때까지 못 고쳐요”가 사라져요. 대신 누구나 고칠 수 있으니 코드 표준과 자동 테스트가 반드시 같이 있어야 해요.</p>
+<h3>개발 리듬 묶음 — 매일 어떻게 일하나</h3>
+<p><b>짝 프로그래밍</b>(Pair Programming)은 개발자 둘이 한 화면 앞에서 함께 코딩하는 원리예요. 한 명은 키보드를 잡는 <b>드라이버</b>, 다른 한 명은 전체 방향과 실수를 보는 <b>내비게이터</b>이고, 일정 시간마다 역할을 바꿔요. 내비게이터가 “여기서 null 체크요!” 하고 외치는 구조라, 코드 리뷰가 작성과 동시에 끝나요. <b>테스트 기반 개발</b>(TDD, Test Driven Development)은 만들 기능에 대한 <b>테스트를 먼저 작성</b>하고, 그 테스트를 통과하도록 실제 코드를 쓰는 원리예요. 아래 단계 그림에서 한 바퀴를 직접 넘겨 보세요.</p>
+<div class="steps" data-title="TDD 한 사이클 — 정기권 할인 계산"><div class="step"><table class="tight"><tr><th>단계</th><th>한 일</th><th>테스트 결과</th></tr><tr class="hi"><td>① 빨강</td><td>테스트 먼저: “월 정기권 30일 = 19,900원, 학생은 20% 할인”</td><td>❌ 실패 (할인 함수가 아직 없음)</td></tr></table><p class="cap">코드보다 테스트가 먼저예요. 아직 기능이 없으니 실패하는 게 정상이고, 이 실패가 ‘무엇을 만들지’의 명세가 돼요.</p></div><div class="step"><table class="tight"><tr><th>단계</th><th>한 일</th><th>테스트 결과</th></tr><tr><td>① 빨강</td><td>학생 20% 할인 테스트 작성</td><td>❌ 실패</td></tr><tr class="hi"><td>② 초록</td><td>테스트를 통과할 만큼만 최소한의 코드 작성</td><td>✅ 통과</td></tr></table><p class="cap">일단 통과만 시켜요. 코드가 좀 못생겨도 괜찮아요. 간단한 디자인 원리 그대로예요.</p></div><div class="step"><table class="tight"><tr><th>단계</th><th>한 일</th><th>테스트 결과</th></tr><tr><td>② 초록</td><td>최소 코드로 통과</td><td>✅ 통과</td></tr><tr class="hi"><td>③ 리팩토링</td><td>중복된 금액 계산을 함수 하나로 정리</td><td>✅ 여전히 통과</td></tr></table><p class="cap">기능은 그대로, 구조만 개선. 테스트가 있으니 안심하고 고칠 수 있어요. 리팩토링이 ‘용기’ 가치와 이어지는 지점이에요.</p></div><div class="step"><table class="tight"><tr><th>단계</th><th>한 일</th><th>테스트 결과</th></tr><tr><td>③ 리팩토링</td><td>구조 정리</td><td>✅ 통과</td></tr><tr class="hi"><td>④ 다음 테스트</td><td>“단체 10명 이상은 추가 10% 할인” 테스트 작성</td><td>❌ 실패 → 다시 ①로</td></tr></table><p class="cap">다음 요구를 또 테스트로 먼저 적어요. 빨강 → 초록 → 리팩토링이 몇 분 단위로 계속 돌아요.</p></div></div>
+<p><b>지속적 통합</b>(CI, Continuous Integration)은 하루에도 여러 번 소프트웨어를 통합하고 빌드하는 원리예요. 각자 브랜치에서 2주씩 따로 일하다 마지막 날 한꺼번에 합치면 충돌이 산더미처럼 쌓여요. 조금씩 자주 합치고, 합칠 때마다 자동 빌드와 자동 테스트를 돌리면 문제가 생긴 지점을 몇 시간 안에 찾을 수 있어요. 현업에서 쓰는 GitHub Actions·Jenkins 파이프라인이 이 원리를 도구로 만든 거예요.</p>
+<div class="figwide"><figure class="mermaid"><img src="../assets/09baa55ffb84607a.png" alt="도식" loading="lazy" style="width:784px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption><figcaption>그림 5. 지속적 통합의 한 바퀴. 변경이 작고 자주 합쳐지니, 테스트가 깨져도 원인이 ‘방금 바꾼 몇 줄’로 좁혀져요.</figcaption></figure></div>
+<p>마지막 <b>40시간 작업</b>(40-Hour Work, 지속 가능한 속도)은 개발자가 피곤해서 실수하지 않도록 일주일에 40시간 이상 일하지 않게 하는 원리예요. 마감 전 밤샘으로 만든 코드는 다음 반복의 버그가 되어 돌아오니까, 반복이 계속되는 애자일에서는 속도를 일정하게 유지하는 게 결국 더 빠르다는 생각이에요.</p>
+<table class="tight"><tr><th>묶음</th><th>기본원리</th><th>한 줄 뜻</th></tr>
+<tr><td rowspan="4">계획 · 릴리스</td><td>계획 세우기</td><td>고객이 가치를 정하고 개발자가 필요·지연을 알려 함께 범위 결정</td></tr>
+<tr><td>작은 릴리스</td><td>작게 먼저 내고 짧은 단위로 업데이트</td></tr>
+<tr><td>고객 상주</td><td>질문에 즉시 답할 고객을 풀타임으로 상주</td></tr>
+<tr><td>메타포어</td><td>공통의 이름·비유로 구조를 설명해 소통</td></tr>
+<tr><td rowspan="4">설계 · 코드</td><td>간단한 디자인</td><td>현재 요구에 맞는 가장 단순한 설계</td></tr>
+<tr><td>리팩토링</td><td>기능은 그대로, 내부 구조 개선</td></tr>
+<tr><td>코드 표준</td><td>팀 공통 코딩 규칙</td></tr>
+<tr><td>공동 코드 소유</td><td>누구나 언제든 어떤 코드든 수정 가능</td></tr>
+<tr><td rowspan="4">개발 리듬</td><td>짝 프로그래밍</td><td>둘이 한 화면에서 함께 코딩</td></tr>
+<tr><td>테스트 기반 개발</td><td>테스트를 먼저, 통과하도록 코드 작성</td></tr>
+<tr><td>지속적 통합</td><td>하루 여러 번 통합·빌드·테스트</td></tr>
+<tr><td>40시간 작업</td><td>주 40시간 이하, 지속 가능한 속도</td></tr></table>
+<div class="box"><b>시험에는 이렇게 나와요</b>“XP의 기본원리가 <b>아닌</b> 것”에 짝 프로그래밍·공동 코드 소유·지속적 통합과 나란히 <b>Linear Sequential Method</b>(선형 순차 방식)가 나왔어요. 단계를 한 줄로 차례차례 밟는 건 폭포수 모형의 다른 이름이라 XP와 정반대예요. 원리 이름은 책 표기(40시간 작업·고객 상주·메타포어·간단한 디자인)와 영문·별칭(지속 가능한 속도·On-Site Customer·단순 설계)이 섞여 나오니 둘 다 익혀 두세요.</div>
+<div class="trap">공동 코드 소유를 “책임자가 없다”로 읽으면 안 돼요. 코드도 책임도 <b>팀 전체</b>가 나눠 가진다는 뜻이에요. 그래서 “개발 책임자가 모든 책임을 지고 팀원은 책임이 없다”는 XP 설명으로 틀린 문장이에요.</div>
+
+<h2>⑤ 스크럼 <span class="tag">기출 5회</span></h2>
+<p>XP가 개발자의 손 습관이라면, 스크럼은 팀이 2주를 어떻게 굴리는지에 대한 <b>운영 틀</b>이에요. <b>스크럼</b>(Scrum)은 짧은 개발 주기(스프린트)를 반복하면서, 팀이 스스로 할 일을 정하고 조직해 매 주기 끝에 동작하는 결과물을 내놓는 <b>팀 중심의 프로젝트 관리 방법론</b>이에요. 매일 정해진 시간·장소에서 짧게 모여 진행을 맞추는 것이 특징이에요. 이름은 럭비에서 선수들이 어깨를 맞대고 공을 다투는 대형에서 왔어요. 한 명의 에이스보다 팀 전체가 한 덩어리로 밀고 나간다는 뜻이죠. 스크럼은 “어떻게 코딩하라”는 규칙이 없어서 XP와 함께 쓰는 팀이 많아요(운영은 스크럼, 개발 습관은 XP).</p>
+<h3>스크럼의 역할 — 누가 무엇을 하나</h3>
+<p><b>제품 책임자</b>(PO, Product Owner)는 이해관계자들의 의견을 모아 제품에 대한 요구사항을 정리하는 사람이에요. 주로 개발 의뢰자나 사용자 쪽 대표가 맡고, 이해관계자 중 개발할 제품을 가장 잘 이해하고 요구사항에 대해 책임지고 결정할 수 있는 사람으로 정해요. 제품 백로그를 만들고 <b>우선순위를 정하는 권한</b>이 이 사람에게 있어요. 씽씽 2.0에서는 운영팀 매니저가 PO예요.</p>
+<p><b>스크럼 마스터</b>(SM, Scrum Master)는 팀이 스크럼 프로세스를 지키고 효과적으로 활용하도록 <b>돕고 보장하는</b> 사람이에요. 스크럼을 진행하면서 생기는 문제를 알아채고 해결하는 역할이라, 책에서는 ‘프로젝트 리더’라고도 적어요. 다만 개발팀에게 일을 지시하고 평가하는 관리자는 아니에요. 스크럼 마스터는 감독보다는 <b>매니저 겸 경호원</b>에 가까워요. 회의 시간을 지키게 하고, 스프린트 중간에 끼어드는 “이것 좀 급하게”를 막아 팀이 집중하게 해 주죠. 나머지 개발자들은 <b>개발팀</b>(Developers)으로, 스프린트 안에서 무엇을 어떻게 만들지 스스로 정해요.</p>
+<h3>제품 백로그와 스프린트</h3>
+<div class="duo"><div><p><b>제품 백로그</b>(Product Backlog)는 제품과 프로젝트에 대한 <b>모든 요구사항</b>을 우선순위대로 늘어놓은 목록이에요. 스크럼 팀이 해결해야 하는 일의 목록이라, 기능 요구뿐 아니라 소프트웨어 요구사항과 아키텍처 정의 같은 작업도 들어갈 수 있어요. 씽씽 2.0의 백로그 맨 위에는 ‘정기권 카드 결제’, 그 아래 ‘단체 대여 QR’, ‘쿠폰 개편’, ‘결제 서버 이중화’가 차례로 있어요. 백로그는 한 번 쓰고 끝나는 문서가 아니라 PO가 계속 다듬는 살아 있는 목록이에요.</p>
+<p><b>스프린트</b>(Sprint)는 실제 개발 작업 기간이에요. 책 기준으로 <b>2~4주</b>의 짧은 기간이고, 이걸 반복해서 수행하며 개발 품질을 높여요. 스크럼 공식 안내서(Scrum Guide 2020)는 “<b>한 달 이하</b>의 고정 길이”라고 적어요. 표현이 조금 달라도 둘 다 ‘몇 주짜리 짧은 주기’라는 점은 같아요. 스프린트를 시작할 때 팀은 제품 백로그 위쪽에서 이번에 할 항목을 골라 <b>스프린트 백로그</b>를 만들고(스프린트 계획), 스프린트가 끝나면 만든 결과물인 <b>증분</b>(Increment)을 이해관계자에게 보여 줘요(스프린트 리뷰).</p>
+<p><b>스크럼 미팅</b>(Scrum Meeting)은 매일 <b>15분 정도</b> 모여 오늘 할 일(To-Do)을 맞추는 회의로, <b>일일 스크럼·데일리 미팅</b>이라고도 해요. 보통 서서 해요. 앉으면 회의가 길어지거든요. 각자 어제 한 일, 오늘 할 일, 막힌 점을 말하고, 막힌 점의 해결은 회의 뒤로 미뤄요. <b>스프린트 회고</b>(Sprint Retrospective)는 지난 스프린트 동안 팀이 정한 규칙을 잘 지켰는지, 다음엔 무엇을 바꿀지 돌아보고 기록하는 자리예요. 보통 스프린트를 마무리하는 날, 리뷰 바로 뒤에 열어요. 리뷰와 회고는 헷갈리기 쉬운 짝이에요. <b>리뷰는 ‘무엇을 만들었나’</b>(제품)를 이해관계자와 보고, <b>회고는 ‘어떻게 일했나’</b>(과정)를 팀끼리 돌아봐요. 이벤트별 시간 상한 같은 세부는 S01에서 정리했어요.</p></div><figure><svg viewBox="0 0 360 250" font-family="sans-serif" role="img" aria-label="스크럼 한 바퀴. 왼쪽 제품 백로그에서 스프린트 계획을 거쳐 스프린트 백로그로, 가운데 2에서 4주 스프린트 큰 고리 안에 매일 15분 스크럼 미팅 작은 고리, 오른쪽으로 증분, 아래로 스프린트 리뷰와 스프린트 회고를 거쳐 다시 제품 백로그로 돌아오는 화살표">
+<defs><marker id="r4m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#333"/></marker></defs>
+<rect width="360" height="250" rx="12" fill="#f7f7f4"/>
+<path d="M50 74 L50 104" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#r4m6)"/>
+<path d="M92 128 L126 112" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#r4m6)"/>
+<path d="M240 100 L270 100" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#r4m6)"/>
+<path d="M310 122 L310 172" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#r4m6)"/>
+<path d="M268 196 L210 196" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#r4m6)"/>
+<path d="M120 196 L4 196 L4 54 L9 54" fill="none" stroke="#2e7d32" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#r4m6)"/>
+<rect x="10" y="34" width="84" height="40" rx="6" fill="#e6f0fa" stroke="#1f5f99" stroke-width="1.6"/>
+<text x="52" y="52" font-size="11" font-weight="700" fill="#1f5f99" text-anchor="middle">제품 백로그</text><text x="52" y="67" font-size="9" fill="#333" text-anchor="middle">PO가 우선순위</text>
+<rect x="10" y="108" width="84" height="40" rx="6" fill="#fff" stroke="#555"/>
+<text x="52" y="126" font-size="10" fill="#222" text-anchor="middle">스프린트 계획</text><text x="52" y="140" font-size="9" fill="#333" text-anchor="middle">→ 스프린트 백로그</text>
+<circle cx="184" cy="100" r="56" fill="#fff" stroke="#1f5f99" stroke-width="2.2"/>
+<text x="184" y="64" font-size="11" font-weight="700" fill="#1f5f99" text-anchor="middle">스프린트</text>
+<text x="184" y="78" font-size="10" fill="#333" text-anchor="middle">2~4주</text>
+<circle cx="184" cy="113" r="28" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1.6"/>
+<text x="184" y="110" font-size="9" fill="#1b5e20" text-anchor="middle">매일 15분</text><text x="184" y="122" font-size="9" fill="#1b5e20" text-anchor="middle">스크럼 미팅</text>
+<rect x="272" y="80" width="78" height="40" rx="6" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1.6"/>
+<text x="311" y="98" font-size="11" font-weight="700" fill="#1b5e20" text-anchor="middle">증분</text><text x="311" y="112" font-size="9" fill="#333" text-anchor="middle">동작하는 결과</text>
+<rect x="270" y="176" width="80" height="40" rx="6" fill="#fff" stroke="#555"/>
+<text x="310" y="194" font-size="10" fill="#222" text-anchor="middle">스프린트 리뷰</text><text x="310" y="208" font-size="9" fill="#333" text-anchor="middle">무엇을 만들었나</text>
+<rect x="122" y="176" width="86" height="40" rx="6" fill="#fff" stroke="#555"/>
+<text x="165" y="194" font-size="10" fill="#222" text-anchor="middle">스프린트 회고</text><text x="165" y="208" font-size="9" fill="#333" text-anchor="middle">어떻게 일했나</text>
+<text x="70" y="236" font-size="10" fill="#1b5e20">다음 스프린트로 (백로그 다시 다듬기)</text>
+</svg><figcaption>그림 6. 스크럼 한 바퀴. 큰 고리(스프린트) 안에 작은 고리(매일 15분 미팅)가 돌고, 끝나면 리뷰(제품)와 회고(과정)를 거쳐 다음 스프린트로 이어져요.</figcaption></figure></div>
+
+<p>씽씽 2.0 팀의 첫 스프린트를 한 바퀴 돌려 볼게요.</p>
+<div class="steps" data-title="씽씽 2.0 스프린트 1 한 바퀴 (2주)"><div class="step"><table class="tight"><tr><th>순서</th><th>일어난 일</th><th>등장 용어</th></tr><tr class="hi"><td>① 백로그 정리</td><td>PO(운영팀 매니저)가 ‘정기권 카드 결제’를 맨 위로 올림</td><td>제품 책임자 · 제품 백로그</td></tr></table><p class="cap">우선순위는 PO가 정해요. 개발팀은 크기를 추정해 의견을 보태요.</p></div><div class="step"><table class="tight"><tr><th>순서</th><th>일어난 일</th><th>등장 용어</th></tr><tr><td>①</td><td>백로그 우선순위 정리</td><td>제품 백로그</td></tr><tr class="hi"><td>② 스프린트 계획</td><td>백로그 위쪽 3개(정기권 결제·단체 QR·결제 실패 안내)를 이번 2주 목표로 선택</td><td>스프린트 · 스프린트 백로그</td></tr></table><p class="cap">팀이 스스로 할 수 있는 만큼만 가져가요. 누가 대신 할당해 주지 않아요.</p></div><div class="step"><table class="tight"><tr><th>순서</th><th>일어난 일</th><th>등장 용어</th></tr><tr><td>②</td><td>스프린트 백로그 확정</td><td>스프린트</td></tr><tr class="hi"><td>③ 매일 15분</td><td>3일째 미팅: “PG사 테스트 키가 안 나와서 막혔어요” → SM이 회의 뒤 PG사에 연락</td><td>스크럼 미팅 · 스크럼 마스터</td></tr></table><p class="cap">미팅에서는 막힌 점을 말만 하고, 해결은 SM이 회의 밖에서 도와요.</p></div><div class="step"><table class="tight"><tr><th>순서</th><th>일어난 일</th><th>등장 용어</th></tr><tr><td>③</td><td>매일 미팅, 장애 제거</td><td>스크럼 미팅</td></tr><tr class="hi"><td>④ 진척 확인</td><td>번다운 차트의 실제선이 이상선 위로 벌어짐 → ‘결제 실패 안내’를 다음 스프린트로 미루기로 PO와 합의</td><td>번다운 차트</td></tr></table><p class="cap">남은 일이 줄어드는 속도가 눈에 보이니, 마지막 날 ‘사실 못 했어요’가 사라져요.</p></div><div class="step"><table class="tight"><tr><th>순서</th><th>일어난 일</th><th>등장 용어</th></tr><tr><td>④</td><td>범위 조정</td><td>번다운 차트</td></tr><tr class="hi"><td>⑤ 스프린트 리뷰</td><td>정기권 결제·단체 QR을 회원 100명에게 시범 공개, “학생 할인은요?” 피드백 → 백로그에 추가</td><td>증분 · 리뷰</td></tr></table><p class="cap">동작하는 결과를 보여 주고 받은 피드백이 다음 백로그가 돼요. 애자일 선언 ‘고객과의 협력’ 장면이에요.</p></div><div class="step"><table class="tight"><tr><th>순서</th><th>일어난 일</th><th>등장 용어</th></tr><tr><td>⑤</td><td>시범 공개, 피드백 수집</td><td>리뷰</td></tr><tr class="hi"><td>⑥ 스프린트 회고</td><td>“PG사 연동은 스프린트 시작 전에 미리 확인하자”를 규칙으로 기록. 이번에 끝낸 양(25포인트)이 다음 계획의 기준</td><td>스프린트 회고 · 속도</td></tr></table><p class="cap">회고는 제품이 아니라 일하는 방식을 고쳐요. 그리고 다음 스프린트 ①로 돌아가요.</p></div></div>
+<h3>번다운 차트와 속도</h3>
+<div class="duo"><div><p><b>번다운 차트</b>(Burn Down Chart)는 스프린트 동안 <b>남아 있는 백로그</b>(남은 작업량)를 시간에 따라 그래프로 그린 차트예요. 세로축이 남은 백로그(보통 스토리 포인트), 가로축이 시간이에요. 처음엔 높은 곳에서 시작해 스프린트 마지막 날 0에 닿는 게 목표라, 이상적인 진행을 나타내는 직선(이상선)과 실제 남은 양을 잇는 선(실제선)을 같이 그려 비교해요. 일이 ‘타서 줄어드는(burn down)’ 모양이라 붙은 이름이에요.</p></div><figure><svg viewBox="0 0 360 230" font-family="sans-serif" role="img" aria-label="씽씽 2.0 스프린트 1 번다운 차트. 세로축 남은 백로그 스토리 포인트 0에서 30, 가로축 1일부터 10일. 30에서 0으로 내려가는 점선 이상선과, 3일째부터 이상선 위로 벌어졌다가 6일째 범위 조정으로 뚝 떨어지고 10일째 0에 닿는 실선 실제선">
+<rect width="360" height="230" rx="12" fill="#f7f7f4"/>
+<path d="M50 20 L50 190 L340 190" fill="none" stroke="#333" stroke-width="1.5"/>
+<g font-size="10" fill="#333" text-anchor="end"><text x="44" y="34">30</text><text x="44" y="90">20</text><text x="44" y="146">10</text><text x="44" y="194">0</text></g>
+<g stroke="#ccc" stroke-width="0.8"><path d="M50 30 L340 30"/><path d="M50 86 L340 86"/><path d="M50 142 L340 142"/></g>
+<g font-size="10" fill="#333" text-anchor="middle"><text x="50" y="206">1일</text><text x="114" y="206">3</text><text x="178" y="206">5</text><text x="210" y="206">6</text><text x="274" y="206">8</text><text x="338" y="206">10일</text></g>
+<path d="M50 30 L338 190" fill="none" stroke="#1f5f99" stroke-width="2" stroke-dasharray="6 4"/>
+<polyline points="50,30 82,41 114,58 146,64 178,75 210,86 210,114 242,136 274,153 306,170 338,190" fill="none" stroke="#b23b3b" stroke-width="2.4"/>
+<text x="216" y="104" font-size="10" fill="#b23b3b">6일: 범위 조정(−5)</text>
+<text x="20" y="14" font-size="10" fill="#333">남은 백로그(포인트)</text>
+<rect x="232" y="26" width="104" height="38" rx="5" fill="#fff" stroke="#999"/>
+<path d="M240 38 L262 38" stroke="#1f5f99" stroke-width="2" stroke-dasharray="6 4"/><text x="268" y="42" font-size="10" fill="#222">이상선</text>
+<path d="M240 54 L262 54" stroke="#b23b3b" stroke-width="2.4"/><text x="268" y="58" font-size="10" fill="#222">실제선</text>
+<text x="195" y="222" font-size="10" fill="#333" text-anchor="middle">시간(스프린트 10 작업일) →</text>
+</svg><figcaption>그림 7. 씽씽 2.0 스프린트 1의 번다운 차트. 실제선이 이상선 위로 벌어지는 게 보이자 6일째 범위를 조정했어요. 세로는 남은 일, 가로는 시간이에요.</figcaption></figure></div>
+
+<p><b>속도</b>(Velocity)는 한 번의 스프린트에서 한 팀이 제품 백로그를 어느 정도 감당할 수 있는지에 대한 <b>추정치</b>예요. 지난 스프린트들에서 실제로 끝낸 양(예: 25포인트, 22포인트, 24포인트)을 보고 다음 스프린트에 가져갈 양을 정하는 기준으로 써요. 자동차 속도계처럼 ‘이 팀은 2주에 대략 이만큼 간다’를 알려 주는 숫자예요. 팀마다 포인트 기준이 달라서 팀끼리 속도를 비교하는 데 쓰면 안 돼요.</p>
+<table class="tight"><tr><th>스크럼 주요 용어</th><th>한 줄 정의</th><th>씽씽 2.0</th></tr>
+<tr><td>제품 책임자(PO)</td><td>이해관계자 의견을 모아 요구사항을 정리하고 백로그 우선순위를 결정하는 책임자</td><td>운영팀 매니저</td></tr>
+<tr><td>제품 백로그</td><td>제품·프로젝트의 모든 요구사항을 우선순위대로 정리한 목록</td><td>정기권 결제 > 단체 QR > 쿠폰 개편 …</td></tr>
+<tr><td>스프린트</td><td>실제 개발 기간, 2~4주(공식 가이드: 1개월 이하)로 반복</td><td>2주</td></tr>
+<tr><td>스크럼 미팅</td><td>매일 15분, 할 일 맞추기(일일 스크럼·데일리 미팅)</td><td>매일 오전 10시, 서서</td></tr>
+<tr><td>스크럼 마스터</td><td>프로세스를 지키게 돕고 문제를 찾아 해결(장애 제거)</td><td>PG사 테스트 키 문제 해결</td></tr>
+<tr><td>스프린트 회고</td><td>규칙 준수·개선점을 돌아보고 기록</td><td>“연동 사전 확인” 규칙 추가</td></tr>
+<tr><td>번다운 차트</td><td>남은 백로그를 시간 흐름에 따라 그린 그래프(세로 백로그, 가로 시간)</td><td>그림 7</td></tr>
+<tr><td>속도</td><td>한 스프린트에 처리 가능한 백로그 양의 추정치</td><td>약 24포인트</td></tr></table>
+<div class="box"><b>시험에는 이렇게 나와요</b>스크럼 용어 설명 중 틀린 것을 고르는 문제에서 “<b>스프린트는 3달 이상</b>의 장기간 개발 기간”이 틀린 선지였어요. 짧은 주기(2~4주)가 스크럼의 핵심이에요. 맞는 선지로는 “스크럼 마스터는 팀이 스크럼을 효과적으로 활용하도록 보장”, “제품 백로그에는 요구사항·아키텍처 정의도 들어갈 수 있음”, “속도는 한 스프린트에 감당할 백로그의 추정치”가 나왔어요. 책은 최근 시험(26년 1·2·3회)에 스크럼 용어가 연달아 나왔다고 표시하니, 용어 8개의 뜻을 짝지어 둬야 해요. 엉뚱한 곳의 함정도 있어요. 네트워크 연결 기술을 묻는 문제(정답 소켓)에 ‘스크럼 기술’이 끼어 나와요. 스크럼은 기술이 아니라 팀 운영 방법이에요.</div>
+
+<h2>⑥ 그 밖의 애자일 — 린 · 칸반 · 크리스탈 · ASD · FDD</h2>
+<p>XP와 스크럼이 애자일의 두 주연이라면, 나머지 방법론은 각자 다른 고민에서 출발한 조연들이에요. 이름과 한 줄 특징만 알아 두면 “애자일 방법론이 아닌 것” 문제를 풀 수 있고, 책이 짚는 특징(린의 JIT, 크리스탈의 6~8명, ASD의 혼란·JAD)이 선지로 나올 때 바로 알아볼 수 있어요.</p>
+<h3>린(Lean)</h3>
+<p><b>린</b>(Lean)은 도요타 자동차의 생산 방식인 <b>린 시스템</b>의 품질 기법을 소프트웨어 개발 과정에 적용해서 <b>낭비 요소를 제거</b>하고 품질을 높이는 방법론이에요. 소프트웨어에서 낭비란 쓰지 않을 기능, 기다리는 시간, 반쯤 만들다 멈춘 작업, 불필요한 문서·승인, 결함 같은 것들이에요. 린의 대표 도구가 둘 있어요. <b>JIT</b>(Just In Time, 적시 생산)는 <b>필요한 것을 필요한 때에 필요한 만큼만</b> 만드는 원칙이에요. 공장에서 재고를 쌓아 두지 않듯, 6개월 뒤에나 쓸 기능을 미리 만들어 쌓아 두지 않아요. 그리고 일의 흐름을 눈에 보이게 하는 <b>칸반 보드</b>를 써요.</p>
+<h3>칸반(Kanban)</h3>
+<div class="duo"><div><p><b>칸반</b>(Kanban)은 작업을 <b>시각화</b>해서, 작업에 참여한 팀이 업무와 각 팀원이 할 수 있는 작업량을 한눈에 파악하게 해 주는 애자일 프로젝트 관리 도구예요. 일본어로 ‘간판’이라는 뜻이고, 도요타 공장에서 부품 보충 신호로 쓰던 카드에서 왔어요. 칸반 보드에서 <b>열</b>(세로 칸)은 업무 단계(할 일·진행 중·검토·완료)를, <b>카드</b>는 작업 하나를 나타내요. 카드가 왼쪽에서 오른쪽으로 흘러가는 모습을 보면 어디서 일이 막히는지 바로 보여요. 핵심 장치는 <b>WIP 제한</b>(Work In Progress, 진행 중 작업 개수 상한)이에요. ‘진행 중’ 칸에 카드가 3개 넘게 못 들어가게 하면, 새 일을 시작하기보다 하던 일을 끝내는 쪽으로 팀이 움직여요.</p></div><figure><svg viewBox="0 0 360 214" font-family="sans-serif" role="img" aria-label="씽씽 2.0 칸반 보드. 네 열 할 일, 진행 중 WIP 3, 검토, 완료. 할 일 열에 학생 할인, 쿠폰 개편, 결제 서버 이중화 카드. 진행 중 열에 결제 실패 안내, 단체 관리자 화면, 정기권 해지 카드 세 장이 가득 참. 검토 열에 정기권 자동 연장 카드. 완료 열에 정기권 카드 결제, 단체 QR 카드">
+<rect width="360" height="214" rx="12" fill="#f7f7f4"/>
+<g font-size="11" font-weight="700" text-anchor="middle">
+<rect x="8" y="10" width="82" height="196" rx="6" fill="#fff" stroke="#777"/><text x="49" y="28" fill="#222">할 일</text>
+<rect x="96" y="10" width="82" height="196" rx="6" fill="#fff" stroke="#b23b3b" stroke-width="2"/><text x="137" y="28" fill="#b23b3b" font-size="10">진행 중·WIP 3</text>
+<rect x="184" y="10" width="82" height="196" rx="6" fill="#fff" stroke="#777"/><text x="225" y="28" fill="#222">검토</text>
+<rect x="272" y="10" width="80" height="196" rx="6" fill="#fff" stroke="#777"/><text x="312" y="28" fill="#222">완료</text>
+</g>
+<g font-size="10" fill="#222" text-anchor="middle">
+<rect x="14" y="38" width="70" height="30" rx="4" fill="#fdf0e2" stroke="#a3560f"/><text x="49" y="57">학생 할인</text>
+<rect x="14" y="74" width="70" height="30" rx="4" fill="#fdf0e2" stroke="#a3560f"/><text x="49" y="93">쿠폰 개편</text>
+<rect x="14" y="110" width="70" height="30" rx="4" fill="#fdf0e2" stroke="#a3560f"/><text x="49" y="125">결제 서버</text><text x="49" y="136">이중화</text>
+<rect x="102" y="38" width="70" height="30" rx="4" fill="#e6f0fa" stroke="#1f5f99"/><text x="137" y="53">결제 실패</text><text x="137" y="64">안내</text>
+<rect x="102" y="74" width="70" height="30" rx="4" fill="#e6f0fa" stroke="#1f5f99"/><text x="137" y="89">단체 관리자</text><text x="137" y="100">화면</text>
+<rect x="102" y="110" width="70" height="30" rx="4" fill="#e6f0fa" stroke="#1f5f99"/><text x="137" y="129">정기권 해지</text>
+<rect x="190" y="38" width="70" height="30" rx="4" fill="#e6f0fa" stroke="#1f5f99"/><text x="225" y="53">정기권</text><text x="225" y="64">자동 연장</text>
+<rect x="278" y="38" width="68" height="30" rx="4" fill="#e8f5e9" stroke="#2e7d32"/><text x="312" y="53">정기권</text><text x="312" y="64">카드 결제</text>
+<rect x="278" y="74" width="68" height="30" rx="4" fill="#e8f5e9" stroke="#2e7d32"/><text x="312" y="93">단체 QR</text>
+<text x="137" y="166" fill="#b23b3b">꽉 참 → 새 카드</text><text x="137" y="180" fill="#b23b3b">시작 금지</text>
+</g>
+</svg><figcaption>그림 8. 씽씽 2.0 칸반 보드. 열은 업무 단계, 카드는 작업 하나. ‘진행 중’이 WIP 3으로 꽉 찼으니 ‘학생 할인’은 하던 일이 하나 끝나야 시작할 수 있어요.</figcaption></figure></div>
+
+<p>칸반 보드와 번다운 차트는 둘 다 진척을 보여 주지만 질문이 달라요. 번다운 차트는 “<b>남은 일이 얼마나</b> 줄었나”(양의 변화), 칸반 보드는 “<b>각 일이 지금 어느 단계</b>에 있나”(위치와 막힘)를 보여 줘요. 또 스크럼과 칸반의 차이도 기억해 두세요. 스크럼은 2~4주 스프린트라는 <b>고정된 주기</b>와 정해진 역할이 있지만, 칸반은 고정 주기 없이 카드가 하나 끝나면 다음 카드를 당겨 오는 <b>연속 흐름</b> 방식이에요. 실제로는 스크럼 팀이 스프린트 백로그를 칸반 보드에 붙여 쓰는 경우가 많아요.</p>
+<h3>크리스탈(Crystal)</h3>
+<p><b>크리스탈</b>(Crystal)은 앨리스터 코오번(Alistair Cockburn)이 만든 방법론 묶음으로, 일반적으로 <b>프로세스나 도구보다 사람</b>에게 더 많은 중점을 두는 방법론이에요. 사람 사이의 소통과 협업이 잘 되면 프로세스는 가벼워도 된다는 생각이에요. 크리스탈은 하나의 고정된 방법이 아니라, 팀 규모와 시스템 중요도에 따라 <b>색깔 이름</b>이 붙은 여러 버전으로 나뉘어요(Clear → Yellow → Orange → Red 순으로 팀이 클수록 진한 색). 크리스탈은 팀 규모별 사이즈표 같은 거예요. 그중 가장 가벼운 <b>크리스탈 클리어</b>는 <b>생명이 걸릴 만큼 중요하지 않은 시스템</b>에서 <b>최대 6~8명</b>이 한 공간에 모여 일하는(공동 배치) 소프트웨어 개발 팀에 적용해요. 씽씽 2.0 팀 일곱 명이 같은 층에서 일한다면 S 사이즈, 클리어가 맞는 셈이에요.</p>
+<h3>ASD(Adaptive Software Development)</h3>
+<p><b>ASD</b>(적응형 소프트웨어 개발)는 짐 하이스미스(Jim Highsmith)가 제안한 방법론으로, 소프트웨어 개발을 <b>혼란(Chaos) 그 자체로 규정</b>하고, 혼란을 피할 대상이 아니라 <b>당연한 전제</b>로 놓은 뒤 그 혼란에 적응할 수 있는 개발 방법을 제시해요. 계획대로 될 거라는 기대를 처음부터 내려놓는 셈이죠. 그래서 계획–설계–구현 대신 <b>추측</b>(Speculate)–<b>협력</b>(Collaborate)–<b>학습</b>(Learn)의 주기를 돌아요. ‘계획’ 대신 ‘추측’이라고 부르는 것부터가 “틀릴 수 있다”는 인정이에요. 요구사항을 모을 때는 개발자와 사용자가 한자리에 모여 집중 워크숍으로 요구를 함께 정하는 <b>JAD</b>(Joint Application Development, 합동 애플리케이션 개발)를 활용해요.</p>
+<h3>FDD(Feature Driven Development)</h3>
+<div class="duo"><div><p><b>FDD</b>(기능 중심 개발)는 프로젝트를 <b>작은 기능</b>(Feature) 단위로 나누어 개발하고, 이를 통해 빠른 피드백과 지속적인 개선을 추구하는 방법론이에요. 여기서 기능은 “정기권 잔여 일수를 계산한다”처럼 고객이 가치를 느끼는 작은 결과 단위예요. 먼저 전체 모델과 기능 목록을 만든 뒤, 기능마다 짧게(보통 2주 이내) 설계하고 구현해서 하나씩 완성해 가요.</p></div><figure><svg viewBox="0 0 360 290" font-family="sans-serif" role="img" aria-label="애자일 계열 비교 카드 여섯 장. XP 개발 습관, 짝 프로그래밍 TDD CI. 스크럼 팀 운영 틀, 스프린트 2에서 4주 PO SM. 린 낭비 제거, 도요타, JIT 칸반. 칸반 작업 시각화, 열은 단계, WIP 제한. 크리스탈 사람 중심, 색깔별 규모, 클리어는 6에서 8명. ASD 혼란 전제, 추측 협력 학습, JAD. 맨 아래 FDD 기능 단위로 나눠 개발">
+<rect width="360" height="290" rx="12" fill="#f7f7f4"/>
+<g font-size="12" font-weight="700">
+<rect x="8" y="8" width="168" height="62" rx="8" fill="#fff" stroke="#1f5f99" stroke-width="1.6"/><text x="18" y="27" fill="#1f5f99">XP · 개발 습관</text>
+<rect x="184" y="8" width="168" height="62" rx="8" fill="#fff" stroke="#1f5f99" stroke-width="1.6"/><text x="194" y="27" fill="#1f5f99">스크럼 · 팀 운영 틀</text>
+<rect x="8" y="78" width="168" height="62" rx="8" fill="#fff" stroke="#2e7d32" stroke-width="1.6"/><text x="18" y="97" fill="#1b5e20">린 · 낭비 제거</text>
+<rect x="184" y="78" width="168" height="62" rx="8" fill="#fff" stroke="#2e7d32" stroke-width="1.6"/><text x="194" y="97" fill="#1b5e20">칸반 · 작업 시각화</text>
+<rect x="8" y="148" width="168" height="62" rx="8" fill="#fff" stroke="#a3560f" stroke-width="1.6"/><text x="18" y="167" fill="#8a4609">크리스탈 · 사람 중심</text>
+<rect x="184" y="148" width="168" height="62" rx="8" fill="#fff" stroke="#a3560f" stroke-width="1.6"/><text x="194" y="167" fill="#8a4609">ASD · 혼란 전제</text>
+<rect x="8" y="218" width="344" height="42" rx="8" fill="#fff" stroke="#555" stroke-width="1.6"/><text x="18" y="235" fill="#222">FDD · 기능 중심</text>
+</g>
+<g font-size="10" fill="#333">
+<text x="18" y="44">짝 프로그래밍 · TDD · CI</text><text x="18" y="60">5가치 · 12원리, 1~3주 반복</text>
+<text x="194" y="44">스프린트 2~4주 · 매일 15분</text><text x="194" y="60">PO · SM · 번다운 · 속도</text>
+<text x="18" y="114">도요타 린 시스템에서</text><text x="18" y="130">JIT(필요한 때 필요한 만큼) · 칸반</text>
+<text x="194" y="114">열 = 업무 단계, 카드 = 작업</text><text x="194" y="130">WIP 제한, 고정 주기 없음</text>
+<text x="18" y="184">프로세스·도구보다 사람</text><text x="18" y="200">색깔별 규모 · 클리어 6~8명</text>
+<text x="194" y="184">추측 → 협력 → 학습 주기</text><text x="194" y="200">JAD(합동 개발 워크숍) 활용</text>
+<text x="18" y="252">작은 기능 단위로 나눠 짧게 설계·구현, 빠른 피드백</text>
+</g>
+<text x="180" y="280" font-size="10" fill="#b23b3b" text-anchor="middle">애자일 아님: 폭포수 · 모듈 중심 개발 · 하둡</text>
+</svg><figcaption>그림 9. 애자일 계열 한눈에 보기. 카드 맨 위 한 단어(습관·운영·낭비·시각화·사람·혼란·기능)만 기억해도 “애자일이 아닌 것” 문제가 풀려요.</figcaption></figure></div>
+
+<p>아래 이름들이 애자일 방법론인지 아닌지 먼저 판정해 보고 오른쪽 칸을 확인해 보세요.</p>
+<table class="tight"><tr><th>이름</th><th>애자일인가?</th><th>이유</th></tr>
+<tr><td>칸반</td><td>예</td><td>작업 시각화 · WIP 제한</td></tr>
+<tr><td>기능 중심 개발(FDD)</td><td>예</td><td>작은 기능 단위 반복</td></tr>
+<tr><td>모듈 중심 개발</td><td><b>아니요</b></td><td>애자일 계열에 이런 방법론은 없음(구조적 설계 용어와 섞은 가짜 이름)</td></tr>
+<tr><td>크리스탈</td><td>예</td><td>사람 중심, 색깔별 규모</td></tr>
+<tr><td>하둡(Hadoop)</td><td><b>아니요</b></td><td>대용량 데이터 분산 처리 기술(빅데이터), 개발 방법론이 아님</td></tr>
+<tr><td>ASD</td><td>예</td><td>혼란 전제, 추측–협력–학습</td></tr>
+<tr><td>폭포수 모형</td><td><b>아니요</b></td><td>단계 순차 진행, 전통적 방법론</td></tr>
+<tr><td>린</td><td>예</td><td>낭비 제거, JIT</td></tr></table>
+<div class="box"><b>시험에는 이렇게 나와요</b>“애자일 방법론에 해당하지 <b>않는</b> 것”이 4회 나왔어요. 정답으로는 <b>모듈 중심 개발</b>(2회), <b>하둡</b>, <b>개발 및 검증</b>이 나왔고, 함께 나온 칸반·기능 중심 개발·XP·스크럼은 애자일이에요. 책도 이 유형은 방법론 이름을 외워 두는 게 답이라고 짚어요. 린·크리스탈·ASD 자체를 묻는 문제는 아직 드물지만, 정의 문장(“혼란을 전제로 적응”, “사람 중심 6~8명”, “JIT·칸반”)과 이름 짝짓기로 나올 수 있으니 한 줄씩은 꼭 붙여 두세요.</div>
+
+<h2>⑦ 한 장 정리</h2>
+<p>오늘 내용을 처음 장면으로 다시 꿰어 볼게요. 씽씽 2.0 팀은 6개월 계획표가 무너지자 <b>애자일 선언</b>의 가치(계획보다 변화 대응, 문서보다 동작하는 소프트웨어)를 택했어요. 팀 운영은 <b>스크럼</b>으로 2주 스프린트를 돌리고, 개발자들은 <b>XP</b>의 짝 프로그래밍·TDD·지속적 통합으로 매일 일하고, 일의 흐름은 <b>칸반 보드</b>로 봤어요. 린·크리스탈·ASD·FDD는 같은 가치관에서 갈라진 다른 처방이에요.</p>
+<p>하나 더 연결할 게 있어요. R03에서는 요구사항을 <b>유스케이스</b>로 그렸죠. 애자일 팀은 같은 요구를 보통 <b>사용자 스토리</b>로 적어요. 사용자 스토리는 “<b>(누구)로서, (무엇)을 하고 싶다, 왜냐하면 (이유)</b>” 형식의 짧은 문장을 카드 한 장에 쓴 요구사항이에요. “출퇴근하는 회원으로서, 정기권을 사고 싶다. 매일 결제 버튼 누르기 귀찮으니까.” 유스케이스가 액터와 시스템의 상호작용을 자세히 그린 설계 문서라면, 사용자 스토리는 “이 기능이 누구에게 왜 필요한가”만 적고 세부는 개발자와 PO의 대화로 채우는 <b>대화의 약속</b>이에요. 애자일 선언의 ‘문서보다 상호작용’이 요구사항 표기 방식에도 드러난 거예요.</p>
+<table class="tight"><tr><th>헷갈리는 짝</th><th>가르는 질문</th><th>답</th></tr>
+<tr><td>애자일 vs 폭포수</td><td>단계를 짧게 여러 번 도나, 한 번씩 완전히 끝내고 넘어가나?</td><td>반복·피드백 / 순차·문서 승인</td></tr>
+<tr><td>선언 4가치 방향</td><td>“보다” 뒤에 사람·동작 SW·고객 협력·변화 대응이 있나?</td><td>있으면 맞음, 뒤집혔으면 틀림</td></tr>
+<tr><td>XP vs 스크럼</td><td>개발자의 코딩 습관인가, 팀의 운영 틀인가?</td><td>짝·TDD·CI / 스프린트·PO·SM</td></tr>
+<tr><td>XP 5가치 vs 함정</td><td>용·단·소·피·존 안에 있나?</td><td>정형 분석·고객 배제는 아님</td></tr>
+<tr><td>스프린트 리뷰 vs 회고</td><td>제품(무엇)을 보나, 과정(어떻게)을 보나?</td><td>리뷰 = 증분 시연 / 회고 = 일하는 방식 개선</td></tr>
+<tr><td>번다운 차트 vs 칸반 보드</td><td>남은 양의 변화인가, 각 일의 현재 단계인가?</td><td>세로 남은 백로그·가로 시간 / 열 = 단계</td></tr>
+<tr><td>제품 책임자 vs 스크럼 마스터</td><td>무엇을 먼저 만들지 정하나, 팀이 잘 굴러가게 돕나?</td><td>우선순위 결정 / 프로세스·장애 제거</td></tr>
+<tr><td>스크럼 vs 칸반</td><td>고정 주기가 있나?</td><td>스프린트 2~4주 / 연속 흐름·WIP 제한</td></tr>
+<tr><td>린 vs 크리스탈 vs ASD</td><td>낭비인가, 사람인가, 혼란인가?</td><td>JIT·칸반 / 6~8명 / 추측–협력–학습·JAD</td></tr>
+<tr><td>유스케이스 vs 사용자 스토리</td><td>상호작용을 그린 문서인가, 대화의 약속인 카드인가?</td><td>R03 다이어그램 / “~로서 ~하고 싶다”</td></tr></table>
+<div class="memo">애자일 계열을 한 번에 외울 땐 씽씽 2.0 팀의 하루를 떠올려요. 아침 10시 서서 15분(<b>스크럼</b>) → 둘이 한 화면에서 테스트부터(<b>XP</b>) → 보드에서 카드 옮기기(<b>칸반</b>) → “이거 진짜 필요해?” 쓸데없는 일 빼기(<b>린</b>) → 일곱 명이 한 층에서 수다(<b>크리스탈</b>) → 계획은 추측일 뿐(<b>ASD</b>) → 오늘 끝낼 기능 하나(<b>FDD</b>).</div>
+<p><b>다음 장 예고:</b> R05에서는 다시 요구사항 쪽으로 돌아가 <b>분석 모델과 요구사항 관리 도구</b>(CASE 등)를 봐요. 애자일 팀이 쓰는 백로그·스토리 카드도 결국 요구사항을 관리하는 한 방식이라는 점을 이어서 볼게요.</p>
+
+<h2>확인 문제</h2>
+<ol class="quiz">
+<li>씽씽 2.0 팀이 XP를 도입하면서 사무실 회의실 네 곳에 XP의 가치 이름을 붙이려 한다. XP의 5가지 가치에 해당하지 <b>않는</b> 것은?<label class="opt"><input type="radio" name="R04-q1" value="1">① 존중(Respect)</label><label class="opt"><input type="radio" name="R04-q1" value="2">② 정형 검증(Formal Verification)</label><label class="opt"><input type="radio" name="R04-q1" value="3">③ 용기(Courage)</label><label class="opt"><input type="radio" name="R04-q1" value="4">④ 피드백(Feedback)</label></li>
+<li>애자일 선언의 가치를 씽씽 2.0 팀 상황에 적용한 설명으로 <b>틀린</b> 것은?<label class="opt"><input type="radio" name="R04-q2" value="1">① 상세 기획서를 다 쓰기 전에, 2주 뒤 동작하는 정기권 결제 화면을 먼저 보여 준다</label><label class="opt"><input type="radio" name="R04-q2" value="2">② 계약서의 기능 목록을 따지기보다 매주 운영팀과 데모를 보며 우선순위를 함께 정한다</label><label class="opt"><input type="radio" name="R04-q2" value="3">③ 처음 세운 6개월 일정을 지키는 것이 바뀐 요구에 대응하는 것보다 더 중요하다</label><label class="opt"><input type="radio" name="R04-q2" value="4">④ 협업 도구 사용 규칙보다 팀원끼리 직접 대화해 문제를 푸는 것을 더 중시한다</label></li>
+<li>씽씽 2.0 팀의 스크럼 운영에 대한 설명으로 <b>틀린</b> 것은?<label class="opt"><input type="radio" name="R04-q3" value="1">① 스프린트는 완성된 결과물을 한 번에 만들기 위해 3개월 이상으로 길게 잡는다</label><label class="opt"><input type="radio" name="R04-q3" value="2">② 제품 책임자는 이해관계자 의견을 모아 제품 백로그의 우선순위를 정한다</label><label class="opt"><input type="radio" name="R04-q3" value="3">③ 일일 스크럼은 매일 15분 정도 진행 상황과 오늘 할 일을 맞추는 회의다</label><label class="opt"><input type="radio" name="R04-q3" value="4">④ 번다운 차트는 남은 백로그의 양을 시간에 따라 보여 준다</label></li>
+<li>XP를 도입한 씽씽 2.0 팀의 모습으로 <b>옳지 않은</b> 것은?<label class="opt"><input type="radio" name="R04-q4" value="1">① 두 개발자가 한 화면 앞에서 번갈아 키보드를 잡고 쿠폰 모듈을 작성한다</label><label class="opt"><input type="radio" name="R04-q4" value="2">② 기능을 만들기 전에 실패하는 테스트부터 작성한다</label><label class="opt"><input type="radio" name="R04-q4" value="3">③ 하루에도 여러 번 코드를 통합 브랜치에 합치고 자동 테스트를 돌린다</label><label class="opt"><input type="radio" name="R04-q4" value="4">④ 요구사항 정의 → 설계 → 구현 → 테스트를 한 번씩 순서대로 완전히 끝내는 선형 순차 방식으로 진행한다</label></li>
+</ol><div class="answer-bar" data-id="R04" data-n="4"><code></code><button type="button">답안 복사</button></div><p><small>고른 뒤 <b>답안 복사</b> → 디스코드 공부 채널에 붙여넣기 하면 돼요.</small></p>
+<p>답장: <code>정처기 R04: 1)번호 2)번호 3)번호 4)번호</code></p>
+<p class="meta"><a href="2026-11-23-D049.html">← D049</a>  </p>
+<script>
+document.querySelectorAll('.answer-bar').forEach(bar=>{
+  const id=bar.dataset.id,n=+bar.dataset.n,out=bar.querySelector('code'),btn=bar.querySelector('button');
+  const text=()=>'정처기 '+id+': '+Array.from({length:n},(_,i)=>{const c=document.querySelector('input[name="'+id+'-q'+(i+1)+'"]:checked');return (i+1)+')'+(c?c.value:'?')}).join(' ');
+  document.querySelectorAll('input[name^="'+id+'-q"]').forEach(r=>r.addEventListener('change',()=>{out.textContent=text()}));
+  out.textContent=text();
+  btn.addEventListener('click',async()=>{const t=text();try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}btn.textContent='복사됨 ✓';setTimeout(()=>btn.textContent='답안 복사',1500)});
+});
+</script>
+
+
+<script>
+// 단계 애니메이션: <div class="steps" data-title="제목"><div class="step">…<p class="cap">설명</p></div>…</div>
+document.querySelectorAll('.steps').forEach(box=>{
+  const st=[...box.querySelectorAll(':scope > .step')]; let i=0, timer=null;
+  const head=document.createElement('div'); head.className='steps-head';
+  head.innerHTML='<b>'+(box.dataset.title||'단계별로 보기')+'</b><span class="steps-dots"></span>';
+  const dots=head.querySelector('.steps-dots');
+  st.forEach((_,k)=>{const d=document.createElement('button');d.type='button';d.className='dot';d.onclick=()=>{stop();show(k)};dots.append(d)});
+  const bar=document.createElement('div'); bar.className='steps-bar';
+  const mk=(t,f)=>{const b=document.createElement('button');b.type='button';b.textContent=t;b.onclick=f;bar.append(b);return b};
+  const prev=mk('◀ 이전',()=>{stop();show(i-1)}), next=mk('다음 ▶',()=>{stop();show(i+1)});
+  const play=mk('▶▶ 자동',()=>{ if(timer){stop();return} play.textContent='■ 멈춤'; if(i===st.length-1) show(0); timer=setInterval(()=>{ if(i>=st.length-1){stop();return} show(i+1) },2600)});
+  function stop(){ if(timer){clearInterval(timer);timer=null} play.textContent='▶▶ 자동' }
+  function show(k){ i=Math.max(0,Math.min(st.length-1,k)); st.forEach((s,n)=>s.classList.toggle('on',n===i));
+    [...dots.children].forEach((d,n)=>d.classList.toggle('on',n===i)); prev.disabled=i===0; next.disabled=i===st.length-1;
+    }
+  box.prepend(head); box.append(bar); show(0);
+});
+</script>
+<footer>2027년 정기 기사 1회 정보처리기사 필기 준비 · 공식 범위: Q-Net 2027~2029 출제기준</footer>
+</main></body></html>
