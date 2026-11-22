@@ -9,7 +9,8 @@
 <link rel="stylesheet" href="../style.css?v=4788e468"></head>
 <body><main>
 <nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a> · <a href="../listen.html">🎧 강의 듣기</a></nav>
-<h1>D049 · 길벗투어 E-R 그림을 표로 옮기는 법 — 계층·네트워크·관계형, 논리 설계 단계, 변환 규칙, 품질 검증</h1><div class="meta">2026-11-23 · B3 데이터 입출력 구현 &gt; 논리 데이터베이스 설계 &gt; 논리적 데이터모델링 · 품질검증</div><p><span class="tag">B3</span> 어제 D047에서 길벗투어의 업무를 E-R 그림 한 장으로 그렸어요. 그림은 회의실 화이트보드에 붙어 있어도 되지만, DB는 그림을 읽지 못해요. 오늘은 그 그림을 DBMS가 알아듣는 <b>표</b>로 옮기는 날이에요. 그림은 아무 벽에나 걸 수 있지만 표 건물은 DBMS가 문을 열어 줘야 서 있을 수 있어요 — 그래서 이 단계부터는 “어떤 DBMS(어떤 데이터 모델)로 갈 거냐”가 먼저 정해져야 해요. 데이터 모델링 · 설계 단계 묶음은 최근 20회 시험에 <b>20회 모두</b> 나온 2과목 단골이에요.</p>
+<h1>D049 · 길벗투어 E-R 그림을 표로 옮기는 법 — 계층·네트워크·관계형, 논리 설계 단계, 변환 규칙, 품질 검증</h1><div class="meta">2026-11-23 · B3 데이터 입출력 구현 &gt; 논리 데이터베이스 설계 &gt; 논리적 데이터모델링 · 품질검증</div><div class="box audio"><b>🎧 듣는 강의 (약 31분)</b>오늘 내용을 이어서 설명해요. 먼저 듣고 페이지를 보면 더 빨라요.<p style="margin:10px 0 0"><b>1부</b> (약 13분)</p><audio controls preload="none" src="../assets/audio/D049-1.mp3?v=804" style="width:100%;margin-top:8px"></audio><p style="margin:10px 0 0"><b>2부</b> (약 17분)</p><audio controls preload="none" src="../assets/audio/D049-2.mp3?v=1029" style="width:100%;margin-top:8px"></audio></div>
+<p><span class="tag">B3</span> 어제 D047에서 길벗투어의 업무를 E-R 그림 한 장으로 그렸어요. 그림은 회의실 화이트보드에 붙어 있어도 되지만, DB는 그림을 읽지 못해요. 오늘은 그 그림을 DBMS가 알아듣는 <b>표</b>로 옮기는 날이에요. 그림은 아무 벽에나 걸 수 있지만 표 건물은 DBMS가 문을 열어 줘야 서 있을 수 있어요 — 그래서 이 단계부터는 “어떤 DBMS(어떤 데이터 모델)로 갈 거냐”가 먼저 정해져야 해요. 데이터 모델링 · 설계 단계 묶음은 최근 20회 시험에 <b>20회 모두</b> 나온 2과목 단골이에요.</p>
 <ul>
 <li>계층형(트리 · 1:N만) · 네트워크형(그래프 · 오너–멤버 · CODASYL DBTG · N:M) · 관계형(표 · 키)을 관계 표현 방식으로 구별하고, 관계형이 등장한 이유를 말한다</li>
 <li>논리적 설계(데이터 모델링)의 작업 넷을 개념 · 물리 설계의 작업과 가르고, ‘레코드 집중 분석’이 물리 설계임을 가려낸다</li>
@@ -227,7 +228,40 @@ document.querySelectorAll('.answer-bar').forEach(bar=>{
   btn.addEventListener('click',async()=>{const t=text();try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}btn.textContent='복사됨 ✓';setTimeout(()=>btn.textContent='답안 복사',1500)});
 });
 </script>
-
+<script>
+// 2026-11-14: 진수 님 요청 — 페이지 하단에 늘 붙어 있는 음악 앱식 플레이어. 본문 <audio>는 숨기고 하단 막대 하나로 1부·2부를 이어 튼다.
+(()=>{const box=document.querySelector('.box.audio');if(!box)return;
+const tr=[...box.querySelectorAll('audio')].map((a,i,all)=>({src:a.getAttribute('src'),key:'pos:'+a.getAttribute('src').split('?')[0],name:all.length>1?(i+1)+'부':'강의'}));
+box.querySelectorAll('audio').forEach(a=>a.remove());box.querySelectorAll('p').forEach(p=>{if(/^\s*\d부/.test(p.textContent))p.remove()});
+const A=new Audio(),rates=[1,1.25,1.5,1.75,2],fmt=t=>isFinite(t)?Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0'):'0:00';
+A.preload='metadata';let cur=0;
+const pick=document.createElement('div');pick.className='audio-ctl';box.appendChild(pick);
+tr.forEach((t,i)=>{const b=document.createElement('button');b.type='button';b.textContent='▶ '+(tr.length>1?t.name+' 듣기':'듣기');b.onclick=()=>{load(i);A.play()};pick.appendChild(b)});
+const bar=document.createElement('div');bar.className='mbar';
+bar.innerHTML='<button class="mb-play" aria-label="재생">▶</button><button data-d="-10">⏪10</button><button data-d="10">10⏩</button>'+
+ '<div class="mb-mid"><div class="mb-title"></div><input type="range" min="0" value="0" step="1" aria-label="재생 위치"><div class="mb-time">0:00 / 0:00</div></div>'+
+ (tr.length>1?'<button class="mb-part">1부</button>':'')+'<button class="mb-rate">1×</button>';
+document.body.appendChild(bar);document.body.classList.add('has-mbar');
+const q=c=>bar.querySelector(c),pl=q('.mb-play'),rg=q('input'),tm=q('.mb-time'),rb=q('.mb-rate'),pt=q('.mb-part');
+const title=(document.querySelector('h1')||{}).textContent||'';
+function load(i){cur=i;A.src=tr[i].src;A.playbackRate=+localStorage.rate||1;q('.mb-title').textContent=tr[i].name+' · '+title;if(pt)pt.textContent=tr[i].name;
+  A.addEventListener('loadedmetadata',()=>{const p=+localStorage[tr[i].key];if(p>5&&p<A.duration-5)A.currentTime=p;A.playbackRate=+localStorage.rate||1;sync()},{once:true});
+  if('mediaSession'in navigator)navigator.mediaSession.metadata=new MediaMetadata({title:tr[i].name+' · '+title,artist:'정처기 듣는 강의'})}
+function sync(){rg.max=A.duration||1;rg.value=A.currentTime;tm.textContent=fmt(A.currentTime)+' / '+fmt(A.duration)}
+A.ontimeupdate=()=>{localStorage[tr[cur].key]=A.currentTime|0;sync()};
+A.onplay=A.onpause=()=>{pl.textContent=A.paused?'▶':'⏸';pl.setAttribute('aria-label',A.paused?'재생':'일시정지')};
+A.onended=()=>{localStorage[tr[cur].key]=0;if(cur+1<tr.length){load(cur+1);A.play()}};
+pl.onclick=()=>A.paused?A.play():A.pause();rg.oninput=()=>A.currentTime=+rg.value;
+bar.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>A.currentTime=Math.max(0,A.currentTime+ +b.dataset.d));
+rb.textContent=(+localStorage.rate||1)+'×';rb.onclick=()=>{const r=rates[(rates.indexOf(A.playbackRate)+1)%rates.length];A.playbackRate=r;localStorage.rate=r;rb.textContent=r+'×'};
+if(pt)pt.onclick=()=>{const p=!A.paused;load((cur+1)%tr.length);if(p)A.play()};
+if('mediaSession'in navigator){const m=navigator.mediaSession;m.setActionHandler('play',()=>A.play());m.setActionHandler('pause',()=>A.pause());
+  m.setActionHandler('seekbackward',()=>A.currentTime-=10);m.setActionHandler('seekforward',()=>A.currentTime+=10);
+  if(tr.length>1){m.setActionHandler('previoustrack',()=>{load(Math.max(0,cur-1));A.play()});m.setActionHandler('nexttrack',()=>{if(cur+1<tr.length){load(cur+1);A.play()}})}}
+document.addEventListener('keydown',e=>{if(/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;
+  if(e.key==='ArrowLeft'&&e.shiftKey){A.currentTime-=10;e.preventDefault()}if(e.key==='ArrowRight'&&e.shiftKey){A.currentTime+=10;e.preventDefault()}});
+const last=tr.findIndex(t=>+localStorage[t.key]>5);load(last>=0?last:0);})();
+</script>
 <script type="module">
 // SQL 실습 상자: text/plain sql-seed 스크립트(data-db=이름)에 스키마·데이터
 //              .sql-run(data-db=이름, data-note=예상 질문) 안의 textarea에 쿼리
