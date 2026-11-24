@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>R06 화면 설계 — UI의 종류와 원칙, 화면을 이루는 부품·손짓, 그리고 네 가지 설계 도구</title>
+<link rel="icon" href="../assets/favicon/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../assets/favicon/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="apple-touch-icon" href="../assets/favicon/apple-touch-icon.png">
+<link rel="stylesheet" href="../style.css?v=4788e468"></head>
+<body><main>
+<nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a> · <a href="../listen.html">🎧 강의 듣기</a></nav>
+<h1>R06 · 화면 설계 — UI의 종류와 원칙, 화면을 이루는 부품·손짓, 그리고 네 가지 설계 도구</h1><div class="meta">2026-11-25 · A2 1과목 리뉴얼</div><p><span class="tag">1과목 리뉴얼</span><span class="tag">A2</span> 리뉴얼 여섯째 장은 책 2장 <b>화면 설계</b>예요. 1장(R01~R05)이 “무엇을 만들까”를 정하는 장이었다면, 2장은 “사용자가 그걸 <b>어떻게 만지게 할까</b>”를 정하는 장이에요. 책 분량은 다섯 쪽 남짓이지만, UI 유형과 설계 원칙을 묻는 문제만 해도 최근 20회 시험 중 18회에 나왔어요. 1과목에서 가장 꾸준히 나오는 점수 창고 중 하나예요.</p>
+<ul>
+<li>UI의 넓은 정의와 좁은 정의를 말하고, CLI · GUI · NUI · OUI를 입력 방식으로 구별할 수 있다</li>
+<li>UI의 특징과 설계 원칙 네 가지(직관성 · 유효성 · 학습성 · 유연성)를 단서 단어로 구별하고, 무결성 · 희소성 같은 가짜 원칙을 가려낼 수 있다</li>
+<li>UI 설계 지침 아홉 가지와 UI 시스템에 필요한 기능 세 가지를 말하고, “오류를 숨긴다”, “심미성을 사용성보다 앞세운다” 같은 틀린 지침을 고를 수 있다</li>
+<li>화면 구성요소(그리드 · 버튼/컨트롤 다섯 종 · Page · 팝업 · Alert)와 제스처 아홉 가지를 구별하고, 라디오 버튼과 체크 박스, 플릭과 스와이프를 가를 수 있다</li>
+<li>와이어프레임 · 스토리보드 · 목업 · 프로토타입의 차이를 말하고, 유스케이스와 섞는 함정을 피할 수 있다</li>
+</ul>
+<div class="glance"><div><b>4</b>UI 유형</div><div><b>4</b>설계 원칙</div><div><b>9</b>설계 지침</div><div><b>5</b>화면 구성요소</div><div><b>9</b>제스처</div><div><b>4</b>설계 도구</div></div>
+<div class="box"><b>이 페이지의 흐름</b>⓪ 큰 그림 — 단체 대여를 화면으로 옮기는 날 → ① UI란, 네 가지 유형 → ② UI의 특징과 설계 원칙 네 가지 → ③ UI 설계 지침과 UI 시스템의 필요 기능 → ④ 화면 구성요소 → ⑤ UI 제스처 → ⑥ UI 화면 설계 도구 → ⑦ 책 밖에서 함께 나오는 말(UX · HCI · 감성공학 · 사용성 평가) → ⑧ 한 장 정리 → 확인 문제</div>
+
+<h2>⓪ 큰 그림 — 단체 대여를 화면으로 옮기는 날</h2>
+<div class="duo"><div><p>R05에서 <b>씽씽 2.0</b> 팀은 흩어져 있던 단체 대여 요구를 모델로 굳히고, 요구사항 관리 도구에 <code>REQ-031 단체 대여(최대 20명)</code>로 올려 베이스라인까지 잡았어요. 스프린트 4의 숙제는 이제 이 한 줄을 <b>사용자가 실제로 누르는 화면</b>으로 바꾸는 일이에요. 요구사항 문서는 회의에 들어간 사람만 읽지만 화면은 모든 이용자가 봐요. 그래서 화면에서 어긋난 요구는 회의실이 아니라 앱 마켓 별점 한 개짜리 리뷰로 돌아와요.</p>
+<p>팀이 화면을 만들며 차례로 묻는 질문이 곧 책 2장의 순서예요. 먼저 <b>어떤 종류의 UI로 만들까</b>(글자 명령? 그래픽? 손짓·음성?). 다음으로 <b>좋은 UI란 무엇이고 그러려면 무엇을 지켜야 하나</b>(원칙과 지침). 그다음 <b>어떤 부품과 손짓으로 화면을 짤까</b>(구성요소와 제스처). 마지막으로 <b>그 화면을 무엇으로 그려서 팀과 합의할까</b>(와이어프레임 · 스토리보드 · 목업 · 프로토타입). 아래 그림의 다섯 칸이 오늘 페이지의 다섯 섹션이에요.</p></div><figure><svg viewBox="0 0 360 304" font-family="sans-serif" role="img" aria-label="큰 그림. 맨 위 REQ-031 단체 대여 최대 20명 상자에서 아래로 화살표가 이어진다. 1 어떤 UI인가 유형, 2 무엇을 지키나 원칙과 지침, 3 무엇으로 짜나 구성요소와 제스처, 4 어떻게 그려 합의하나 설계 도구 네 가지, 마지막으로 사용자 테스트 상자">
+<defs><marker id="r6a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#333"/></marker></defs>
+<rect width="360" height="304" rx="12" fill="#f7f7f4"/>
+<path d="M180 48 L180 60" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#r6a1)"/>
+<path d="M180 96 L180 108" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#r6a1)"/>
+<path d="M180 144 L180 156" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#r6a1)"/>
+<path d="M180 192 L180 204" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#r6a1)"/>
+<path d="M180 240 L180 252" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#r6a1)"/>
+<g font-size="12" fill="#222" text-anchor="middle">
+<rect x="70" y="12" width="220" height="36" rx="8" fill="#fff4e0" stroke="#a86400"/><text x="180" y="28" font-weight="bold">REQ-031 단체 대여</text><text x="180" y="42" font-size="11">최대 20명 · 베이스라인 v2 (R05)</text>
+<rect x="70" y="62" width="220" height="34" rx="8" fill="#e8f1fa" stroke="#1f5f99"/><text x="180" y="78" font-weight="bold">① 어떤 UI인가</text><text x="180" y="91" font-size="11">CLI · GUI · NUI · OUI</text>
+<rect x="70" y="110" width="220" height="34" rx="8" fill="#e8f1fa" stroke="#1f5f99"/><text x="180" y="126" font-weight="bold">② 무엇을 지키나</text><text x="180" y="139" font-size="11">특징 · 원칙 4 · 지침 9</text>
+<rect x="70" y="158" width="220" height="34" rx="8" fill="#e8f1fa" stroke="#1f5f99"/><text x="180" y="174" font-weight="bold">③ 무엇으로 짜나</text><text x="180" y="187" font-size="11">화면 구성요소 · 제스처</text>
+<rect x="70" y="206" width="220" height="34" rx="8" fill="#e8f1fa" stroke="#1f5f99"/><text x="180" y="222" font-weight="bold">④ 어떻게 그려 합의하나</text><text x="180" y="235" font-size="11">와이어프레임 · 스토리보드 · 목업 · 프로토타입</text>
+<rect x="70" y="254" width="220" height="36" rx="8" fill="#e9f5ec" stroke="#2e7d4f"/><text x="180" y="270" font-weight="bold">사용자 테스트</text><text x="180" y="284" font-size="11">고칠 곳을 찾아 ②로 되돌아감</text>
+</g>
+<g font-size="11" fill="#1f5f99" text-anchor="start"><text x="298" y="83">§1</text><text x="298" y="131">§2 · §3</text><text x="298" y="179">§4 · §5</text><text x="298" y="227">§6</text></g>
+<path d="M66 272 C 30 272, 30 128, 66 128" fill="none" stroke="#2e7d4f" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#r6a1)"/>
+</svg><figcaption>그림 1. 오늘의 큰 그림. 요구 한 줄이 화면이 되기까지 네 가지 질문을 차례로 거치고, 사용자 테스트에서 걸린 것은 원칙 · 지침 단계로 돌아가 고쳐요.</figcaption></figure></div>
+
+
+<h2>① UI란, 네 가지 유형 <span class="tag">기출 18회</span></h2>
+<h3>UI의 정의</h3>
+<p><b>UI(User Interface, 사용자 인터페이스)</b>는 사용자와 시스템이 서로 뜻을 주고받을 수 있게 그 사이에 놓인 접점이에요. 넓게 보면 사람과 시스템 사이의 의사소통을 돕는 <b>물리적 · 가상의 매개체 전부</b>(키보드, 마우스, 터치스크린, 스피커, 화면 속 버튼까지)를 말하고, 좁게 보면 우리가 흔히 말하는 <b>사람이 보고 만지는 화면</b>을 가리켜요. 시험은 이 두 뜻을 섞어 쓰니, “UI = 화면”만 기억하면 “UI는 물리적 매개체도 포함한다”는 맞는 선지를 틀렸다고 착각하기 쉬워요.</p>
+<p>UI와 늘 붙어 다니는 말이 <b>인터랙션(Interaction)</b>이에요. 입력 장치와 출력 장치를 매개로 사람과 디지털 시스템이 주고받는 의사소통 <b>과정</b> 자체를 말해요. 사용자가 버튼을 누르고(입력) 화면이 바뀌고(출력) 사용자가 그걸 보고 다음 행동을 고르는 한 바퀴가 하나의 인터랙션이에요. UI가 ‘접점’이라는 물건이라면 인터랙션은 그 접점에서 일어나는 ‘대화’예요. 뒤에 나올 유연성 원칙(“인터랙션을 최대한 포용”)과 프로토타입(“정적 화면에 인터랙션을 더한 것”)이 모두 이 단어에 기대고 있어요.</p>
+<h3>입력 방식으로 가르는 네 가지 유형</h3>
+<div class="duo"><div><p>UI 유형은 <b>사용자가 무엇으로 명령하는가</b> 하나로 갈라요. 역사 순서와도 거의 같아서 한 줄로 외우기 좋아요.</p>
+<p><b>CLI(Command Line Interface)</b>는 사용자가 <b>글자로 된 명령어를 키보드로 입력</b>하고 결과도 글자로 받는 방식이에요. DOS와 Unix 터미널이 대표예요. 씽씽 2.0의 관제 서버에서 운영자가 <code>scoot status --zone gangnam</code>을 쳐서 구역별 배터리 상태를 보는 장면이 CLI예요. 명령만 정확히 알면 빠르고 자동화(스크립트)도 쉽지만, 주문을 정확히 외워야 문이 열리는 마법사 학교처럼 처음 온 사람에게는 문턱이 높아요.</p>
+<p><b>GUI(Graphical User Interface)</b>는 창 · 아이콘 · 메뉴 같은 <b>그래픽 요소를 마우스나 전자펜으로 가리키고 눌러서</b> 명령하는 방식이에요. 명령어를 외우지 않아도 보이는 것을 누르면 되니 사용자 층이 크게 넓어졌어요. 씽씽 운영팀이 쓰는 관리자 웹 페이지(지도 위 킥보드 아이콘을 클릭해 상태 보기)가 GUI예요.</p>
+<p><b>NUI(Natural User Interface)</b>는 사람이 원래 쓰는 <b>몸짓 · 손가락 터치 · 음성 · 시선</b>처럼 자연스러운 행동으로 명령하는 방식이에요. 스마트폰의 멀티터치(두 손가락으로 지도 확대), 동작 인식 게임기, 음성 비서가 대표예요. 씽씽 이용자 앱에서 지도를 손가락으로 벌려 확대하고 “근처 킥보드 찾아 줘”라고 말하는 것이 NUI예요. CLI가 주문을 외워야 하는 마법사 학교라면, NUI는 손짓만 해도 알아듣는 눈치 빠른 점원이에요. ⑤에서 볼 제스처가 NUI의 대표 입력이에요.</p>
+<p><b>OUI(Organic User Interface)</b>는 <b>입력 장치가 곧 출력 장치</b>가 되는 방식이에요. 따로 화면을 보고 버튼을 누르는 게 아니라, 모든 사물이 스스로 입력을 받고 결과를 보여 줘요. 휘어지는 디스플레이, 만지면 색이 바뀌는 사물 표면이 예예요. 씽씽이 구상 중인 차세대 킥보드에서 손잡이를 꽉 쥐면(입력) 손잡이 자체의 LED 띠가 초록으로 바뀌며 반납 완료를 알리는(출력) 장면이 OUI예요. “사물 인터넷 시대의 UI”라고 기억하면 돼요.</p></div><figure><svg viewBox="0 0 360 236" font-family="sans-serif" role="img" aria-label="UI 유형 진화 띠. 왼쪽부터 CLI 검은 터미널에 글자 명령, GUI 창과 아이콘과 마우스 포인터, NUI 손가락 두 개와 말풍선, OUI 킥보드 손잡이 자체에 LED가 켜진 그림. 각 칸 아래에 입력 방식과 씽씽 예시가 적혀 있다. 위쪽에 시간 흐름 화살표">
+<defs><marker id="r6a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#333"/></marker></defs>
+<rect width="360" height="236" rx="12" fill="#f7f7f4"/>
+<path d="M14 18 L346 18" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#r6a2)"/>
+<text x="180" y="13" font-size="10" fill="#444" text-anchor="middle">먼저 나온 것 → 나중에 나온 것</text>
+<g font-size="12" fill="#222" text-anchor="middle">
+<rect x="8" y="28" width="82" height="198" rx="8" fill="#ffffff" stroke="#555"/>
+<rect x="96" y="28" width="82" height="198" rx="8" fill="#ffffff" stroke="#1f5f99"/>
+<rect x="184" y="28" width="82" height="198" rx="8" fill="#ffffff" stroke="#2e7d4f"/>
+<rect x="272" y="28" width="82" height="198" rx="8" fill="#ffffff" stroke="#a86400"/>
+<text x="49" y="47" font-weight="bold">CLI</text><text x="137" y="47" font-weight="bold">GUI</text><text x="225" y="47" font-weight="bold">NUI</text><text x="313" y="47" font-weight="bold">OUI</text>
+</g>
+<rect x="16" y="56" width="66" height="50" rx="4" fill="#222"/>
+<text x="21" y="74" font-size="9" fill="#7ee08a" font-family="monospace">$ scoot</text><text x="21" y="87" font-size="9" fill="#7ee08a" font-family="monospace">status</text><text x="21" y="100" font-size="9" fill="#7ee08a" font-family="monospace">ok 12대</text>
+<rect x="104" y="56" width="66" height="50" rx="4" fill="#e8f1fa" stroke="#1f5f99"/><rect x="104" y="56" width="66" height="10" fill="#1f5f99"/>
+<rect x="111" y="73" width="14" height="12" rx="2" fill="#fff" stroke="#1f5f99"/><rect x="131" y="73" width="14" height="12" rx="2" fill="#fff" stroke="#1f5f99"/><rect x="151" y="73" width="14" height="12" rx="2" fill="#fff" stroke="#1f5f99"/>
+<path d="M150 88 L150 102 L154 98 L158 104 L160 103 L156 97 L161 97 z" fill="#222"/>
+<circle cx="212" cy="88" r="7" fill="#cfe8d6" stroke="#2e7d4f"/><circle cx="236" cy="78" r="7" fill="#cfe8d6" stroke="#2e7d4f"/>
+<path d="M207 93 L198 102" fill="none" stroke="#2e7d4f" stroke-width="1.5" marker-end="url(#r6a2)"/><path d="M241 73 L250 64" fill="none" stroke="#2e7d4f" stroke-width="1.5" marker-end="url(#r6a2)"/>
+<rect x="196" y="56" width="34" height="14" rx="7" fill="#fff" stroke="#2e7d4f"/><text x="213" y="66" font-size="8" fill="#222" text-anchor="middle">찾아 줘</text>
+<path d="M284 92 L342 80" fill="none" stroke="#555" stroke-width="8" stroke-linecap="round"/>
+<path d="M300 88.7 L326 83.3" fill="none" stroke="#2e9e55" stroke-width="4" stroke-linecap="round"/>
+<text x="313" y="70" font-size="9" fill="#222" text-anchor="middle">쥐면 → 빛남</text>
+<g font-size="11" fill="#222" text-anchor="middle">
+<text x="49" y="126">글자 명령</text><text x="49" y="141">키보드</text>
+<text x="137" y="126">창 · 아이콘</text><text x="137" y="141">마우스 · 전자펜</text>
+<text x="225" y="126">몸짓 · 터치</text><text x="225" y="141">음성 · 동작 인식</text>
+<text x="313" y="126">사물이 곧 화면</text><text x="313" y="141">입력 = 출력</text>
+</g>
+<path d="M14 154 L84 154 M102 154 L172 154 M190 154 L260 154 M278 154 L348 154" fill="none" stroke="#bbb" stroke-width="1"/>
+<g font-size="10" fill="#333" text-anchor="middle">
+<text x="49" y="172">씽씽 예</text><text x="49" y="188">관제 서버</text><text x="49" y="202">명령으로</text><text x="49" y="216">상태 조회</text>
+<text x="137" y="172">씽씽 예</text><text x="137" y="188">관리자 웹</text><text x="137" y="202">지도 아이콘</text><text x="137" y="216">클릭</text>
+<text x="225" y="172">씽씽 예</text><text x="225" y="188">이용자 앱</text><text x="225" y="202">핀치 확대 ·</text><text x="225" y="216">음성 검색</text>
+<text x="313" y="172">씽씽 예</text><text x="313" y="188">손잡이 쥐어</text><text x="313" y="202">반납, 손잡이</text><text x="313" y="216">LED로 확인</text>
+</g>
+</svg><figcaption>그림 2. UI 유형 진화 띠. 칸을 가르는 질문은 하나, “무엇으로 명령하나?” 글자 → 그림 → 몸 → 사물 자체 순이에요.</figcaption></figure></div>
+
+<p class="hint">↔ 표가 넓어요. 옆으로 밀어서 보세요</p><table><tr><th>유형</th><th>무엇으로 명령하나</th><th>대표 예</th><th>단서 단어</th></tr>
+<tr><td>CLI</td><td>키보드로 글자 명령 입력, 결과도 글자</td><td>DOS, Unix 터미널</td><td>명령어 · 텍스트 · 문자열</td></tr>
+<tr><td>GUI</td><td>그래픽 요소를 마우스 · 전자펜으로 선택</td><td>윈도 바탕화면, 웹 페이지</td><td>그래픽 · 아이콘 · 마우스</td></tr>
+<tr><td>NUI</td><td>몸짓 · 터치 · 음성 등 자연스러운 행동</td><td>스마트폰 멀티터치, 동작 인식, 음성 비서</td><td>멀티터치 · 동작 인식 · 신체</td></tr>
+<tr><td>OUI</td><td>사물이 입력을 받고 스스로 출력</td><td>휘어지는 디스플레이, 반응하는 사물 표면</td><td>입력 장치 = 출력 장치 · 모든 사물</td></tr></table>
+<div class="box"><b>시험에는 이렇게 나와요</b>설명 한 줄을 주고 유형 이름을 고르게 하는 모양이 압도적이에요. “DOS · Unix처럼 명령어를 문자로 입력”, “텍스트로만 명령하고 결과를 본다”면 CLI, “멀티터치 · 동작 인식처럼 신체 부위를 이용”하면 NUI예요. 오답 자리에는 실제로 있는 이름(GUI · OUI)과 그럴듯하게 지어낸 이름(CUI · MUI)이 섞여 와요. 보기에 낯선 약자가 있으면 지어낸 이름일 가능성부터 의심하고, 설명의 <b>입력 수단</b> 단어(글자 · 마우스 · 신체 · 사물)를 찾아 칸을 정하세요.</div>
+
+<h2>② UI의 특징과 설계 원칙 네 가지 <span class="tag">기출 18회</span></h2>
+<h3>UI의 특징</h3>
+<p>UI가 왜 따로 설계할 대상인지는 UI가 해 주는 일을 보면 알 수 있어요. 책은 네 가지를 꼽아요. 첫째, 잘 만든 UI는 사용자가 잘못 누를 여지를 줄여 <b>오류를 최소화</b>해요. 둘째, 구현하려는 기능을 화면 위 버튼과 칸으로 드러내 <b>작업 기능을 구체화</b>해요. 셋째, 개발자가 아니라 <b>사용자 중심의 상호 작용</b>이 되도록 돕고, 넷째, 시스템이 지금 무슨 상태이고 방금 한 행동이 어떤 효과를 냈는지를 <b>보여 줘요</b>. 단체 대여 화면으로 말하면, 인원 칸에 숫자만 들어가게 해서 엉뚱한 입력을 막고(오류 최소화), “단체 대여”라는 기능을 신청 버튼 하나로 드러내고(기능 구체화), 신청 후 “20명 결제 완료”를 띄워 결과를 보여 주는 것이에요.</p>
+<p>그래서 이 특징을 뒤집은 문장이 단골 오답이에요. “UI는 편의성을 높여 <b>작업 시간을 증가</b>시킨다”는 말은 앞뒤가 안 맞아요. 편해지면 작업 시간은 줄어야 하죠. “UI는 <b>개발자 중심</b>으로 설계되어야 한다”도 틀린 말이에요. 화면은 그것을 쓰는 사람을 위해 있어요.</p>
+<h3>설계 원칙 네 가지 — 좋은 UI의 품질 기준</h3>
+<div class="duo"><div><p><b>UI 설계 원칙</b>은 “좋은 UI란 무엇인가”에 답하는 네 가지 품질 기준이에요. 구체적으로 무엇을 하라는 행동 규칙(③의 지침)보다 한 단계 위에 있는, 화면을 평가하는 잣대예요. 네 원칙마다 그 원칙을 이루는 세부 특성이 두세 개씩 붙어 있고, 시험은 이 세부 특성과 정의 속 단서 단어로 원칙 이름을 맞히게 해요.</p>
+<p><b>직관성</b>은 <b>누구나 처음 봐도 쉽게 이해하고 쓸 수 있어야</b> 한다는 원칙이에요. 세부 특성은 쉬운 검색, 쉬운 사용성, 일관성이에요. 단체 대여 화면에서 인원을 늘리는 버튼을 ‘+’ 모양으로 두고, 앱의 다른 화면과 같은 자리 같은 색으로 두면 설명서 없이도 누구나 누를 수 있어요. 시험 지문에 <b>“누구나 쉽게 이해하고 사용”</b>이 보이면 직관성이에요.</p>
+<p><b>유효성</b>은 사용자의 목표를 <b>정확하고 완벽하게 달성</b>하게 해야 한다는 원칙이에요. 세부 특성은 쉬운 오류 처리와 복구예요. 대표자가 20명분 결제를 눌렀을 때 중간에 몇 명만 빠지거나 두 번 결제되는 일 없이 정확히 한 번에 끝나고, 결제가 실패하면 처음부터 다시 입력하지 않고 그 자리에서 복구되는 것이 유효성이에요. 단서는 <b>“정확하고 완벽하게”</b>예요.</p>
+<p><b>학습성</b>은 <b>초보자와 숙련자 모두</b>가 쉽게 배우고 사용할 수 있어야 한다는 원칙이에요. 세부 특성은 쉬운 학습, 쉬운 접근, 쉬운 기억이에요. 단체 대여를 처음 신청해 보는 회사 총무도, 매주 동아리 라이딩을 잡는 회장도 금방 익히고 다음에 와서도 어디에 뭐가 있었는지 기억할 수 있어야 해요. 단서는 <b>“초보 · 숙련자 모두”, “배우고 기억”</b>이에요.</p>
+<p><b>유연성</b>은 사용자의 <b>인터랙션을 최대한 포용하고 실수를 방지</b>해야 한다는 원칙이에요. 세부 특성은 오류 예방, 실수 포용, 오류 감지예요. 인원 칸에 ‘20’이라고 쳐도 ‘스무 명’이라고 말해도 받아 주고(포용), 21을 넣는 순간 바로 경고해 결제 단계까지 가지 않게 막고(예방 · 감지), 실수로 지운 참가자를 되살릴 수 있게(실수 포용) 하는 것이 유연성이에요. 단서는 <b>“포용”, “실수 방지”</b>예요. 출제자는 직관성의 “누구나 쉽게”를 들고 와서 유연성이라는 옷을 입혀 보내는 걸 좋아해요. 옷이 아니라 이름표, 즉 단서 단어를 보세요.</p></div><figure><svg viewBox="0 0 360 262" font-family="sans-serif" role="img" aria-label="설계 원칙 네 칸. 왼쪽 위 직관성: 누구나 쉽게 이해 사용, 쉬운 검색 사용성 일관성. 오른쪽 위 유효성: 정확하고 완벽하게 목표 달성, 오류 처리 복구. 왼쪽 아래 학습성: 초보 숙련자 모두 쉽게 배움, 쉬운 학습 접근 기억, D007 정정 표시. 오른쪽 아래 유연성: 인터랙션 포용 실수 방지, 오류 예방 실수 포용 오류 감지">
+<rect width="360" height="262" rx="12" fill="#f7f7f4"/>
+<g font-size="12" fill="#222">
+<rect x="10" y="10" width="166" height="116" rx="8" fill="#e8f1fa" stroke="#1f5f99"/>
+<rect x="184" y="10" width="166" height="116" rx="8" fill="#e9f5ec" stroke="#2e7d4f"/>
+<rect x="10" y="134" width="166" height="118" rx="8" fill="#fff4e0" stroke="#a86400"/>
+<rect x="184" y="134" width="166" height="118" rx="8" fill="#f3ecfa" stroke="#6a3d9a"/>
+<text x="22" y="32" font-size="14" font-weight="bold">직관성</text><text x="22" y="52">“누구나 쉽게</text><text x="22" y="67">이해 · 사용”</text>
+<text x="196" y="32" font-size="14" font-weight="bold">유효성</text><text x="196" y="52">“정확하고 완벽하게</text><text x="196" y="67">목표 달성”</text>
+<text x="22" y="156" font-size="14" font-weight="bold">학습성</text><text x="22" y="176">“초보 · 숙련자 모두</text><text x="22" y="191">쉽게 배우고 기억”</text>
+<text x="196" y="156" font-size="14" font-weight="bold">유연성</text><text x="196" y="176">“인터랙션 포용 ·</text><text x="196" y="191">실수 방지”</text>
+</g>
+<g font-size="10" fill="#222">
+<rect x="20" y="80" width="46" height="18" rx="9" fill="#fff" stroke="#1f5f99"/><text x="43" y="93" text-anchor="middle">쉬운 검색</text>
+<rect x="70" y="80" width="54" height="18" rx="9" fill="#fff" stroke="#1f5f99"/><text x="97" y="93" text-anchor="middle">쉬운 사용성</text>
+<rect x="20" y="102" width="40" height="18" rx="9" fill="#fff" stroke="#1f5f99"/><text x="40" y="115" text-anchor="middle">일관성</text>
+<rect x="190" y="80" width="76" height="18" rx="9" fill="#fff" stroke="#2e7d4f"/><text x="228" y="93" text-anchor="middle">쉬운 오류 처리</text>
+<rect x="270" y="80" width="34" height="18" rx="9" fill="#fff" stroke="#2e7d4f"/><text x="287" y="93" text-anchor="middle">복구</text>
+<rect x="20" y="204" width="46" height="18" rx="9" fill="#fff" stroke="#a86400"/><text x="43" y="217" text-anchor="middle">쉬운 학습</text>
+<rect x="70" y="204" width="46" height="18" rx="9" fill="#fff" stroke="#a86400"/><text x="93" y="217" text-anchor="middle">쉬운 접근</text>
+<rect x="120" y="204" width="46" height="18" rx="9" fill="#fff" stroke="#a86400"/><text x="143" y="217" text-anchor="middle">쉬운 기억</text>
+<rect x="194" y="204" width="46" height="18" rx="9" fill="#fff" stroke="#6a3d9a"/><text x="217" y="217" text-anchor="middle">오류 예방</text>
+<rect x="244" y="204" width="46" height="18" rx="9" fill="#fff" stroke="#6a3d9a"/><text x="267" y="217" text-anchor="middle">실수 포용</text>
+<rect x="294" y="204" width="46" height="18" rx="9" fill="#fff" stroke="#6a3d9a"/><text x="317" y="217" text-anchor="middle">오류 감지</text>
+<rect x="20" y="228" width="88" height="18" rx="4" fill="#fdecea" stroke="#b23b3b"/><text x="64" y="241" text-anchor="middle" fill="#b23b3b">D007 단서 정정</text>
+</g>
+</svg><figcaption>그림 3. 설계 원칙 네 칸. 큰 글씨는 지문에서 찾을 단서 문구, 동그란 칩은 그 원칙을 이루는 세부 특성이에요.</figcaption></figure></div>
+
+<div class="trap"><b>정정합니다.</b> 예전 D007 페이지에서는 “초보자부터 숙련자까지 모두”를 <b>유연성</b>의 단서로 설명했어요. 책과 기출 기준으로는 이 단서가 <b>학습성</b>의 것이 맞아요. 유연성의 단서는 “인터랙션 포용 · 실수 방지”예요. D007로 외웠다면 이 칸만 바꿔 주세요. 헷갈리게 해서 미안해요.</div>
+<p>원칙 문제에는 이름만 그럴듯한 <b>가짜 원칙</b>도 섞여 나와요. 무결성, 희소성, 멀티운용성은 UI 설계 원칙이 아니에요(무결성은 데이터베이스, 희소성은 경제학에서 들어 본 말이죠). 또 하나의 경계 함정은 품질 표준 ISO/IEC 9126이에요. 여기서 학습성은 <b>사용성</b>의 하위 특성이에요. “기능성의 하위 특성이 아닌 것은?”에 학습성이 정답으로 나오는 이유예요. 품질 특성은 R19에서 자세히 볼게요.</p>
+<div class="box"><b>시험에는 이렇게 나와요</b>가장 흔한 모양은 “사용자가 누구나 쉽게 이해하고 사용할 수 있어야 한다는 원칙은?”이고 답은 직관성이에요. 오답 자리에는 유효성 · 유연성 같은 진짜 원칙과 무결성 · 희소성 · 멀티운용성 같은 가짜가 함께 와요. 학습성과 유연성은 단서를 바꿔 끼운 선지로 자주 시험해요. 원칙 문제와 짝으로 “UI 특징으로 틀린 것”도 나오는데, 답은 대개 “작업 시간을 증가시킨다”나 “개발자 중심으로 설계”예요.</div>
+
+<h2>③ UI 설계 지침과 UI 시스템의 필요 기능 <span class="tag">기출 12회</span></h2>
+<h3>원칙과 지침은 무엇이 다른가</h3>
+<p><b>UI 설계 지침</b>은 원칙을 화면에서 실제로 지키기 위해 설계자가 따라야 할 <b>구체적인 행동 규칙</b>이에요. 원칙이 “좋은 화면은 누구나 쉽게 쓸 수 있어야 한다”라는 목표라면, 지침은 “그러려면 조작 방법을 단순하게 하고, 주요 기능은 첫 화면에 보이게 두라”는 할 일 목록이에요. 시험 문제도 원칙은 이름 맞히기, 지침은 “옳지 않은 지침 고르기”로 모양이 달라요. 씽씽 팀은 아홉 가지 지침을 단체 대여 화면 리뷰 체크리스트로 썼어요.</p>
+<table><tr><th>지침</th><th>무엇을 하라는가</th><th>단체 대여 화면 리뷰에서</th></tr>
+<tr><td>사용자 중심</td><td>실제 사용자를 이해하고 그들이 쉽게 쓰게 만든다. 보기 좋음(심미성)보다 쓰기 좋음(사용성)이 먼저</td><td>멋진 배경 사진보다 인원 입력 칸을 크게</td></tr>
+<tr><td>효율성</td><td>버튼과 조작 방법을 기억하기 쉽고 빨리 익숙해지게 한다</td><td>자주 쓰는 ‘지난 단체 그대로 다시 신청’을 한 번에</td></tr>
+<tr><td>단순성</td><td>조작을 단순하게 해 사용자 부담을 줄인다</td><td>신청 7단계 → 2단계로</td></tr>
+<tr><td>결과 예측 가능</td><td>누르기 전에 무슨 일이 일어날지 알 수 있게 한다</td><td>버튼 이름을 ‘확인’ 대신 ‘20명 결제하기’로</td></tr>
+<tr><td>가시성</td><td>주요 기능은 메인 화면에 드러나 쉽게 조작하게 한다</td><td>‘단체 대여’를 메뉴 깊숙이가 아니라 첫 화면에</td></tr>
+<tr><td>표준화</td><td>디자인과 기능 구조를 표준화해 한 번 배우면 다른 곳에서도 쉽게 쓰게 한다</td><td>개인 대여와 같은 결제 화면 구조</td></tr>
+<tr><td>접근성</td><td>나이 · 직무 · 성별 등이 다른 다양한 사용자를 고려한다</td><td>글자 크기 조절, 화면 낭독기 지원</td></tr>
+<tr><td>명확성</td><td>사용자가 개념을 쉽게 알아보게 한다</td><td>‘대표 결제’와 ‘각자 결제’를 그림과 한 줄 설명으로</td></tr>
+<tr><td>오류 발생 해결</td><td>오류를 숨기지 않고 정확히 알리며 회복 방법까지 안내한다</td><td>21명 입력 시 즉시 빨간 안내 + 해결 방법 제시</td></tr></table>
+<div class="duo"><div><p>아홉 개 중 시험이 가장 아끼는 칸은 마지막 <b>오류 발생 해결</b>이에요. 내용은 이래요. 사용자가 오류 상황을 정확히 알아차리게 하고, 오류 메시지는 이해하기 쉽게 쓰며 오류에서 빠져나오는 방법을 자세히 알려 줘야 해요. 오류 때문에 생길 수 있는 <b>나쁜 결과도 적극적으로 알려야</b> 하고, 메시지는 글자뿐 아니라 <b>소리나 색</b>까지 써서 보고 듣는 순간 뜻이 전해지게 하고, 오류를 쉽게 고칠 수 있게 피드백을 줘야 해요. 오류를 숨기는 UI는 무슨 일이 있어도 “괜찮아”만 반복하는 연인 같아요. 당장은 평화롭지만 나중에 한꺼번에 터져요.</p></div><figure><svg viewBox="0 0 360 268" font-family="sans-serif" role="img" aria-label="나쁜 화면과 고친 화면 비교. 왼쪽 나쁜 화면: 큰 장식 사진, 작은 글씨, 인원 21이 들어가도 아무 경고 없음, 단계 1/7, 아래 숨은 다음 버튼. 오른쪽 고친 화면: 단계 1/2, 인원 21 칸 빨간 테두리와 최대 20명 안내와 두 팀 나누기 제안, 크고 분명한 20명 결제하기 버튼">
+<rect width="360" height="268" rx="12" fill="#f7f7f4"/>
+<g font-size="12" fill="#222" text-anchor="middle"><text x="90" y="20" font-weight="bold" fill="#b23b3b">✗ 리뷰 전</text><text x="270" y="20" font-weight="bold" fill="#2e7d4f">✓ 리뷰 후</text></g>
+<rect x="20" y="28" width="140" height="230" rx="14" fill="#fff" stroke="#555"/>
+<rect x="200" y="28" width="140" height="230" rx="14" fill="#fff" stroke="#555"/>
+<rect x="30" y="40" width="120" height="62" rx="4" fill="#e3e3dc" stroke="#999"/><path d="M30 40 L150 102 M150 40 L30 102" fill="none" stroke="#999"/>
+<text x="90" y="116" font-size="8" fill="#555" text-anchor="middle">1/7 단계 · 단체 정보를 입력하세요</text>
+<rect x="30" y="124" width="120" height="20" rx="3" fill="#fff" stroke="#999"/><text x="36" y="138" font-size="9" fill="#555">인원 21</text>
+<text x="90" y="160" font-size="8" fill="#555" text-anchor="middle">(경고 없음)</text>
+<rect x="104" y="232" width="46" height="16" rx="3" fill="#eee" stroke="#999"/><text x="127" y="244" font-size="8" fill="#555" text-anchor="middle">다음</text>
+<g font-size="10" fill="#b23b3b"><text x="30" y="186">· 장식 사진이 제일 큼</text><text x="30" y="201">· 오류를 숨김</text><text x="30" y="216">· 7단계, 버튼 숨음</text></g>
+<text x="270" y="50" font-size="11" fill="#222" text-anchor="middle">단체 대여 · 1/2</text>
+<text x="212" y="74" font-size="11" fill="#222">인원</text>
+<rect x="244" y="60" width="86" height="22" rx="4" fill="#fff" stroke="#b23b3b" stroke-width="2"/><text x="252" y="76" font-size="12" fill="#222">21</text>
+<rect x="210" y="88" width="120" height="44" rx="4" fill="#fdecea" stroke="#b23b3b"/>
+<text x="216" y="104" font-size="10" fill="#b23b3b">⚠ 단체는 최대 20명이에요</text><text x="216" y="120" font-size="10" fill="#222">→ 두 팀(11+10)으로 나누기</text>
+<rect x="210" y="210" width="120" height="34" rx="6" fill="#1f5f99"/><text x="270" y="232" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">20명 결제하기</text>
+<g font-size="10" fill="#2e7d4f"><text x="210" y="154">· 오류 즉시 · 색으로 알림</text><text x="210" y="169">· 회복 방법까지 안내</text><text x="210" y="184">· 2단계, 결과 예측 가능</text><text x="210" y="199">· 주요 버튼이 크게(가시성)</text></g>
+</svg><figcaption>그림 4. 같은 화면의 리뷰 전과 후. 왼쪽은 사용자 중심 · 단순성 · 가시성 · 오류 발생 해결을 한꺼번에 어겼어요. 고친 쪽 버튼에 ‘20명’을 넣은 건 결과 예측 가능 지침이에요.</figcaption></figure></div>
+
+<p>원칙 네 개와 지침 아홉 개를 따로 외우면 금방 섞여요. 아래 그림처럼 “이 지침은 어느 원칙을 지키려는 행동인가”로 묶어 보면 기억이 쉬워요. 단, 이 묶음은 기억을 돕는 정리일 뿐 책이 정한 공식 분류는 아니에요. 시험은 원칙 이름과 지침 이름을 각각 묻기 때문에 묶음 자체가 문제로 나오지는 않아요.</p>
+<div class="figwide"><figure class="mermaid"><img src="../assets/a0327c97e508854d.png" alt="도식" loading="lazy" style="width:599px"><figcaption class="hint">↔ 그림이 넓어요. 옆으로 밀어서 보세요</figcaption><figcaption>그림 5. 원칙(왜)과 지침(무엇을)의 기억용 묶음. 왼쪽이 평가 잣대, 오른쪽이 설계자가 실제로 하는 행동이에요.</figcaption></figure></div>
+<h3>UI 시스템이 갖춰야 할 기능</h3>
+<p>지침을 지키려면 화면 뒤의 시스템도 받쳐 줘야 해요. 책은 UI 시스템에 꼭 필요한 기능을 세 가지로 정리해요. 사용자가 넣은 값이 올바른지 <b>입력을 검증</b>하고, 오류가 나면 <b>에러를 처리하고 에러 메시지를 보여 주고</b>, 사용자가 막혔을 때 <b>도움말(Help)과 프롬프트(Prompt, 다음 입력을 안내하는 문구)</b>를 제공하는 것이에요. 아래 단계 그림이 인원 21명 입력 한 건에서 이 세 기능이 차례로 일하는 모습이에요. “UI 시스템에 필요한 기능이 아닌 것”으로는 소스 코드 분석이나 오류 복구처럼 화면이 아니라 개발 · 운영 쪽 일이 오답으로 나와요.</p>
+<div class="steps" data-title="인원 21명 입력 한 건이 처리되는 길"><div class="step"><table class="tight"><tr><th>순서</th><th>일어난 일</th><th>필요 기능 · 지침</th></tr><tr class="hi"><td>① 입력</td><td>총무가 인원 칸에 21을 입력하고 칸을 벗어남</td><td>입력 검증 시작</td></tr></table><p class="cap">결제 버튼까지 가기 전에, 칸을 벗어나는 순간 검증이 돌아요.</p></div><div class="step"><table class="tight"><tr><th>순서</th><th>일어난 일</th><th>필요 기능 · 지침</th></tr><tr><td>① 입력</td><td>21 입력</td><td>입력 검증</td></tr><tr class="hi"><td>② 검증</td><td>“최대 20” 규칙(REQ-031)에 걸림 → 오류로 판정</td><td>입력 검증 · 에러 처리</td></tr></table><p class="cap">규칙은 R05의 베이스라인에서 왔어요. 요구가 바뀌면 이 검증도 같이 바뀌어야 해요.</p></div><div class="step"><table class="tight"><tr><th>순서</th><th>일어난 일</th><th>필요 기능 · 지침</th></tr><tr><td>②</td><td>오류 판정</td><td>에러 처리</td></tr><tr class="hi"><td>③ 알림</td><td>칸 테두리 빨강 + 짧은 진동 + “단체는 최대 20명이에요”</td><td>에러 메시지 · 오류 발생 해결(색 · 소리 · 쉬운 말)</td></tr></table><p class="cap">글자 하나에만 기대지 않고 색과 진동까지 써요. 오류를 숨기지 않는 거예요.</p></div><div class="step"><table class="tight"><tr><th>순서</th><th>일어난 일</th><th>필요 기능 · 지침</th></tr><tr><td>③</td><td>오류 알림</td><td>에러 메시지</td></tr><tr class="hi"><td>④ 회복</td><td>“두 팀으로 나눌까요? / 20명으로 줄일까요?” 버튼 + ‘단체 대여 도움말’ 링크</td><td>도움말 · 프롬프트 · 회복 방법 안내</td></tr></table><p class="cap">무엇이 틀렸는지에서 끝나지 않고 다음에 무엇을 하면 되는지까지 알려 줘요.</p></div></div>
+<div class="box"><b>시험에는 이렇게 나와요</b>“UI 설계 지침으로 옳지 않은 것은?”의 정답 자리에 오는 문장은 몇 가지로 정해져 있어요. 오류의 부정적인 내용은 사용자가 모르게 감춘다, 보기 좋음(심미성)을 쓰기 좋음(사용성)보다 앞세운다, 오류 메시지에서 소리 · 색을 빼고 글자로만 알린다, 조작 방법을 여러 가지로 늘려 기능을 많게 한다 — 모두 지침을 뒤집은 말이에요. 반대로 “주요 기능은 메인 화면에 노출”, “사용자의 직무 · 나이 · 성별을 고려”, “오류 메시지는 이해하기 쉽게”는 맞는 지침이에요.</div>
+
+<h2>④ 화면 구성요소</h2>
+<p>원칙과 지침이 정해졌으면 이제 화면을 실제로 짤 부품이 필요해요. <b>UI 화면 구성요소</b>는 화면을 이루는 부품 단위예요. 책은 다섯 묶음으로 나눠요. 데이터를 표 모양으로 늘어놓는 <b>그리드</b>, 사용자 입력을 받는 <b>버튼/컨트롤</b>, 페이지 전체에 걸쳐 쓰는 <b>Page 요소</b>, 현재 화면 위에 따로 뜨는 <b>팝업 요소</b>, 사용자에게 상황을 알리는 <b>Alert 요소</b>예요. 요구사항이 화면에 제대로 담기려면 이 부품을 알맞은 자리에 고르는 일이 중요해요.</p>
+<h3>그리드와 버튼/컨트롤 다섯 가지</h3>
+<p><b>그리드(Grid)</b>는 UI를 구성하는 방법 가운데 행과 열로 된 <b>테이블 형태</b>로 정보를 늘어놓는 요소예요. 단체 대여 화면의 참가자 명단(이름 · 연락처 · 헬멧 사이즈)이 그리드예요.</p>
+<p><b>버튼/컨트롤</b>은 사용자 입력을 받는 부품이고 시험에 이름이 나오는 것은 다섯 가지예요. <b>콤보 박스(Combo Box)</b>는 입력 칸 하나처럼 보이다가 누르면 고를 수 있는 목록이 아래로 펼쳐지는 부품이에요(대여 지점 고르기). <b>토글 버튼(Toggle Button)</b>은 켜짐 · 꺼짐처럼 <b>두 가지 상태 중 하나</b>로 누를 때마다 바뀌는 부품이에요(알림 받기). <b>텍스트 박스(Text Field)</b>는 사용자가 글자를 직접 써 넣는 칸이고, 한 줄짜리도 여러 줄짜리도 있어요(단체명, 요청 사항). <b>라디오 버튼(Radio Button)</b>은 여러 선택지 중 <b>딱 하나만</b> 고를 때 쓰고, <b>체크 박스(Checkbox)</b>는 여러 선택지 중 <b>하나 이상</b>을 골라도 될 때 써요.</p>
+<p>라디오 버튼이라는 이름은 옛날 자동차 라디오의 채널 버튼에서 왔어요. 한 채널 버튼을 누르면 이미 눌려 있던 다른 버튼이 튀어 올라와서, 동시에 두 채널을 들을 수는 없었죠. 결제 방식(대표 결제 / 각자 결제)처럼 둘을 동시에 고르면 말이 안 되는 곳은 라디오, 추가 옵션(헬멧 대여 / 보험 가입)처럼 둘 다 골라도 되는 곳은 체크 박스예요.</p>
+<h3>Page · 팝업 · Alert 요소</h3>
+<div class="duo"><div><p><b>Page 요소</b>는 화면 한 장을 이루는 공통 장치들이에요. 폰트 규정, 아이콘 규정, 체크 박스 · 라디오 버튼의 공통 모양, 알림 표시(알럿), 이미지 표시, 탭 표시, 스텝(진행 단계) 표시, 페이지 이동, 위아래 스크롤, 정보 입력 칸 배치 같은 것을 페이지마다 같은 규칙으로 맞추는 요소예요. 단체 대여 화면 위쪽의 ‘1/2 단계’ 표시가 스텝 표시예요.</p>
+<p><b>팝업 요소</b>는 지금 화면 위에 따로 뜨는 창이에요. 브라우저 창이 하나 더 열리는 <b>윈도 팝업</b>과, 같은 페이지 안에서 레이어를 한 겹 덮어 띄우는 <b>레이어 팝업</b>이 있어요. 단체 대여 화면에서 ‘대표 결제란?’을 누르면 뜨는 설명 상자가 레이어 팝업이에요.</p>
+<p><b>Alert 요소</b>는 사용자에게 상황을 알려 주는 알림이에요. 무엇을 알리는지에 따라 네 가지로 나눠요. 필요한 정보가 빠졌거나 잘못됐을 때의 <b>정보 누락 · 오류 Alert</b>, 업무 처리가 끝났음을 알리는 <b>처리 완료 Alert</b>, 지우거나 고치기 전에 한 번 더 묻는 <b>삭제 · 수정 Alert</b>, 업무 진행에 필요한 사항을 알려 주는 <b>업무 안내성 Alert</b>예요. ③에서 본 ‘오류 발생 해결’ 지침이 실제 화면에서 쓰는 부품이 바로 이 Alert예요.</p></div><figure><svg viewBox="0 0 360 340" font-family="sans-serif" role="img" aria-label="단체 대여 신청 화면 와이어프레임에 구성요소 이름표. 위에서부터 스텝 표시 Page 요소, 단체명 텍스트 박스, 대여 지점 콤보 박스, 참가자 명단 그리드, 결제 방식 라디오 버튼, 추가 옵션 체크 박스, 알림 받기 토글 버튼, 인원 초과 Alert, 대표 결제 설명 레이어 팝업, 신청 버튼">
+<defs><marker id="r6a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#1f5f99"/></marker></defs>
+<rect width="360" height="340" rx="12" fill="#f7f7f4"/>
+<g fill="none" stroke="#1f5f99" stroke-width="1"><path d="M232 34 L196 34"/><path d="M232 64 L196 62"/><path d="M232 92 L196 90"/><path d="M232 124 L196 128"/><path d="M232 170 L196 172"/><path d="M232 196 L196 196"/><path d="M232 220 L196 220"/><path d="M232 248 L196 248"/><path d="M232 274 L180 284"/><path d="M232 312 L196 312"/></g>
+<rect x="16" y="12" width="184" height="318" rx="16" fill="#fff" stroke="#555"/>
+<g font-size="10" fill="#222">
+<text x="28" y="38">단체 대여 신청</text><text x="168" y="38" fill="#1f5f99">1/2</text>
+<text x="28" y="60">단체명</text><rect x="70" y="50" width="120" height="16" rx="3" fill="#fff" stroke="#888"/><text x="75" y="62">씽씽 라이딩 동아리</text>
+<text x="28" y="90">대여 지점</text><rect x="80" y="80" width="110" height="16" rx="3" fill="#fff" stroke="#888"/><text x="85" y="92">강남역 2번 출구 ▾</text>
+<rect x="28" y="104" width="162" height="48" fill="#fff" stroke="#888"/><path d="M28 120 L190 120 M28 136 L190 136 M90 104 L90 152 M150 104 L150 152" fill="none" stroke="#bbb"/>
+<text x="34" y="116" font-weight="bold">이름</text><text x="96" y="116" font-weight="bold">연락처</text><text x="156" y="116" font-weight="bold">헬멧</text>
+<text x="34" y="132">김○○</text><text x="96" y="132">010-…</text><text x="156" y="132">M</text><text x="34" y="148">이○○</text><text x="96" y="148">010-…</text><text x="156" y="148">L</text>
+<text x="28" y="168">결제</text><circle cx="62" cy="172" r="5" fill="#1f5f99" stroke="#1f5f99"/><text x="70" y="176">대표</text><circle cx="108" cy="172" r="5" fill="#fff" stroke="#555"/><text x="116" y="176">각자</text>
+<text x="28" y="200">옵션</text><rect x="58" y="191" width="10" height="10" fill="#1f5f99"/><text x="72" y="200">헬멧</text><rect x="104" y="191" width="10" height="10" fill="#fff" stroke="#555"/><text x="118" y="200">보험</text>
+<text x="28" y="224">알림 받기</text><rect x="150" y="214" width="32" height="14" rx="7" fill="#2e7d4f"/><circle cx="175" cy="221" r="5" fill="#fff"/>
+<rect x="28" y="238" width="162" height="20" rx="3" fill="#fdecea" stroke="#b23b3b"/><text x="34" y="252" fill="#b23b3b">⚠ 단체는 최대 20명이에요</text>
+<rect x="60" y="264" width="120" height="30" rx="4" fill="#fff" stroke="#6a3d9a" stroke-dasharray="3 2"/><text x="66" y="277">대표 결제란?</text><text x="66" y="289">한 사람이 전원 결제</text>
+<rect x="28" y="302" width="162" height="20" rx="4" fill="#1f5f99"/><text x="109" y="316" fill="#fff" text-anchor="middle">20명 결제하기</text>
+</g>
+<g font-size="11" fill="#1f5f99"><text x="236" y="38">Page 요소(스텝)</text><text x="236" y="68">텍스트 박스</text><text x="236" y="96">콤보 박스</text><text x="236" y="128">그리드</text><text x="236" y="174">라디오 버튼</text><text x="236" y="200">체크 박스</text><text x="236" y="224">토글 버튼</text><text x="236" y="252">Alert(오류)</text><text x="236" y="278">레이어 팝업</text><text x="236" y="316">버튼</text></g>
+</svg><figcaption>그림 6. 단체 대여 신청 화면의 부품 이름표. 결제는 하나만(라디오), 옵션은 여럿(체크), 알림은 켜고 끄기(토글), 지점은 펼쳐 고르기(콤보)예요.</figcaption></figure></div>
+
+<table><tr><th>Alert 종류</th><th>언제 뜨나</th><th>단체 대여 화면 예</th></tr>
+<tr><td>⚠ 정보 누락 · 오류</td><td>필요한 정보가 빠졌거나 틀렸을 때</td><td>“대여 지점을 골라 주세요”, “최대 20명이에요”</td></tr>
+<tr><td>✅ 처리 완료</td><td>요청한 업무가 끝났을 때</td><td>“20명 대여 신청이 완료됐어요”</td></tr>
+<tr><td>❓ 삭제 · 수정</td><td>지우거나 고치기 전에 한 번 더 확인할 때</td><td>“참가자 이○○ 님을 명단에서 뺄까요?”</td></tr>
+<tr><td>ℹ 업무 안내성</td><td>업무 진행에 필요한 사항을 알려 줄 때</td><td>“단체 대여는 출발 1시간 전까지 신청해 주세요”</td></tr></table>
+<p><b>직접 해 보기 — 어떤 부품을 쓸까?</b> 오른쪽 칸을 가리고 장면마다 알맞은 부품을 먼저 말해 보세요.</p>
+<table><tr><th>장면</th><th>알맞은 부품</th></tr>
+<tr><td>헬멧 사이즈 S · M · L · XL 중 한 사람이 하나만 고른다</td><td>라디오 버튼</td></tr>
+<tr><td>관심 있는 라이딩 코스(한강 · 남산 · 서울숲)를 여러 개 고른다</td><td>체크 박스</td></tr>
+<tr><td>야간 라이딩 모드를 켜거나 끈다</td><td>토글 버튼</td></tr>
+<tr><td>전국 120개 대여 지점 중 하나를 목록을 펼쳐 고른다</td><td>콤보 박스</td></tr>
+<tr><td>운영팀에 남길 요청 사항을 자유롭게 쓴다</td><td>텍스트 박스</td></tr>
+<tr><td>지난달 단체 대여 내역을 날짜 · 인원 · 금액 열로 늘어놓는다</td><td>그리드</td></tr></table>
+<div class="box"><b>시험에는 이렇게 나와요</b>“여러 항목 중 하나만 선택할 수 있는 요소는?”이 반복해서 나왔어요. 답은 라디오 버튼이고, 오답 자리에는 토글 버튼 · 텍스트 박스 · 체크 박스가 와요. 체크 박스는 ‘하나 이상’, 토글은 ‘두 상태 사이 전환’이라는 차이만 분명히 하면 돼요.</div>
+
+<h2>⑤ UI 제스처</h2>
+<div class="duo"><div><p><b>UI 제스처</b>는 터치스크린 위에서 손가락을 어떻게 움직이느냐로 명령을 전달하는 방식이에요. ①에서 본 NUI의 대표 입력이죠. 책이 꼽는 제스처는 아홉 가지예요. 탭, 더블 탭, 프레스, 플릭, 스와이프, 팬, 드래그, 핀치, 로테이트. 이름이 많아 보여도 <b>손가락이 몇 개인가, 얼마나 오래 닿아 있나, 닿은 채 움직이나</b> 세 가지 질문이면 모두 갈라져요.</p>
+<p>손가락 하나로 <b>움직이지 않고</b> 누르는 것부터 볼게요. <b>탭(Tap)</b>은 화면을 짧고 가볍게 한 번 건드리는 것, <b>더블 탭(Double Tap)</b>은 빠르게 두 번 건드리는 것, <b>프레스(Press)</b>는 손가락을 대고 길게 꾹 누르고 있는 것이에요. 씽씽 지도에서 킥보드 아이콘을 탭하면 정보가 뜨고, 지도를 더블 탭하면 한 단계 확대되고, 아이콘을 프레스하면 ‘이 킥보드 예약’ 메뉴가 떠요.</p>
+<p>손가락 하나로 <b>움직이는</b> 제스처가 가장 헷갈려요. <b>플릭(Flick)</b>은 수평이나 수직 방향으로 <b>빠르게 튕기듯</b> 미는 동작이에요. <b>스와이프(Swipe)</b>는 화면을 <b>터치한 상태 그대로 끌어</b> 미는 동작이에요. 둘 다 미는 건데 플릭은 딱밤처럼 툭 치고 떠나고, 스와이프는 쓰다듬듯 닿은 채로 지나가요. 쓰임으로 보면 플릭은 긴 목록을 휙 넘길 때, 스와이프는 대여 내역 한 줄을 옆으로 밀어 ‘삭제’ 버튼을 꺼낼 때처럼 한 방향으로 넘기는 일에 써요. <b>팬(Pan)</b>도 손을 떼지 않고 끄는 동작이지만, 보이는 영역 자체를 이리저리 옮기는 데 써요(지도를 손가락으로 잡고 주변 동네를 둘러보기). <b>드래그(Drag)</b>는 화면 위의 이미지나 항목을 <b>잡아 끌고 가서 손을 떼어 놓는</b> 동작이에요(참가자 이름을 다른 팀 칸으로 끌어 옮기기). 팬은 화면이 움직이고, 드래그는 물건이 옮겨져요.</p>
+<p>손가락 <b>두 개</b>를 쓰는 제스처는 둘이에요. <b>핀치(Pinch)</b>는 두 손가락을 화면에 댄 채 사이를 벌리거나 좁히는 동작으로 확대 · 축소에 쓰고, <b>로테이트(Rotate)</b>는 두 손가락을 댄 채 돌리는 동작으로 지도 방향 회전에 써요.</p></div><figure><svg viewBox="0 0 360 324" font-family="sans-serif" role="img" aria-label="제스처 아홉 칸. 첫 줄 탭 짧게 한 번, 더블 탭 빠르게 두 번, 프레스 길게 꾹. 둘째 줄 플릭 빠르게 튕김, 스와이프 닿은 채 밀기, 팬 닿은 채 화면 이동. 셋째 줄 드래그 끌어서 놓기, 핀치 두 손가락 벌리기 좁히기, 로테이트 두 손가락 돌리기. 플릭과 스와이프는 주황, 팬과 드래그는 파랑, 핀치와 로테이트는 초록 테두리로 짝 표시">
+<defs><marker id="r6a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#333"/></marker></defs>
+<rect width="360" height="324" rx="12" fill="#f7f7f4"/>
+<g fill="#fff" stroke-width="1.5">
+<rect x="8" y="8" width="110" height="98" rx="8" stroke="#555"/><rect x="125" y="8" width="110" height="98" rx="8" stroke="#555"/><rect x="242" y="8" width="110" height="98" rx="8" stroke="#555"/>
+<rect x="8" y="114" width="110" height="98" rx="8" stroke="#a86400" stroke-width="2.5"/><rect x="125" y="114" width="110" height="98" rx="8" stroke="#a86400" stroke-width="2.5"/><rect x="242" y="114" width="110" height="98" rx="8" stroke="#1f5f99" stroke-width="2.5"/>
+<rect x="8" y="220" width="110" height="98" rx="8" stroke="#1f5f99" stroke-width="2.5"/><rect x="125" y="220" width="110" height="98" rx="8" stroke="#2e7d4f" stroke-width="2.5"/><rect x="242" y="220" width="110" height="98" rx="8" stroke="#2e7d4f" stroke-width="2.5"/>
+</g>
+<g fill="#cfe0f2" stroke="#1f5f99" stroke-width="1.5">
+<circle cx="63" cy="50" r="10"/>
+<circle cx="180" cy="50" r="10"/><circle cx="180" cy="50" r="17" fill="none"/>
+<circle cx="297" cy="50" r="10"/>
+<circle cx="40" cy="156" r="10"/>
+<circle cx="152" cy="156" r="10"/>
+<circle cx="297" cy="156" r="10"/>
+<circle cx="96" cy="262" r="10"/>
+<circle cx="168" cy="262" r="9"/><circle cx="192" cy="262" r="9"/>
+<circle cx="284" cy="250" r="9"/><circle cx="310" cy="274" r="9"/>
+</g>
+<path d="M297 34 A16 16 0 1 1 281 50" fill="none" stroke="#a86400" stroke-width="2"/>
+<g fill="none" stroke="#333" stroke-width="1.6">
+<path d="M54 156 L94 156" stroke-width="2.5" marker-end="url(#r6a4)"/><path d="M58 148 L70 148 M58 164 L70 164" stroke="#999"/>
+<path d="M166 156 L214 156" stroke-dasharray="1 0" marker-end="url(#r6a4)"/><path d="M152 156 L166 156" stroke="#1f5f99" stroke-width="3"/>
+<path d="M297 140 L297 128" marker-end="url(#r6a4)"/><path d="M297 170 L297 177" marker-end="url(#r6a4)"/><path d="M281 156 L269 156" marker-end="url(#r6a4)"/><path d="M313 156 L325 156" marker-end="url(#r6a4)"/>
+<path d="M36 246 C 50 236, 74 240, 86 256" stroke-dasharray="4 3" marker-end="url(#r6a4)"/>
+<path d="M160 262 L146 262" marker-end="url(#r6a4)"/><path d="M200 262 L214 262" marker-end="url(#r6a4)"/>
+<path d="M272 240 A30 30 0 0 1 326 254" marker-end="url(#r6a4)"/>
+</g>
+<rect x="22" y="246" width="16" height="12" rx="2" fill="#fff4e0" stroke="#a86400"/>
+<g font-size="12" fill="#222" text-anchor="middle" font-weight="bold">
+<text x="63" y="84">탭</text><text x="180" y="84">더블 탭</text><text x="297" y="84">프레스</text>
+<text x="63" y="190">플릭</text><text x="180" y="190">스와이프</text><text x="297" y="192">팬</text>
+<text x="63" y="296">드래그</text><text x="180" y="296">핀치</text><text x="297" y="296">로테이트</text>
+</g>
+<g font-size="10" fill="#333" text-anchor="middle">
+<text x="63" y="99">짧게 한 번</text><text x="180" y="99">빠르게 두 번</text><text x="297" y="99">길게 꾹</text>
+<text x="63" y="205">빠르게 툭 튕김</text><text x="180" y="205">닿은 채 끌어 밀기</text><text x="297" y="205">닿은 채 화면 이동</text>
+<text x="63" y="311">끌고 가서 놓기</text><text x="180" y="311">두 손가락 벌림 · 좁힘</text><text x="297" y="311">두 손가락 돌리기</text>
+</g>
+</svg><figcaption>그림 7. 제스처 아홉 칸. 같은 색 테두리끼리가 헷갈리는 짝이에요 — 주황(플릭 · 스와이프: 머무는 시간), 파랑(팬 · 드래그: 화면이 움직이나, 물건이 옮겨지나), 초록(핀치 · 로테이트: 벌리나, 돌리나).</figcaption></figure></div>
+
+<p class="hint">↔ 표가 넓어요. 옆으로 밀어서 보세요</p><table><tr><th>손가락</th><th>움직임</th><th>제스처</th><th>씽씽 앱에서</th></tr>
+<tr><td>하나</td><td>제자리 · 짧게</td><td>탭 / 더블 탭</td><td>아이콘 정보 보기 / 지도 한 단계 확대</td></tr>
+<tr><td>하나</td><td>제자리 · 길게</td><td>프레스</td><td>킥보드 예약 메뉴 띄우기</td></tr>
+<tr><td>하나</td><td>빠르게 튕김</td><td>플릭</td><td>긴 대여 내역 휙 넘기기</td></tr>
+<tr><td>하나</td><td>닿은 채 밀기</td><td>스와이프 / 팬</td><td>내역 한 줄 밀어 삭제 / 지도 둘러보기</td></tr>
+<tr><td>하나</td><td>대상을 끌어 놓기</td><td>드래그</td><td>참가자를 다른 팀 칸으로 옮기기</td></tr>
+<tr><td>둘</td><td>벌림 · 좁힘 / 회전</td><td>핀치 / 로테이트</td><td>지도 확대 · 축소 / 지도 방향 돌리기</td></tr></table>
+<p><b>직접 해 보기 — 이 동작의 이름은?</b> 오른쪽 칸을 가리고 답해 보세요. 하나는 제스처 이름이 아니에요.</p>
+<table><tr><th>동작</th><th>이름</th></tr>
+<tr><td>사진을 두 손가락으로 벌려 크게 본다</td><td>핀치</td></tr>
+<tr><td>알림 목록을 엄지로 툭 쳐서 빠르게 내려 보낸다</td><td>플릭</td></tr>
+<tr><td>즐겨찾기 지점 아이콘을 손가락으로 잡아 다른 자리까지 끌고 가서 손을 뗀다</td><td>드래그</td></tr>
+<tr><td>화면을 한 손가락으로 짧게 두 번 두드린다</td><td>더블 탭</td></tr>
+<tr><td>손가락을 화면에 둔 채 넓은 지도를 이리저리 옮겨 본다</td><td>팬</td></tr>
+<tr><td>손끝을 흐르듯 움직이는 ‘플로(Flow)’</td><td>제스처 이름 아님</td></tr></table>
+<div class="box"><b>시험에는 이렇게 나와요</b>“NUI(또는 터치 제스처)에 속하지 않는 것은?”처럼 이름 넷을 주고 가짜 하나를 고르게 해요. 진짜 자리에는 Pinch · Press · Flick 같은 이름이, 가짜 자리에는 Flow처럼 그럴듯한 영어 단어가 와요. 아홉 개 이름(Tap · Double Tap · Press · Flick · Swipe · Pan · Drag · Pinch · Rotate)을 한 번 소리 내어 읽어 두면, 목록에 없는 단어가 바로 튀어 보여요.</div>
+
+<h2>⑥ UI 화면 설계 도구</h2>
+<p>부품과 손짓을 골랐으면 이제 화면을 그려서 기획자 · 디자이너 · 개발자 · 고객이 같은 그림을 보고 합의해야 해요. 책은 이때 쓰는 도구를 네 가지로 꼽아요. 이름이 비슷하고 실무에서도 섞어 부르기 때문에, 시험은 정의 한 줄을 주고 이름을 고르게 해요. 각 도구를 <b>무엇을 담나</b>와 <b>움직이나</b> 두 질문으로 보면 갈라져요.</p>
+<div class="duo"><div><p><b>와이어프레임(Wireframe)</b>은 화면 한 장마다 무엇을 어디에 둘지, 즉 <b>화면 단위의 레이아웃(배치)</b>을 잡는 작업이에요. 기획자 · 고객 같은 이해관계자와 화면 구성을 맞춰 보거나 서비스 흐름을 가볍게 돌려 볼 때 써요. 색도 그림도 없이 회색 상자와 선으로 “여기에 인원 칸, 여기에 결제 버튼” 정도만 정해요. 씽씽 팀이 회의실 화이트보드에 그린 첫 스케치가 와이어프레임이에요.</p>
+<p><b>스토리보드(Storyboard)</b>는 정책, 프로세스, 콘텐츠 구성, 와이어프레임(UI · UX), 기능 정의, 데이터베이스 연동까지 <b>서비스 구축에 필요한 정보를 모두 담은 설계 산출물</b>이에요. 화면 그림 옆에 “① 인원 칸: 2~20, 초과 시 오류 Alert”, “② 결제 버튼: 대표 결제면 결제 API 1회 호출, 결과를 rental_group 테이블에 저장” 같은 설명이 번호로 붙어요. 디자이너와 개발자가 실제로 이걸 보고 일하는, 네 도구 중 <b>가장 큰 그릇</b>이에요.</p>
+<p><b>목업(Mockup)</b>은 디자인, 사용 방법 설명, 평가 등을 위해 <b>실제 화면과 비슷하게 만든 정적인 모형</b>이에요. 색 · 글꼴 · 아이콘까지 입혀 진짜 앱처럼 보이지만, 시각적으로 구성요소를 배치한 것일 뿐 <b>실제로 구현되어 동작하지는 않아요</b>. 버튼을 눌러도 아무 일도 안 일어나요.</p>
+<p><b>프로토타입(Prototype)</b>은 정적인 화면(와이어프레임이나 스토리보드)에 <b>동적인 효과를 입혀</b> 실제 구현된 것처럼 시뮬레이션해 볼 수 있게 만든 모형이에요. 버튼을 누르면 다음 화면으로 넘어가고, 21을 넣으면 Alert가 떠요. 실제 서버나 결제는 없지만 사용자는 “이렇게 동작하겠구나”를 손으로 겪어 볼 수 있어요. 그래서 사용자 테스트는 보통 프로토타입으로 해요.</p>
+<p>음식으로 비유하면 와이어프레임은 접시 위 배치만 적은 메모, 목업은 메뉴판에 넣을 실물 같은 사진, 프로토타입은 시식용으로 한입 먹어 볼 수 있는 한 접시, 스토리보드는 재료 · 조리법 · 원가 · 발주처까지 다 적힌 메뉴 개발 기획서예요. 출제자가 노리는 짝은 <b>목업과 프로토타입</b>이에요. 둘 다 진짜처럼 보이지만 목업은 사진이라 먹을 수 없고, 프로토타입은 맛을 볼 수 있어요.</p></div><figure><svg viewBox="0 0 360 236" font-family="sans-serif" role="img" aria-label="설계 도구 관계도. 왼쪽 큰 스토리보드 상자 안에 정책, 프로세스, 콘텐츠, 기능 정의, DB 연동 칩과 점선 와이어프레임 상자(레이아웃, UI, UX)가 있다. 큰 화살표에 인터랙션 더하기가 붙어 오른쪽 프로토타입 상자로 간다. 아래에 목업 상자: 와이어프레임에 실제 같은 디자인, 정적, 동작 안 함">
+<defs><marker id="r6a5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#333"/></marker></defs>
+<rect width="360" height="236" rx="12" fill="#f7f7f4"/>
+<path d="M216 82 L258 82" fill="none" stroke="#333" stroke-width="3" marker-end="url(#r6a5)"/>
+<path d="M166 136 L166 168" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#r6a5)"/>
+<rect x="10" y="12" width="204" height="124" rx="10" fill="#fff4e0" stroke="#a86400"/>
+<text x="20" y="30" font-size="13" font-weight="bold" fill="#222">스토리보드</text><text x="96" y="30" font-size="10" fill="#444">서비스 구축 정보 전부</text>
+<g font-size="10" fill="#222" text-anchor="middle">
+<rect x="18" y="42" width="52" height="20" rx="4" fill="#fff" stroke="#a86400"/><text x="44" y="56">정책</text>
+<rect x="74" y="42" width="52" height="20" rx="4" fill="#fff" stroke="#a86400"/><text x="100" y="56">프로세스</text>
+<rect x="18" y="68" width="52" height="20" rx="4" fill="#fff" stroke="#a86400"/><text x="44" y="82">콘텐츠</text>
+<rect x="74" y="68" width="52" height="20" rx="4" fill="#fff" stroke="#a86400"/><text x="100" y="82">기능 정의</text>
+<rect x="18" y="94" width="108" height="20" rx="4" fill="#fff" stroke="#a86400"/><text x="72" y="108">DB 연동</text>
+<rect x="134" y="40" width="72" height="90" rx="6" fill="#fff" stroke="#555" stroke-dasharray="4 3"/>
+<text x="170" y="54" font-weight="bold">와이어프레임</text>
+<rect x="142" y="62" width="56" height="18" rx="3" fill="#eee" stroke="#777"/><text x="170" y="75">레이아웃</text>
+<rect x="142" y="86" width="26" height="18" rx="3" fill="#eee" stroke="#777"/><text x="155" y="99">UI</text>
+<rect x="172" y="86" width="26" height="18" rx="3" fill="#eee" stroke="#777"/><text x="185" y="99">UX</text>
+</g>
+<text x="237" y="74" font-size="10" fill="#222" text-anchor="middle">+ 인터랙션</text>
+<rect x="262" y="40" width="88" height="84" rx="10" fill="#e9f5ec" stroke="#2e7d4f"/>
+<text x="306" y="60" font-size="13" font-weight="bold" fill="#222" text-anchor="middle">프로토타입</text>
+<rect x="286" y="68" width="40" height="40" rx="4" fill="#fff" stroke="#2e7d4f"/><path d="M312 92 L312 104 L315 101 L318 106 L320 105 L317 100 L321 100 z" fill="#222"/>
+<text x="306" y="118" font-size="10" fill="#222" text-anchor="middle">눌러 보면 동작</text>
+<rect x="96" y="170" width="160" height="56" rx="10" fill="#e8f1fa" stroke="#1f5f99"/>
+<text x="176" y="190" font-size="13" font-weight="bold" fill="#222" text-anchor="middle">목업</text>
+<text x="176" y="206" font-size="10" fill="#222" text-anchor="middle">와이어프레임 + 실제 같은 디자인</text>
+<text x="176" y="220" font-size="10" fill="#b23b3b" text-anchor="middle">정적 · 실제 구현 없음</text>
+<text x="172" y="158" font-size="10" fill="#444">겉모습만 입히면</text>
+</svg><figcaption>그림 8. 네 도구의 관계. 스토리보드가 가장 큰 그릇이고 그 안의 와이어프레임에 인터랙션을 더하면 프로토타입, 겉모습만 실제처럼 입히면 목업이에요.</figcaption></figure></div>
+
+<figure><svg viewBox="0 0 378 184" font-family="sans-serif" role="img" aria-label="같은 단체 대여 화면의 네 모습. 와이어프레임: 회색 상자뿐. 스토리보드: 화면 옆에 번호 붙은 설명 메모. 목업: 색과 글자가 들어간 화면. 프로토타입: 색 화면에 손가락 포인터와 다음 화면으로 가는 화살표">
+<defs><marker id="r6a6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#2e7d4f"/></marker></defs>
+<rect width="378" height="184" rx="12" fill="#f7f7f4"/>
+<g fill="#fff" stroke="#555"><rect x="12" y="14" width="64" height="112" rx="8"/><rect x="100" y="14" width="64" height="112" rx="8"/></g>
+<g fill="#ddd"><rect x="20" y="26" width="48" height="8"/><rect x="20" y="42" width="48" height="12"/><rect x="20" y="60" width="48" height="12"/><rect x="20" y="78" width="48" height="20"/><rect x="20" y="106" width="48" height="12"/></g>
+<g fill="#ddd"><rect x="108" y="26" width="48" height="8"/><rect x="108" y="42" width="48" height="12"/><rect x="108" y="60" width="48" height="12"/><rect x="108" y="106" width="48" height="12"/></g>
+<g font-size="8" fill="#a86400"><circle cx="112" cy="48" r="5" fill="#fff4e0" stroke="#a86400"/><text x="112" y="51" text-anchor="middle">1</text><circle cx="112" cy="112" r="5" fill="#fff4e0" stroke="#a86400"/><text x="112" y="115" text-anchor="middle">2</text></g>
+<g font-size="8" fill="#222"><text x="167" y="46">① 2~20</text><text x="167" y="56">명, 초과</text><text x="167" y="66">Alert</text><text x="167" y="96">② 결제</text><text x="167" y="106">API·DB</text><text x="167" y="116">저장</text></g>
+<g transform="translate(18,0)"><g fill="#fff" stroke="#555"><rect x="198" y="14" width="64" height="112" rx="8"/><rect x="284" y="14" width="64" height="112" rx="8"/></g><rect x="198" y="14" width="64" height="16" rx="8" fill="#1f5f99"/><text x="230" y="26" font-size="8" fill="#fff" text-anchor="middle">단체 대여</text>
+<g font-size="8" fill="#222"><rect x="206" y="40" width="48" height="12" rx="2" fill="#fff" stroke="#888"/><text x="209" y="49">동아리</text><rect x="206" y="58" width="48" height="12" rx="2" fill="#fff" stroke="#888"/><text x="209" y="67">강남역 ▾</text><rect x="206" y="76" width="48" height="22" fill="#e8f1fa" stroke="#888"/></g>
+<rect x="206" y="106" width="48" height="12" rx="3" fill="#1f5f99"/><text x="230" y="115" font-size="7" fill="#fff" text-anchor="middle">결제하기</text>
+<rect x="284" y="14" width="64" height="16" rx="8" fill="#1f5f99"/><text x="316" y="26" font-size="8" fill="#fff" text-anchor="middle">단체 대여</text>
+<g font-size="8" fill="#222"><rect x="292" y="40" width="48" height="12" rx="2" fill="#fff" stroke="#888"/><text x="295" y="49">동아리</text><rect x="292" y="58" width="48" height="12" rx="2" fill="#fff" stroke="#b23b3b" stroke-width="1.5"/><text x="295" y="67">21</text><rect x="292" y="76" width="48" height="14" rx="2" fill="#fdecea" stroke="#b23b3b"/><text x="295" y="86" fill="#b23b3b">최대 20명</text></g>
+<rect x="292" y="106" width="48" height="12" rx="3" fill="#1f5f99"/><text x="316" y="115" font-size="7" fill="#fff" text-anchor="middle">결제하기</text>
+<path d="M326 116 L326 126 L329 123 L332 128 L334 127 L331 122 L335 122 z" fill="#222"/>
+<path d="M340 112 C 356 112, 356 70, 344 62" fill="none" stroke="#2e7d4f" stroke-width="1.3" marker-end="url(#r6a6)"/></g>
+<g font-size="11" fill="#222" text-anchor="middle" font-weight="bold"><text x="44" y="146">와이어프레임</text><text x="140" y="146">스토리보드</text><text x="248" y="146">목업</text><text x="334" y="146">프로토타입</text></g>
+<g font-size="9" fill="#333" text-anchor="middle"><text x="44" y="162">배치만</text><text x="140" y="162">배치 + 정책</text><text x="140" y="174">기능 · DB 연동</text><text x="248" y="162">실제 같은 겉모습</text><text x="248" y="174">정적</text><text x="334" y="162">눌러 보면 반응</text></g>
+</svg><figcaption>그림 9. 같은 단체 대여 화면의 네 얼굴. 왼쪽에서 오른쪽으로 갈수록 실제에 가까워지지만, 정보가 가장 많은 건 스토리보드예요.</figcaption></figure>
+<p>씽씽 팀이 실제로 이 도구들을 어떤 순서로 썼는지 단계로 따라가 볼게요. 순서는 팀마다 다를 수 있지만, 가벼운 그림으로 빨리 합의하고 무거운 도구로 갈수록 세부를 채운다는 흐름은 같아요.</p>
+<div class="steps" data-title="단체 대여 화면이 만들어지는 다섯 단계"><div class="step"><table class="tight"><tr><th>단계</th><th>만든 것</th><th>누가 무엇을 합의했나</th></tr><tr class="hi"><td>① 와이어프레임</td><td>화이트보드에 회색 상자 배치</td><td>기획 · 운영 · 개발이 “인원 칸은 위, 결제는 아래”에 합의</td></tr></table><p class="cap">색도 글꼴도 없으니 지우고 다시 그리는 데 1분이면 돼요. 배치 논쟁은 여기서 끝내요.</p></div><div class="step"><table class="tight"><tr><th>단계</th><th>만든 것</th><th>누가 무엇을 합의했나</th></tr><tr><td>①</td><td>와이어프레임</td><td>배치 합의</td></tr><tr class="hi"><td>② 스토리보드</td><td>화면마다 번호 주석 · 정책(2~20명) · 결제 API · DB 테이블</td><td>개발자가 “무엇을 어디에 저장하나”까지 확인</td></tr></table><p class="cap">디자이너와 개발자가 함께 보는 최종 설계 문서예요. R05의 요구 번호(REQ-031)도 여기 적혀요.</p></div><div class="step"><table class="tight"><tr><th>단계</th><th>만든 것</th><th>누가 무엇을 합의했나</th></tr><tr><td>②</td><td>스토리보드</td><td>정책 · 기능 · DB 합의</td></tr><tr class="hi"><td>③ 목업</td><td>디자이너가 브랜드 색 · 아이콘을 입힌 정적 시안</td><td>마케팅팀이 “이 색과 톤으로 간다” 승인</td></tr></table><p class="cap">눌러도 안 움직이지만 겉모습은 진짜예요. 디자인 평가에 쓰여요.</p></div><div class="step"><table class="tight"><tr><th>단계</th><th>만든 것</th><th>누가 무엇을 합의했나</th></tr><tr><td>③</td><td>목업</td><td>디자인 승인</td></tr><tr class="hi"><td>④ 프로토타입</td><td>목업에 화면 전환 · Alert 동작을 연결한 클릭 모형</td><td>실제 동아리 회장 5명이 손으로 눌러 봄</td></tr></table><p class="cap">서버 없이도 흐름을 손으로 겪어 볼 수 있어요.</p></div><div class="step"><table class="tight"><tr><th>단계</th><th>만든 것</th><th>누가 무엇을 합의했나</th></tr><tr><td>④</td><td>프로토타입</td><td>사용자 테스트</td></tr><tr class="hi"><td>⑤ 고치기</td><td>“참가자를 지웠다가 되살릴 수 없다” 발견 → 되돌리기 추가</td><td>유연성(실수 포용) 결함을 코드 짜기 전에 수정</td></tr></table><p class="cap">코딩 전에 찾았으니 고치는 값이 싸요. 그림 1의 초록 점선(사용자 테스트 → 원칙으로 되돌아가기)이 이 장면이에요.</p></div></div>
+<p class="hint">↔ 표가 넓어요. 옆으로 밀어서 보세요</p><table><tr><th>도구</th><th>무엇을 담나</th><th>움직이나</th><th>가르는 단서</th></tr>
+<tr><td>와이어프레임</td><td>화면 단위 레이아웃</td><td>아니요</td><td>이해관계자 협의 · 간략한 흐름 공유 · 배치</td></tr>
+<tr><td>스토리보드</td><td>정책 · 프로세스 · 콘텐츠 · 와이어프레임 · 기능 정의 · DB 연동</td><td>아니요</td><td>모든 정보 · 최종 설계 산출물</td></tr>
+<tr><td>목업</td><td>실제와 비슷한 겉모습</td><td>아니요(구현 안 됨)</td><td>실제 화면과 유사 · 정적 · 시각적 배치만</td></tr>
+<tr><td>프로토타입</td><td>정적 화면 + 동적 효과</td><td>예(시뮬레이션)</td><td>동적 효과 · 실제 구현된 것처럼 · 시뮬레이션</td></tr></table>
+<p>두 가지 경계도 같이 챙겨 두세요. 하나는 <b>유스케이스</b>예요. 사용자 입장에서 목표를 이루려면 시스템과 무엇을 주고받는지 기술한 것으로, R03에서 본 <b>요구사항 기술 방법</b>이지 화면 설계 도구가 아니에요. 그런데 시험에서는 설계 도구 이름들 사이에 정답으로도, 오답으로도 섞여 나와요. 다른 하나는 <b>프로토타입 모형</b>이에요. 소프트웨어 생명주기 모형 가운데 시제품을 만들어 요구를 확인하는 개발 방식의 이름으로, 오늘의 화면 설계 도구 프로토타입과 생각이 닮았지만 시험 범위가 달라요(생명주기 모형은 R14에서 봐요).</p>
+<p><b>직접 해 보기 — 무슨 도구일까?</b> 오른쪽 칸을 가리고 답해 보세요.</p>
+<table><tr><th>설명</th><th>도구</th></tr>
+<tr><td>투자 설명회 슬라이드에 넣으려고 실제 앱 스크린숏처럼 만든 한 장. 링크도 버튼도 동작하지 않는다</td><td>목업</td></tr>
+<tr><td>화면 그림 옆에 “③ 결제 성공 시 rental_group에 저장, 실패 시 오류 Alert” 같은 설명이 번호로 붙은 문서</td><td>스토리보드</td></tr>
+<tr><td>회의 중 포스트잇과 펜으로 “제목, 입력 칸 둘, 버튼 하나” 자리만 잡아 둔 그림</td><td>와이어프레임</td></tr>
+<tr><td>테스트 참가자가 휴대폰으로 눌러 보면 다음 화면으로 넘어가고 오류 안내도 뜨지만, 결제는 실제로 되지 않는 모형</td><td>프로토타입</td></tr>
+<tr><td>“동아리 회장은 단체 대여를 신청한다 → 시스템은 인원을 확인한다 …”처럼 사용자와 시스템이 주고받는 일을 적은 것</td><td>유스케이스(설계 도구 아님)</td></tr></table>
+<div class="box"><b>시험에는 이렇게 나와요</b>“디자인 · 사용 방법 설명 · 평가 등을 위해 실제 화면과 유사하게 만든 정적인 모형, 실제로 구현되지는 않음”을 주고 이름을 고르게 하는 문제가 반복됐어요. 답은 목업이고 오답 자리에 스토리보드 · 프로토타입 · 유스케이스가 와요. 반대로 “사용자 측면에서 목표를 달성하기 위해 수행할 내용을 기술”을 주면 답은 유스케이스예요. 단서 단어는 <b>정적 · 구현 안 됨 → 목업</b>, <b>동적 효과 · 시뮬레이션 → 프로토타입</b>, <b>모든 정보 · DB 연동 → 스토리보드</b>, <b>레이아웃 · 협의 → 와이어프레임</b>이에요.</div>
+
+<h2>⑦ 책 밖에서 함께 나오는 말 — UX · HCI · 감성공학 · 사용성 평가</h2>
+<p>책 2장에는 없지만 공식 출제 기준의 UI 항목과 예전 기출에 함께 등장하는 말이 넷 있어요. 최근 시험 빈도는 낮으니 정의만 정확히 잡아 두면 돼요.</p>
+<p><b>UX(User Experience, 사용자 경험)</b>는 사용자가 제품이나 서비스를 쓰면서 겪는 <b>느낌과 경험 전체</b>예요. UI가 손에 닿는 접점이라면 UX는 그 접점을 지나며 남는 기억이에요. 같은 단체 대여 화면이라도 결제가 빠르고 오류 안내가 친절했다면 “씽씽은 편하다”는 좋은 경험이 남아요. UX는 주관적이고(사람마다 다름), 상황에 따라 달라지고(출근길과 주말 라이딩), 총체적(화면만이 아니라 고객센터 · 킥보드 상태까지)이에요.</p>
+<p><b>HCI(Human-Computer Interaction)</b>는 사람과 컴퓨터가 상호작용하는 방식을 연구해, 사람이 시스템을 더 쉽고 편하게 쓰도록 설계 · 평가하는 학문 분야예요. ①의 인터랙션을 체계적으로 다루는 연구라고 보면 돼요.</p>
+<p><b>감성공학</b>은 사람이 가진 감성(편안함 · 즐거움 · 고급스러움 같은 느낌)을 측정하고 분석해 제품 설계에 반영하는 기술이에요. 방법에 따라 1류(감성 어휘로 느낌을 조사해 설계 요소로 옮김), 2류(나이 · 성별 같은 개인 특성과 생리 반응까지 측정), 3류(감성 어휘를 수학 모델로 다뤄 설계에 연결)로 나눠요. 자세한 예는 지난 D010 페이지에 있어요.</p>
+<p><b>사용성 평가</b>는 실제 사용자가 시스템을 쓰는 모습을 관찰하거나 측정해, 원칙과 지침을 실제로 잘 지켰는지 확인하는 활동이에요. 과업을 끝내는 데 걸린 시간, 실수한 횟수, 만족도 같은 것을 봐요. ⑥의 다섯 번째 단계(프로토타입으로 동아리 회장 다섯 명이 눌러 본 것)가 작은 사용성 평가예요.</p>
+
+<h2>⑧ 한 장 정리</h2>
+<p>오늘 본 것을 헷갈리는 짝으로 다시 묶어 볼게요. 가운데 열 질문 하나로 짝이 갈라지게 정리했어요.</p>
+<table><tr><th>헷갈리는 짝</th><th>가르는 질문</th><th>답</th></tr>
+<tr><td>CLI · GUI · NUI · OUI</td><td>무엇으로 명령하나?</td><td>글자 명령 / 그래픽 · 마우스 / 몸짓 · 터치 · 음성 / 사물 자체가 입출력</td></tr>
+<tr><td>직관성 vs 학습성</td><td>처음 보고 바로 쓰나, 익혀서 기억하나?</td><td>누구나 쉽게 이해 · 사용 / 초보 · 숙련자 모두 배우고 기억</td></tr>
+<tr><td>유효성 vs 유연성</td><td>목표를 정확히 이루나, 실수를 받아 주나?</td><td>정확 · 완벽한 달성 / 인터랙션 포용 · 실수 방지</td></tr>
+<tr><td>진짜 원칙 vs 가짜</td><td>네 이름 안에 있나?</td><td>직관 · 유효 · 학습 · 유연 / 무결성 · 희소성 · 멀티운용성 ✗</td></tr>
+<tr><td>원칙 vs 지침</td><td>평가 잣대인가, 할 일인가?</td><td>좋은 UI의 기준 4 / 구체 행동 규칙 9</td></tr>
+<tr><td>맞는 지침 vs 뒤집힌 지침</td><td>사용자를 돕나, 숨기거나 꾸미나?</td><td>오류는 알리고 회복 안내 · 사용성 우선 / 오류 숨김 · 심미성 우선 ✗</td></tr>
+<tr><td>라디오 vs 체크 vs 토글</td><td>몇 개를 고르나?</td><td>딱 하나 / 하나 이상 / 두 상태 전환</td></tr>
+<tr><td>플릭 vs 스와이프</td><td>얼마나 머무나?</td><td>빠르게 튕김 / 닿은 채 끌어 밂</td></tr>
+<tr><td>팬 vs 드래그</td><td>무엇이 움직이나?</td><td>보이는 화면 / 끌어 놓는 대상</td></tr>
+<tr><td>목업 vs 프로토타입</td><td>눌러 보면 반응하나?</td><td>정적 · 구현 없음 / 동적 시뮬레이션</td></tr>
+<tr><td>스토리보드 vs 와이어프레임</td><td>정보를 얼마나 담나?</td><td>정책 · 기능 · DB까지 전부 / 화면 배치만</td></tr>
+<tr><td>설계 도구 vs 유스케이스</td><td>화면을 그리나, 요구를 기술하나?</td><td>네 도구 / 요구 기술 방법(R03)</td></tr></table>
+<div class="memo">원칙 네 개는 씽씽 동아리 회장의 첫 신청을 따라가며 외워요. 화면을 보자마자 뭘 누를지 알고(<b>직관성</b>) → 20명 결제가 한 번에 정확히 끝나고(<b>유효성</b>) → 다음 주엔 안 보고도 다시 신청하고(<b>학습성</b>) → 실수로 21을 넣어도 앱이 받아 주며 막아 준다(<b>유연성</b>). 도구 네 개는 가벼운 순서로 와이어프레임 → 스토리보드 → 목업 → 프로토타입.</div>
+<p><b>다음 장 예고:</b> 화면을 그렸으면 그 화면 뒤에서 돌아갈 코드를 어떻게 나눌지 정해야 해요. R07부터는 책 3장 <b>애플리케이션 설계</b>로 들어가, 단체 대여 기능을 모듈로 쪼개고 재사용 · 결합도 · 응집도로 “잘 나눴는지”를 재는 법을 볼게요.</p>
+
+<h2>확인 문제</h2>
+<ol class="quiz">
+<li>씽씽 2.0 앱에서 지도를 두 손가락으로 벌려 확대하고 “근처 킥보드 찾아 줘”라고 말해 검색하는 것처럼, 사람의 자연스러운 몸짓과 말로 시스템과 주고받는 인터페이스는?<label class="opt"><input type="radio" name="R06-q1" value="1">① GUI</label><label class="opt"><input type="radio" name="R06-q1" value="2">② NUI</label><label class="opt"><input type="radio" name="R06-q1" value="3">③ OUI</label><label class="opt"><input type="radio" name="R06-q1" value="4">④ CLI</label></li>
+<li>단체 대여 화면 리뷰에서 “처음 신청하는 회사 총무도, 매주 신청하는 동아리 회장도 금방 익히고 다음에 와서도 쓰는 법을 기억할 수 있어야 한다”는 의견이 지적한 UI 설계 원칙은?<label class="opt"><input type="radio" name="R06-q2" value="1">① 유연성</label><label class="opt"><input type="radio" name="R06-q2" value="2">② 직관성</label><label class="opt"><input type="radio" name="R06-q2" value="3">③ 유효성</label><label class="opt"><input type="radio" name="R06-q2" value="4">④ 학습성</label></li>
+<li>단체 대여 화면에 적용할 UI 설계 지침으로 <b>옳지 않은</b> 것은?<label class="opt"><input type="radio" name="R06-q3" value="1">① 나이 · 직무가 다른 다양한 이용자가 쓸 수 있도록 고려한다</label><label class="opt"><input type="radio" name="R06-q3" value="2">② ‘단체 대여 신청’처럼 주요 기능은 첫 화면에 드러나게 둔다</label><label class="opt"><input type="radio" name="R06-q3" value="3">③ 인원 초과로 결제가 막히는 상황은 이용자가 당황하지 않도록 알리지 않고 내부에서 조용히 처리한다</label><label class="opt"><input type="radio" name="R06-q3" value="4">④ 오류 메시지는 쉬운 말로 쓰고 회복 방법을 함께 안내한다</label></li>
+<li>디자이너가 색 · 글꼴 · 아이콘까지 실제 앱처럼 입혀 회의에서 보여 주지만, 버튼을 눌러도 아무 동작이 없는 정적인 화면 모형은?<label class="opt"><input type="radio" name="R06-q4" value="1">① 목업</label><label class="opt"><input type="radio" name="R06-q4" value="2">② 와이어프레임</label><label class="opt"><input type="radio" name="R06-q4" value="3">③ 프로토타입</label><label class="opt"><input type="radio" name="R06-q4" value="4">④ 스토리보드</label></li>
+</ol><div class="answer-bar" data-id="R06" data-n="4"><code></code><button type="button">답안 복사</button></div><p><small>고른 뒤 <b>답안 복사</b> → 디스코드 공부 채널에 붙여넣기 하면 돼요.</small></p>
+<p>답장: <code>정처기 R06: 1)번호 2)번호 3)번호 4)번호</code></p>
+<p class="meta"><a href="2026-11-25-D051.html">← D051</a>  </p>
+<script>
+document.querySelectorAll('.answer-bar').forEach(bar=>{
+  const id=bar.dataset.id,n=+bar.dataset.n,out=bar.querySelector('code'),btn=bar.querySelector('button');
+  const text=()=>'정처기 '+id+': '+Array.from({length:n},(_,i)=>{const c=document.querySelector('input[name="'+id+'-q'+(i+1)+'"]:checked');return (i+1)+')'+(c?c.value:'?')}).join(' ');
+  document.querySelectorAll('input[name^="'+id+'-q"]').forEach(r=>r.addEventListener('change',()=>{out.textContent=text()}));
+  out.textContent=text();
+  btn.addEventListener('click',async()=>{const t=text();try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}btn.textContent='복사됨 ✓';setTimeout(()=>btn.textContent='답안 복사',1500)});
+});
+</script>
+
+
+<script>
+// 단계 애니메이션: <div class="steps" data-title="제목"><div class="step">…<p class="cap">설명</p></div>…</div>
+document.querySelectorAll('.steps').forEach(box=>{
+  const st=[...box.querySelectorAll(':scope > .step')]; let i=0, timer=null;
+  const head=document.createElement('div'); head.className='steps-head';
+  head.innerHTML='<b>'+(box.dataset.title||'단계별로 보기')+'</b><span class="steps-dots"></span>';
+  const dots=head.querySelector('.steps-dots');
+  st.forEach((_,k)=>{const d=document.createElement('button');d.type='button';d.className='dot';d.onclick=()=>{stop();show(k)};dots.append(d)});
+  const bar=document.createElement('div'); bar.className='steps-bar';
+  const mk=(t,f)=>{const b=document.createElement('button');b.type='button';b.textContent=t;b.onclick=f;bar.append(b);return b};
+  const prev=mk('◀ 이전',()=>{stop();show(i-1)}), next=mk('다음 ▶',()=>{stop();show(i+1)});
+  const play=mk('▶▶ 자동',()=>{ if(timer){stop();return} play.textContent='■ 멈춤'; if(i===st.length-1) show(0); timer=setInterval(()=>{ if(i>=st.length-1){stop();return} show(i+1) },2600)});
+  function stop(){ if(timer){clearInterval(timer);timer=null} play.textContent='▶▶ 자동' }
+  function show(k){ i=Math.max(0,Math.min(st.length-1,k)); st.forEach((s,n)=>s.classList.toggle('on',n===i));
+    [...dots.children].forEach((d,n)=>d.classList.toggle('on',n===i)); prev.disabled=i===0; next.disabled=i===st.length-1;
+    }
+  box.prepend(head); box.append(bar); show(0);
+});
+</script>
+<footer>2027년 정기 기사 1회 정보처리기사 필기 준비 · 공식 범위: Q-Net 2027~2029 출제기준</footer>
+</main></body></html>
