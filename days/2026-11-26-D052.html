@@ -9,7 +9,8 @@
 <link rel="stylesheet" href="../style.css?v=4788e468"></head>
 <body><main>
 <nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a> · <a href="../listen.html">🎧 강의 듣기</a></nav>
-<h1>D052 · 쪼갠 표를 운영하는 하루 — ALTER TABLE 세부 · 뷰 제약과 DROP VIEW CASCADE · REVOKE 연쇄 회수 · 집계 함수 7종 · OLAP 다섯 연산</h1><div class="meta">2026-11-26 · B2 SQL 활용 &gt; 기본 SQL 작성 · 응용 SQL 작성 보강</div><p><span class="tag">B2</span><span class="tag">B1</span> 어제 D051까지 길벗투어의 표를 5NF까지 쪼갰어요. 설계는 끝났지만 표가 실제로 운영되기 시작하면 요청이 쏟아져요. “투어 표에 정원 열이 빠졌어요”, “예약 요약은 영업팀에만 보여 주세요”, “퇴사한 인턴 권한 좀 거둬 주세요”, “월말 리포트에 평점 평균이랑 편차가 필요해요”, “경영진이 지역별 · 분기별로 돌려 보고 싶대요”. 오늘은 이 다섯 요청을 하루 동안 차례로 처리하면서, D029 · D032 · D034 · D037에서 기본만 보고 넘어갔던 SQL의 <b>빠진 세부</b>를 채워요. 뷰는 최근 20회 시험에 <b>20회 모두</b>, DDL은 <b>19회</b>, DCL은 <b>17회</b> 나왔어요.</p>
+<h1>D052 · 쪼갠 표를 운영하는 하루 — ALTER TABLE 세부 · 뷰 제약과 DROP VIEW CASCADE · REVOKE 연쇄 회수 · 집계 함수 7종 · OLAP 다섯 연산</h1><div class="meta">2026-11-26 · B2 SQL 활용 &gt; 기본 SQL 작성 · 응용 SQL 작성 보강</div><div class="box audio"><b>🎧 듣는 강의 (약 37분)</b>오늘 내용을 이어서 설명해요. 먼저 듣고 페이지를 보면 더 빨라요.<p style="margin:10px 0 0"><b>1부</b> (약 19분)</p><audio controls preload="none" src="../assets/audio/D052-1.mp3?v=1115" style="width:100%;margin-top:8px"></audio><p style="margin:10px 0 0"><b>2부</b> (약 19분)</p><audio controls preload="none" src="../assets/audio/D052-2.mp3?v=1131" style="width:100%;margin-top:8px"></audio></div>
+<p><span class="tag">B2</span><span class="tag">B1</span> 어제 D051까지 길벗투어의 표를 5NF까지 쪼갰어요. 설계는 끝났지만 표가 실제로 운영되기 시작하면 요청이 쏟아져요. “투어 표에 정원 열이 빠졌어요”, “예약 요약은 영업팀에만 보여 주세요”, “퇴사한 인턴 권한 좀 거둬 주세요”, “월말 리포트에 평점 평균이랑 편차가 필요해요”, “경영진이 지역별 · 분기별로 돌려 보고 싶대요”. 오늘은 이 다섯 요청을 하루 동안 차례로 처리하면서, D029 · D032 · D034 · D037에서 기본만 보고 넘어갔던 SQL의 <b>빠진 세부</b>를 채워요. 뷰는 최근 20회 시험에 <b>20회 모두</b>, DDL은 <b>19회</b>, DCL은 <b>17회</b> 나왔어요.</p>
 <ul>
 <li>ALTER TABLE의 여섯 갈래(열 추가 · 열 정의 변경 · 열 삭제 · 열 이름 변경 · 제약 추가 · 제약 삭제)를 구별하고, “빠진 열 추가” 문제에서 INSERT · MODIFY 같은 함정을 피해 ALTER를 고른다</li>
 <li>뷰가 행을 저장하지 않는 가상 테이블임을 설명하고, 갱신이 막히는 뷰(집계 · DISTINCT · GROUP BY · 조인 · 계산식)와 DROP VIEW … CASCADE / RESTRICT의 결과, “뷰 정의는 ALTER가 아니라 삭제 후 재생성”을 말한다</li>
@@ -246,7 +247,40 @@ document.querySelectorAll('.answer-bar').forEach(bar=>{
   btn.addEventListener('click',async()=>{const t=text();try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}btn.textContent='복사됨 ✓';setTimeout(()=>btn.textContent='답안 복사',1500)});
 });
 </script>
-
+<script>
+// 2026-11-14: 진수 님 요청 — 페이지 하단에 늘 붙어 있는 음악 앱식 플레이어. 본문 <audio>는 숨기고 하단 막대 하나로 1부·2부를 이어 튼다.
+(()=>{const box=document.querySelector('.box.audio');if(!box)return;
+const tr=[...box.querySelectorAll('audio')].map((a,i,all)=>({src:a.getAttribute('src'),key:'pos:'+a.getAttribute('src').split('?')[0],name:all.length>1?(i+1)+'부':'강의'}));
+box.querySelectorAll('audio').forEach(a=>a.remove());box.querySelectorAll('p').forEach(p=>{if(/^\s*\d부/.test(p.textContent))p.remove()});
+const A=new Audio(),rates=[1,1.25,1.5,1.75,2],fmt=t=>isFinite(t)?Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0'):'0:00';
+A.preload='metadata';let cur=0;
+const pick=document.createElement('div');pick.className='audio-ctl';box.appendChild(pick);
+tr.forEach((t,i)=>{const b=document.createElement('button');b.type='button';b.textContent='▶ '+(tr.length>1?t.name+' 듣기':'듣기');b.onclick=()=>{load(i);A.play()};pick.appendChild(b)});
+const bar=document.createElement('div');bar.className='mbar';
+bar.innerHTML='<button class="mb-play" aria-label="재생">▶</button><button data-d="-10">⏪10</button><button data-d="10">10⏩</button>'+
+ '<div class="mb-mid"><div class="mb-title"></div><input type="range" min="0" value="0" step="1" aria-label="재생 위치"><div class="mb-time">0:00 / 0:00</div></div>'+
+ (tr.length>1?'<button class="mb-part">1부</button>':'')+'<button class="mb-rate">1×</button>';
+document.body.appendChild(bar);document.body.classList.add('has-mbar');
+const q=c=>bar.querySelector(c),pl=q('.mb-play'),rg=q('input'),tm=q('.mb-time'),rb=q('.mb-rate'),pt=q('.mb-part');
+const title=(document.querySelector('h1')||{}).textContent||'';
+function load(i){cur=i;A.src=tr[i].src;A.playbackRate=+localStorage.rate||1;q('.mb-title').textContent=tr[i].name+' · '+title;if(pt)pt.textContent=tr[i].name;
+  A.addEventListener('loadedmetadata',()=>{const p=+localStorage[tr[i].key];if(p>5&&p<A.duration-5)A.currentTime=p;A.playbackRate=+localStorage.rate||1;sync()},{once:true});
+  if('mediaSession'in navigator)navigator.mediaSession.metadata=new MediaMetadata({title:tr[i].name+' · '+title,artist:'정처기 듣는 강의'})}
+function sync(){rg.max=A.duration||1;rg.value=A.currentTime;tm.textContent=fmt(A.currentTime)+' / '+fmt(A.duration)}
+A.ontimeupdate=()=>{localStorage[tr[cur].key]=A.currentTime|0;sync()};
+A.onplay=A.onpause=()=>{pl.textContent=A.paused?'▶':'⏸';pl.setAttribute('aria-label',A.paused?'재생':'일시정지')};
+A.onended=()=>{localStorage[tr[cur].key]=0;if(cur+1<tr.length){load(cur+1);A.play()}};
+pl.onclick=()=>A.paused?A.play():A.pause();rg.oninput=()=>A.currentTime=+rg.value;
+bar.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>A.currentTime=Math.max(0,A.currentTime+ +b.dataset.d));
+rb.textContent=(+localStorage.rate||1)+'×';rb.onclick=()=>{const r=rates[(rates.indexOf(A.playbackRate)+1)%rates.length];A.playbackRate=r;localStorage.rate=r;rb.textContent=r+'×'};
+if(pt)pt.onclick=()=>{const p=!A.paused;load((cur+1)%tr.length);if(p)A.play()};
+if('mediaSession'in navigator){const m=navigator.mediaSession;m.setActionHandler('play',()=>A.play());m.setActionHandler('pause',()=>A.pause());
+  m.setActionHandler('seekbackward',()=>A.currentTime-=10);m.setActionHandler('seekforward',()=>A.currentTime+=10);
+  if(tr.length>1){m.setActionHandler('previoustrack',()=>{load(Math.max(0,cur-1));A.play()});m.setActionHandler('nexttrack',()=>{if(cur+1<tr.length){load(cur+1);A.play()}})}}
+document.addEventListener('keydown',e=>{if(/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;
+  if(e.key==='ArrowLeft'&&e.shiftKey){A.currentTime-=10;e.preventDefault()}if(e.key==='ArrowRight'&&e.shiftKey){A.currentTime+=10;e.preventDefault()}});
+const last=tr.findIndex(t=>+localStorage[t.key]>5);load(last>=0?last:0);})();
+</script>
 <script type="module">
 // SQL 실습 상자: text/plain sql-seed 스크립트(data-db=이름)에 스키마·데이터
 //              .sql-run(data-db=이름, data-note=예상 질문) 안의 textarea에 쿼리
