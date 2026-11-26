@@ -6,7 +6,7 @@
 <link rel="icon" href="../assets/favicon/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="../assets/favicon/favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="apple-touch-icon" href="../assets/favicon/apple-touch-icon.png">
-<link rel="stylesheet" href="../style.css?v=4788e468"></head>
+<link rel="stylesheet" href="../style.css?v=4c5c3c74"></head>
 <body><main>
 <nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a> · <a href="../listen.html">🎧 강의 듣기</a></nav>
 <h1>R07 · 재사용과 공통 모듈 — 모듈을 어떻게 나누고, 잘 나눴는지 결합도·응집도·팬인/팬아웃으로 재기</h1><div class="meta">2026-11-26 · A3 1과목 리뉴얼</div><p><span class="tag">1과목 리뉴얼</span><span class="tag">A3</span> 리뉴얼 일곱째 장부터 책 3장 <b>애플리케이션 설계</b>로 들어가요. 2장(R06)에서 사용자가 만질 화면을 그렸다면, 3장은 그 화면 뒤에서 돌아갈 코드의 뼈대를 정하는 장이에요. 오늘은 그 첫 절인 <b>재사용</b>과 <b>공통 모듈</b>이에요. 모듈화 · 재사용 · 팬인/팬아웃 묶음은 최근 20회 시험에 한 번도 빠짐없이 나왔고, 결합도는 20회 중 19회, 응집도는 16회 나왔어요. 1과목에서 가장 확실한 점수 창고예요.</p>
@@ -313,6 +313,36 @@ document.querySelectorAll('.steps').forEach(box=>{
     }
   box.prepend(head); box.append(bar); show(0);
 });
+</script>
+<div id="tp-seed" hidden></div><script>
+// 예제 표 패널: 실습 DB 표 + 📌로 고정한 표를 옆(PC)·아래(폰) 패널에 띄운다. 스크롤해도 따라오고, 열림 상태는 페이지를 옮겨도 유지.
+(function(){
+const KEY='pin:'+location.pathname, seed=document.getElementById('tp-seed');
+const main=document.querySelector('main');
+const tables=[...main.querySelectorAll('table')].filter(t=>!t.closest('.sql-run,.tpanel,#tp-seed,.quiz,.answer-bar,nav'));
+const panel=document.createElement('aside');panel.className='tpanel';
+panel.innerHTML='<div class="tp-head"><b>📋 예제 표</b><button type="button" class="tp-x" aria-label="닫기">✕</button></div><div class="tp-body"></div>';
+const bodyEl=panel.querySelector('.tp-body');
+const btn=document.createElement('button');btn.type='button';btn.className='tp-btn';btn.textContent='📋 예제 표';
+let pins=JSON.parse(localStorage[KEY]||'[]');
+function label(t){let e=t,cap='';for(let k=0;k<4&&e&&!cap;k++){e=e.previousElementSibling;if(e&&/^(H[2-4]|P|B)$/.test(e.tagName))cap=e.textContent.trim()}
+  const f=t.closest('figure');if(f&&f.querySelector('figcaption'))cap=f.querySelector('figcaption').textContent.trim();
+  return (cap||'표').slice(0,40)}
+function render(){
+  let h='';
+  if(seed&&seed.innerHTML.trim())h+='<div class="tp-sec">실습 DB(실행 상자가 쓰는 표)</div>'+seed.innerHTML;
+  const ps=pins.filter(i=>tables[i]);
+  h+='<div class="tp-sec">📌 고정한 표</div>'+(ps.length?ps.map(i=>'<div class="tp-item"><div class="tp-name">'+label(tables[i]).replace(/</g,'&lt;')+' <button type="button" class="tp-go" data-i="'+i+'">본문 위치</button> <button type="button" class="tp-un" data-i="'+i+'">빼기</button></div>'+tables[i].outerHTML+'</div>').join(''):'<p class="tp-empty">본문 표 오른쪽 위 📌를 누르면 여기에 꽂혀요.</p>');
+  bodyEl.innerHTML=h;
+  bodyEl.querySelectorAll('.tp-un').forEach(b=>b.onclick=()=>toggle(+b.dataset.i));
+  bodyEl.querySelectorAll('.tp-go').forEach(b=>b.onclick=()=>{tables[+b.dataset.i].scrollIntoView({behavior:'smooth',block:'center'});if(innerWidth<1100)open(false)});
+  tables.forEach((t,i)=>{const p=t.previousElementSibling;if(p&&p.classList.contains('tp-pin'))p.classList.toggle('on',pins.includes(i))})}
+function toggle(i){pins=pins.includes(i)?pins.filter(x=>x!==i):[...pins,i];localStorage[KEY]=JSON.stringify(pins);render();if(pins.includes(i))open(true)}
+function open(o){document.body.classList.toggle('tp-open',o);localStorage.tpOpen=o?1:0;btn.textContent=o?'📋 닫기':'📋 예제 표'}
+tables.forEach((t,i)=>{const b=document.createElement('button');b.type='button';b.className='tp-pin';b.title='예제 표 패널에 고정';b.textContent='📌';b.onclick=()=>toggle(i);t.before(b)});
+panel.querySelector('.tp-x').onclick=()=>open(false);btn.onclick=()=>open(!document.body.classList.contains('tp-open'));
+document.body.append(panel,btn);render();open(localStorage.tpOpen==='1');
+})();
 </script>
 <footer>2027년 정기 기사 1회 정보처리기사 필기 준비 · 공식 범위: Q-Net 2027~2029 출제기준</footer>
 </main></body></html>

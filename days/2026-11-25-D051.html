@@ -6,7 +6,7 @@
 <link rel="icon" href="../assets/favicon/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="../assets/favicon/favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="apple-touch-icon" href="../assets/favicon/apple-touch-icon.png">
-<link rel="stylesheet" href="../style.css?v=4788e468"></head>
+<link rel="stylesheet" href="../style.css?v=4c5c3c74"></head>
 <body><main>
 <nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a> · <a href="../listen.html">🎧 강의 듣기</a></nav>
 <h1>D051 · 3NF를 통과해도 남는 구멍 — BCNF·다치 종속(4NF)·조인 종속(5NF)과 정규형 손풀이</h1><div class="meta">2026-11-25 · B3 데이터 입출력 구현 &gt; 논리 데이터베이스 설계 &gt; 데이터베이스 정규화②</div><div class="box audio"><b>🎧 듣는 강의 (약 33분)</b>오늘 내용을 이어서 설명해요. 먼저 듣고 페이지를 보면 더 빨라요.<p style="margin:10px 0 0"><b>1부</b> (약 15분)</p><audio controls preload="none" src="../assets/audio/D051-1.mp3?v=902" style="width:100%;margin-top:8px"></audio><p style="margin:10px 0 0"><b>2부</b> (약 18분)</p><audio controls preload="none" src="../assets/audio/D051-2.mp3?v=1068" style="width:100%;margin-top:8px"></audio></div>
@@ -365,6 +365,36 @@ document.querySelectorAll('.steps').forEach(box=>{
     }
   box.prepend(head); box.append(bar); show(0);
 });
+</script>
+<div id="tp-seed" hidden><div class="tp-item"><div class="tp-name">🗄 guide_assign <small>6행</small></div><table class="tight"><tr><th>customer_id</th><th>language</th><th>guide</th></tr><tr><td>c1</td><td>영어</td><td>서하</td></tr><tr><td>c2</td><td>영어</td><td>서하</td></tr><tr><td>c3</td><td>영어</td><td>서하</td></tr><tr><td>c1</td><td>일본어</td><td>도윤</td></tr><tr><td>c4</td><td>일본어</td><td>도윤</td></tr><tr><td>c5</td><td>영어</td><td>민재</td></tr></table></div><div class="tp-item"><div class="tp-name">🗄 guide_skill <small>14행</small></div><table class="tight"><tr><th>guide</th><th>language</th><th>region</th></tr><tr><td>서하</td><td>영어</td><td>제주</td></tr><tr><td>서하</td><td>영어</td><td>부산</td></tr><tr><td>서하</td><td>영어</td><td>강릉</td></tr><tr><td>서하</td><td>일본어</td><td>제주</td></tr><tr><td>서하</td><td>일본어</td><td>부산</td></tr><tr><td>서하</td><td>일본어</td><td>강릉</td></tr><tr><td>서하</td><td>중국어</td><td>제주</td></tr><tr><td>서하</td><td>중국어</td><td>부산</td></tr><tr><td>서하</td><td>중국어</td><td>강릉</td></tr><tr><td>도윤</td><td>영어</td><td>제주</td></tr><tr><td>도윤</td><td>영어</td><td>부산</td></tr><tr><td>도윤</td><td>일본어</td><td>제주</td></tr><tr><td>도윤</td><td>일본어</td><td>부산</td></tr><tr><td>민재</td><td>중국어</td><td>서울</td></tr></table></div><div class="tp-item"><div class="tp-name">🗄 offer <small>4행</small></div><table class="tight"><tr><th>guide</th><th>tour_type</th><th>lodge</th></tr><tr><td>서하</td><td>트레킹</td><td>A숙소</td></tr><tr><td>서하</td><td>트레킹</td><td>B숙소</td></tr><tr><td>서하</td><td>야경</td><td>A숙소</td></tr><tr><td>도윤</td><td>트레킹</td><td>A숙소</td></tr></table></div></div><script>
+// 예제 표 패널: 실습 DB 표 + 📌로 고정한 표를 옆(PC)·아래(폰) 패널에 띄운다. 스크롤해도 따라오고, 열림 상태는 페이지를 옮겨도 유지.
+(function(){
+const KEY='pin:'+location.pathname, seed=document.getElementById('tp-seed');
+const main=document.querySelector('main');
+const tables=[...main.querySelectorAll('table')].filter(t=>!t.closest('.sql-run,.tpanel,#tp-seed,.quiz,.answer-bar,nav'));
+const panel=document.createElement('aside');panel.className='tpanel';
+panel.innerHTML='<div class="tp-head"><b>📋 예제 표</b><button type="button" class="tp-x" aria-label="닫기">✕</button></div><div class="tp-body"></div>';
+const bodyEl=panel.querySelector('.tp-body');
+const btn=document.createElement('button');btn.type='button';btn.className='tp-btn';btn.textContent='📋 예제 표';
+let pins=JSON.parse(localStorage[KEY]||'[]');
+function label(t){let e=t,cap='';for(let k=0;k<4&&e&&!cap;k++){e=e.previousElementSibling;if(e&&/^(H[2-4]|P|B)$/.test(e.tagName))cap=e.textContent.trim()}
+  const f=t.closest('figure');if(f&&f.querySelector('figcaption'))cap=f.querySelector('figcaption').textContent.trim();
+  return (cap||'표').slice(0,40)}
+function render(){
+  let h='';
+  if(seed&&seed.innerHTML.trim())h+='<div class="tp-sec">실습 DB(실행 상자가 쓰는 표)</div>'+seed.innerHTML;
+  const ps=pins.filter(i=>tables[i]);
+  h+='<div class="tp-sec">📌 고정한 표</div>'+(ps.length?ps.map(i=>'<div class="tp-item"><div class="tp-name">'+label(tables[i]).replace(/</g,'&lt;')+' <button type="button" class="tp-go" data-i="'+i+'">본문 위치</button> <button type="button" class="tp-un" data-i="'+i+'">빼기</button></div>'+tables[i].outerHTML+'</div>').join(''):'<p class="tp-empty">본문 표 오른쪽 위 📌를 누르면 여기에 꽂혀요.</p>');
+  bodyEl.innerHTML=h;
+  bodyEl.querySelectorAll('.tp-un').forEach(b=>b.onclick=()=>toggle(+b.dataset.i));
+  bodyEl.querySelectorAll('.tp-go').forEach(b=>b.onclick=()=>{tables[+b.dataset.i].scrollIntoView({behavior:'smooth',block:'center'});if(innerWidth<1100)open(false)});
+  tables.forEach((t,i)=>{const p=t.previousElementSibling;if(p&&p.classList.contains('tp-pin'))p.classList.toggle('on',pins.includes(i))})}
+function toggle(i){pins=pins.includes(i)?pins.filter(x=>x!==i):[...pins,i];localStorage[KEY]=JSON.stringify(pins);render();if(pins.includes(i))open(true)}
+function open(o){document.body.classList.toggle('tp-open',o);localStorage.tpOpen=o?1:0;btn.textContent=o?'📋 닫기':'📋 예제 표'}
+tables.forEach((t,i)=>{const b=document.createElement('button');b.type='button';b.className='tp-pin';b.title='예제 표 패널에 고정';b.textContent='📌';b.onclick=()=>toggle(i);t.before(b)});
+panel.querySelector('.tp-x').onclick=()=>open(false);btn.onclick=()=>open(!document.body.classList.contains('tp-open'));
+document.body.append(panel,btn);render();open(localStorage.tpOpen==='1');
+})();
 </script>
 <footer>2027년 정기 기사 1회 정보처리기사 필기 준비 · 공식 범위: Q-Net 2027~2029 출제기준</footer>
 </main></body></html>

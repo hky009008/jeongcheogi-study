@@ -6,7 +6,7 @@
 <link rel="icon" href="../assets/favicon/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="../assets/favicon/favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="apple-touch-icon" href="../assets/favicon/apple-touch-icon.png">
-<link rel="stylesheet" href="../style.css?v=4788e468"></head>
+<link rel="stylesheet" href="../style.css?v=4c5c3c74"></head>
 <body><main>
 <nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a> · <a href="../listen.html">🎧 강의 듣기</a></nav>
 <h1>D049 · 길벗투어 E-R 그림을 표로 옮기는 법 — 계층·네트워크·관계형, 논리 설계 단계, 변환 규칙, 품질 검증</h1><div class="meta">2026-11-23 · B3 데이터 입출력 구현 &gt; 논리 데이터베이스 설계 &gt; 논리적 데이터모델링 · 품질검증</div><div class="box audio"><b>🎧 듣는 강의 (약 31분)</b>오늘 내용을 이어서 설명해요. 먼저 듣고 페이지를 보면 더 빨라요.<p style="margin:10px 0 0"><b>1부</b> (약 13분)</p><audio controls preload="none" src="../assets/audio/D049-1.mp3?v=804" style="width:100%;margin-top:8px"></audio><p style="margin:10px 0 0"><b>2부</b> (약 17분)</p><audio controls preload="none" src="../assets/audio/D049-2.mp3?v=1029" style="width:100%;margin-top:8px"></audio></div>
@@ -323,6 +323,36 @@ document.querySelectorAll('.steps').forEach(box=>{
     }
   box.prepend(head); box.append(bar); show(0);
 });
+</script>
+<div id="tp-seed" hidden><div class="tp-item"><div class="tp-name">🗄 고객 <small>3행</small></div><table class="tight"><tr><th>고객번호</th><th>이름</th><th>생일</th></tr><tr><td>1</td><td>가온</td><td>1990-05-01</td></tr><tr><td>2</td><td>나래</td><td>1985-11-30</td></tr><tr><td>3</td><td>다솜</td><td>2000-02-14</td></tr></table></div><div class="tp-item"><div class="tp-name">🗄 투어 <small>3행</small></div><table class="tight"><tr><th>투어번호</th><th>이름</th><th>지역</th></tr><tr><td>T1</td><td>제주 올레 3일</td><td>제주</td></tr><tr><td>T2</td><td>부산 먹방 2일</td><td>부산</td></tr><tr><td>T3</td><td>강릉 해변 2일</td><td>강릉</td></tr></table></div></div><script>
+// 예제 표 패널: 실습 DB 표 + 📌로 고정한 표를 옆(PC)·아래(폰) 패널에 띄운다. 스크롤해도 따라오고, 열림 상태는 페이지를 옮겨도 유지.
+(function(){
+const KEY='pin:'+location.pathname, seed=document.getElementById('tp-seed');
+const main=document.querySelector('main');
+const tables=[...main.querySelectorAll('table')].filter(t=>!t.closest('.sql-run,.tpanel,#tp-seed,.quiz,.answer-bar,nav'));
+const panel=document.createElement('aside');panel.className='tpanel';
+panel.innerHTML='<div class="tp-head"><b>📋 예제 표</b><button type="button" class="tp-x" aria-label="닫기">✕</button></div><div class="tp-body"></div>';
+const bodyEl=panel.querySelector('.tp-body');
+const btn=document.createElement('button');btn.type='button';btn.className='tp-btn';btn.textContent='📋 예제 표';
+let pins=JSON.parse(localStorage[KEY]||'[]');
+function label(t){let e=t,cap='';for(let k=0;k<4&&e&&!cap;k++){e=e.previousElementSibling;if(e&&/^(H[2-4]|P|B)$/.test(e.tagName))cap=e.textContent.trim()}
+  const f=t.closest('figure');if(f&&f.querySelector('figcaption'))cap=f.querySelector('figcaption').textContent.trim();
+  return (cap||'표').slice(0,40)}
+function render(){
+  let h='';
+  if(seed&&seed.innerHTML.trim())h+='<div class="tp-sec">실습 DB(실행 상자가 쓰는 표)</div>'+seed.innerHTML;
+  const ps=pins.filter(i=>tables[i]);
+  h+='<div class="tp-sec">📌 고정한 표</div>'+(ps.length?ps.map(i=>'<div class="tp-item"><div class="tp-name">'+label(tables[i]).replace(/</g,'&lt;')+' <button type="button" class="tp-go" data-i="'+i+'">본문 위치</button> <button type="button" class="tp-un" data-i="'+i+'">빼기</button></div>'+tables[i].outerHTML+'</div>').join(''):'<p class="tp-empty">본문 표 오른쪽 위 📌를 누르면 여기에 꽂혀요.</p>');
+  bodyEl.innerHTML=h;
+  bodyEl.querySelectorAll('.tp-un').forEach(b=>b.onclick=()=>toggle(+b.dataset.i));
+  bodyEl.querySelectorAll('.tp-go').forEach(b=>b.onclick=()=>{tables[+b.dataset.i].scrollIntoView({behavior:'smooth',block:'center'});if(innerWidth<1100)open(false)});
+  tables.forEach((t,i)=>{const p=t.previousElementSibling;if(p&&p.classList.contains('tp-pin'))p.classList.toggle('on',pins.includes(i))})}
+function toggle(i){pins=pins.includes(i)?pins.filter(x=>x!==i):[...pins,i];localStorage[KEY]=JSON.stringify(pins);render();if(pins.includes(i))open(true)}
+function open(o){document.body.classList.toggle('tp-open',o);localStorage.tpOpen=o?1:0;btn.textContent=o?'📋 닫기':'📋 예제 표'}
+tables.forEach((t,i)=>{const b=document.createElement('button');b.type='button';b.className='tp-pin';b.title='예제 표 패널에 고정';b.textContent='📌';b.onclick=()=>toggle(i);t.before(b)});
+panel.querySelector('.tp-x').onclick=()=>open(false);btn.onclick=()=>open(!document.body.classList.contains('tp-open'));
+document.body.append(panel,btn);render();open(localStorage.tpOpen==='1');
+})();
 </script>
 <footer>2027년 정기 기사 1회 정보처리기사 필기 준비 · 공식 범위: Q-Net 2027~2029 출제기준</footer>
 </main></body></html>

@@ -6,7 +6,7 @@
 <link rel="icon" href="../assets/favicon/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="../assets/favicon/favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="apple-touch-icon" href="../assets/favicon/apple-touch-icon.png">
-<link rel="stylesheet" href="../style.css?v=4788e468"></head>
+<link rel="stylesheet" href="../style.css?v=4c5c3c74"></head>
 <body><main>
 <nav class="top"><a href="../index.html">목차</a> · <a href="../wrong.html">오답 노트</a> · <a href="../schedule.html">학습 일정</a> · <a href="../listen.html">🎧 강의 듣기</a></nav>
 <h1>D046 · 여행사 ‘길벗투어’의 투어표 — 같은 데이터를 세 겹으로 보는 법과 DB 설계 5단계</h1><div class="meta">2026-11-20 · B3 데이터 입출력 구현 &gt; 논리 데이터베이스 설계 &gt; 데이터모델 개념</div><p><span class="tag">B3</span> 어제까지 관계 데이터 모델의 연산(관계대수 · 관계해석)을 봤다면, 오늘은 한 걸음 물러나 “데이터 모델이란 무엇이고, 데이터베이스는 어떤 겹으로 나뉘며, 어떤 순서로 설계하나”라는 큰 그림이에요. 스키마 · 독립성 문제는 최근 20회 중 17회, 설계 단계 · E-R 묶음은 20회 모두 나왔어요. 오늘은 가벼운 날이라 개념 여덟 개를 한 사례로 차분히 꿰는 데 집중해요. 예시는 여행사 ‘길벗투어’의 예약 시스템이에요.</p>
@@ -289,6 +289,36 @@ document.querySelectorAll('.steps').forEach(box=>{
     }
   box.prepend(head); box.append(bar); show(0);
 });
+</script>
+<div id="tp-seed" hidden><div class="tp-item"><div class="tp-name">🗄 투어 <small>4행</small></div><table class="tight"><tr><th>투어번호</th><th>이름</th><th>지역</th><th>가격</th></tr><tr><td>T1</td><td>제주 올레 3일</td><td>제주</td><td>450000</td></tr><tr><td>T2</td><td>부산 미식 2일</td><td>부산</td><td>280000</td></tr><tr><td>T3</td><td>교토 단풍 4일</td><td>교토</td><td>890000</td></tr><tr><td>T4</td><td>강릉 해돋이 1일</td><td>강릉</td><td>120000</td></tr></table></div><div class="tp-item"><div class="tp-name">🗄 예약 <small>6행</small></div><table class="tight"><tr><th>예약번호</th><th>투어</th><th>고객</th><th>인원</th></tr><tr><td>R1</td><td>T1</td><td>c1</td><td>2</td></tr><tr><td>R2</td><td>T1</td><td>c2</td><td>4</td></tr><tr><td>R3</td><td>T2</td><td>c3</td><td>1</td></tr><tr><td>R4</td><td>T3</td><td>c1</td><td>2</td></tr><tr><td>R5</td><td>T3</td><td>c4</td><td>3</td></tr><tr><td>R6</td><td>T4</td><td>c2</td><td>2</td></tr></table></div><div class="tp-item"><div class="tp-name">🗄 후기 <small>0행</small></div><table class="tight"><tr><th>후기번호</th><th>투어</th><th>별점</th></tr></table></div></div><script>
+// 예제 표 패널: 실습 DB 표 + 📌로 고정한 표를 옆(PC)·아래(폰) 패널에 띄운다. 스크롤해도 따라오고, 열림 상태는 페이지를 옮겨도 유지.
+(function(){
+const KEY='pin:'+location.pathname, seed=document.getElementById('tp-seed');
+const main=document.querySelector('main');
+const tables=[...main.querySelectorAll('table')].filter(t=>!t.closest('.sql-run,.tpanel,#tp-seed,.quiz,.answer-bar,nav'));
+const panel=document.createElement('aside');panel.className='tpanel';
+panel.innerHTML='<div class="tp-head"><b>📋 예제 표</b><button type="button" class="tp-x" aria-label="닫기">✕</button></div><div class="tp-body"></div>';
+const bodyEl=panel.querySelector('.tp-body');
+const btn=document.createElement('button');btn.type='button';btn.className='tp-btn';btn.textContent='📋 예제 표';
+let pins=JSON.parse(localStorage[KEY]||'[]');
+function label(t){let e=t,cap='';for(let k=0;k<4&&e&&!cap;k++){e=e.previousElementSibling;if(e&&/^(H[2-4]|P|B)$/.test(e.tagName))cap=e.textContent.trim()}
+  const f=t.closest('figure');if(f&&f.querySelector('figcaption'))cap=f.querySelector('figcaption').textContent.trim();
+  return (cap||'표').slice(0,40)}
+function render(){
+  let h='';
+  if(seed&&seed.innerHTML.trim())h+='<div class="tp-sec">실습 DB(실행 상자가 쓰는 표)</div>'+seed.innerHTML;
+  const ps=pins.filter(i=>tables[i]);
+  h+='<div class="tp-sec">📌 고정한 표</div>'+(ps.length?ps.map(i=>'<div class="tp-item"><div class="tp-name">'+label(tables[i]).replace(/</g,'&lt;')+' <button type="button" class="tp-go" data-i="'+i+'">본문 위치</button> <button type="button" class="tp-un" data-i="'+i+'">빼기</button></div>'+tables[i].outerHTML+'</div>').join(''):'<p class="tp-empty">본문 표 오른쪽 위 📌를 누르면 여기에 꽂혀요.</p>');
+  bodyEl.innerHTML=h;
+  bodyEl.querySelectorAll('.tp-un').forEach(b=>b.onclick=()=>toggle(+b.dataset.i));
+  bodyEl.querySelectorAll('.tp-go').forEach(b=>b.onclick=()=>{tables[+b.dataset.i].scrollIntoView({behavior:'smooth',block:'center'});if(innerWidth<1100)open(false)});
+  tables.forEach((t,i)=>{const p=t.previousElementSibling;if(p&&p.classList.contains('tp-pin'))p.classList.toggle('on',pins.includes(i))})}
+function toggle(i){pins=pins.includes(i)?pins.filter(x=>x!==i):[...pins,i];localStorage[KEY]=JSON.stringify(pins);render();if(pins.includes(i))open(true)}
+function open(o){document.body.classList.toggle('tp-open',o);localStorage.tpOpen=o?1:0;btn.textContent=o?'📋 닫기':'📋 예제 표'}
+tables.forEach((t,i)=>{const b=document.createElement('button');b.type='button';b.className='tp-pin';b.title='예제 표 패널에 고정';b.textContent='📌';b.onclick=()=>toggle(i);t.before(b)});
+panel.querySelector('.tp-x').onclick=()=>open(false);btn.onclick=()=>open(!document.body.classList.contains('tp-open'));
+document.body.append(panel,btn);render();open(localStorage.tpOpen==='1');
+})();
 </script>
 <footer>2027년 정기 기사 1회 정보처리기사 필기 준비 · 공식 범위: Q-Net 2027~2029 출제기준</footer>
 </main></body></html>
