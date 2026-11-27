@@ -17,6 +17,7 @@
 <li>수평 · 수직 단편화와 할당 · 복제를 구별하고, 나눈 조각이 지켜야 할 세 조건(완전성 · 재구성 · 분리)을 직접 확인한다</li>
 </ul>
 <div class="glance"><div><b>5</b>장면(물리 설계 → 스토리지 → 분산 DB → 투명성 → 분산 설계)</div><div><b>16</b>그림 · 표 · <b>3</b>애니메이션</div><div><b>3</b>실행 상자</div><div><b>7</b>문항(새 3 + 누적 2 + 복습 2)</div></div>
+<div class="box audio"><b>🎧 듣는 강의 (약 37분)</b>오늘 내용을 이어서 설명해요. 먼저 듣고 페이지를 보면 더 빨라요.<p style="margin:10px 0 0"><b>1부</b> (약 18분)</p><audio controls preload="none" src="../assets/audio/D054-1.mp3?v=1102" style="width:100%;margin-top:8px"></audio><p style="margin:10px 0 0"><b>2부</b> (약 19분)</p><audio controls preload="none" src="../assets/audio/D054-2.mp3?v=1120" style="width:100%;margin-top:8px"></audio></div>
 <div class="box"><b>오늘 이야기의 흐름</b>논리 설계가 끝난 스키마를 어떻게 저장할지 정한다(장면 1) → 그 데이터를 담을 저장장치를 서버에 어떻게 잇고 고장에 대비할지 고른다(장면 2) → 은행이 지점별로 커지면 DB도 흩어진다(장면 3) → 흩어졌다는 사실을 사용자에게 숨긴다(장면 4) → 무엇을 어떻게 나눠 어디에 둘지 설계한다(장면 5)</div>
 <div class="box"><b>따라잡기 안내</b>설계 네 단계와 논리 설계 작업은 <a href="2026-11-23-D049.html">D049</a>, 로킹 · 타임스탬프 · 2PC는 어제 <a href="2026-11-27-D053.html">D053</a>에 있어요. 오늘 장면 4의 투명성 두 가지가 그 기법들과 이어져요.</div>
 
@@ -183,7 +184,40 @@ document.querySelectorAll('.answer-bar').forEach(bar=>{
   btn.addEventListener('click',async()=>{const t=text();try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}btn.textContent='복사됨 ✓';setTimeout(()=>btn.textContent='답안 복사',1500)});
 });
 </script>
-
+<script>
+// 2026-11-14: 진수 님 요청 — 페이지 하단에 늘 붙어 있는 음악 앱식 플레이어. 본문 <audio>는 숨기고 하단 막대 하나로 1부·2부를 이어 튼다.
+(()=>{const box=document.querySelector('.box.audio');if(!box)return;
+const tr=[...box.querySelectorAll('audio')].map((a,i,all)=>({src:a.getAttribute('src'),key:'pos:'+a.getAttribute('src').split('?')[0],name:all.length>1?(i+1)+'부':'강의'}));
+box.querySelectorAll('audio').forEach(a=>a.remove());box.querySelectorAll('p').forEach(p=>{if(/^\s*\d부/.test(p.textContent))p.remove()});
+const A=new Audio(),rates=[1,1.25,1.5,1.75,2],fmt=t=>isFinite(t)?Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0'):'0:00';
+A.preload='metadata';let cur=0;
+const pick=document.createElement('div');pick.className='audio-ctl';box.appendChild(pick);
+tr.forEach((t,i)=>{const b=document.createElement('button');b.type='button';b.textContent='▶ '+(tr.length>1?t.name+' 듣기':'듣기');b.onclick=()=>{load(i);A.play()};pick.appendChild(b)});
+const bar=document.createElement('div');bar.className='mbar';
+bar.innerHTML='<button class="mb-play" aria-label="재생">▶</button><button data-d="-10">⏪10</button><button data-d="10">10⏩</button>'+
+ '<div class="mb-mid"><div class="mb-title"></div><input type="range" min="0" value="0" step="1" aria-label="재생 위치"><div class="mb-time">0:00 / 0:00</div></div>'+
+ (tr.length>1?'<button class="mb-part">1부</button>':'')+'<button class="mb-rate">1×</button>';
+document.body.appendChild(bar);document.body.classList.add('has-mbar');
+const q=c=>bar.querySelector(c),pl=q('.mb-play'),rg=q('input'),tm=q('.mb-time'),rb=q('.mb-rate'),pt=q('.mb-part');
+const title=(document.querySelector('h1')||{}).textContent||'';
+function load(i){cur=i;A.src=tr[i].src;A.playbackRate=+localStorage.rate||1;q('.mb-title').textContent=tr[i].name+' · '+title;if(pt)pt.textContent=tr[i].name;
+  A.addEventListener('loadedmetadata',()=>{const p=+localStorage[tr[i].key];if(p>5&&p<A.duration-5)A.currentTime=p;A.playbackRate=+localStorage.rate||1;sync()},{once:true});
+  if('mediaSession'in navigator)navigator.mediaSession.metadata=new MediaMetadata({title:tr[i].name+' · '+title,artist:'정처기 듣는 강의'})}
+function sync(){rg.max=A.duration||1;rg.value=A.currentTime;tm.textContent=fmt(A.currentTime)+' / '+fmt(A.duration)}
+A.ontimeupdate=()=>{localStorage[tr[cur].key]=A.currentTime|0;sync()};
+A.onplay=A.onpause=()=>{pl.textContent=A.paused?'▶':'⏸';pl.setAttribute('aria-label',A.paused?'재생':'일시정지')};
+A.onended=()=>{localStorage[tr[cur].key]=0;if(cur+1<tr.length){load(cur+1);A.play()}};
+pl.onclick=()=>A.paused?A.play():A.pause();rg.oninput=()=>A.currentTime=+rg.value;
+bar.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>A.currentTime=Math.max(0,A.currentTime+ +b.dataset.d));
+rb.textContent=(+localStorage.rate||1)+'×';rb.onclick=()=>{const r=rates[(rates.indexOf(A.playbackRate)+1)%rates.length];A.playbackRate=r;localStorage.rate=r;rb.textContent=r+'×'};
+if(pt)pt.onclick=()=>{const p=!A.paused;load((cur+1)%tr.length);if(p)A.play()};
+if('mediaSession'in navigator){const m=navigator.mediaSession;m.setActionHandler('play',()=>A.play());m.setActionHandler('pause',()=>A.pause());
+  m.setActionHandler('seekbackward',()=>A.currentTime-=10);m.setActionHandler('seekforward',()=>A.currentTime+=10);
+  if(tr.length>1){m.setActionHandler('previoustrack',()=>{load(Math.max(0,cur-1));A.play()});m.setActionHandler('nexttrack',()=>{if(cur+1<tr.length){load(cur+1);A.play()}})}}
+document.addEventListener('keydown',e=>{if(/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;
+  if(e.key==='ArrowLeft'&&e.shiftKey){A.currentTime-=10;e.preventDefault()}if(e.key==='ArrowRight'&&e.shiftKey){A.currentTime+=10;e.preventDefault()}});
+const last=tr.findIndex(t=>+localStorage[t.key]>5);load(last>=0?last:0);})();
+</script>
 <script type="module">
 // SQL 실습 상자: text/plain sql-seed 스크립트(data-db=이름)에 스키마·데이터
 //              .sql-run(data-db=이름, data-note=예상 질문) 안의 textarea에 쿼리
